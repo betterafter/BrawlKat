@@ -1,0 +1,2 @@
+rootProject.name='BrawlKat'
+include ':app'
