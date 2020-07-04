@@ -2,37 +2,56 @@ package com.example.brawlkat;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStream;
 import java.io.PrintWriter;
-import java.net.InetAddress;
 import java.net.Socket;
 
 public class Client {
 
-    String res;
-    Socket socket = null;            //Server와 통신하기 위한 Socket
-    BufferedReader in = null;        //Server로부터 데이터를 읽어들이기 위한 입력스트림
-    BufferedReader in2 = null;        //키보드로부터 읽어들이기 위한 입력스트림
-    PrintWriter out = null;            //서버로 내보내기 위한 출력 스트림
-    InetAddress ia = null;
+    Socket socket = null;
+    String result = "";
+    OutputStream sendToServer;
+    InputStream data;
 
-    public String clientTest(){
+    public String clientTest(String playerTag){
 
         try {
-            ia = InetAddress.getByName("222.237.33.235");    //서버로 접속
-            socket = new Socket(ia,9000);
+            socket = new Socket("35.237.9.225", 9000);
+            System.out.println(socket.isConnected());
 
-            System.out.println(socket.toString());
+            sendToServer = socket.getOutputStream();
+            PrintWriter writer = new PrintWriter(sendToServer, true);
+            writer.println(playerTag);
 
-            res = "succeed";
+            sendToServer.flush();
+
+            data = socket.getInputStream();
+            InputStreamReader input = new InputStreamReader(data);
+            BufferedReader reader = new BufferedReader(input);
+
+
+
+            result = reader.readLine();
+            System.out.println(result);
+
+            socket.close();
+
         }catch(IOException e) {
             e.printStackTrace();
-            res = "fail1";
+
         }
+        try {
+            // 소켓 종료.
 
-
-        return res;
+            if(sendToServer != null) sendToServer.close() ;
+            if(data != null) data.close();
+            if (socket != null) socket.close() ;
+        } catch (Exception e) {
+            // TODO : process exceptions.
+        }
+        return result;
     }
-
-
 
 }

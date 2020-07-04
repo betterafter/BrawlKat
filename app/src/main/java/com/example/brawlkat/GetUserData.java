@@ -3,37 +3,19 @@ package com.example.brawlkat;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.net.HttpURLConnection;
-import java.net.URL;
-
 import androidx.appcompat.app.AppCompatActivity;
 
 public class GetUserData extends AppCompatActivity {
 
     String res = "";
 
-    public String ShowPlayerInformation(String accessToken, String urls){
+    public String ShowPlayerInformation(String dataFromServer){
+
+        System.out.println(dataFromServer);
+
         try{
 
-            URL url = new URL(urls);
-            HttpURLConnection connection = (HttpURLConnection)url.openConnection();
-
-            connection.setRequestMethod("GET");
-            connection.setRequestProperty("Authorization", "Bearer " + accessToken);
-
-            BufferedReader in = new BufferedReader(new InputStreamReader(connection.getInputStream(), "UTF-8"));
-
-            String line, data = "";
-
-            while((line = in.readLine()) != null){
-                data = data.concat(line);
-                System.out.println(line);
-            }
-
-
-
+            String data = dataFromServer;
             JSONObject jsonObject = new JSONObject(data);
             JSONArray myBrawler = (JSONArray) jsonObject.get("brawlers");
             res = res + "-------------------------" +  jsonObject.get("name") + "-------------------------" + '\n';
