@@ -15,6 +15,7 @@ public class kat_MainActivity extends AppCompatActivity {
 
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
 
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -57,4 +58,6 @@ public class kat_MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 }

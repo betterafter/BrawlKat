@@ -25,8 +25,6 @@
         </activity>
         <activity android:name=".MainActivity"></activity>
         <service android:name=".kat_OverdrawActivity"></service>
-        <service android:name=".kat_OverdrawShowActivity"></service>
-
     </application>
 
 </manifest>
