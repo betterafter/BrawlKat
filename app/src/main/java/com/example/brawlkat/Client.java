@@ -7,6 +7,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.util.ArrayList;
 
 public class Client {
 
@@ -14,29 +15,35 @@ public class Client {
     String result = "";
     OutputStream sendToServer;
     InputStream data;
+    ArrayList<String> resData = new ArrayList<>();
 
-    public String clientTest(String playerTag){
+    public ArrayList<String> getdata(String... send){
 
         try {
-            socket = new Socket("35.237.9.225", 9000);
-            System.out.println(socket.isConnected());
 
-            sendToServer = socket.getOutputStream();
-            PrintWriter writer = new PrintWriter(sendToServer, true);
-            writer.println(playerTag);
+            int sendDataCount = 2;
+            for(int i = 0; i < sendDataCount; i++){
+                socket = new Socket("35.237.9.225", 9000);
+                System.out.println(socket.isConnected());
 
-            sendToServer.flush();
+                sendToServer = socket.getOutputStream();
+                PrintWriter writer = new PrintWriter(sendToServer, true);
+                writer.println(send[i]);
 
-            data = socket.getInputStream();
-            InputStreamReader input = new InputStreamReader(data);
-            BufferedReader reader = new BufferedReader(input);
+                sendToServer.flush();
+
+                data = socket.getInputStream();
+                InputStreamReader input = new InputStreamReader(data);
+                BufferedReader reader = new BufferedReader(input);
+                result = reader.readLine();
+
+                System.out.println("getData : " + result);
+                resData.add(result);
 
 
+                socket.close();
+            }
 
-            result = reader.readLine();
-            System.out.println(result);
-
-            socket.close();
 
         }catch(IOException e) {
             e.printStackTrace();
@@ -51,7 +58,7 @@ public class Client {
         } catch (Exception e) {
             // TODO : process exceptions.
         }
-        return result;
+        return resData;
     }
 
 }

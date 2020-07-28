@@ -34,7 +34,7 @@ public class MainActivity extends AppCompatActivity {
 
         public void run(){
 
-            data = client.clientTest(playerTag);
+            //data = client.clientTest(playerTag);
             System.out.println(data);
             textView.setText(getUserData.ShowPlayerInformation(data));
         }
