@@ -37,10 +37,13 @@ public class kat_MainActivity extends AppCompatActivity {
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-            } else {
+            }
+            else {
                 startService(new Intent(kat_MainActivity.this, kat_OverdrawActivity.class));
+            }
         }
-        } else {
+
+        else {
             startService(new Intent(kat_MainActivity.this, kat_OverdrawActivity.class));
         }
     }

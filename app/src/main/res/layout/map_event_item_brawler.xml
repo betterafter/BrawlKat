@@ -3,14 +3,15 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
     <LinearLayout
         android:id="@+id/map_event_item_brawler_layout"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:orientation="vertical"
         android:layout_margin="10dp"
+        android:orientation="vertical"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -19,23 +20,28 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            app:srcCompat="@drawable/test_2" />
+            app:srcCompat="@drawable/logo" />
 
         <TextView
             android:id="@+id/map_event_item_brawler_name"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:fontFamily="@font/lilita_one"
             android:text="name"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp" />
 
         <TextView
             android:id="@+id/map_event_item_brawler_winRate"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="0"
+            android:fontFamily="sans-serif"
             android:text="winRate"
-            android:textAlignment="center" />
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

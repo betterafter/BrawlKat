@@ -1,68 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="false">
 
 
     <LinearLayout
         android:id="@+id/item_mainLayout"
-        android:background="#FAFAA8"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#4D000000"
         android:orientation="vertical">
 
-        <ImageButton
+        <ImageView
             android:id="@+id/item_background"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_weight="0"
-            app:srcCompat="@drawable/gemmine_headerevent" />
+            app:srcCompat="@drawable/logo" />
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:weightSum="1"
             android:layout_margin="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:weightSum="1">
 
             <ImageView
                 android:id="@+id/item_modeType"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_weight="0"
-                app:srcCompat="@drawable/test_2" />
+                android:layout_margin="5dp"
+                app:srcCompat="@drawable/logo" />
 
-            <TextView
-                android:id="@+id/item_mapNameAndTime"
-                android:layout_width="wrap_content"
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="TextView" />
+                android:layout_weight="0"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/item_mapType"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/lilita_one"
+                    android:text="TextView"
+                    android:textColor="@color/colorBlack" />
+
+                <TextView
+                    android:id="@+id/item_mapNameAndTime"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:fontFamily="@font/lilita_one"
+                    android:text="TextView"
+                    android:textAlignment="center"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="24sp" />
+
+            </LinearLayout>
 
         </LinearLayout>
-
-        <TextView
-            android:id="@+id/textView3"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="Recommends" />
+            android:layout_height="wrap_content">
 
-        <LinearLayout
-            android:id="@+id/item_RecommendsLayout"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical">
+            <LinearLayout
+                android:id="@+id/item_RecommendsLayout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="5dp"
+                android:orientation="vertical"
+                android:gravity="center">
 
-        </LinearLayout>
+            </LinearLayout>
 
-        <TextView
-            android:id="@+id/textView4"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text="your Recommends" />
+        </ScrollView>
+
 
         <LinearLayout
             android:id="@+id/item_UserRecommendsLayout"

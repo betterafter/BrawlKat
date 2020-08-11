@@ -6,6 +6,7 @@ import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -27,10 +28,10 @@ public class kat_EventActivity extends kat_OverdrawActivity {
     private         getEventsThread                     eventsThread;
     private         kat_eventsParser                    eventsParser;
     private         kat_brawlersParser                  brawlersParser;
-    private         View[]                              eventView           = new View[20];
     private         ArrayList<kat_eventsParser.pair>    EventArrayList;
     private         ArrayList<HashMap<String, Object>>  BrawlersArrayList;
     private         ViewPager2                          viewPager;
+
 
 
     public kat_EventActivity(Context context, kat_OverdrawActivity overdrawActivity){
@@ -48,35 +49,40 @@ public class kat_EventActivity extends kat_OverdrawActivity {
 
     // 서비스 실행 시에 보여지는 화면
     public void ShowEventsInformation(){
-        if(overdrawActivity.mapWindowManager == null){
-            overdrawActivity.mapRecommend = new WindowManager.LayoutParams(
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.WRAP_CONTENT,
-                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                            | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                    PixelFormat.TRANSLUCENT
-            );
 
+        overdrawActivity.mapRecommend = new WindowManager.LayoutParams(
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.WRAP_CONTENT,
+                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                PixelFormat.TRANSLUCENT
+        );
+
+
+        if(overdrawActivity.mapWindowManager == null)
             overdrawActivity.mapWindowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
 
-        }
-//        if(overdrawActivity.mapRecommendView.getWindowToken() != null) {
-//            overdrawActivity.mapWindowManager.removeView(overdrawActivity.mapRecommendView);
-//        }
-
-//        else {
-//            overdrawActivity.mapWindowManager.addView(overdrawActivity.mapRecommendView, overdrawActivity.mapRecommend);
-//        }
         if(overdrawActivity.mapRecommendView.getWindowToken() == null) {
+
+            DisplayMetrics metrics = new DisplayMetrics();
+            overdrawActivity.mapWindowManager.getDefaultDisplay().getMetrics(metrics);
+
+            int fixedWidth = Math.max(metrics.heightPixels, metrics.widthPixels);
+            int fixedHeight = Math.min(metrics.heightPixels, metrics.widthPixels);
+
+            overdrawActivity.mapRecommend.height = fixedHeight;
+            overdrawActivity.mapRecommend.width = fixedWidth / 2;
+
             overdrawActivity.mapWindowManager.addView(overdrawActivity.mapRecommendView, overdrawActivity.mapRecommend);
         }
     }
 
-
+    // 서버에서 가져온 api 데이터 불러오고 리스트에 넣기
     public void getCurrentEventsInformation(){
 
-        client = new Client();
+        client = new Client(overdrawActivity);
+        client.init();
         eventsThread = new getEventsThread();
         if(!eventsThread.isAlive())
             eventsThread.start();
@@ -88,20 +94,8 @@ public class kat_EventActivity extends kat_OverdrawActivity {
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
 
-        System.out.println(ev.getAction());
-
         if(ev.getAction() == MotionEvent.ACTION_OUTSIDE){
-
-            System.out.println(overdrawActivity.layoutParams.x);
-            System.out.println(overdrawActivity.layoutParams.y);
-            System.out.println(ev.getX());
-            System.out.println(ev.getY());
-
-
-            while(overdrawActivity.ServiceButtonTouched) continue;
-            if(overdrawActivity.ServiceButtonTouchedCase != 0){
-                onDestroy(); return true;
-            }
+            onDestroy(); return true;
         }
 
         return true;
@@ -112,19 +106,28 @@ public class kat_EventActivity extends kat_OverdrawActivity {
     private class getEventsThread extends Thread{
 
         public void run(){
-            ArrayList<String> dataSet = client.getdata("events", "brawlers");
-            eventsParser = new kat_eventsParser(dataSet.get(0));
-            brawlersParser = new kat_brawlersParser(dataSet.get(1));
 
             try{
-                EventArrayList = eventsParser.DataParser();
-                BrawlersArrayList = brawlersParser.DataParser();
+                while (true){
 
-                //eventsParser.testPrint(EventArrayList);
+                    if(overdrawActivity.programDeactivate) break;
+                    ArrayList<String> dataSet = client.getdata("events", "brawlers");
 
-                System.out.println("success to get data '\n'");
+                    if(dataSet.size() <= 0) continue;
 
+                    eventsParser = new kat_eventsParser(dataSet.get(0));
+                    brawlersParser = new kat_brawlersParser(dataSet.get(1));
 
+                    EventArrayList = eventsParser.DataParser();
+                    BrawlersArrayList = brawlersParser.DataParser();
+
+                    System.out.println(BrawlersArrayList);
+
+                    //eventsParser.testPrint(EventArrayList);
+
+                    System.out.println("success to get data '\n'");
+                    sleep(1000 * 60 * 5);
+                }
             }
             catch (Exception e){
                 System.out.println("fail");
@@ -142,23 +145,53 @@ public class kat_EventActivity extends kat_OverdrawActivity {
         viewPager.setAdapter(eventAdapter);
     }
 
+    // 뷰페이저 옆의 이벤트 선택 버튼
     public void addModeButton(){
 
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        int setWidth = Math.max(width, height);
         LinearLayout buttonGroup = (LinearLayout) overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
         buttonGroup.removeAllViews();
 
-        for(int i = 0; i < EventArrayList.size(); i++){
+        for(int i = 0; i < EventArrayList.size(); i++) {
+
             ImageButton btn = new ImageButton(context);
+
+            // 이미지 버튼 스타일링
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    ViewGroup.LayoutParams.MATCH_PARENT,
+                    ViewGroup.LayoutParams.WRAP_CONTENT
+            );
+            params.setMargins(5, 5,5,5);
+            btn.setLayoutParams(params);
+
+
+
             String gameModeTypeUrl = (String) EventArrayList.get(i).getInfo().get("gamemodeTypeImageUrl");
-            Glide.with(context).load(gameModeTypeUrl).override((width / 3) / 7,(width / 3) / 7).into(btn);
+            String mapType = (String) EventArrayList.get(i).getInfo().get("name");
+
+            Glide.with(context)
+                    .load(gameModeTypeUrl).override((setWidth) / 32, (setWidth) / 32)
+                    .into(btn);
+
+            // setBackground는 default 스타일이 따로 정해져있어서 커스텀 스타일을 default 스타일이 덮어씌우는 느낌이 된다.
+            //btn.setBackgroundColor(Color.BLACK);
+            if(mapType.contains("Championship")) {
+                btn.setBackgroundResource(R.drawable.championshipbutton);
+            }
+            else{
+                btn.setBackgroundResource(R.drawable.normalbutton);
+            }
+
+
 
             final int idx = i;
             btn.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    viewPager.setCurrentItem(idx, false);
+                    viewPager.setCurrentItem(idx, true);
                 }
             });
 

@@ -17,6 +17,7 @@ public class kat_brawlersParser {
 
     public ArrayList<HashMap<String, Object> > DataParser() throws Exception {
 
+
         JSONObject jsonObject = new JSONObject(data);
         JSONArray list = (JSONArray) jsonObject.get("list");
 

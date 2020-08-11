@@ -51,6 +51,9 @@ public class kat_eventsParser {
             map.put("name", name.get("name"));
 
 
+            JSONObject mapName = (JSONObject) element.get("map");
+            map.put("mapName", mapName.get("name"));
+
 
             // 시작 시간 & 종료 시간
             map.put("startTime", element.get("startTime"));
