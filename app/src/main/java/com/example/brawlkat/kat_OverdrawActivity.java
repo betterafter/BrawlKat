@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
 import android.view.LayoutInflater;
@@ -37,32 +38,36 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
     public      View                            mapRecommendView;
     public      LayoutInflater                  layoutInflater;
     private     kat_EventActivity               events;
+    public      buttonLongClickToExitThread     buttonThread;
 
 
     // 기타 변수들
     private     float                           mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
     public      boolean                         ServiceButtonTouched = false;
-    public      boolean                         programDeactivate = false;
     public      int                             ServiceButtonTouchedCase = 0;
+    public      String                          getPlayerTag;
 
 
+    public      final IBinder                   binder = new LocalBinder();
 
 
-
-
-
-
-
-    @Override
-    public IBinder onBind(Intent arg0){
-        return null;
+    public class LocalBinder extends Binder{
+        kat_OverdrawActivity getService(){
+            return kat_OverdrawActivity.this;
+        }
     }
 
     @Override
-    public int onStartCommand( Intent intent, int flags, int startId )
+    public IBinder onBind(Intent arg0){
+        return binder;
+    }
+
+    @Override
+    public int onStartCommand(Intent intent, int flags, int startId )
     {
         // QQQ: 두번 이상 호출되지 않도록 조치해야 할 것 같다.
         Intent clsIntent = new Intent(this, kat_MainActivity.class);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, clsIntent, 0);
 
         NotificationCompat.Builder clsBuilder;
@@ -106,11 +111,19 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
         events = new kat_EventActivity(context, this);
         events.init_mapInflater();
         events.getCurrentEventsInformation();
-        events.Change();
-        events.addModeButton();
 
-        programDeactivate = false;
+
+
+
+
+
+        //events.ChangeRecommendViewClick();
+
+        buttonThread = new buttonLongClickToExitThread();
+        buttonThread.start();
     }
+
+
 
 
     public void init_Inflater(){
@@ -124,7 +137,6 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
         btn.setOnTouchListener(this);
         constraintLayout.addView(btn);
     }
-
 
     public void init_windowManager(){
 
@@ -144,27 +156,23 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
         windowManager.addView(constraintLayout, layoutParams);
     }
 
-
-
-
-
-
-
     @Override
     public void onDestroy() {
         if(windowManager != null) {
             //서비스 종료시 뷰 제거. *중요 : 뷰를 꼭 제거 해야함.
-            if(constraintLayout != null)
+            if(constraintLayout != null && constraintLayout.getWindowToken() != null)
                 windowManager.removeView(constraintLayout);
         }
 
-        programDeactivate = true;
+        events.eventsThread.interrupt();
+        events.client.getThread.interrupt();
+        buttonThread.interrupt();
+
+
+        System.out.println("Service Destroyed");
         super.onDestroy();
     }
 
-
-
-    float ftx, fty;
 
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
@@ -174,14 +182,12 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
         else if(ev.getAction() == MotionEvent.ACTION_OUTSIDE) System.out.println("OUTSIDE");
         else if(ev.getAction() == MotionEvent.ACTION_MOVE) System.out.println("MOVE");
 
-
         switch (ev.getAction()) {
 
 
             case MotionEvent.ACTION_DOWN:
 
-                ftx = ev.getX();
-                fty = ev.getY();
+                buttonThread.stopLongClickAction = false;
 
                 ServiceButtonTouched = true;
                 mStartingX = ev.getRawX();
@@ -198,32 +204,76 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
                 layoutParams.x = (int) (mWidgetStartingX - deltaX);
                 layoutParams.y = (int) (mWidgetStartingY - deltaY);
                 windowManager.updateViewLayout(constraintLayout, layoutParams);
+
+                if(Math.abs(mWidgetStartingX - layoutParams.x) > 10 || Math.abs(mWidgetStartingY - layoutParams.y) > 10){
+                    buttonThread.stopLongClickAction = true;
+                }
+                else{
+                    buttonThread.stopLongClickAction = false;
+                }
+
                 return true;
 
             case MotionEvent.ACTION_UP:
 
+                buttonThread.stopLongClickAction = true;
                 if(ServiceButtonTouchedCase != 3){
 
                     if(Math.abs(mWidgetStartingX - layoutParams.x) > 10 || Math.abs(mWidgetStartingY - layoutParams.y) > 10){
                         ServiceButtonTouchedCase = 1;
                     }
 
+                    // 움직이지 않고 제자리 터치 할 경우
                     else {
                         ServiceButtonTouchedCase = 2;
                         events.ShowEventsInformation();
+                        events.Change();
+                        events.addModeButton();
+                        events.ChangeRecommendViewClick();
                     }
                 }
 
 
-
-
             case MotionEvent.ACTION_OUTSIDE:
-
                 ServiceButtonTouchedCase = 0;
-
-
         }
 
         return false;
+    }
+
+
+    private class buttonLongClickToExitThread extends Thread{
+
+        public int stopCount;
+        public boolean stopLongClickAction = true;
+
+        public void run(){
+
+            try{
+                stopCount = 0; stopLongClickAction = true;
+                System.out.println("long click start");
+                while(true){
+
+                    if(stopCount >= 3){
+                        stopCount = 0;
+                        this.interrupt();
+                        onDestroy();
+                        stopSelf();
+
+                        break;
+                    }
+
+                    stopCount++;
+                    if(stopLongClickAction){
+                        stopCount = 0; continue;
+                    }
+                    System.out.println(stopCount);
+                    sleep(1000);
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 }

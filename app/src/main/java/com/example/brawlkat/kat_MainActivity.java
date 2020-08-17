@@ -1,12 +1,18 @@
 package com.example.brawlkat;
 
 import android.annotation.TargetApi;
+import android.content.ComponentName;
+import android.content.Context;
 import android.content.Intent;
+import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.provider.Settings;
 import android.view.View;
+
+import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +20,10 @@ import androidx.appcompat.app.AppCompatActivity;
 public class kat_MainActivity extends AppCompatActivity {
 
     private static final int ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
+    public String playerTag;
+
+    kat_OverdrawActivity katService;
+    boolean bound = false;
 
 
     @Override
@@ -28,23 +38,37 @@ public class kat_MainActivity extends AppCompatActivity {
 
     public void onEndClick(View view){
         Intent intent = new Intent(this, kat_OverdrawActivity.class);
+        unbindService(katConnection);
         stopService(intent);
+    }
+
+    public void getPlayerTagClick(View view){
+        TextInputEditText inputEditText = (TextInputEditText) findViewById(R.id.tagText);
+        playerTag = inputEditText.getText().toString();
+        katService.getPlayerTag = playerTag;
     }
 
     public void getPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   // 마시멜로우 이상일 경우
-            if (!Settings.canDrawOverlays(this)) {              // 체크
+            if (!Settings.canDrawOverlays(this)) {// 체크
+
                 Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
                         Uri.parse("package:" + getPackageName()));
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
             }
             else {
-                startService(new Intent(kat_MainActivity.this, kat_OverdrawActivity.class));
+                Intent intent = new Intent(kat_MainActivity.this, kat_OverdrawActivity.class);
+                intent.putExtra("playerTag", playerTag);
+                bindService(intent, katConnection, Context.BIND_AUTO_CREATE);
+                startService(intent);
             }
         }
 
         else {
-            startService(new Intent(kat_MainActivity.this, kat_OverdrawActivity.class));
+            Intent intent = new Intent(kat_MainActivity.this, kat_OverdrawActivity.class);
+            intent.putExtra("playerTag", playerTag);
+            bindService(intent, katConnection, Context.BIND_AUTO_CREATE);
+            startService(intent);
         }
     }
 
@@ -57,10 +81,27 @@ public class kat_MainActivity extends AppCompatActivity {
                 // TODO 동의를 얻지 못했을 경우의 처리
 
             } else {
-                startService(new Intent(kat_MainActivity.this, kat_OverdrawActivity.class));
+                Intent intent = new Intent(kat_MainActivity.this, kat_OverdrawActivity.class);
+                intent.putExtra("playerTag", playerTag);
+                bindService(intent, katConnection, Context.BIND_AUTO_CREATE);
+                startService(intent);
             }
         }
     }
 
 
+
+    private ServiceConnection katConnection = new ServiceConnection() {
+        @Override
+        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
+            kat_OverdrawActivity.LocalBinder binder = (kat_OverdrawActivity.LocalBinder) iBinder;
+            katService = binder.getService();
+            bound = true;
+        }
+
+        @Override
+        public void onServiceDisconnected(ComponentName componentName) {
+            bound = false;
+        }
+    };
 }

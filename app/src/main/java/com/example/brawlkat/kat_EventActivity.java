@@ -8,6 +8,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
+import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
@@ -24,13 +25,17 @@ public class kat_EventActivity extends kat_OverdrawActivity {
     //access        type                                name                    init
     private         Context                             context;
     private         kat_OverdrawActivity                overdrawActivity;
-    private         Client                              client;
-    private         getEventsThread                     eventsThread;
+    public          Client                              client;
+    public          getEventsThread                     eventsThread;
     private         kat_eventsParser                    eventsParser;
     private         kat_brawlersParser                  brawlersParser;
-    private         ArrayList<kat_eventsParser.pair>    EventArrayList;
-    private         ArrayList<HashMap<String, Object>>  BrawlersArrayList;
-    private         ViewPager2                          viewPager;
+    public          ArrayList<kat_eventsParser.pair>    EventArrayList;
+    public          ArrayList<HashMap<String, Object>>  BrawlersArrayList;
+    public          ArrayList<String>                   offi_PlayerArrayList;
+    private         ViewPager2                          viewPager               = null;
+    public          kat_EventAdapter                    eventAdapter;
+    public          boolean                             changeRecommendView = false;
+
 
 
 
@@ -84,9 +89,10 @@ public class kat_EventActivity extends kat_OverdrawActivity {
         client = new Client(overdrawActivity);
         client.init();
         eventsThread = new getEventsThread();
+
+
         if(!eventsThread.isAlive())
             eventsThread.start();
-
     }
 
 
@@ -103,17 +109,23 @@ public class kat_EventActivity extends kat_OverdrawActivity {
 
 
 
-    private class getEventsThread extends Thread{
+
+
+
+    public class getEventsThread extends Thread{
 
         public void run(){
 
             try{
                 while (true){
 
-                    if(overdrawActivity.programDeactivate) break;
-                    ArrayList<String> dataSet = client.getdata("events", "brawlers");
+                    if(!client.getThread.isAlive()) continue;
+                    if(client.getdata() == null) continue;
 
-                    if(dataSet.size() <= 0) continue;
+                    ArrayList<String> dataSet = client.getdata();
+                    System.out.println(dataSet.size());
+
+                    if(dataSet.size() < 2) continue;
 
                     eventsParser = new kat_eventsParser(dataSet.get(0));
                     brawlersParser = new kat_brawlersParser(dataSet.get(1));
@@ -121,29 +133,59 @@ public class kat_EventActivity extends kat_OverdrawActivity {
                     EventArrayList = eventsParser.DataParser();
                     BrawlersArrayList = brawlersParser.DataParser();
 
-                    System.out.println(BrawlersArrayList);
-
                     //eventsParser.testPrint(EventArrayList);
 
-                    System.out.println("success to get data '\n'");
-                    sleep(1000 * 60 * 5);
+                    if(viewPager == null){
+                        viewPager = (ViewPager2) overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
+                        eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList, kat_EventActivity.this);
+                    }
+
+                    System.out.println("success to get data'\n");
+                    int time = 1000 * 6;
+                    sleep(time);
                 }
             }
             catch (Exception e){
-                System.out.println("fail");
+                if(e instanceof InterruptedException){
+                    System.out.println("Interrupt Exception");
+                }
+                else System.out.println("fail");
             }
         }
     }
-
-
     public void Change(){
 
-        while (EventArrayList == null || BrawlersArrayList == null) continue;
-
-        viewPager = (ViewPager2) overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
-        kat_EventAdapter eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList);
         viewPager.setAdapter(eventAdapter);
     }
+
+
+
+    public void ChangeRecommendViewClick(){
+
+        Button btn = new Button(context);
+        LinearLayout buttonGroup = (LinearLayout) overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
+        buttonGroup.addView(btn);
+
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                System.out.println("get own data button click - player tag : " + overdrawActivity.getPlayerTag);
+
+                client.offi_init(overdrawActivity.getPlayerTag);
+                offi_PlayerArrayList = client.getOffidata();
+                if(changeRecommendView){
+                    changeRecommendView = false;
+                }
+                else {
+                    changeRecommendView = true;
+                }
+                eventAdapter.refresh();
+            }
+        });
+    }
+
+
+
 
     // 뷰페이저 옆의 이벤트 선택 버튼
     public void addModeButton(){
@@ -166,8 +208,6 @@ public class kat_EventActivity extends kat_OverdrawActivity {
             );
             params.setMargins(5, 5,5,5);
             btn.setLayoutParams(params);
-
-
 
             String gameModeTypeUrl = (String) EventArrayList.get(i).getInfo().get("gamemodeTypeImageUrl");
             String mapType = (String) EventArrayList.get(i).getInfo().get("name");
@@ -209,6 +249,5 @@ public class kat_EventActivity extends kat_OverdrawActivity {
             if(overdrawActivity.mapRecommendView != null)
                 overdrawActivity.mapWindowManager.removeView(overdrawActivity.mapRecommendView);
         }
-        super.onDestroy();
     }
 }

@@ -3,7 +3,6 @@ package com.example.brawlkat;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -14,19 +13,14 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DataSource;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.load.engine.GlideException;
-import com.bumptech.glide.request.RequestListener;
 import com.bumptech.glide.request.RequestOptions;
-import com.bumptech.glide.request.target.Target;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -36,13 +30,15 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     private                 Context                                             context;
     private                 ArrayList<kat_eventsParser.pair>                    EventArrayList;
     private                 ArrayList<HashMap<String, Object>>                  BrawlersArrayList;
+    private                 kat_EventActivity                                   eventActivity;
 
 
     public kat_EventAdapter(Context context, ArrayList<kat_eventsParser.pair> EventArrayList,
-                            ArrayList<HashMap<String, Object>> BrawlersArrayList){
+                            ArrayList<HashMap<String, Object>> BrawlersArrayList, kat_EventActivity eventActivity){
         this.context = context;
         this.EventArrayList = EventArrayList;
         this.BrawlersArrayList = BrawlersArrayList;
+        this.eventActivity = eventActivity;
     }
 
     @NonNull
@@ -50,10 +46,6 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
         View view = inflater.inflate(R.layout.map_event_item, parent, false) ;
-
-        System.out.println("EventArrayList size : " + EventArrayList.size());
-        System.out.println("BralwerArrayList size : " + BrawlersArrayList.size());
-
         return new viewHolder(view, EventArrayList, BrawlersArrayList);
     }
 
@@ -62,13 +54,21 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
         holder.fastImageLoad();
         holder.onBind(position);
-        holder.onBrawlerRecommendsBind(position);
+        if(!eventActivity.changeRecommendView)
+            holder.onBrawlerRecommendsBind(position);
+        else
+            holder.onUsersBrawlerRecommendsBind(position);
     }
 
     @Override
     public int getItemCount() {
         return EventArrayList.size();
     }
+
+    public void refresh(){
+        this.notifyDataSetChanged();
+    }
+
 
 
     public class viewHolder extends RecyclerView.ViewHolder{
@@ -111,6 +111,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                     .format(DecodeFormat.PREFER_RGB_565);
         }
 
+        // 기본 이미지 세팅
         public void onBind(int position){
 
             DisplayMetrics metrics = context.getResources().getDisplayMetrics();
@@ -134,7 +135,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                     .override((width / 3) / 10,(width / 3) / 10)
                     .into(modeType);
         }
-
+        // 전체 브롤러 추천 뷰
         public void onBrawlerRecommendsBind(int position){
 
             RecommendsLayout.removeAllViews();
@@ -146,8 +147,6 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
             LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             int i = 0;
-
-            System.out.println(EventArrayList.get(position).getWins().size());
 
             if(EventArrayList.get(position).getWins().size() <= 0){
 
@@ -166,11 +165,9 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
             while(i < EventArrayList.get(position).getWins().size()){
 
                 LinearLayout VerticalLayout = new LinearLayout(context);
-                System.out.println(EventArrayList.get(position).getWins());
 
                 for(int j = 0; j < 5; j++){
 
-                    System.out.println("i : " + i + "   position : " + position);
                     //if(EventArrayList.get(position).getWins().size() == i) return;
                     if(EventArrayList.get(position).getWins().size() <= i) break;
 
@@ -195,19 +192,6 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                             .applyDefaultRequestOptions(options)
                             .load(brawlersImageUrl)
                             .override((width / 3) / 7,(width / 3) / 7)
-                            .listener(new RequestListener<Drawable>() {
-                                @Override
-                                public boolean onLoadFailed(@Nullable GlideException e, Object model, Target<Drawable> target, boolean isFirstResource) {
-                                    System.out.println("glide failed");
-                                    return false;
-                                }
-
-                                @Override
-                                public boolean onResourceReady(Drawable resource, Object model, Target<Drawable> target, DataSource dataSource, boolean isFirstResource) {
-                                    System.out.println("glide success");
-                                    return false;
-                                }
-                            })
                             .into(brawlerImage);
 
                     brawlerName.setText(brawlersName);
@@ -225,6 +209,10 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
                 RecommendsLayout.addView(VerticalLayout);
             }
+        }
+        // 유저가 소유하고 있는 브롤러 추천 뷰
+        public void onUsersBrawlerRecommendsBind(int position){
+            RecommendsLayout.removeAllViews();
         }
     }
 }
