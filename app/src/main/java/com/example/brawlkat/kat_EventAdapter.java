@@ -31,6 +31,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     private                 ArrayList<kat_eventsParser.pair>                    EventArrayList;
     private                 ArrayList<HashMap<String, Object>>                  BrawlersArrayList;
     private                 kat_EventActivity                                   eventActivity;
+    private                 ArrayList<String>                                   playerBrawlersArrayList;
 
 
     public kat_EventAdapter(Context context, ArrayList<kat_eventsParser.pair> EventArrayList,
@@ -54,10 +55,11 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
         holder.fastImageLoad();
         holder.onBind(position);
+
         if(!eventActivity.changeRecommendView)
-            holder.onBrawlerRecommendsBind(position);
+            holder.onBrawlerRecommendsBind(position, false);
         else
-            holder.onUsersBrawlerRecommendsBind(position);
+            holder.onBrawlerRecommendsBind(position, true);
     }
 
     @Override
@@ -136,9 +138,18 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                     .into(modeType);
         }
         // 전체 브롤러 추천 뷰
-        public void onBrawlerRecommendsBind(int position){
+        public void onBrawlerRecommendsBind(int position, boolean isUserRecommend){
+
+            System.out.println("is User Recommendation? : " + isUserRecommend);
 
             RecommendsLayout.removeAllViews();
+
+            if(isUserRecommend){
+                while (eventActivity.offi_PlayerArrayList == null){
+                    continue;
+                }
+                playerBrawlersArrayList = eventActivity.offi_PlayerArrayList;
+            }
 
             DisplayMetrics metrics = context.getResources().getDisplayMetrics();
             int height = Math.min(metrics.heightPixels, metrics.widthPixels);
@@ -176,9 +187,29 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                     String brawlerID = EventArrayList.get(position).getWins().get(i).get("brawler").toString();
 
                     int idx = 0;
+                    boolean BrawlerFoundInUserRecommend = false;
                     while(true){
-                        if(BrawlersArrayList.get(idx).get("id").toString().equals(brawlerID)) break;
+                        // brawlersArrayList 에서 현재 순위의 브롤러를 찾았을 때
+                        if(BrawlersArrayList.get(idx).get("id").toString().equals(brawlerID)){
+                            if(isUserRecommend){
+                                for(int k = 0; k < playerBrawlersArrayList.size(); k++){
+                                    String playerBrawler = playerBrawlersArrayList.get(k).toLowerCase();
+
+                                    System.out.println("brawl list : " + BrawlersArrayList.get(idx).get("name").toString());
+                                    System.out.println("player Bralwer : " + playerBrawler);
+
+                                    if(playerBrawler.equals(BrawlersArrayList.get(idx).get("name").toString().toLowerCase())){
+                                        BrawlerFoundInUserRecommend = true; break;
+                                    }
+                                }
+                            }
+                            else BrawlerFoundInUserRecommend = true;
+                            break;
+                        }
                         idx++;
+                    }
+                    if(!BrawlerFoundInUserRecommend) {
+                        j = j - 1; i++; continue;
                     }
 
                     ImageView brawlerImage = brawlerView.findViewById(R.id.map_event_item_brawler_img);
@@ -209,10 +240,6 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
                 RecommendsLayout.addView(VerticalLayout);
             }
-        }
-        // 유저가 소유하고 있는 브롤러 추천 뷰
-        public void onUsersBrawlerRecommendsBind(int position){
-            RecommendsLayout.removeAllViews();
         }
     }
 }

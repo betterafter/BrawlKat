@@ -29,13 +29,14 @@ public class kat_EventActivity extends kat_OverdrawActivity {
     public          getEventsThread                     eventsThread;
     private         kat_eventsParser                    eventsParser;
     private         kat_brawlersParser                  brawlersParser;
+    private         kat_official_playerParser           official_playerParser;
     public          ArrayList<kat_eventsParser.pair>    EventArrayList;
     public          ArrayList<HashMap<String, Object>>  BrawlersArrayList;
     public          ArrayList<String>                   offi_PlayerArrayList;
     private         ViewPager2                          viewPager               = null;
     public          kat_EventAdapter                    eventAdapter;
     public          boolean                             changeRecommendView = false;
-
+    public          String                              playerTag;
 
 
 
@@ -90,7 +91,6 @@ public class kat_EventActivity extends kat_OverdrawActivity {
         client.init();
         eventsThread = new getEventsThread();
 
-
         if(!eventsThread.isAlive())
             eventsThread.start();
     }
@@ -111,7 +111,7 @@ public class kat_EventActivity extends kat_OverdrawActivity {
 
 
 
-
+    // starlist.pro api 데이터 받고 저장
     public class getEventsThread extends Thread{
 
         public void run(){
@@ -153,8 +153,9 @@ public class kat_EventActivity extends kat_OverdrawActivity {
             }
         }
     }
-    public void Change(){
 
+
+    public void Change(){
         viewPager.setAdapter(eventAdapter);
     }
 
@@ -169,22 +170,36 @@ public class kat_EventActivity extends kat_OverdrawActivity {
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                System.out.println("get own data button click - player tag : " + overdrawActivity.getPlayerTag);
 
-                client.offi_init(overdrawActivity.getPlayerTag);
-                offi_PlayerArrayList = client.getOffidata();
-                if(changeRecommendView){
-                    changeRecommendView = false;
-                }
-                else {
-                    changeRecommendView = true;
-                }
+                client.offi_init();
+                System.out.println("get own data button click - player tag : " + overdrawActivity.getPlayerTag);
+                GetOffiApiThread offiApiThread = new GetOffiApiThread();
+                if(!offiApiThread.isAlive()) offiApiThread.start();
+                // 버튼 클릭 시 유저 추천 뷰 <-> 전체 추천 뷰 전환
+                if(changeRecommendView) changeRecommendView = false;
+                else changeRecommendView = true;
                 eventAdapter.refresh();
             }
         });
     }
 
 
+    private class GetOffiApiThread extends Thread{
+        public void run(){
+            try{
+                while(true){
+                    if(client.getOffidata() == null) continue;
+
+                    official_playerParser = new kat_official_playerParser(client.getOffidata().get(0));
+                    offi_PlayerArrayList = official_playerParser.DataParser();
+                    break;
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
 
 
     // 뷰페이저 옆의 이벤트 선택 버튼

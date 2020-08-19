@@ -31,14 +31,14 @@ public class Client {
 
         String playerTag;
 
-        public getOfficialApiThread(String playerTag){
-            this.playerTag = playerTag;
-        }
-
         public void run(){
+
+            playerTag = kat_overdrawActivity.getPlayerTag;
 
             try{
                 while(true){
+
+                    if(playerTag == null) continue;
                     Socket socket = new Socket("35.237.9.225", 9000);
 
                     byte[] bytes = null;
@@ -57,9 +57,6 @@ public class Client {
                     String end = "\n";
                     os.write(end.getBytes());
                     os.flush();
-
-                    System.out.println("[official - 데이터 보내기 성공]");
-
 
                     InputStream data = socket.getInputStream();
                     InputStreamReader input = new InputStreamReader(data);
@@ -134,16 +131,12 @@ public class Client {
                     bytes = result.getBytes("UTF-8");
                     os.write(bytes);
                     os.flush();
-                    System.out.println("[데이터 보내기 성공]");
-
 
                     data = socket.getInputStream();
                     input = new InputStreamReader(data);
                     reader = new BufferedReader(input);
 
                     result = reader.readLine();
-
-                    System.out.println("client - check result data : " + result);
 
                     int startidx = 0; int split = 0;
 
@@ -165,8 +158,6 @@ public class Client {
 
                     os.close();
                     socket.close();
-
-                    System.out.println("success get data from server");
 
                     int time = 1000 * 3;
                     sleep(time);
@@ -193,9 +184,13 @@ public class Client {
         if(!getThread.isAlive()) getThread.start();
     }
 
-    public void offi_init(String playerTag){
-        officialApiThread = new getOfficialApiThread(playerTag);
-        officialApiThread.start();
+    public void offi_init(){
+        officialApiThread = new getOfficialApiThread();
+        if(!officialApiThread.isAlive()) officialApiThread.start();
+    }
+
+    public void offi_intterupt(){
+        officialApiThread.interrupt();
     }
 
 
