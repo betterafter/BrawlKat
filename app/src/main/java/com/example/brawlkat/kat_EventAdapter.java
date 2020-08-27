@@ -16,6 +16,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.brawlkat.dataparser.kat_eventsParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,12 +31,12 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     private                 Context                                             context;
     private                 ArrayList<kat_eventsParser.pair>                    EventArrayList;
     private                 ArrayList<HashMap<String, Object>>                  BrawlersArrayList;
-    private                 kat_EventActivity                                   eventActivity;
+    private                 kat_Service_EventActivity                           eventActivity;
     private                 ArrayList<String>                                   playerBrawlersArrayList;
 
 
     public kat_EventAdapter(Context context, ArrayList<kat_eventsParser.pair> EventArrayList,
-                            ArrayList<HashMap<String, Object>> BrawlersArrayList, kat_EventActivity eventActivity){
+                            ArrayList<HashMap<String, Object>> BrawlersArrayList, kat_Service_EventActivity eventActivity){
         this.context = context;
         this.EventArrayList = EventArrayList;
         this.BrawlersArrayList = BrawlersArrayList;
@@ -46,7 +47,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
-        View view = inflater.inflate(R.layout.map_event_item, parent, false) ;
+        View view = inflater.inflate(R.layout.service_map_event_item, parent, false) ;
         return new viewHolder(view, EventArrayList, BrawlersArrayList);
     }
 
@@ -183,7 +184,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                     if(EventArrayList.get(position).getWins().size() <= i) break;
 
 
-                    View brawlerView = layoutInflater.inflate(R.layout.map_event_item_brawler, null);
+                    View brawlerView = layoutInflater.inflate(R.layout.service_map_event_item_brawler, null);
                     String brawlerID = EventArrayList.get(position).getWins().get(i).get("brawler").toString();
 
                     int idx = 0;

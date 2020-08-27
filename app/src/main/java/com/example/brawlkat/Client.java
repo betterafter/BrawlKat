@@ -10,32 +10,38 @@ import java.util.ArrayList;
 
 public class Client {
 
-    private                 Socket                      socket                  = null;
-    private                 InputStream                 data;
-    private                 OutputStream                tagdata;
-    private                 ArrayList<String>           resData;
-    private                 ArrayList<String>           resOffiData;
-    public                  getApiThread                getThread;
-    public                  kat_OverdrawActivity        kat_overdrawActivity;
-    public                  getOfficialApiThread        officialApiThread;
+    private                 Socket                          socket                  = null;
+    private                 InputStream                     data;
+    private                 OutputStream                    tagdata;
+    private                 ArrayList<String>               resData;
+    private                 ArrayList<String>               resOffiData;
+    public                  getApiThread                    getThread;
+    public                  kat_Service_OverdrawActivity    kat_Service_overdrawActivity;
+    public                  getOfficialApiThread            officialApiThread;
 
 
+    public Client(){
 
-    public Client(kat_OverdrawActivity kat_overdrawActivity){
-        this.kat_overdrawActivity = kat_overdrawActivity;
+    }
+
+    public Client(kat_Service_OverdrawActivity kat_Service_overdrawActivity){
+        this.kat_Service_overdrawActivity = kat_Service_overdrawActivity;
     }
 
 
     // 버튼 클릭 시에 해당 스레드 실행
     public class getOfficialApiThread extends Thread{
 
-        String playerTag;
+        private String playerTag;
+
+        public getOfficialApiThread(String playerTag){
+            this.playerTag = playerTag;
+        }
 
         public void run(){
 
-            playerTag = kat_overdrawActivity.getPlayerTag;
-
             try{
+
                 while(true){
 
                     if(playerTag == null) continue;
@@ -47,7 +53,7 @@ public class Client {
                     // 데이터 보내기
 
                     // playerTag를 먼저 보냄.
-                    result = playerTag;
+                    result = "%23" + playerTag;
                     OutputStream os = socket.getOutputStream();
                     bytes = result.getBytes("UTF-8");
                     os.write(bytes);
@@ -63,13 +69,12 @@ public class Client {
                     BufferedReader reader = new BufferedReader(input);
                     result = reader.readLine();
 
-                    System.out.println(result);
-
                     int startidx = 0; int split = 0;
 
                     // API 데이터 파싱
                     String splited;
                     resOffiData = new ArrayList<>();
+
                     while (split != -1) {
 
                         split = result.indexOf("}{", startidx);
@@ -86,14 +91,15 @@ public class Client {
                     reader.close();
                     socket.close();
 
-                    if(resOffiData.size() <= 0){
-                        System.out.println("resOffiData size : " + resOffiData.size());
-                        continue;
-                    }
-                    else {
-                        this.interrupt();
-                        break;
-                    }
+//                    if(resOffiData.size() <= 0){
+//                        System.out.println("resOffiData size : " + resOffiData.size());
+//                        continue;
+//                    }
+//                    else {
+//                        this.interrupt();
+//                        break;
+//                    }
+                    break;
                 }
             }
 
@@ -104,7 +110,6 @@ public class Client {
         }
 
     }
-
 
     public class getApiThread extends Thread{
 
@@ -179,20 +184,18 @@ public class Client {
         }
     }
 
+
+
+
     public void init(){
         getThread = new getApiThread();
         if(!getThread.isAlive()) getThread.start();
     }
 
-    public void offi_init(){
-        officialApiThread = new getOfficialApiThread();
+    public void offi_init(String playerTag){
+        officialApiThread = new getOfficialApiThread(playerTag);
         if(!officialApiThread.isAlive()) officialApiThread.start();
     }
-
-    public void offi_intterupt(){
-        officialApiThread.interrupt();
-    }
-
 
 
     public ArrayList<String> getdata() {
@@ -200,6 +203,10 @@ public class Client {
     }
     public ArrayList<String> getOffidata() {
         return resOffiData;
+    }
+
+    public void offidataRemove(){
+        resOffiData = null;
     }
 
 }

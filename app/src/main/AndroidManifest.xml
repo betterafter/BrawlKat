@@ -16,14 +16,16 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".kat_MainActivity">
+        <activity android:name=".kat_Player_MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <service android:name=".kat_OverdrawActivity"></service>
+        <activity android:name=".kat_Player_RecentSearchActivity"></activity>
+        <activity android:name=".kat_Player_DetailActivity"></activity>
+        <service android:name=".kat_Service_OverdrawActivity"></service>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

@@ -13,6 +13,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.brawlkat.dataparser.kat_brawlersParser;
+import com.example.brawlkat.dataparser.kat_eventsParser;
+import com.example.brawlkat.dataparser.kat_official_playerParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -20,11 +23,11 @@ import java.util.HashMap;
 import androidx.viewpager2.widget.ViewPager2;
 
 
-public class kat_EventActivity extends kat_OverdrawActivity {
+public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
     //access        type                                name                    init
     private         Context                             context;
-    private         kat_OverdrawActivity                overdrawActivity;
+    private         kat_Service_OverdrawActivity        overdrawActivity;
     public          Client                              client;
     public          getEventsThread                     eventsThread;
     private         kat_eventsParser                    eventsParser;
@@ -40,7 +43,7 @@ public class kat_EventActivity extends kat_OverdrawActivity {
 
 
 
-    public kat_EventActivity(Context context, kat_OverdrawActivity overdrawActivity){
+    public kat_Service_EventActivity(Context context, kat_Service_OverdrawActivity overdrawActivity){
         super();
         this.context = context;
         this.overdrawActivity = overdrawActivity;
@@ -49,7 +52,7 @@ public class kat_EventActivity extends kat_OverdrawActivity {
     // map inflater 초기화
     public void init_mapInflater() {
         layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        overdrawActivity.mapRecommendView = layoutInflater.inflate(R.layout.map_recommend, null);
+        overdrawActivity.mapRecommendView = layoutInflater.inflate(R.layout.service_map_recommend, null);
         overdrawActivity.mapRecommendView.setOnTouchListener(this);
     }
 
@@ -137,7 +140,7 @@ public class kat_EventActivity extends kat_OverdrawActivity {
 
                     if(viewPager == null){
                         viewPager = (ViewPager2) overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
-                        eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList, kat_EventActivity.this);
+                        eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList, kat_Service_EventActivity.this);
                     }
 
                     System.out.println("success to get data'\n");
@@ -156,6 +159,9 @@ public class kat_EventActivity extends kat_OverdrawActivity {
 
 
     public void Change(){
+        while(BrawlersArrayList == null || EventArrayList == null || eventAdapter == null) continue;
+//        System.out.println("BrawlersArrayList size : " + BrawlersArrayList.size());
+//        System.out.println("EventArrayList size : " + EventArrayList.size());
         viewPager.setAdapter(eventAdapter);
     }
 
@@ -171,7 +177,11 @@ public class kat_EventActivity extends kat_OverdrawActivity {
             @Override
             public void onClick(View view) {
 
-                client.offi_init();
+                if(overdrawActivity.getPlayerTag == null){
+                    return;
+                }
+
+                client.offi_init(overdrawActivity.getPlayerTag);
                 System.out.println("get own data button click - player tag : " + overdrawActivity.getPlayerTag);
                 GetOffiApiThread offiApiThread = new GetOffiApiThread();
                 if(!offiApiThread.isAlive()) offiApiThread.start();
@@ -188,8 +198,9 @@ public class kat_EventActivity extends kat_OverdrawActivity {
         public void run(){
             try{
                 while(true){
-                    if(client.getOffidata() == null) continue;
 
+                    if(client.getOffidata() == null) continue;
+                    System.out.println("client data not null : " + client.getOffidata());
                     official_playerParser = new kat_official_playerParser(client.getOffidata().get(0));
                     offi_PlayerArrayList = official_playerParser.DataParser();
                     break;

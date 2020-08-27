@@ -9,4 +9,7 @@
     <color name="championshipPressedColor">#DF0101</color>
     <color name="normalColor">#4D000000</color>
     <color name="normalPressedColor">#000000</color>
+    <color name="mainBackgroundBlue">#CEECF5</color>
+    <color name="mainTextBlue">#81BEF7</color>
+    <color name="trophiesYellow">#FFC107</color>
 </resources>

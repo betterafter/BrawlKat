@@ -20,7 +20,7 @@ import android.widget.ImageButton;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 
-public class kat_OverdrawActivity extends Service implements View.OnTouchListener {
+public class kat_Service_OverdrawActivity extends Service implements View.OnTouchListener {
 
     // 윈도우 매니저
     public      WindowManager                   windowManager;
@@ -32,12 +32,10 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
 
     // 뷰
     private     ImageButton                     btn;
-    public      ImageButton                     getUserInformationButton;
-    public      ImageButton                     getEventsInformationButton;
     public      ConstraintLayout                constraintLayout;
     public      View                            mapRecommendView;
     public      LayoutInflater                  layoutInflater;
-    private     kat_EventActivity               events;
+    private kat_Service_EventActivity events;
     public      buttonLongClickToExitThread     buttonThread;
 
 
@@ -49,11 +47,13 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
 
 
     public      final IBinder                   binder = new LocalBinder();
+    public      boolean                         unbindCall = false;
 
 
+    // 스레드와 메인 액티비티 연결을 위한 바인더 선언
     public class LocalBinder extends Binder{
-        kat_OverdrawActivity getService(){
-            return kat_OverdrawActivity.this;
+        kat_Service_OverdrawActivity getService(){
+            return kat_Service_OverdrawActivity.this;
         }
     }
 
@@ -66,8 +66,7 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
     public int onStartCommand(Intent intent, int flags, int startId )
     {
         // QQQ: 두번 이상 호출되지 않도록 조치해야 할 것 같다.
-        Intent clsIntent = new Intent(this, kat_MainActivity.class);
-
+        Intent clsIntent = new Intent(this, kat_Player_MainActivity.class);
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, clsIntent, 0);
 
         NotificationCompat.Builder clsBuilder;
@@ -94,40 +93,29 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
 
         // QQQ: 쓰레드 등을 실행하여서 서비스에 적합한 로직을 구현한다.
 
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
-
-
 
     @Override
     public void onCreate() {
         super.onCreate();
-
         init_Inflater();
         init_windowManager();
 
         context = getApplicationContext();
 
-        events = new kat_EventActivity(context, this);
+        // EventActivity 선언 및 뷰 생성
+        events = new kat_Service_EventActivity(context, this);
         events.init_mapInflater();
         events.getCurrentEventsInformation();
 
-
-
-
-
-
-        //events.ChangeRecommendViewClick();
-
+        // 메인 버튼 클릭 스레드 실행
         buttonThread = new buttonLongClickToExitThread();
         buttonThread.start();
     }
 
-
-
-
+    // 메인 버튼 생성
     public void init_Inflater(){
-
 
         constraintLayout = new ConstraintLayout(this);
 
@@ -138,6 +126,7 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
         constraintLayout.addView(btn);
     }
 
+    // 메인 버튼에 연결된 윈도우 매니저 선언
     public void init_windowManager(){
 
         // FLAG_NOT_FOCUSABLE : 현재 윈도우에 포커스가 집중되어 네비게이션 바 같은 시스템 ui가 현재 서비스 윈도우의 상태에
@@ -156,22 +145,24 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
         windowManager.addView(constraintLayout, layoutParams);
     }
 
+    // 서비스 종료
     @Override
     public void onDestroy() {
         if(windowManager != null) {
-            //서비스 종료시 뷰 제거. *중요 : 뷰를 꼭 제거 해야함.
+            //서비스 종료시 뷰 제거.
             if(constraintLayout != null && constraintLayout.getWindowToken() != null)
                 windowManager.removeView(constraintLayout);
         }
-
+        // 서비스 종료 시 모든 스레드 종료
         events.eventsThread.interrupt();
         events.client.getThread.interrupt();
         buttonThread.interrupt();
 
+        unbindCall = true;
 
-        System.out.println("Service Destroyed");
         super.onDestroy();
     }
+
 
 
     @Override
@@ -205,9 +196,11 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
                 layoutParams.y = (int) (mWidgetStartingY - deltaY);
                 windowManager.updateViewLayout(constraintLayout, layoutParams);
 
+                // 버튼 움직임을 의도한 모션을 취할 때는 '3초 누르기' 모션 해제
                 if(Math.abs(mWidgetStartingX - layoutParams.x) > 10 || Math.abs(mWidgetStartingY - layoutParams.y) > 10){
                     buttonThread.stopLongClickAction = true;
                 }
+                // 그렇지 않으면 '3초 누르기' 모션 유지
                 else{
                     buttonThread.stopLongClickAction = false;
                 }
@@ -241,7 +234,7 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
         return false;
     }
 
-
+    // 버튼을 3초 이상 누르고 있으면 서비스 종료
     private class buttonLongClickToExitThread extends Thread{
 
         public int stopCount;
@@ -251,14 +244,10 @@ public class kat_OverdrawActivity extends Service implements View.OnTouchListene
 
             try{
                 stopCount = 0; stopLongClickAction = true;
-                System.out.println("long click start");
-                while(true){
 
+                while(true){
                     if(stopCount >= 3){
-                        stopCount = 0;
-                        this.interrupt();
-                        onDestroy();
-                        stopSelf();
+                        stopCount = 0; onDestroy(); this.interrupt();
 
                         break;
                     }
