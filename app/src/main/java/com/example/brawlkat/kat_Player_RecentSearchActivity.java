@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
 import com.google.android.material.textfield.TextInputEditText;
 
@@ -31,7 +32,8 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
-                    Search(player_detail_user_search.getText().toString());
+                    SearchThread st = new SearchThread(player_detail_user_search.getText().toString());
+                    st.start();
                 }
                 return false;
             }
@@ -46,34 +48,56 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     }
 
 
+    private class SearchThread extends Thread{
+
+        String tag;
+
+        public SearchThread(String tag){
+            this.tag = tag;
+        }
+
+        public void run(){
+
+            playerTag = tag;
+            client.offi_init(playerTag);
+
+            while(!client.workDone){
+                System.out.println("client wait");
+                if(client.workDone){
+                    client.workDone = false;
+                    Search(tag);
+                    break;
+                }
+            }
+        }
+    }
+
+
     public void Search(String tag){
 
-        playerTag = tag;
-       // playerTag = player_detail_user_search.getText().toString();
-
-        client.offi_init(playerTag);
-
-        // official api 데이터를 완전히 가져올 때까지 기다린다.
-        while(client.getOffidata() == null || client.getOffidata().size() <= 0);
-
         // 제대로 가져오지 못했을 경우 알림
-        if(client.getOffidata().get(0).equals("none")){
+        if(client.getOffidata().get(0).equals("{none}")){
             Toast toast = Toast.makeText(this.getApplicationContext(), "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
             toast.show();
 
-            client.offidataRemove();
+            //client.offidataRemove();
         }
 
         // 제대로 가져왔을 경우
         else{
+
+            String playerInfo = client.getOffidata().get(0);
+            String playerBattleLog = client.getOffidata().get(1);
+
             official_playerInfoParser = new kat_official_playerInfoParser(client.getOffidata().get(0));
-            client.offidataRemove();
+            official_playerBattleLogParser = new kat_official_playerBattleLogParser(client.getOffidata().get(1));
+            //client.offidataRemove();
             try {
 
                 playerData = null;
                 playerData = official_playerInfoParser.DataParser();
-                while(playerData == null);
-
+                if(!playerBattleLog.equals("{none}"))
+                    playerBattleDataList = official_playerBattleLogParser.DataParser();
 
                 String type = "player";
                 String Tag = playerData.getTag();
@@ -82,10 +106,14 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
                 katabase.delete();
                 katabase.insert(type, Tag, name, isAccount);
-                recentSearchUpdate();
 
                 Intent intent = new Intent(kat_Player_RecentSearchActivity.this, kat_Player_DetailActivity.class);
                 intent.putExtra("playerData", playerData);
+                //intent.putExtra("playerBattleData", playerBattleDataList);
+
+                System.out.println("플레이어 정보 : " + playerData);
+                System.out.println("플레이어 전투 기록 : " + playerBattleDataList);
+
                 startActivity(intent);
             }
             catch (Exception e){
@@ -95,7 +123,10 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     }
 
 
-    private void recentSearchUpdate(){
+
+
+
+    public void recentSearchUpdate(){
 
         LinearLayout linearLayout = findViewById(R.id.player_detail_recent_search_layout);
         linearLayout.removeAllViews();
@@ -144,7 +175,9 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
     // 전적 검색 클릭
     public void onUserSearchClick(View view){
-        Search(player_detail_user_search.getText().toString());
+        //Search(player_detail_user_search.getText().toString());
+        SearchThread st = new SearchThread(player_detail_user_search.getText().toString());
+        st.start();
     }
 
     // 리스트를 터치했을 때 발생 함수
@@ -154,7 +187,9 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         String newTag = RawTag.substring(1);
 
         System.out.println(newTag);
-        Search(newTag);
+        //Search(newTag);
+        SearchThread st = new SearchThread(newTag);
+        st.start();
     }
 
 

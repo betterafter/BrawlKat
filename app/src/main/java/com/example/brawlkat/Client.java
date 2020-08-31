@@ -13,11 +13,12 @@ public class Client {
     private                 Socket                          socket                  = null;
     private                 InputStream                     data;
     private                 OutputStream                    tagdata;
-    private                 ArrayList<String>               resData;
-    private                 ArrayList<String>               resOffiData;
+    private                 static ArrayList<String>        resData                 = new ArrayList<>();
+    private                 static ArrayList<String>        resOffiData             = new ArrayList<>();
     public                  getApiThread                    getThread;
     public                  kat_Service_OverdrawActivity    kat_Service_overdrawActivity;
     public                  getOfficialApiThread            officialApiThread;
+    public                  boolean                         workDone = false;
 
 
     public Client(){
@@ -86,19 +87,13 @@ public class Client {
                         startidx = split + 1;
                     }
 
+
                     input.close();
                     data.close();
                     reader.close();
                     socket.close();
-
-//                    if(resOffiData.size() <= 0){
-//                        System.out.println("resOffiData size : " + resOffiData.size());
-//                        continue;
-//                    }
-//                    else {
-//                        this.interrupt();
-//                        break;
-//                    }
+                    workDone = true;
+                    System.out.println("workDone : " + workDone);
                     break;
                 }
             }

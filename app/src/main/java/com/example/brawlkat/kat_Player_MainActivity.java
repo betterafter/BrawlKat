@@ -14,11 +14,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.brawlkat.dataparser.kat_mapsParser;
+import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
 import com.example.brawlkat.dataparser.kat_official_playerParser;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -27,36 +30,40 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class kat_Player_MainActivity extends AppCompatActivity {
 
-    private             LinearLayout                                player_layout_userInfo;
-    private             LinearLayout                                player_layout_recent_userSearch;
-    private             LinearLayout                                player_layout_recent_clubSearch;
-    private             TextInputEditText                           player_user_search;
-    private             TextInputEditText                           player_club_search;
+    private             LinearLayout                                                            player_layout_userInfo;
+    private             LinearLayout                                                            player_layout_recent_userSearch;
+    private             LinearLayout                                                            player_layout_recent_clubSearch;
+    private             TextInputEditText                                                       player_user_search;
+    private             TextInputEditText                                                       player_club_search;
 
-    public              Client                                      client;
-
-
+    public              static Client                                                           client = new Client();
 
 
-    public              String                                      playerTag;
-    private             String                                      clubTag;
 
-    public              kat_official_playerParser                   official_playerParser;
-    public              kat_official_playerInfoParser               official_playerInfoParser;
-    private             ArrayList<String>                           offi_PlayerArrayList;
-    public              kat_official_playerInfoParser.playerData    playerData;
 
-    private             static final int                            ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
+    public              String                                                                  playerTag;
+    private             String                                                                  clubTag;
 
-    public              kat_Service_OverdrawActivity                katService;
-    private             boolean                                     bound = false;
-    private             boolean                                     endClickToUnbind = false;
+    public              kat_official_playerParser                                               official_playerParser;
+    public              kat_official_playerInfoParser                                           official_playerInfoParser;
+    public              kat_official_playerBattleLogParser                                      official_playerBattleLogParser;
+    private             ArrayList<String>                                                       offi_PlayerArrayList;
+    public              kat_official_playerInfoParser.playerData                                playerData;
+    public              static ArrayList<kat_official_playerBattleLogParser.playerBattleData>   playerBattleDataList = new ArrayList<>();
 
-    public              kat_database                                katabase;
-    private             FragmentManager                             fragmentManager;
-    private             FragmentTransaction                         fragmentTransaction;
-    public              LayoutInflater                              layoutInflater;
+    private             static final int                                                        ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
 
+    public              kat_Service_OverdrawActivity                                            katService;
+    private             boolean                                                                 bound = false;
+    private             boolean                                                                 endClickToUnbind = false;
+
+    public              kat_database                                                            katabase;
+    private             FragmentManager                                                         fragmentManager;
+    private             FragmentTransaction                                                     fragmentTransaction;
+    public              LayoutInflater                                                          layoutInflater;
+
+    public              kat_mapsParser                                                          mapsParser;
+    public              static HashMap<String, kat_mapsParser.mapData>                          mapData;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -64,12 +71,14 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         setContentView(R.layout.player_main);
 
         unbindThread ubt = new unbindThread();
-        ubt.start();
+        if(!ubt.isAlive()) ubt.start();
 
         player_user_search = (TextInputEditText)findViewById(R.id.player_user_searchInput);
         player_club_search = (TextInputEditText)findViewById(R.id.player_club_serachInput);
 
-        client = new Client();
+        //client = new Client();
+        client.init();
+
 
         katabase = new kat_database(getApplicationContext(), "kat", null, 1);
 
@@ -79,7 +88,64 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
         //katService.getPlayerTag = playerTag;
 
+//        test t = new test();
+//        t.start();
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+        getMapDataThread mdt = new getMapDataThread();
+        if(!mdt.isAlive()) mdt.start();
+    }
+
+    private class getMapDataThread extends Thread{
+        public void run(){
+            try{
+                while(true) {
+                    if(client.getdata() == null || client.getdata().size() <= 2) continue;
+                    if (client.getdata().get(2) != null) {
+                        mapsParser = new kat_mapsParser(client.getdata().get(2));
+                        mapData = mapsParser.DataParser();
+                        System.out.println("mapData ready");
+                        int time = 1000 * 60 * 30;
+                        sleep(time);
+                    }
+                }
+            }
+            catch (Exception e){
+               // e.printStackTrace();
+            }
+        }
+    }
+
+
+
+    public class test extends Thread{
+        public void run(){
+            try{
+                while(true){
+                    if(mapData == null) System.out.println("map Data null!!!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    else System.out.println("map Data not null!!!!!!!!!!!!!!!!!!!!!!!!");
+
+                    if(client.getdata() == null || client.getdata().size() < 2) System.out.println("client data null!!!!!!!!!!!!!!!!!!!!!!!!!");
+                    else System.out.println(client.getdata().get(2));
+
+                    sleep(1000);
+                }
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+
+
+
+
+
 
     // 전적 검색 클릭
     public void onUserSearchClick(View view){

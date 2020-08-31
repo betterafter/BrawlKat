@@ -82,6 +82,7 @@ public class kat_official_playerInfoParser implements Serializable {
 
             ArrayList<starPower> spArrayList = new ArrayList<>();
             JSONArray starPower = (JSONArray) element.get("starPowers");
+
             for(int j = 0; j < starPower.length(); j++){
 
                 starPower sp = new starPower();
@@ -101,6 +102,7 @@ public class kat_official_playerInfoParser implements Serializable {
 
             ArrayList<gadget> ggArrayList = new ArrayList<>();
             JSONArray gadGet = (JSONArray) element.get("gadgets");
+
             for(int j = 0; j < gadGet.length(); j++){
 
                 gadget gg = new gadget();
@@ -116,7 +118,10 @@ public class kat_official_playerInfoParser implements Serializable {
                 ggArrayList.add(gg);
             }
             brawlerData.setGadgets(ggArrayList);
+
+            pbdArrayList.add(brawlerData);
         }
+
 
         pd.setBrawlerData(pbdArrayList);
 
@@ -263,7 +268,7 @@ public class kat_official_playerInfoParser implements Serializable {
         }
     }
 
-    private class playerBrawlerData implements Serializable{
+    public class playerBrawlerData implements Serializable{
 
         private String id, name;
         private int power, rank, trophies, highestTrophies;
