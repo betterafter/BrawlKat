@@ -9,8 +9,6 @@ import java.util.ArrayList;
 public class kat_official_playerInfoParser implements Serializable {
 
     private             String                          data;
-    private             ArrayList<String>               slot = new ArrayList<>();
-    private             ArrayList<playerData>           resData = new ArrayList<>();
 
     public kat_official_playerInfoParser(String data){
         this.data = data;

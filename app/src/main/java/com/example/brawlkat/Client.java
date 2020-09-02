@@ -33,10 +33,12 @@ public class Client {
     // 버튼 클릭 시에 해당 스레드 실행
     public class getOfficialApiThread extends Thread{
 
-        private String playerTag;
+        private String tag;
+        private String type;
 
-        public getOfficialApiThread(String playerTag){
-            this.playerTag = playerTag;
+        public getOfficialApiThread(String tag, String type){
+            this.tag = tag;
+            this.type = type;
         }
 
         public void run(){
@@ -45,7 +47,7 @@ public class Client {
 
                 while(true){
 
-                    if(playerTag == null) continue;
+                    if(tag == null) continue;
                     Socket socket = new Socket("35.237.9.225", 9000);
 
                     byte[] bytes = null;
@@ -54,7 +56,8 @@ public class Client {
                     // 데이터 보내기
 
                     // playerTag를 먼저 보냄.
-                    result = "%23" + playerTag;
+                    result = "%23" + tag;
+                    result = type + "/" + result;
                     OutputStream os = socket.getOutputStream();
                     bytes = result.getBytes("UTF-8");
                     os.write(bytes);
@@ -187,8 +190,8 @@ public class Client {
         if(!getThread.isAlive()) getThread.start();
     }
 
-    public void offi_init(String playerTag){
-        officialApiThread = new getOfficialApiThread(playerTag);
+    public void offi_init(String tag, String type){
+        officialApiThread = new getOfficialApiThread(tag, type);
         if(!officialApiThread.isAlive()) officialApiThread.start();
     }
 

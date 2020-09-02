@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 
 import com.example.brawlkat.dataparser.kat_mapsParser;
+import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
 import com.example.brawlkat.dataparser.kat_official_playerParser;
@@ -47,8 +48,10 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     public              kat_official_playerParser                                               official_playerParser;
     public              kat_official_playerInfoParser                                           official_playerInfoParser;
     public              kat_official_playerBattleLogParser                                      official_playerBattleLogParser;
+    public              kat_official_clubInfoParser                                             official_clubInfoParser;
     private             ArrayList<String>                                                       offi_PlayerArrayList;
     public              kat_official_playerInfoParser.playerData                                playerData;
+    public              kat_official_clubInfoParser.clubData                                    clubData;
     public              static ArrayList<kat_official_playerBattleLogParser.playerBattleData>   playerBattleDataList = new ArrayList<>();
 
     private             static final int                                                        ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
@@ -74,9 +77,8 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         if(!ubt.isAlive()) ubt.start();
 
         player_user_search = (TextInputEditText)findViewById(R.id.player_user_searchInput);
-        player_club_search = (TextInputEditText)findViewById(R.id.player_club_serachInput);
+        player_club_search = (TextInputEditText)findViewById(R.id.player_club_searchInput);
 
-        //client = new Client();
         client.init();
 
 
@@ -88,8 +90,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
         //katService.getPlayerTag = playerTag;
 
-//        test t = new test();
-//        t.start();
     }
 
     @Override
@@ -100,6 +100,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         if(!mdt.isAlive()) mdt.start();
     }
 
+    // 맵 데이터 받아오기
     private class getMapDataThread extends Thread{
         public void run(){
             try{
@@ -108,7 +109,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                     if (client.getdata().get(2) != null) {
                         mapsParser = new kat_mapsParser(client.getdata().get(2));
                         mapData = mapsParser.DataParser();
-                        System.out.println("mapData ready");
                         int time = 1000 * 60 * 30;
                         sleep(time);
                     }
@@ -121,39 +121,18 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     }
 
 
-
-    public class test extends Thread{
-        public void run(){
-            try{
-                while(true){
-                    if(mapData == null) System.out.println("map Data null!!!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    else System.out.println("map Data not null!!!!!!!!!!!!!!!!!!!!!!!!");
-
-                    if(client.getdata() == null || client.getdata().size() < 2) System.out.println("client data null!!!!!!!!!!!!!!!!!!!!!!!!!");
-                    else System.out.println(client.getdata().get(2));
-
-                    sleep(1000);
-                }
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
-
-
-
-
-
-
     // 전적 검색 클릭
     public void onUserSearchClick(View view){
         Intent intent = new Intent(kat_Player_MainActivity.this, kat_Player_RecentSearchActivity.class);
+        intent.putExtra("type", "players");
         startActivity(intent);
     }
 
-
+    public void onClubSearchClick(View view){
+        Intent intent = new Intent(kat_Player_MainActivity.this, kat_Player_RecentSearchActivity.class);
+        intent.putExtra("type", "clubs");
+        startActivity(intent);
+    }
 
 
 

@@ -24,8 +24,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 
-public class kat_Player_DetailActivity extends kat_Player_RecentSearchActivity {
+public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActivity {
 
     private                             ImageView                               playerIcon;
     private                             ImageView                               player_detail_trophies_icon;
@@ -50,7 +51,7 @@ public class kat_Player_DetailActivity extends kat_Player_RecentSearchActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.player_detail);
+        setContentView(R.layout.player_player_detail);
 
         Intent intent = getIntent();
         playerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
@@ -80,7 +81,7 @@ public class kat_Player_DetailActivity extends kat_Player_RecentSearchActivity {
         setData();
     }
 
-    // player_detail 레이아웃에 데이터 바인드
+    // player_player_detail 레이아웃에 데이터 바인드
     private void setData(){
 
 
@@ -228,8 +229,23 @@ public class kat_Player_DetailActivity extends kat_Player_RecentSearchActivity {
                 }
                 if(check) break;
             }
+            if(battleData.getBattleResult().equals("victory") || battleData.getBattleResult().equals("1")
+                    || battleData.getBattleResult().equals("2")) {
+                battleLogResult.setText("W");
+                battleLogResult.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.winColor));
+            }
 
-            battleLogResult.setText(battleData.getBattleResult());
+            else if(battleData.getBattleResult().equals("draw")){
+                battleLogResult.setText("D");
+                battleLogResult.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.drawColor));
+            }
+
+            else{
+                battleLogResult.setText("L");
+                battleLogResult.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.loseColor));
+            }
+
+
             for(int j = 0; j < BrawlersArrayList.size(); j++){
                 if(BrawlersArrayList.get(j).get("name").toString().toLowerCase().equals(userBrawler.toLowerCase())){
                     GlideImage(BrawlersArrayList.get(j).get("imageUrl").toString(), width / 15, width / 15, battleLogBrawler);
@@ -246,9 +262,12 @@ public class kat_Player_DetailActivity extends kat_Player_RecentSearchActivity {
                 }
             }
 
-            battleLogBrawlerTrophy.setText(Integer.toString(brawlerData.getTrophies()));
-
-            System.out.println(mapData.get(battleData.getEventId()).getGameModeIconUrl());
+            if(battleData.getBattleTrophyChange() == null)
+                battleLogBrawlerTrophy.setText("+0");
+            else if(battleData.getBattleTrophyChange().contains("-"))
+                battleLogBrawlerTrophy.setText(battleData.getBattleTrophyChange());
+            else
+                battleLogBrawlerTrophy.setText("+" + battleData.getBattleTrophyChange());
 
             GlideImage(mapData.get(battleData.getEventId()).getGameModeIconUrl(), width / 20, width / 20, battleLogEventIcon);
             battleLogTime.setText(battleData.getBattleTime());

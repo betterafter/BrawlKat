@@ -29,6 +29,7 @@ public class kat_mapsParser implements Serializable {
             mapData md = new mapData();
 
             md.setMapImageUrl(elem.getString("imageUrl"));
+            md.setName(elem.getString("name"));
 
             JSONObject environment = elem.getJSONObject("environment");
             md.setEventBannerUrl(environment.getString("imageUrl"));

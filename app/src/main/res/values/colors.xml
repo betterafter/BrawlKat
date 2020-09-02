@@ -12,4 +12,7 @@
     <color name="mainBackgroundBlue">#CEECF5</color>
     <color name="mainTextBlue">#81BEF7</color>
     <color name="trophiesYellow">#FFC107</color>
+    <color name="winColor">#01DF74</color>
+    <color name="loseColor">#FF0040</color>
+    <color name="drawColor">#6E6E6E</color>
 </resources>

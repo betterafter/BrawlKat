@@ -181,7 +181,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     return;
                 }
 
-                client.offi_init(overdrawActivity.getPlayerTag);
+                client.offi_init(overdrawActivity.getPlayerTag, "players");
                 System.out.println("get own data button click - player tag : " + overdrawActivity.getPlayerTag);
                 GetOffiApiThread offiApiThread = new GetOffiApiThread();
                 if(!offiApiThread.isAlive()) offiApiThread.start();

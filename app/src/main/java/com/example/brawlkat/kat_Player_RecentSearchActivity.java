@@ -9,6 +9,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
 import com.google.android.material.textfield.TextInputEditText;
@@ -19,20 +20,23 @@ import androidx.annotation.Nullable;
 
 public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
-    private                                     TextInputEditText                               player_detail_user_search;
+    private                                     TextInputEditText                               player_detail_user_club_search;
+    private                                     String                                          type;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.player_club_search);
+        setContentView(R.layout.player_player_club_search);
 
-        player_detail_user_search = findViewById(R.id.player_detail_user_searchInput);
-        player_detail_user_search.setOnKeyListener(new View.OnKeyListener(){
+        type = getIntent().getStringExtra("type");
+
+        player_detail_user_club_search = findViewById(R.id.player_detail_user_club_searchInput);
+        player_detail_user_club_search.setOnKeyListener(new View.OnKeyListener(){
 
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
-                    SearchThread st = new SearchThread(player_detail_user_search.getText().toString());
+                    SearchThread st = new SearchThread(player_detail_user_club_search.getText().toString(), type);
                     st.start();
                 }
                 return false;
@@ -51,21 +55,24 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     private class SearchThread extends Thread{
 
         String tag;
+        String type;
 
-        public SearchThread(String tag){
+        public SearchThread(String tag, String type){
             this.tag = tag;
+            this.type = type;
         }
 
         public void run(){
 
             playerTag = tag;
-            client.offi_init(playerTag);
+            client.offi_init(tag, type);
 
             while(!client.workDone){
                 System.out.println("client wait");
                 if(client.workDone){
                     client.workDone = false;
-                    Search(tag);
+                    if(type.equals("players")) playerSearch();
+                    else clubSearch();
                     break;
                 }
             }
@@ -73,46 +80,34 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     }
 
 
-    public void Search(String tag){
+    public void playerSearch(){
 
         // 제대로 가져오지 못했을 경우 알림
         if(client.getOffidata().get(0).equals("{none}")){
             Toast toast = Toast.makeText(this.getApplicationContext(), "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
             toast.show();
 
-            //client.offidataRemove();
         }
-
         // 제대로 가져왔을 경우
         else{
-
-            String playerInfo = client.getOffidata().get(0);
-            String playerBattleLog = client.getOffidata().get(1);
-
             official_playerInfoParser = new kat_official_playerInfoParser(client.getOffidata().get(0));
             official_playerBattleLogParser = new kat_official_playerBattleLogParser(client.getOffidata().get(1));
-            //client.offidataRemove();
-            try {
 
-                playerData = null;
+            try {
                 playerData = official_playerInfoParser.DataParser();
-                if(!playerBattleLog.equals("{none}"))
+                if(!client.getOffidata().get(1).equals("{none}"))
                     playerBattleDataList = official_playerBattleLogParser.DataParser();
 
-                String type = "player";
+                String type = "players";
                 String Tag = playerData.getTag();
                 String name = playerData.getName();
                 String isAccount = "no";
 
-                katabase.delete();
+                katabase.delete(type);
                 katabase.insert(type, Tag, name, isAccount);
 
-                Intent intent = new Intent(kat_Player_RecentSearchActivity.this, kat_Player_DetailActivity.class);
+                Intent intent = new Intent(kat_Player_RecentSearchActivity.this, kat_Player_PlayerDetailActivity.class);
                 intent.putExtra("playerData", playerData);
-                //intent.putExtra("playerBattleData", playerBattleDataList);
-
-                System.out.println("플레이어 정보 : " + playerData);
-                System.out.println("플레이어 전투 기록 : " + playerBattleDataList);
 
                 startActivity(intent);
             }
@@ -122,16 +117,48 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         }
     }
 
+    public void clubSearch(){
 
+        // 제대로 가져오지 못했을 경우 알림
+        if(client.getOffidata().get(0).equals("{none}")){
+            Toast toast = Toast.makeText(this.getApplicationContext(), "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
+            toast.show();
 
+        }
+        // 제대로 가져왔을 경우
+        else{
+            official_clubInfoParser = new kat_official_clubInfoParser(client.getOffidata().get(0));
 
+            try {
+                clubData = official_clubInfoParser.DataParser();
 
+                String type = "clubs";
+                String tag = clubData.getTag();
+                String name = clubData.getName();
+                String isAccount = "no";
+
+                katabase.delete(type);
+                katabase.insert(type, tag, name, isAccount);
+
+                Intent intent = new Intent(kat_Player_RecentSearchActivity.this, kat_Player_ClubDetailActivity.class);
+                intent.putExtra("clubData", clubData);
+
+                startActivity(intent);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    // 최근 전적 검색 기록 업데이트
     public void recentSearchUpdate(){
 
         LinearLayout linearLayout = findViewById(R.id.player_detail_recent_search_layout);
         linearLayout.removeAllViews();
 
-        ArrayList<ArrayList<String>> resultList = katabase.get();
+        katabase.print();
+        ArrayList<ArrayList<String>> resultList = katabase.get(type);
 
         for(int i = 0; i < 9; i++){
 
@@ -140,8 +167,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         }
 
     }
-
-
 
     // 버튼을 클릭했을 때 최근 전적 기록을 갱신함.
     private void recentSearchResultList(LinearLayout linearLayout, LayoutInflater layoutInflater, ArrayList<String> data){
@@ -174,9 +199,8 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
 
     // 전적 검색 클릭
-    public void onUserSearchClick(View view){
-        //Search(player_detail_user_search.getText().toString());
-        SearchThread st = new SearchThread(player_detail_user_search.getText().toString());
+    public void onUserClubSearchClick(View view){
+        SearchThread st = new SearchThread(player_detail_user_club_search.getText().toString(), type);
         st.start();
     }
 
@@ -186,9 +210,7 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         String RawTag = ((TextView) linearLayout.getChildAt(1)).getText().toString();
         String newTag = RawTag.substring(1);
 
-        System.out.println(newTag);
-        //Search(newTag);
-        SearchThread st = new SearchThread(newTag);
+        SearchThread st = new SearchThread(newTag, type);
         st.start();
     }
 
