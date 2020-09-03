@@ -30,6 +30,7 @@ public class kat_official_clubInfoParser implements Serializable {
 
         JSONArray members = jsonObject.getJSONArray("members");
         ArrayList<clubMemberData> memberData = new ArrayList<>();
+        long lowestTrophy = Long.MAX_VALUE; long highestTrophy = Long.MIN_VALUE;
         for(int i = 0; i < members.length(); i++){
 
             JSONObject elem = (JSONObject) members.get(i);
@@ -40,13 +41,19 @@ public class kat_official_clubInfoParser implements Serializable {
             clubMemberData.setName(elem.getString("name"));
             clubMemberData.setNameColor(elem.getString("nameColor"));
             clubMemberData.setRole(elem.getString("role"));
-            clubMemberData.setTrophies(elem.getInt("trophies"));
+
+            int MembersTrophies = elem.getInt("trophies");
+            lowestTrophy = Math.min(MembersTrophies, lowestTrophy);
+            highestTrophy = Math.max(MembersTrophies, highestTrophy);
+            clubMemberData.setTrophies(MembersTrophies);
 
             JSONObject icon = (JSONObject) elem.get("icon");
             clubMemberData.setIconId(icon.getString("id"));
 
             memberData.add(clubMemberData);
         }
+        cd.setTrophyRange((int)lowestTrophy + " ~ " + (int) highestTrophy);
+        cd.setAverageTrophy(cd.getTrophies() / memberData.size());
         cd.setMemberDatas(memberData);
 
         return cd;
@@ -61,10 +68,28 @@ public class kat_official_clubInfoParser implements Serializable {
         String tag;
         String name;
         String description;
+        String trophyRange;
+        int averageTrophy;
         int trophies;
         int requiredTrophies;
         int badgeId;
         ArrayList<clubMemberData> memberDatas;
+
+        public String getTrophyRange() {
+            return trophyRange;
+        }
+
+        public void setTrophyRange(String trophyRange) {
+            this.trophyRange = trophyRange;
+        }
+
+        public int getAverageTrophy() {
+            return averageTrophy;
+        }
+
+        public void setAverageTrophy(int averageTrophy) {
+            this.averageTrophy = averageTrophy;
+        }
 
         public ArrayList<clubMemberData> getMemberDatas() {
             return memberDatas;
