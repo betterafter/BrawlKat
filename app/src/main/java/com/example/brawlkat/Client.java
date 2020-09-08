@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.util.ArrayList;
 
 public class Client {
@@ -17,8 +18,9 @@ public class Client {
     private                 static ArrayList<String>        resOffiData             = new ArrayList<>();
     public                  getApiThread                    getThread;
     public                  kat_Service_OverdrawActivity    kat_Service_overdrawActivity;
-    public                  getOfficialApiThread            officialApiThread;
+    public getAllTypeApiThread officialApiThread;
     public                  boolean                         workDone = false;
+    public                  boolean                         socketFail = false;
 
 
     public Client(){
@@ -31,14 +33,16 @@ public class Client {
 
 
     // 버튼 클릭 시에 해당 스레드 실행
-    public class getOfficialApiThread extends Thread{
+    public class getAllTypeApiThread extends Thread{
 
         private String tag;
         private String type;
+        private String apiType;
 
-        public getOfficialApiThread(String tag, String type){
+        public getAllTypeApiThread(String tag, String type, String apiType){
             this.tag = tag;
             this.type = type;
+            this.apiType = apiType;
         }
 
         public void run(){
@@ -56,8 +60,11 @@ public class Client {
                     // 데이터 보내기
 
                     // playerTag를 먼저 보냄.
-                    result = "%23" + tag;
-                    result = type + "/" + result;
+                    if(apiType.equals("official"))
+                        result = "%23" + tag;
+                    else if(apiType.equals("nofficial"))
+                        result = tag;
+                    result = type + "/" + result + "/" + apiType;
                     OutputStream os = socket.getOutputStream();
                     bytes = result.getBytes("UTF-8");
                     os.write(bytes);
@@ -103,7 +110,11 @@ public class Client {
 
             catch (Exception e){
                 e.printStackTrace();
+                if(e instanceof SocketTimeoutException){
+                    socketFail = true;
+                }
             }
+
 
         }
 
@@ -129,7 +140,8 @@ public class Client {
                     // 데이터 보내기
 
                     // starlist api는 서버에 보낼 데이터가 없기 때문에 개행문자만을 보내 수신 종료한다.
-                    result = "\n";
+                    result = "/" + "/" + "nofficial";
+                    result += "\n";
                     OutputStream os = socket.getOutputStream();
                     bytes = result.getBytes("UTF-8");
                     os.write(bytes);
@@ -185,26 +197,24 @@ public class Client {
 
 
 
+
+
     public void init(){
         getThread = new getApiThread();
         if(!getThread.isAlive()) getThread.start();
     }
 
-    public void offi_init(String tag, String type){
-        officialApiThread = new getOfficialApiThread(tag, type);
+    public void AllTypeInit(String tag, String type, String apiType){
+        officialApiThread = new getAllTypeApiThread(tag, type, apiType);
         if(!officialApiThread.isAlive()) officialApiThread.start();
     }
 
 
-    public ArrayList<String> getdata() {
+    public ArrayList<String> getData() {
         return resData;
     }
-    public ArrayList<String> getOffidata() {
+    public ArrayList<String> getAllTypeData() {
         return resOffiData;
-    }
-
-    public void offidataRemove(){
-        resOffiData = null;
     }
 
 }

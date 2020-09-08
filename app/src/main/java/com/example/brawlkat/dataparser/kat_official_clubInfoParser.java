@@ -5,6 +5,7 @@ import org.json.JSONObject;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class kat_official_clubInfoParser implements Serializable {
 
@@ -30,6 +31,11 @@ public class kat_official_clubInfoParser implements Serializable {
 
         JSONArray members = jsonObject.getJSONArray("members");
         ArrayList<clubMemberData> memberData = new ArrayList<>();
+        HashMap<String, Integer> roles = new HashMap<>();
+        roles.put("president", 0);
+        roles.put("vicePresident", 0);
+        roles.put("senior", 0);
+        roles.put("member", 0);
         long lowestTrophy = Long.MAX_VALUE; long highestTrophy = Long.MIN_VALUE;
         for(int i = 0; i < members.length(); i++){
 
@@ -40,7 +46,16 @@ public class kat_official_clubInfoParser implements Serializable {
             clubMemberData.setTag(elem.getString("tag"));
             clubMemberData.setName(elem.getString("name"));
             clubMemberData.setNameColor(elem.getString("nameColor"));
-            clubMemberData.setRole(elem.getString("role"));
+
+
+            String role = elem.getString("role");
+            clubMemberData.setRole(role);
+
+            if(roles.containsKey(role))
+                roles.put(role, roles.get(role) + 1);
+            else
+                roles.put(role, 1);
+
 
             int MembersTrophies = elem.getInt("trophies");
             lowestTrophy = Math.min(MembersTrophies, lowestTrophy);
@@ -54,6 +69,7 @@ public class kat_official_clubInfoParser implements Serializable {
         }
         cd.setTrophyRange((int)lowestTrophy + " ~ " + (int) highestTrophy);
         cd.setAverageTrophy(cd.getTrophies() / memberData.size());
+        cd.setMembersRole(roles);
         cd.setMemberDatas(memberData);
 
         return cd;
@@ -74,6 +90,16 @@ public class kat_official_clubInfoParser implements Serializable {
         int requiredTrophies;
         int badgeId;
         ArrayList<clubMemberData> memberDatas;
+        HashMap<String, Integer> membersRole;
+
+
+        public HashMap<String, Integer> getMembersRole() {
+            return membersRole;
+        }
+
+        public void setMembersRole(HashMap<String, Integer> membersRole) {
+            this.membersRole = membersRole;
+        }
 
         public String getTrophyRange() {
             return trophyRange;

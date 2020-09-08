@@ -186,12 +186,12 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     }
 
     private void playerBattleLogList(){
-        if(client.getdata().get(1).equals("{none}") || playerBattleDataList == null) return;
+        if(client.getData().get(1).equals("{none}") || playerBattleDataList == null) return;
 
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout linearLayout = findViewById(R.id.player_detail_battle_log_layout);
 
-        kat_brawlersParser bp = new kat_brawlersParser(client.getdata().get(1));
+        kat_brawlersParser bp = new kat_brawlersParser(client.getData().get(1));
         ArrayList<HashMap<String, Object>> BrawlersArrayList = new ArrayList<>();
         try{
             BrawlersArrayList = bp.DataParser();

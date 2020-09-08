@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.brawlkat.dataparser.kat_clubLogParser;
 import com.example.brawlkat.dataparser.kat_mapsParser;
 import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
@@ -30,6 +31,9 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class kat_Player_MainActivity extends AppCompatActivity {
+
+    public              static String                                                           official = "official";
+    public              static String                                                           nofficial = "nofficial";
 
     private             LinearLayout                                                            player_layout_userInfo;
     private             LinearLayout                                                            player_layout_recent_userSearch;
@@ -49,9 +53,11 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     public              kat_official_playerInfoParser                                           official_playerInfoParser;
     public              kat_official_playerBattleLogParser                                      official_playerBattleLogParser;
     public              kat_official_clubInfoParser                                             official_clubInfoParser;
+    public              kat_clubLogParser                                                       clubLogParser;
     private             ArrayList<String>                                                       offi_PlayerArrayList;
     public              kat_official_playerInfoParser.playerData                                playerData;
     public              kat_official_clubInfoParser.clubData                                    clubData;
+    public              kat_clubLogParser.clubLogData                                           clubLogData;
     public              static ArrayList<kat_official_playerBattleLogParser.playerBattleData>   playerBattleDataList = new ArrayList<>();
 
     private             static final int                                                        ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
@@ -105,9 +111,9 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         public void run(){
             try{
                 while(true) {
-                    if(client.getdata() == null || client.getdata().size() <= 2) continue;
-                    if (client.getdata().get(2) != null) {
-                        mapsParser = new kat_mapsParser(client.getdata().get(2));
+                    if(client.getData() == null || client.getData().size() <= 2) continue;
+                    if (client.getData().get(2) != null) {
+                        mapsParser = new kat_mapsParser(client.getData().get(2));
                         mapData = mapsParser.DataParser();
                         int time = 1000 * 60 * 30;
                         sleep(time);

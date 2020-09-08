@@ -123,9 +123,9 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 while (true){
 
                     if(!client.getThread.isAlive()) continue;
-                    if(client.getdata() == null) continue;
+                    if(client.getData() == null) continue;
 
-                    ArrayList<String> dataSet = client.getdata();
+                    ArrayList<String> dataSet = client.getData();
                     System.out.println(dataSet.size());
 
                     if(dataSet.size() < 2) continue;
@@ -181,7 +181,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     return;
                 }
 
-                client.offi_init(overdrawActivity.getPlayerTag, "players");
+                client.AllTypeInit(overdrawActivity.getPlayerTag, "players", kat_Player_MainActivity.official);
                 System.out.println("get own data button click - player tag : " + overdrawActivity.getPlayerTag);
                 GetOffiApiThread offiApiThread = new GetOffiApiThread();
                 if(!offiApiThread.isAlive()) offiApiThread.start();
@@ -199,9 +199,9 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
             try{
                 while(true){
 
-                    if(client.getOffidata() == null) continue;
-                    System.out.println("client data not null : " + client.getOffidata());
-                    official_playerParser = new kat_official_playerParser(client.getOffidata().get(0));
+                    if(client.getAllTypeData() == null) continue;
+                    System.out.println("client data not null : " + client.getAllTypeData());
+                    official_playerParser = new kat_official_playerParser(client.getAllTypeData().get(0));
                     offi_PlayerArrayList = official_playerParser.DataParser();
                     break;
                 }

@@ -15,7 +15,12 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.brawlkat.dataparser.kat_clubLogParser;
 import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
 
 import androidx.annotation.Nullable;
 
@@ -46,6 +51,10 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
         Intent intent = getIntent();
         clubData = (kat_official_clubInfoParser.clubData) intent.getSerializableExtra("clubData");
+        clubLogData = (kat_clubLogParser.clubLogData) intent.getSerializableExtra("clubLogData");
+
+        System.out.println(clubLogData.getHisotryFormat());
+
 
         player_club_icon = findViewById(R.id.player_club_icon);
         player_club_name = findViewById(R.id.player_club_name);
@@ -88,6 +97,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         player_club_description.setText(clubData.getDescription());
 
         setClubInformationList();
+        setClubMemberList();
     }
 
     private void setClubInformationList(){
@@ -126,6 +136,65 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
             linearLayout.addView(view);
         }
+
+        String[] membersType = new String[4];
+        int[] membersValue = new int[4];
+        HashMap<String, Integer> roles = clubData.getMembersRole();
+        Iterator<String> iter = roles.keySet().iterator();
+
+        int idx = 0;
+        while(iter.hasNext()){
+            String key = (String) iter.next();
+            int value = roles.get(key);
+
+            membersType[idx] = key;
+            membersValue[idx] = value;
+
+            idx++;
+        }
+
+        LinearLayout linearLayout2 = findViewById(R.id.player_club_members_summary);
+        for(int i = 0; i < 4; i++){
+            View view = layoutInflater.inflate(R.layout.player_club_member_information, null);
+            TextView club_member_type = view.findViewById(R.id.player_club_member_type);
+            TextView club_member_value = view.findViewById(R.id.player_club_member_value);
+
+            club_member_type.setText(membersType[i]);
+            club_member_value.setText(Integer.toString(membersValue[i]));
+
+            linearLayout2.addView(view);
+        }
+    }
+
+    public void setClubMemberList(){
+
+        LinearLayout linearLayout = findViewById(R.id.player_club_members);
+        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = clubData.getMemberDatas();
+        for(int i = 0; i < memberData.size(); i++){
+            View view = inflater.inflate(R.layout.player_club_detail_members_item, null);
+            TextView club_member_rank = view.findViewById(R.id.player_club_detail_members_ranknum);
+            ImageView club_member_icon = view.findViewById(R.id.player_club_detail_members_icon);
+            TextView club_member_name = view.findViewById(R.id.player_club_detail_members_name);
+            TextView club_member_trophy = view.findViewById(R.id.player_club_detail_members_trophy);
+
+            String iconUrl = "https://www.starlist.pro/assets/profile-low/" +
+                    memberData.get(i).getIconId() + ".png?v=1";
+            GlideImage(iconUrl, width / 20, width / 20, club_member_icon);
+            club_member_rank.setText(Integer.toString(i + 1));
+            club_member_name.setText(memberData.get(i).getName());
+            club_member_trophy.setText(Integer.toString(memberData.get(i).getTrophies()));
+
+            linearLayout.addView(view);
+        }
+    }
+
+
+    public void setClubLog(){
+
+        LinearLayout linearLayout = findViewById(R.id.player_club_members);
+        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
     }
 
 
