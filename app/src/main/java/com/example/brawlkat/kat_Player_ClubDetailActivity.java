@@ -53,9 +53,6 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         clubData = (kat_official_clubInfoParser.clubData) intent.getSerializableExtra("clubData");
         clubLogData = (kat_clubLogParser.clubLogData) intent.getSerializableExtra("clubLogData");
 
-        System.out.println(clubLogData.getHisotryFormat());
-
-
         player_club_icon = findViewById(R.id.player_club_icon);
         player_club_name = findViewById(R.id.player_club_name);
         player_club_tag = findViewById(R.id.player_club_tag);
@@ -169,6 +166,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
     public void setClubMemberList(){
 
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
+        linearLayout.removeAllViews();
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = clubData.getMemberDatas();
         for(int i = 0; i < memberData.size(); i++){
@@ -193,8 +191,48 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
     public void setClubLog(){
 
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
+        linearLayout.removeAllViews();
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        ArrayList<Object> cld = clubLogData.getHistoryData();
+        for(int i = 0; i < cld.size(); i++){
 
+            View view = inflater.inflate(R.layout.player_club_detail_club_log, null);
+            TextView type = view.findViewById(R.id.player_club_detail_club_log_type);
+            TextView change = view.findViewById(R.id.player_club_detail_club_log_change);
+            TextView time = view.findViewById(R.id.player_club_detail_club_log_time);
+
+            if(cld.get(i) instanceof kat_clubLogParser.joinData){
+                kat_clubLogParser.joinData data = (kat_clubLogParser.joinData) cld.get(i);
+                type.setText("join");
+                change.setText(data.getPlayerName());
+                time.setText(data.getTimeFormat());
+            }
+
+            else if(cld.get(i) instanceof kat_clubLogParser.settingData){
+                kat_clubLogParser.settingData data = (kat_clubLogParser.settingData) cld.get(i);
+                type.setText(data.getType());
+                change.setText(data.getOldType() + " -> " + data.getNewType());
+                time.setText(data.getTimeFormat());
+            }
+
+            else if(cld.get(i) instanceof kat_clubLogParser.promoteData){
+                kat_clubLogParser.promoteData data = (kat_clubLogParser.promoteData) cld.get(i);
+                type.setText("promote");
+                change.setText(data.getOldRole() + " -> " + data.getNewRole() + "     " + data.getPlayerName());
+                time.setText(data.getTimeFormat());
+            }
+
+            linearLayout.addView(view);
+        }
+    }
+
+
+    public void onsetClubMemberListClick(View view){
+        setClubMemberList();
+    }
+
+    public void onsetClubLogClick(View view){
+        setClubLog();
     }
 
 

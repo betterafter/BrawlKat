@@ -8,74 +8,94 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_margin="10dp"
+        android:background="@drawable/card_background"
         android:orientation="horizontal"
-        android:weightSum="5"
-        android:paddingBottom="50dp"
-        app:layout_constraintTop_toTopOf="parent">
+        android:weightSum="10"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:layout_editor_absoluteX="10dp">
 
         <TextView
             android:id="@+id/player_detail_battle_log_result"
-            android:layout_width="40dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="10dp"
-            android:layout_weight="0.5"
-            android:fontFamily="@font/lilita_one"
+            android:layout_weight="0.2"
+            android:background="@drawable/card_left"
+            android:fontFamily="@font/actor"
+            android:gravity="center"
             android:text="TextView"
             android:textAlignment="center"
-            android:textSize="24sp" />
-
-        <ImageView
-            android:id="@+id/player_detail_battle_log_brawler"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginRight="10dp"
-            android:layout_weight="0.5"
-            tools:srcCompat="@tools:sample/avatars" />
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_weight="0.5"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="10dp"
+            android:layout_weight="4"
+            android:gravity="left"
             android:orientation="vertical">
 
-            <TextView
-                android:id="@+id/player_detail_battle_log_brawler_name"
+            <ImageView
+                android:id="@+id/player_detail_battle_log_brawler"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lilita_one"
-                android:text="TextView"
-                android:textColor="@color/colorBlack"
-                android:textSize="18sp" />
+                android:gravity="left"
+                tools:srcCompat="@tools:sample/avatars" />
 
-            <TextView
-                android:id="@+id/player_detail_battle_log_brawler_trophy"
+            <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lilita_one"
-                android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="@color/trophiesYellow" />
+                android:layout_gravity="center"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <TextView
+                    android:id="@+id/player_detail_battle_log_brawler_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="5dp"
+                    android:fontFamily="@font/actor"
+                    android:text="dynamike"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/player_detail_battle_log_brawler_trophy"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/actor"
+                    android:text="100"
+                    android:textAlignment="center"
+                    android:textColor="@color/trophiesYellow" />
+            </LinearLayout>
         </LinearLayout>
 
         <LinearLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="left"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="right"
             android:layout_marginLeft="20dp"
-            android:layout_weight="2"
-            android:orientation="vertical">
+            android:layout_weight="5.8"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:weightSum="1">
 
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal">
+                android:layout_gravity="left"
+                android:layout_marginTop="10dp"
+                android:layout_marginRight="15dp"
+                android:gravity="left"
+                android:orientation="horizontal"
+                android:weightSum="0.5">
 
                 <ImageView
                     android:id="@+id/player_detail_battle_log_event_icon"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginRight="20dp"
-                    android:layout_weight="0"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <TextView
@@ -84,26 +104,31 @@
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/lilita_one"
                     android:text="TextView"
-                    android:textColor="@color/cardview_dark_background" />
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp" />
+
             </LinearLayout>
 
             <TextView
                 android:id="@+id/player_detail_battle_log_time"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:fontFamily="@font/lilita_one"
+                android:layout_marginRight="15dp"
+                android:fontFamily="@font/actor"
                 android:text="TextView"
-                android:textAlignment="center"
-                android:textColor="@color/cardview_dark_background" />
+                android:textAlignment="textEnd"
+                android:textColor="@color/whiteGray"
+                android:textSize="10sp" />
 
-            <TextView
-                android:id="@+id/player_detail_battle_log_event_map"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:fontFamily="@font/lilita_one"
-                android:text="TextView"
-                android:textAlignment="viewEnd"
-                android:textColor="@color/cardview_dark_background" />
         </LinearLayout>
+
+        <ImageView
+            android:id="@+id/player_detail_battle_log_show_detail"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_weight="0.1"
+            android:background="@drawable/card_right"
+            android:src="@drawable/round_keyboard_arrow_right_24" />
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

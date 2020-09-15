@@ -8,7 +8,11 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_marginHorizontal="3dp"
+        android:layout_marginVertical="5dp"
+        android:background="@drawable/card"
+        android:orientation="vertical"
+        android:padding="10dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -17,14 +21,16 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_margin="10dp"
             android:layout_weight="0"
+            android:background="@drawable/circle"
             tools:srcCompat="@tools:sample/avatars" />
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_marginVertical="10dp"
             android:layout_weight="0"
+            android:background="@drawable/horizontal_line"
             android:orientation="vertical">
 
             <TextView
@@ -32,23 +38,26 @@
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/lilita_one"
+                android:fontFamily="sans-serif"
                 android:text="TextView"
                 android:textAlignment="center"
-                android:textColor="@color/cardview_dark_background"
+                android:textColor="@color/whiteGray"
                 android:textSize="12sp" />
 
             <TextView
                 android:id="@+id/player_detail_game_info_modeValue"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"
+                android:layout_marginTop="10dp"
                 android:layout_weight="1"
-                android:fontFamily="@font/lilita_one"
+                android:fontFamily="sans-serif"
                 android:text="TextView"
                 android:textAlignment="center"
-                android:textColor="@color/colorBlack" />
+                android:textColor="@color/colorWhite"
+                android:textSize="18sp" />
         </LinearLayout>
 
     </LinearLayout>

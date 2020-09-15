@@ -4,6 +4,7 @@
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
     <color name="colorWhite">#ffffff</color>
+    <color name="whiteGray">#e6e6e6</color>
     <color name="colorBlack">#000000</color>
     <color name="championshipColor">#4DDF0101</color>
     <color name="championshipPressedColor">#DF0101</color>
@@ -12,7 +13,11 @@
     <color name="mainBackgroundBlue">#CEECF5</color>
     <color name="mainTextBlue">#81BEF7</color>
     <color name="trophiesYellow">#FFC107</color>
-    <color name="winColor">#01DF74</color>
-    <color name="loseColor">#FF0040</color>
-    <color name="drawColor">#6E6E6E</color>
+    <color name="winColor">#5393ca</color>
+    <color name="loseColor">#ed6767</color>
+    <color name="drawColor">#808080</color>
+    <color name="background">#1f1f1f</color>
+    <color name="backgroundCard">#31313c</color>
+    <color name="mainBlue">#2295dd</color>
+    <color name="selectedBlue">#2274dd</color>
 </resources>

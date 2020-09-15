@@ -39,38 +39,104 @@ public class kat_official_playerBattleLogParser implements Serializable {
 
             // 전투 정보
             JSONObject battle = (JSONObject) item.get("battle");
-            if(battle.isNull("rank")) {
+
+
+
+
+            // trophyChange 가 없는 경우 :
+            // 1. 동점      2. 이벤트 모드
+            if(battle.isNull("trophyChange")){
+                // 동점일 경우
+                if(!battle.isNull("result"))
+                    pbd.setBattleResult(battle.getString("result"));
+                else if(!battle.isNull("rank"))
+                    pbd.setBattleResult(battle.getString("rank"));
+
+                // 그 외에 이벤트 모드일 경우 무승부로 처리
+                else
+                    pbd.setBattleResult("draw");
+            }
+            // 랭크가 없는 경우 : 3 vs 3 맵 또는 이벤트 맵인데 이벤트 맵은 위에서 걸러지므로 3 vs 3 맵만 판별하면 된다.
+            else if(battle.isNull("rank")) {
                 pbd.setBattleResult(battle.getString("result"));
                 pbd.setBattleDuration(battle.getString("duration"));
             }
+            // 그 외의 경우 무승부로 처리해버린다.
             else {
                 pbd.setBattleResult(battle.getString("rank"));
             }
+            // 트로피 변화가 있으면 트로피 변화를 세팅해준다.
             if(!battle.isNull("trophyChange"))
                 pbd.setBattleTrophyChange(Integer.toString(battle.getInt("trophyChange")));
 
+
+
+
+
+
             // all team : [ team 1 : [ {memeber1}, {memeber2} ],    team 2 : [ {memeber3}, {member4} ] ]
             // 전체 팀의 수
-            ArrayList<team> teamsArrayList = new ArrayList<>();
-            JSONArray battleTeam = (JSONArray) battle.get("teams");
-            for(int j = 0; j < battleTeam.length(); j++){
+            ArrayList<Object> teamsArrayList = new ArrayList<>();
 
-                team teams = new team();
+            // 스타 플레이어 태그 가져오기
+            if(!battle.isNull("starPlayer")){
+                JSONObject starPlayer = battle.getJSONObject("starPlayer");
+                pbd.setStarPlayer(starPlayer.getString("tag"));
+            }
 
-                // 각 팀의 정보
-                JSONArray teamItem = (JSONArray) battleTeam.get(j);
+
+
+
+            //////////////////// teams 중심 ////////////////////////////
+            // 3 vs 3 모드인 경우 팀 형태로 데이터를 파싱해줘야 한다.
+            if(!battle.isNull("teams")){
+                JSONArray battleTeam = (JSONArray) battle.get("teams");
+                for(int j = 0; j < battleTeam.length(); j++) {
+
+                    team teams = new team();
+
+                    // 각 팀의 정보
+                    JSONArray teamItem = (JSONArray) battleTeam.get(j);
+                    ArrayList<playTeamInfo> eachTeamItem = new ArrayList<>();
+
+                    // 각 팀의 멤버의 정보
+                    for (int k = 0; k < teamItem.length(); k++) {
+
+                        JSONObject teamInfo = (JSONObject) teamItem.get(k);
+                        playTeamInfo info = new playTeamInfo();
+
+                        info.setTag(teamInfo.getString("tag"));
+                        info.setName(teamInfo.getString("name"));
+
+                        JSONObject brawlers = (JSONObject) teamInfo.get("brawler");
+                        info.setBrawler_Id(brawlers.getString("id"));
+                        info.setBrawler_name(brawlers.getString("name"));
+                        info.setBrawler_power(brawlers.getString("power"));
+                        info.setBrawler_trophies(brawlers.getString("trophies"));
+
+                        eachTeamItem.add(info);
+                    }
+                    teams.setPlayTeamInfo(eachTeamItem);
+                    teamsArrayList.add(teams);
+                }
+            }
+
+            /////////////////////////// player 중심 /////////////////////////
+            // solo showdown 같이 개인전인 경우 플레이어 중심으로 데이터를 파싱해줘야 한다.
+            else if(!battle.isNull("players")){
+                JSONArray battlePlayer = (JSONArray) battle.get("players");
+                player player = new player();
                 ArrayList<playTeamInfo> eachTeamItem = new ArrayList<>();
 
-                // 각 팀의 멤버의 정보
-                for(int k = 0; k < teamItem.length(); k++){
+                for(int k = 0; k < battlePlayer.length(); k++){
 
-                    JSONObject teamInfo = (JSONObject) teamItem.get(k);
+                    JSONObject playerInfo = (JSONObject) battlePlayer.get(k);
                     playTeamInfo info = new playTeamInfo();
 
-                    info.setTag(teamInfo.getString("tag"));
-                    info.setName(teamInfo.getString("name"));
+                    info.setTag(playerInfo.getString("tag"));
+                    info.setName(playerInfo.getString("name"));
 
-                    JSONObject brawlers = (JSONObject) teamInfo.get("brawler");
+                    JSONObject brawlers = (JSONObject) playerInfo.get("brawler");
                     info.setBrawler_Id(brawlers.getString("id"));
                     info.setBrawler_name(brawlers.getString("name"));
                     info.setBrawler_power(brawlers.getString("power"));
@@ -78,11 +144,13 @@ public class kat_official_playerBattleLogParser implements Serializable {
 
                     eachTeamItem.add(info);
                 }
-                teams.setPlayTeamInfos(eachTeamItem);
-                teamsArrayList.add(teams);
+                player.setPlayTeamInfo(eachTeamItem);
+                teamsArrayList.add(player);
             }
-            pbd.setTeams(teamsArrayList);
 
+
+            // 해당 player or team 으로 이루어진 teamsArrayList를 pbd에 넣고 battleData에 pbd를 넣어준다.
+            pbd.setTeamOrPlayer(teamsArrayList);
             battleData.add(pbd);
         }
 
@@ -97,14 +165,15 @@ public class kat_official_playerBattleLogParser implements Serializable {
         String eventId, eventMode, eventMap;
         String battleResult, battleDuration, battleTrophyChange;
         String battleStarPlayerTag;
-        ArrayList<team> teams = new ArrayList<>();
+        String starPlayer;
+        ArrayList<Object> teamOrPlayer = new ArrayList<>();
 
-        public ArrayList<team> getTeams() {
-            return teams;
+        public ArrayList<Object> getTeamOrPlayer() {
+            return teamOrPlayer;
         }
 
-        public void setTeams(ArrayList<team> teams) {
-            this.teams = teams;
+        public void setTeamOrPlayer(ArrayList<Object> teamOrPlayer) {
+            this.teamOrPlayer = teamOrPlayer;
         }
 
         public String getBattleTime() {
@@ -170,18 +239,41 @@ public class kat_official_playerBattleLogParser implements Serializable {
         public void setBattleStarPlayerTag(String battleStarPlayerTag) {
             this.battleStarPlayerTag = battleStarPlayerTag;
         }
-    }
 
-    public class team implements Serializable {
-
-        ArrayList<playTeamInfo> playTeamInfos = new ArrayList<>();
-
-        public ArrayList<playTeamInfo> getPlayTeamInfos() {
-            return playTeamInfos;
+        public String getStarPlayer() {
+            return starPlayer;
         }
 
-        public void setPlayTeamInfos(ArrayList<playTeamInfo> playTeamInfos) {
-            this.playTeamInfos = playTeamInfos;
+        public void setStarPlayer(String starPlayer) {
+            this.starPlayer = starPlayer;
+        }
+    }
+
+    // 팀 기반 모드인 경우
+    public class team implements Serializable {
+
+        ArrayList<playTeamInfo> playTeamInfo = new ArrayList<>();
+
+        public ArrayList<playTeamInfo> getPlayTeamInfo() {
+            return playTeamInfo;
+        }
+
+        public void setPlayTeamInfo(ArrayList<playTeamInfo> playTeamInfo) {
+            this.playTeamInfo = playTeamInfo;
+        }
+    }
+
+    // 개인전인 경우
+    public class player implements Serializable {
+
+        ArrayList<playTeamInfo> playTeamInfo = new ArrayList<>();
+
+        public ArrayList<kat_official_playerBattleLogParser.playTeamInfo> getPlayTeamInfo() {
+            return playTeamInfo;
+        }
+
+        public void setPlayTeamInfo(ArrayList<kat_official_playerBattleLogParser.playTeamInfo> playTeamInfo) {
+            this.playTeamInfo = playTeamInfo;
         }
     }
 

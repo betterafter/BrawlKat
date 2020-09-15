@@ -104,10 +104,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
                     }
                 }
             }
-
-
-
-
         }
     }
 
@@ -122,9 +118,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         }
         // 제대로 가져왔을 경우
         else{
-//            official_playerInfoParser = new kat_official_playerInfoParser(client.getAllTypeData().get(0));
-//            official_playerBattleLogParser = new kat_official_playerBattleLogParser(client.getAllTypeData().get(1));
-
             official_playerInfoParser = new kat_official_playerInfoParser(sendData.get(0));
             official_playerBattleLogParser = new kat_official_playerBattleLogParser(sendData.get(1));
 
