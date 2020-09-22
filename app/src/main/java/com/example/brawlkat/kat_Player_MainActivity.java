@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.brawlkat.dataparser.kat_brawlersParser;
 import com.example.brawlkat.dataparser.kat_clubLogParser;
 import com.example.brawlkat.dataparser.kat_mapsParser;
 import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
@@ -72,7 +73,9 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     public              LayoutInflater                                                          layoutInflater;
 
     public              kat_mapsParser                                                          mapsParser;
+    public              kat_brawlersParser                                                      brawlersParser;
     public              static HashMap<String, kat_mapsParser.mapData>                          mapData;
+    public              static ArrayList<HashMap<String, Object>>                               BrawlersArrayList = new ArrayList<>();
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -113,8 +116,13 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                 while(true) {
                     if(client.getData() == null || client.getData().size() <= 2) continue;
                     if (client.getData().get(2) != null) {
+
                         mapsParser = new kat_mapsParser(client.getData().get(2));
                         mapData = mapsParser.DataParser();
+
+                        brawlersParser = new kat_brawlersParser(client.getData().get(1));
+                        BrawlersArrayList = brawlersParser.DataParser();
+
                         int time = 1000 * 60 * 30;
                         sleep(time);
                     }

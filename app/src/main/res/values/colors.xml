@@ -20,4 +20,16 @@
     <color name="backgroundCard">#31313c</color>
     <color name="mainBlue">#2295dd</color>
     <color name="selectedBlue">#2274dd</color>
+
+
+    <color name="Color1">#2295dd</color>
+    <color name="Color2">#00BBAC</color>
+    <color name="Color3">#20dfd0</color>
+    <color name="Color4">#17e8b2</color>
+    <color name="Color5">#1de261</color>
+    <color name="Color6">#a1e51a</color>
+    <color name="Color7">#e6ea15</color>
+    <color name="Color8">#e98216</color>
+    <color name="Color9">#e0231f</color>
+    <color name="Color10">#e11ec0</color>
 </resources>

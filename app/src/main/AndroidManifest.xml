@@ -26,6 +26,7 @@
         <activity android:name=".kat_Player_RecentSearchActivity"></activity>
         <activity android:name=".kat_Player_PlayerDetailActivity"></activity>
         <activity android:name=".kat_Player_ClubDetailActivity"></activity>
+        <activity android:name=".kat_Player_PlayerBattleLogDetailActivity"></activity>
         <service android:name=".kat_Service_OverdrawActivity"></service>
         <meta-data
             android:name="preloaded_fonts"

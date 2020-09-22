@@ -17,12 +17,10 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.brawlkat.dataparser.kat_brawlersParser;
 import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -44,8 +42,8 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
     private                             RequestOptions                          options;
 
-    private                             int                                     height;
-    private                             int                                     width;
+    public                              static int                              height;
+    public                              static int                              width;
 
 
 
@@ -79,7 +77,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     protected void onStart(){
         super.onStart();
 
-        setData();
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_PlayerDetailActivity")) setData();
     }
 
     // player_player_detail 레이아웃에 데이터 바인드
@@ -177,7 +175,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         }
     }
 
-    private void GlideImage(String url, int width, int height, ImageView view){
+    public void GlideImage(String url, int width, int height, ImageView view){
 
         Glide.with(getApplicationContext())
                 .applyDefaultRequestOptions(options)
@@ -186,7 +184,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
                 .into(view);
     }
 
-    private void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
+    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
         Glide.with(getApplicationContext())
                 .applyDefaultRequestOptions(options)
                 .load(url)
@@ -201,15 +199,6 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout linearLayout = findViewById(R.id.player_detail_battle_log_layout);
         linearLayout.removeAllViews();
-
-        kat_brawlersParser bp = new kat_brawlersParser(client.getData().get(1));
-        ArrayList<HashMap<String, Object>> BrawlersArrayList = new ArrayList<>();
-        try{
-            BrawlersArrayList = bp.DataParser();
-        }
-        catch (Exception e){
-            e.printStackTrace();
-        }
 
         for(int i = 0; i < playerBattleDataList.size(); i++){
 
@@ -232,6 +221,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             String userBrawler = ""; boolean check = false;
             for(int j = 0; j < teams.size(); j++){
 
+                // TeamOrPlayer 가 team 일 때, PlayTeamInfo에서 내 계정 정보 찾기
                 if(teams.get(j) instanceof kat_official_playerBattleLogParser.team){
 
                     kat_official_playerBattleLogParser.team item = (kat_official_playerBattleLogParser.team)teams.get(j);
@@ -247,6 +237,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
                     if(check) break;
                 }
 
+                // TeamOrPlayer 가 player 일 때, PlayTeamInfo에서 내 계정 정보 찾기
                 else if(teams.get(j) instanceof kat_official_playerBattleLogParser.player){
 
                     kat_official_playerBattleLogParser.player item = (kat_official_playerBattleLogParser.player) teams.get(j);
@@ -261,10 +252,9 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
                     }
                     if(check) break;
                 }
-
-
-
             }
+
+            // 왼쪽의 승패 여부를 표시하는 텍스트 디자인
             if(battleData.getBattleResult().equals("victory") || (battleData.getBattleTrophyChange() != null
                     && !battleData.getBattleTrophyChange().contains("-"))) {
                 battleLogResult.setText("승");
@@ -294,6 +284,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             }
 
 
+            // starlist.pro에서 제공 받은 brawler 정보를 받아와 내가 플레이한 브롤러 이미지 표시하기
             for(int j = 0; j < BrawlersArrayList.size(); j++){
                 if(BrawlersArrayList.get(j).get("name").toString().toLowerCase().equals(userBrawler.toLowerCase())){
                     GlideImage(BrawlersArrayList.get(j).get("imageUrl").toString(), width / 10, width / 10, battleLogBrawler);

@@ -111,8 +111,10 @@ public class kat_official_playerBattleLogParser implements Serializable {
                         JSONObject brawlers = (JSONObject) teamInfo.get("brawler");
                         info.setBrawler_Id(brawlers.getString("id"));
                         info.setBrawler_name(brawlers.getString("name"));
-                        info.setBrawler_power(brawlers.getString("power"));
-                        info.setBrawler_trophies(brawlers.getString("trophies"));
+                        if(!brawlers.isNull("power"))
+                            info.setBrawler_power(brawlers.getString("power"));
+                        if(!brawlers.isNull("trophies"))
+                            info.setBrawler_trophies(brawlers.getString("trophies"));
 
                         eachTeamItem.add(info);
                     }

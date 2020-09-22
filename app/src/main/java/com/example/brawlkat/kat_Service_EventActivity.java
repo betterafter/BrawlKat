@@ -140,7 +140,8 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
                     if(viewPager == null){
                         viewPager = (ViewPager2) overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
-                        eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList, kat_Service_EventActivity.this);
+                        eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList,
+                                kat_Service_EventActivity.this);
                     }
 
                     System.out.println("success to get data'\n");
