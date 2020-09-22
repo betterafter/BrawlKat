@@ -53,7 +53,7 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     }
 
 
-    private class SearchThread extends Thread{
+    public class SearchThread extends Thread{
 
         String tag;
         String type;
@@ -68,8 +68,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
             playerTag = tag;
             sendData = new ArrayList<>();
-            System.out.println("type : " + type);
-
 
             if(type.equals("players")){
 
@@ -123,8 +121,10 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
             try {
                 playerData = official_playerInfoParser.DataParser();
-                if(!client.getAllTypeData().get(1).equals("{none}"))
+                if(!client.getAllTypeData().get(1).equals("{none}")) {
                     playerBattleDataList = official_playerBattleLogParser.DataParser();
+                    playerBattleDataListStack.add(official_playerBattleLogParser.DataParser());
+                }
 
                 String type = "players";
                 String Tag = playerData.getTag();
@@ -157,7 +157,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         else{
             official_clubInfoParser = new kat_official_clubInfoParser(sendData.get(0));
             clubLogParser = new kat_clubLogParser(sendData.get(1));
-            System.out.println("club log data : " + sendData.get(1));
 
             try {
                 clubData = official_clubInfoParser.DataParser();

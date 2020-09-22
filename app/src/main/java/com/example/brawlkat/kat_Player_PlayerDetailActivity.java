@@ -194,7 +194,9 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     }
 
     private void playerBattleLogList(){
-        if(client.getData().get(1).equals("{none}") || playerBattleDataList == null) return;
+        if(client.getData().get(1).equals("{none}")
+                || (!playerBattleDataListStack.empty() && playerBattleDataListStack.peek() == null)) return;
+        playerBattleDataList = playerBattleDataListStack.peek();
 
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout linearLayout = findViewById(R.id.player_detail_battle_log_layout);
@@ -332,5 +334,14 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             });
             linearLayout.addView(view);
         }
+    }
+
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_PlayerDetailActivity"))
+            playerBattleDataListStack.pop();
     }
 }

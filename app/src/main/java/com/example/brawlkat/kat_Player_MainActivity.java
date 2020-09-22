@@ -25,6 +25,7 @@ import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Stack;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -47,7 +48,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
 
 
-    public              String                                                                  playerTag;
+    public              static String                                                           playerTag;
     private             String                                                                  clubTag;
 
     public              kat_official_playerParser                                               official_playerParser;
@@ -77,6 +78,12 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     public              static HashMap<String, kat_mapsParser.mapData>                          mapData;
     public              static ArrayList<HashMap<String, Object>>                               BrawlersArrayList = new ArrayList<>();
 
+
+    public              static Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>> playerBattleDataListStack = new Stack<>();
+    public              static Stack<kat_Player_PlayerDetailActivity>                                player_playerDetailActivities = new Stack<>();
+
+
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,7 +105,22 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         // 앱이 처음 실행될 때 이전에 본인의 계정을 저장했었다면 그 계정 태그를 가져와 playerTag에 저장해준다.
 
         //katService.getPlayerTag = playerTag;
+        test t = new test();
+        t.start();
+    }
 
+    private class test extends Thread{
+        public void run(){
+            while(true){
+                try {
+                    System.out.println("size : " + playerBattleDataListStack.size());
+                    sleep(1000);
+                }
+                catch (Exception e){
+
+                }
+            }
+        }
     }
 
     @Override
@@ -264,5 +286,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             bound = false;
         }
     };
+
+
 
 }

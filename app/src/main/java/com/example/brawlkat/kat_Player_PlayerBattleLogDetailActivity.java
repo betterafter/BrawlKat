@@ -63,19 +63,8 @@ public class kat_Player_PlayerBattleLogDetailActivity extends kat_Player_PlayerD
                     }
                 }).attach();
 
-
-
-        setData();
-
-
     }
 
-
-
-    private void setData(){
-
-
-    }
 
 
 }
