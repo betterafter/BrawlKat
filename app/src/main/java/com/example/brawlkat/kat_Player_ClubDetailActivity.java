@@ -67,14 +67,6 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         height = metrics.heightPixels;
         width = metrics.widthPixels;
-
-
-
-
-
-
-
-        System.out.println(clubData.getName());
     }
 
 
@@ -88,7 +80,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
     private void setData(){
 
         String iconUrl = "https://www.starlist.pro/assets/club/" + clubData.getBadgeId() + ".png?v=1";
-        GlideImage(iconUrl, width / 5, width / 5, player_club_icon);
+        GlideImageWithRoundCorner(iconUrl, width / 7, width / 7, player_club_icon);
         player_club_name.setText(clubData.getName());
         player_club_tag.setText(clubData.getTag());
         player_club_description.setText(clubData.getDescription());
@@ -121,18 +113,32 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
         LinearLayout linearLayout = findViewById(R.id.player_club_clubInformation);
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        for(int i = 0; i < 5; i++){
-            View view = layoutInflater.inflate(R.layout.player_club_information, null);
-            ImageView icon = view.findViewById(R.id.player_club_info_icon);
-            TextView name = view.findViewById(R.id.player_club_info_name);
-            TextView value = view.findViewById(R.id.player_club_info_value);
+        linearLayout.removeAllViews();
 
-            GlideImage(informationIconUrl[i], width / 20, width / 20, icon);
+        for(int i = 0; i < 5; i++){
+
+            // 내부 레이아웃 아이템을 같은 간격으로 정렬
+            View view = layoutInflater.inflate(R.layout.club_detail_clubinformation, null);
+            LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            p.weight = 1;
+            view.setLayoutParams(p);
+
+            // 각 아이템 값 선언
+            ImageView icon = view.findViewById(R.id.club_detail_game_info_icon);
+            GlideImageWithRoundCorner(informationIconUrl[i], width / 20, width / 20, icon);
+
+            TextView name = view.findViewById(R.id.club_detail_game_info_modeType);
             name.setText(informationName[i]);
+
+            TextView value = view.findViewById(R.id.club_detail_game_info_modeValue);
             value.setText(informationValue[i]);
 
             linearLayout.addView(view);
         }
+
 
         String[] membersType = new String[4];
         int[] membersValue = new int[4];
@@ -241,6 +247,15 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         Glide.with(getApplicationContext())
                 .applyDefaultRequestOptions(options)
                 .load(url)
+                .override(width, height)
+                .into(view);
+    }
+
+    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
+        Glide.with(getApplicationContext())
+                .applyDefaultRequestOptions(options)
+                .load(url)
+                .apply(new RequestOptions().circleCrop().circleCrop())
                 .override(width, height)
                 .into(view);
     }

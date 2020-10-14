@@ -175,24 +175,6 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         }
     }
 
-    public void GlideImage(String url, int width, int height, ImageView view){
-
-        Glide.with(getApplicationContext())
-                .applyDefaultRequestOptions(options)
-                .load(url)
-                .override(width, height)
-                .into(view);
-    }
-
-    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
-        Glide.with(getApplicationContext())
-                .applyDefaultRequestOptions(options)
-                .load(url)
-                .apply(new RequestOptions().circleCrop().circleCrop())
-                .override(width, height)
-                .into(view);
-    }
-
     private void playerBattleLogList(){
         if(client.getData().get(1).equals("{none}")
                 || (!playerBattleDataListStack.empty() && playerBattleDataListStack.peek() == null)) return;
@@ -343,5 +325,24 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_PlayerDetailActivity"))
             playerBattleDataListStack.pop();
+    }
+
+
+    public void GlideImage(String url, int width, int height, ImageView view){
+
+        Glide.with(getApplicationContext())
+                .applyDefaultRequestOptions(options)
+                .load(url)
+                .override(width, height)
+                .into(view);
+    }
+
+    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
+        Glide.with(getApplicationContext())
+                .applyDefaultRequestOptions(options)
+                .load(url)
+                .apply(new RequestOptions().circleCrop().circleCrop())
+                .override(width, height)
+                .into(view);
     }
 }
