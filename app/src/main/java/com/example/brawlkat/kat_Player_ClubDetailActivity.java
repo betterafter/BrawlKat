@@ -2,10 +2,13 @@ package com.example.brawlkat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -38,6 +41,8 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
     private                             int                                     height;
     private                             int                                     width;
 
+    private                             int[]                                   colorArray2;
+
 
 
 
@@ -67,6 +72,11 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
         height = metrics.heightPixels;
         width = metrics.widthPixels;
+
+        colorArray2 = new int[]{
+                R.color.Color1,  R.color.Color3, R.color.Color4,
+                R.color.Color6, R.color.Color7
+        };
     }
 
 
@@ -115,6 +125,23 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         linearLayout.removeAllViews();
 
+        TextView tv = new TextView(getApplicationContext());
+        tv.setText("클럽 정보");
+        tv.setBackgroundResource(R.drawable.card_bottom_line);
+        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+        tv.setTextColor(getResources().getColor(R.color.colorWhite));
+        tv.setGravity(Gravity.CENTER_VERTICAL);
+        tv.setPadding(30, 30, 30, 30);
+
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        tv.setLayoutParams(layoutParams);
+        linearLayout.addView(tv);
+
+
+
         for(int i = 0; i < 5; i++){
 
             // 내부 레이아웃 아이템을 같은 간격으로 정렬
@@ -135,6 +162,9 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
             TextView value = view.findViewById(R.id.club_detail_game_info_modeValue);
             value.setText(informationValue[i]);
+            value.setTypeface(tv.getTypeface(), Typeface.BOLD);
+            value.setTextColor(getResources().getColor(colorArray2[i]));
+
 
             linearLayout.addView(view);
         }
