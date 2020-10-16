@@ -4,13 +4,16 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -140,6 +143,21 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         tv.setLayoutParams(layoutParams);
         linearLayout.addView(tv);
 
+        String[] membersType = new String[4];
+        int[] membersValue = new int[4];
+        HashMap<String, Integer> roles = clubData.getMembersRole();
+        Iterator<String> iter = roles.keySet().iterator();
+
+        int idx = 0;
+        while(iter.hasNext()){
+            String key = (String) iter.next();
+            int value = roles.get(key);
+
+            membersType[idx] = key;
+            membersValue[idx] = value;
+
+            idx++;
+        }
 
 
         for(int i = 0; i < 5; i++){
@@ -165,42 +183,28 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             value.setTypeface(tv.getTypeface(), Typeface.BOLD);
             value.setTextColor(getResources().getColor(colorArray2[i]));
 
+            if(i == 4){
+                LinearLayout member_summary_layout = view.findViewById(R.id.member_summary);
+                for(int j = 0; j < 4; j++){
+                    View v = layoutInflater.inflate(R.layout.player_club_member_information, null);
+                    TextView club_member_type = v.findViewById(R.id.player_club_member_type);
+                    TextView club_member_value = v.findViewById(R.id.player_club_member_value);
+
+                    club_member_type.setText(membersType[j]);
+                    club_member_value.setText(Integer.toString(membersValue[j]));
+
+                    member_summary_layout.addView(v);
+                }
+
+            }
 
             linearLayout.addView(view);
-        }
-
-
-        String[] membersType = new String[4];
-        int[] membersValue = new int[4];
-        HashMap<String, Integer> roles = clubData.getMembersRole();
-        Iterator<String> iter = roles.keySet().iterator();
-
-        int idx = 0;
-        while(iter.hasNext()){
-            String key = (String) iter.next();
-            int value = roles.get(key);
-
-            membersType[idx] = key;
-            membersValue[idx] = value;
-
-            idx++;
-        }
-
-        LinearLayout linearLayout2 = findViewById(R.id.player_club_members_summary);
-        for(int i = 0; i < 4; i++){
-            View view = layoutInflater.inflate(R.layout.player_club_member_information, null);
-            TextView club_member_type = view.findViewById(R.id.player_club_member_type);
-            TextView club_member_value = view.findViewById(R.id.player_club_member_value);
-
-            club_member_type.setText(membersType[i]);
-            club_member_value.setText(Integer.toString(membersValue[i]));
-
-            linearLayout2.addView(view);
         }
     }
 
     public void setClubMemberList(){
 
+        final ScrollView club_member_scrollView = findViewById(R.id.player_club_member_scrollview);
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -211,13 +215,38 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             ImageView club_member_icon = view.findViewById(R.id.player_club_detail_members_icon);
             TextView club_member_name = view.findViewById(R.id.player_club_detail_members_name);
             TextView club_member_trophy = view.findViewById(R.id.player_club_detail_members_trophy);
+            TextView club_member_role = view.findViewById(R.id.player_club_detail_members_role);
+            club_member_name.setMovementMethod(new ScrollingMovementMethod());
+
+            club_member_name.setOnTouchListener(new TextView.OnTouchListener(){
+                @Override
+                public boolean onTouch(View view, MotionEvent motionevent){
+                    club_member_scrollView.requestDisallowInterceptTouchEvent(true);
+                    return false;
+                }
+            });
 
             String iconUrl = "https://www.starlist.pro/assets/profile-low/" +
                     memberData.get(i).getIconId() + ".png?v=1";
-            GlideImage(iconUrl, width / 20, width / 20, club_member_icon);
+            GlideImage(iconUrl, width / 10, width / 10, club_member_icon);
             club_member_rank.setText(Integer.toString(i + 1));
             club_member_name.setText(memberData.get(i).getName());
             club_member_trophy.setText(Integer.toString(memberData.get(i).getTrophies()));
+            club_member_role.setText(memberData.get(i).getRole());
+
+            club_member_trophy.setTextColor(getResources().getColor(R.color.trophiesYellow));
+            if(memberData.get(i).getRole().equals("member")){
+                club_member_role.setTextColor(getResources().getColor(R.color.colorWhite));
+            }
+            else if(memberData.get(i).getRole().equals("senior")){
+                club_member_role.setTextColor(getResources().getColor(R.color.Color4));
+            }
+            else if(memberData.get(i).getRole().equals("vicePresident")){
+                club_member_role.setTextColor(getResources().getColor(R.color.Color3));
+            }
+            else if(memberData.get(i).getRole().equals("president")){
+                club_member_role.setTextColor(getResources().getColor(R.color.Color1));
+            }
 
             linearLayout.addView(view);
         }

@@ -13,13 +13,19 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textAlignment="textStart"
+            android:textColor="@color/colorWhite"
+            android:textStyle="italic" />
 
         <TextView
             android:id="@+id/player_club_member_value"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="TextView" />
+            android:text="TextView"
+            android:textAlignment="textEnd"
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
