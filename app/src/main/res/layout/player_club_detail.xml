@@ -135,25 +135,32 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:layout_marginHorizontal="10dp"
                 android:orientation="horizontal">
 
                 <Button
                     android:id="@+id/button"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:paddingHorizontal="10dp"
+                    android:background="@drawable/semi_round_button_inner_click"
                     android:onClick="onsetClubMemberListClick"
-                    android:text="Button" />
+                    android:text="club member"
+                    android:textColor="@color/colorWhite" />
 
                 <Button
                     android:id="@+id/button4"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
+                    android:layout_height="30dp"
+                    android:layout_marginHorizontal="5dp"
+                    android:paddingHorizontal="10dp"
+                    android:background="@drawable/semi_round_button_outter_click"
                     android:onClick="onsetClubLogClick"
-                    android:text="Button" />
+                    android:text="club log"
+                    android:textColor="@color/colorWhite" />
             </LinearLayout>
 
             <ScrollView

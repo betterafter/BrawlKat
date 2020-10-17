@@ -3,6 +3,7 @@ package com.example.brawlkat;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
@@ -15,6 +16,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -23,6 +25,8 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.dataparser.kat_clubLogParser;
 import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
+import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
+import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -41,10 +45,11 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
     private                             RequestOptions                      options;
 
 
-    private                             int                                     height;
-    private                             int                                     width;
+    private                             int                                 height;
+    private                             int                                 width;
 
-    private                             int[]                                   colorArray2;
+    private                             int[]                               colorArray2;
+    private                             Client                              client = kat_Player_MainActivity.client;
 
 
 
@@ -208,7 +213,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = clubData.getMemberDatas();
+        final ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = clubData.getMemberDatas();
         for(int i = 0; i < memberData.size(); i++){
             View view = inflater.inflate(R.layout.player_club_detail_members_item, null);
             TextView club_member_rank = view.findViewById(R.id.player_club_detail_members_ranknum);
@@ -248,6 +253,16 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
                 club_member_role.setTextColor(getResources().getColor(R.color.Color1));
             }
 
+            final int idx = i;
+            view.setOnClickListener(new View.OnClickListener(){
+                @Override
+                public void onClick(View v){
+                    String realTag = memberData.get(idx).getTag().substring(1);
+                    System.out.println("realTag : " + realTag);
+                    SearchThread st = new SearchThread(realTag, "players");
+                    st.start();
+                }
+            });
             linearLayout.addView(view);
         }
     }
@@ -268,29 +283,56 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
             if(cld.get(i) instanceof kat_clubLogParser.joinData){
                 kat_clubLogParser.joinData data = (kat_clubLogParser.joinData) cld.get(i);
-                type.setText("join");
-                change.setText(data.getPlayerName());
+                type.setText("Changing Club Member");
+                if(data.isJoin()) {
+                    Drawable drawable = type.getBackground();
+                    drawable.setTint(getResources().getColor(R.color.Color12));
+                    change.setText(data.getPlayerName() + " 님이 클럽에 가입했습니다.");
+                }
+                else {
+                    Drawable drawable = type.getBackground();
+                    drawable.setTint(getResources().getColor(R.color.Color11));
+                    change.setText(data.getPlayerName() + " 님이 클럽을 탈퇴했습니다.");
+                }
+
                 time.setText(data.getTimeFormat());
             }
 
             else if(cld.get(i) instanceof kat_clubLogParser.settingData){
                 kat_clubLogParser.settingData data = (kat_clubLogParser.settingData) cld.get(i);
-                type.setText(data.getType());
-                change.setText(data.getOldType() + " -> " + data.getNewType());
+                type.setText("Changing Club Status");
+                Drawable drawable = type.getBackground();
+                if(data.getType().equals("requirement")){
+                    drawable.setTint(getResources().getColor(R.color.Color1));
+                    type.setText("Changing Club Status [Requirement]");
+                    change.setText(data.getOldType() + " 에서 " + data.getNewType() + " 으로 변경되었습니다.");
+                }
+                else if(data.getType().equals("status")){
+                    drawable.setTint(getResources().getColor(R.color.Color2));
+                    type.setText("Changing Club Status [Status]");
+                    change.setText(data.getOldType() + " 에서 " + data.getNewType() + " 으로 변경되었습니다.");
+                }
+                else if(data.getType().equals("description")){
+                    drawable.setTint(getResources().getColor(R.color.Color3));
+                    type.setText("Changing Club Status [Description]");
+                    change.setText("before : " + data.getOldType() + '\n' + "after : " + data.getNewType());
+                }
                 time.setText(data.getTimeFormat());
             }
 
             else if(cld.get(i) instanceof kat_clubLogParser.promoteData){
                 kat_clubLogParser.promoteData data = (kat_clubLogParser.promoteData) cld.get(i);
-                type.setText("promote");
-                change.setText(data.getOldRole() + " -> " + data.getNewRole() + "     " + data.getPlayerName());
+                Drawable drawable = type.getBackground();
+                drawable.setTint(getResources().getColor(R.color.Color8));
+                type.setText("Changing Member's Role");
+                change.setText(data.getPlayerName() + " 님의 역할이 " + data.getOldRole() + " 에서 " + data.getNewRole() + " 로 변경되었습니다.");
+
                 time.setText(data.getTimeFormat());
             }
 
             linearLayout.addView(view);
         }
     }
-
 
     public void onsetClubMemberListClick(View view){
         setClubMemberList();
@@ -299,7 +341,6 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
     public void onsetClubLogClick(View view){
         setClubLog();
     }
-
 
     private void GlideImage(String url, int width, int height, ImageView view){
 
@@ -317,6 +358,71 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
                 .apply(new RequestOptions().circleCrop().circleCrop())
                 .override(width, height)
                 .into(view);
+    }
+
+    public class SearchThread extends Thread{
+
+        String tag;
+        String type;
+        ArrayList<String> sendData;
+
+        public SearchThread(String tag, String type){
+            this.tag = tag;
+            this.type = type;
+        }
+
+        public void run(){
+
+            sendData = new ArrayList<>();
+            System.out.println("type : " + type);
+
+            client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
+
+            while(!client.workDone){
+                System.out.println("client wait");
+                if(client.workDone){
+                    client.workDone = false;
+                    sendData.add(client.getAllTypeData().get(0));
+                    sendData.add(client.getAllTypeData().get(1));
+                    playerSearch(sendData);
+
+                    break;
+                }
+            }
+        }
+    }
+
+    public void playerSearch(ArrayList<String> sendData){
+
+        // 제대로 가져오지 못했을 경우 알림
+        if(sendData.get(0).equals("{none}")){
+            Toast toast = Toast.makeText(getApplicationContext(),
+                    "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
+            toast.show();
+
+        }
+        // 제대로 가져왔을 경우
+        else{
+
+            kat_official_playerInfoParser official_playerInfoParser = new kat_official_playerInfoParser(sendData.get(0));
+            kat_official_playerBattleLogParser official_playerBattleLogParser = new kat_official_playerBattleLogParser(sendData.get(1));
+
+            try {
+                playerData = official_playerInfoParser.DataParser();
+                if(!client.getAllTypeData().get(1).equals("{none}")) {
+                    kat_Player_MainActivity.playerBattleDataList = official_playerBattleLogParser.DataParser();
+                    kat_Player_MainActivity.playerBattleDataListStack.add(official_playerBattleLogParser.DataParser());
+                }
+
+                Intent intent = new Intent(getApplicationContext(), kat_Player_PlayerDetailActivity.class);
+                intent.putExtra("playerData", playerData);
+
+                startActivity(intent);
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
+        }
     }
 
 }
