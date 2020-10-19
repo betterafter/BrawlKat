@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="#ffffff"
+    android:background="@color/background"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -41,10 +41,11 @@
                     android:layout_margin="5dp"
                     android:layout_weight="10"
                     android:background="@null"
-                    android:fontFamily="@font/lilita_one"
-                    android:hint="enter your tag except '#'"
+                    android:fontFamily="sans-serif"
+                    android:hint="put your tag except '#'"
                     android:singleLine="true"
-                    android:text="" />
+                    android:text=""
+                    android:textColorHint="@color/colorWhite" />
 
                 <ImageButton
                     android:id="@+id/imageButton"
@@ -67,7 +68,7 @@
             android:layout_margin="10dp"
             android:fontFamily="@font/lilita_one"
             android:text="recent search"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/colorWhite"
             android:textSize="30sp" />
 
         <LinearLayout

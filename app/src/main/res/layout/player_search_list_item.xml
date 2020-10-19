@@ -19,7 +19,7 @@
             android:layout_marginTop="10dp"
             android:fontFamily="@font/lilita_one"
             android:text="TextView"
-            android:textColor="@color/mainTextBlue"
+            android:textColor="@color/Color1"
             android:textSize="18sp"
             android:onClick="onSearchListClick"/>
 
@@ -29,11 +29,11 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginBottom="10dp"
-            android:fontFamily="@font/lilita_one"
+            android:fontFamily="sans-serif"
+            android:onClick="onSearchListClick"
             android:text="TextView"
-            android:textColor="@color/cardview_dark_background"
-            android:textSize="12sp"
-            android:onClick="onSearchListClick"/>
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp" />
 
     </LinearLayout>
 
