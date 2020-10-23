@@ -29,7 +29,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
     private                             ImageView                               playerIcon;
     private                             ImageView                               player_detail_trophies_icon;
-
+    private                             ImageView                               player_detail_favorites;
 
 
     private                             TextView                                player_detail_name;
@@ -62,6 +62,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         player_detail_trophies = findViewById(R.id.player_detail_trophies);
         player_detail_level = findViewById(R.id.player_detail_level_icon_text);
 
+        player_detail_favorites = findViewById(R.id.player_detail_favorites);
 
         options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -78,6 +79,12 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         super.onStart();
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_PlayerDetailActivity")) setData();
+        if(!kataFavoritesBase.isFavorites(playerData.getTag())){
+            player_detail_favorites.setBackground(getResources().getDrawable(R.drawable.round_star_border_24));
+        }
+        else{
+            player_detail_favorites.setBackground(getResources().getDrawable(R.drawable.round_star_24));
+        }
     }
 
     // player_player_detail 레이아웃에 데이터 바인드
@@ -325,6 +332,18 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_PlayerDetailActivity"))
             playerBattleDataListStack.pop();
+    }
+
+    public void onFavoritesClick(View view){
+        kataFavoritesBase.print();
+        if(!kataFavoritesBase.isFavorites(playerData.getTag())) {
+            kataFavoritesBase.insert("player", playerData.getTag(), playerData.getName());
+            view.setBackground(getResources().getDrawable(R.drawable.round_star_24));
+        }
+        else {
+            kataFavoritesBase.delete(playerData.getTag());
+            view.setBackground(getResources().getDrawable(R.drawable.round_star_border_24));
+        }
     }
 
 

@@ -1,4 +1,4 @@
-package com.example.brawlkat;
+package com.example.brawlkat.database;
 
 import android.content.Context;
 import android.database.Cursor;
@@ -97,6 +97,7 @@ public class kat_database extends SQLiteOpenHelper {
 
         return resultList;
     }
+
 
     public void delete(String type){
         SQLiteDatabase database = getWritableDatabase();

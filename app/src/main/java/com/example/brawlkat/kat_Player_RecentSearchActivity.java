@@ -129,7 +129,7 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
                 String type = "players";
                 String Tag = playerData.getTag();
                 String name = playerData.getName();
-                String isAccount = "no";
+                String isAccount = "NO";
 
                 katabase.delete(type);
                 katabase.insert(type, Tag, name, isAccount);

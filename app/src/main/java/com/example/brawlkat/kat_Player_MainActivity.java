@@ -14,6 +14,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 
+import com.example.brawlkat.database.kat_database;
+import com.example.brawlkat.database.kat_favoritesDatabase;
 import com.example.brawlkat.dataparser.kat_brawlersParser;
 import com.example.brawlkat.dataparser.kat_clubLogParser;
 import com.example.brawlkat.dataparser.kat_mapsParser;
@@ -69,6 +71,8 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     private             boolean                                                                 endClickToUnbind = false;
 
     public              kat_database                                                            katabase;
+    public              kat_favoritesDatabase                                                   kataFavoritesBase;
+
     private             FragmentManager                                                         fragmentManager;
     private             FragmentTransaction                                                     fragmentTransaction;
     public              LayoutInflater                                                          layoutInflater;
@@ -99,6 +103,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
 
         katabase = new kat_database(getApplicationContext(), "kat", null, 1);
+        kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 1);
 
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
