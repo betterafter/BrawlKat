@@ -70,8 +70,8 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     private             boolean                                                                 bound = false;
     private             boolean                                                                 endClickToUnbind = false;
 
-    public              kat_database                                                            katabase;
-    public              kat_favoritesDatabase                                                   kataFavoritesBase;
+    public              static kat_database                                                     katabase;
+    public              static kat_favoritesDatabase                                            kataFavoritesBase;
 
     private             FragmentManager                                                         fragmentManager;
     private             FragmentTransaction                                                     fragmentTransaction;
@@ -291,7 +291,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             bound = false;
         }
     };
-
 
 
 }

@@ -1,7 +1,6 @@
 package com.example.brawlkat.katfragment;
 
 import android.content.Context;
-import android.content.Intent;
 import android.graphics.Typeface;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -10,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
@@ -23,6 +21,7 @@ import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_Player_PlayerDetailActivity;
+import com.example.brawlkat.kat_SearchThread;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -353,8 +352,9 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
                 System.out.println("tag : " + playerInfo.getTag());
                 String realTag = playerInfo.getTag().substring(1);
                 System.out.println("realTag : " + realTag);
-                SearchThread st = new SearchThread(realTag, "players");
-                st.start();
+
+                kat_SearchThread kset = new kat_SearchThread(getActivity());
+                kset.SearchStart(realTag, "players");
             }
         });
 
@@ -384,71 +384,4 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         }
         return false;
     }
-
-    public class SearchThread extends Thread{
-
-        String tag;
-        String type;
-        ArrayList<String> sendData;
-
-        public SearchThread(String tag, String type){
-            this.tag = tag;
-            this.type = type;
-        }
-
-        public void run(){
-
-            sendData = new ArrayList<>();
-            System.out.println("type : " + type);
-
-            client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
-
-            while(!client.workDone){
-                System.out.println("client wait");
-                if(client.workDone){
-                    client.workDone = false;
-                    sendData.add(client.getAllTypeData().get(0));
-                    sendData.add(client.getAllTypeData().get(1));
-                    playerSearch(sendData);
-
-                    break;
-                }
-            }
-        }
-    }
-
-
-    public void playerSearch(ArrayList<String> sendData){
-
-        // 제대로 가져오지 못했을 경우 알림
-        if(sendData.get(0).equals("{none}")){
-            Toast toast = Toast.makeText(getActivity().getApplicationContext(),
-                    "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
-            toast.show();
-
-        }
-        // 제대로 가져왔을 경우
-        else{
-
-            kat_official_playerInfoParser official_playerInfoParser = new kat_official_playerInfoParser(sendData.get(0));
-            kat_official_playerBattleLogParser official_playerBattleLogParser = new kat_official_playerBattleLogParser(sendData.get(1));
-
-            try {
-                playerData = official_playerInfoParser.DataParser();
-                if(!client.getAllTypeData().get(1).equals("{none}")) {
-                    kat_Player_MainActivity.playerBattleDataList = official_playerBattleLogParser.DataParser();
-                    kat_Player_MainActivity.playerBattleDataListStack.add(official_playerBattleLogParser.DataParser());
-                }
-
-                Intent intent = new Intent(getActivity().getApplicationContext(), kat_Player_PlayerDetailActivity.class);
-                intent.putExtra("playerData", playerData);
-
-                startActivity(intent);
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        }
-    }
-
 }
