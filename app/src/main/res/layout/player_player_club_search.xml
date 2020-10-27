@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_margin="20dp"
-            android:background="@drawable/player_main_input">
+            android:background="@drawable/player_main_input_normal">
 
             <LinearLayout
                 android:layout_width="match_parent"

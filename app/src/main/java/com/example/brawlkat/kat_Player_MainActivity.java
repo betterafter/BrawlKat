@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 
@@ -40,8 +41,8 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     public              static String                                                           nofficial = "nofficial";
 
     private             LinearLayout                                                            player_layout_userInfo;
-    private             LinearLayout                                                            player_layout_recent_userSearch;
-    private             LinearLayout                                                            player_layout_recent_clubSearch;
+    private             LinearLayout                                                            player_user_search_layout;
+    private             LinearLayout                                                            player_club_search_layout;
     private             TextInputEditText                                                       player_user_search;
     private             TextInputEditText                                                       player_club_search;
 
@@ -96,8 +97,25 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         unbindThread ubt = new unbindThread();
         if(!ubt.isAlive()) ubt.start();
 
+
         player_user_search = (TextInputEditText)findViewById(R.id.player_user_searchInput);
         player_club_search = (TextInputEditText)findViewById(R.id.player_club_searchInput);
+        player_user_search_layout = (LinearLayout)findViewById(R.id.player_user_searchInput_layout);
+        player_club_search_layout = (LinearLayout)findViewById(R.id.player_club_searchInput_layout);
+
+        player_user_search.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent){
+                return true;
+            }
+        });
+
+        player_club_search.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent){
+                return true;
+            }
+        });
 
         client.init();
 
