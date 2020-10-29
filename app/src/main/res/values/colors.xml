@@ -16,13 +16,14 @@
     <color name="winColor">#5393ca</color>
     <color name="loseColor">#ed6767</color>
     <color name="drawColor">#808080</color>
-    <color name="background">#1f1f1f</color>
+    <color name="background">#1f2024</color>
     <color name="backgroundCard">#31313c</color>
     <color name="mainBlue">#2295dd</color>
     <color name="selectedBlue">#2274dd</color>
+    <color name="semiBlack">#080809</color>
 
 
-    <color name="Color1">#2295dd</color>
+    <color name="Color1">#00bcff</color>
     <color name="Color2">#00BBAC</color>
     <color name="Color3">#20dfd0</color>
     <color name="Color4">#17e8b2</color>

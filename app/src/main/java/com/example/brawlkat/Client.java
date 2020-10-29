@@ -174,7 +174,7 @@ public class Client {
                     os.close();
                     socket.close();
 
-                    int time = 1000 * 3;
+                    int time = 1000 * 60;
                     sleep(time);
                 }
             }

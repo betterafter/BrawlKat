@@ -30,7 +30,8 @@ public class kat_official_playerInfoParser implements Serializable {
 
         pd.setTrophies(Integer.parseInt(jsonObject.get("trophies").toString()));
         pd.setHighestTrophies(jsonObject.getInt("highestTrophies"));
-        pd.setPowerPlayPoint(jsonObject.getInt("powerPlayPoints"));
+        if(!jsonObject.isNull("powerPlayPoints"))
+            pd.setPowerPlayPoint(jsonObject.getInt("powerPlayPoints"));
         if(!jsonObject.isNull("highestPowerPlayPoints"))
             pd.setHighestPowerPlayPoint(jsonObject.getInt("highestPowerPlayPoints"));
         pd.setExpLevel(jsonObject.getInt("expLevel"));

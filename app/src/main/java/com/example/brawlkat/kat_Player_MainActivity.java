@@ -11,9 +11,10 @@ import android.os.Bundle;
 import android.os.IBinder;
 import android.provider.Settings;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.LinearLayout;
+import android.widget.ImageButton;
 
 import com.example.brawlkat.database.kat_database;
 import com.example.brawlkat.database.kat_favoritesDatabase;
@@ -24,12 +25,16 @@ import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
 import com.example.brawlkat.dataparser.kat_official_playerParser;
-import com.google.android.material.textfield.TextInputEditText;
+import com.example.brawlkat.katfragment.kat_FavoritesFragment;
+import com.example.brawlkat.katfragment.kat_RankingFragment;
+import com.example.brawlkat.katfragment.kat_SearchFragment;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Stack;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
@@ -37,14 +42,22 @@ import androidx.fragment.app.FragmentTransaction;
 
 public class kat_Player_MainActivity extends AppCompatActivity {
 
+    // 하단 네비게이션 바 관련
+    private             BottomNavigationView                                                    bottomNavigationView;
+    private             FragmentManager                                                         fragmentManager;
+    private             FragmentTransaction                                                     fragmentTransaction;
+
+    private             kat_SearchFragment                                                      kat_searchFragment;
+    private             kat_FavoritesFragment                                                   kat_favoritesFragment;
+    private             kat_RankingFragment                                                     kat_rankingFragment;
+    //.................................................................................................................//
+
+    public              ImageButton                                                             serviceButton;
+    private             boolean                                                                 isServiceStart = false;
+
     public              static String                                                           official = "official";
     public              static String                                                           nofficial = "nofficial";
 
-    private             LinearLayout                                                            player_layout_userInfo;
-    private             LinearLayout                                                            player_user_search_layout;
-    private             LinearLayout                                                            player_club_search_layout;
-    private             TextInputEditText                                                       player_user_search;
-    private             TextInputEditText                                                       player_club_search;
 
     public              static Client                                                           client = new Client();
 
@@ -71,11 +84,10 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     private             boolean                                                                 bound = false;
     private             boolean                                                                 endClickToUnbind = false;
 
+
     public              static kat_database                                                     katabase;
     public              static kat_favoritesDatabase                                            kataFavoritesBase;
 
-    private             FragmentManager                                                         fragmentManager;
-    private             FragmentTransaction                                                     fragmentTransaction;
     public              LayoutInflater                                                          layoutInflater;
 
     public              kat_mapsParser                                                          mapsParser;
@@ -92,66 +104,132 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.player_main);
+        setContentView(R.layout.main);
+
+        // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
+        bottomNavigationView = findViewById(R.id.bottomNavi);
+        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
+        {
+            @Override
+            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
+            {
+                switch (menuItem.getItemId())
+                {
+                    case R.id.action_search:
+                        setFrag(0);
+                        break;
+                    case R.id.action_favorites:
+                        setFrag(1);
+                        break;
+                    case R.id.action_ranking:
+                        setFrag(2);
+                        break;
+                }
+                return true;
+            }
+        });
+
+        kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
+        kat_favoritesFragment = new kat_FavoritesFragment();
+        kat_rankingFragment = new kat_RankingFragment();
+
+        // ...........................................................................................................
 
         unbindThread ubt = new unbindThread();
         if(!ubt.isAlive()) ubt.start();
 
-
-        player_user_search = (TextInputEditText)findViewById(R.id.player_user_searchInput);
-        player_club_search = (TextInputEditText)findViewById(R.id.player_club_searchInput);
-        player_user_search_layout = (LinearLayout)findViewById(R.id.player_user_searchInput_layout);
-        player_club_search_layout = (LinearLayout)findViewById(R.id.player_club_searchInput_layout);
-
-        player_user_search.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                return true;
-            }
-        });
-
-        player_club_search.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                return true;
-            }
-        });
-
         client.init();
-
 
         katabase = new kat_database(getApplicationContext(), "kat", null, 1);
         kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 1);
 
+
+        serviceButton = (ImageButton)findViewById(R.id.main_serviceButton);
+        serviceButton.setOnTouchListener(new View.OnTouchListener(){
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent){
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    if (isServiceStart) {
+                        if (katService != null && !endClickToUnbind) {
+                            endClickToUnbind = true;
+                            unbindService(katConnection);
+                            isServiceStart = false;
+                        }
+                    } else {
+                        endClickToUnbind = false;
+                        getPermission();
+                        testThread tt = new testThread();
+                        tt.start();
+                        isServiceStart = true;
+                    }
+                }
+                return false;
+            }
+        });
+
+
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        // 앱이 처음 실행될 때 이전에 본인의 계정을 저장했었다면 그 계정 태그를 가져와 playerTag에 저장해준다.
-
-        //katService.getPlayerTag = playerTag;
-        test t = new test();
-        t.start();
+        // setFrag(0)를 할 때 Recent_Search로 넘어가지 않는 오류가 있었는데, Recent_Search에서 fragment 를 담을 Main_Frame이 없다고 한다.
+        // 생각해보니 Recent_Search는 MainActivity를 상속 받기 때문에 MainActivity의 onCreate나 onStart도 상속을 받아서
+        // setFrag 메소드를 실행해버린다. 그래서 recent_Search에 자꾸 fragment 화면을 띄우려고 한 것.
+        // setFrag를 MainActivity에서만 실행하게 해준다.
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) setFrag(0);
     }
+
+
+    @Override
+    protected void onStart() {
+
+        super.onStart();
+        getMapDataThread mdt = new getMapDataThread();
+        if (!mdt.isAlive()) mdt.start();
+
+        //test t = new test();
+        //t.start();
+
+    }
+
 
     private class test extends Thread{
         public void run(){
             while(true){
-                try {
-                    System.out.println("size : " + playerBattleDataListStack.size());
-                    sleep(1000);
+                try{
+                    sleep(3000);
+                    setFrag(0);
+                    break;
                 }
                 catch (Exception e){
-
+                    e.printStackTrace();
                 }
             }
         }
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
+    // 프레그먼트 교체
+    public void setFrag(int n)
+    {
+        fragmentManager = getSupportFragmentManager();
+        fragmentTransaction = fragmentManager.beginTransaction();
+        switch (n)
+        {
+            case 0:
+                fragmentTransaction.replace(R.id.Main_Frame, kat_searchFragment);
+                fragmentTransaction.commit();
+                break;
 
-        getMapDataThread mdt = new getMapDataThread();
-        if(!mdt.isAlive()) mdt.start();
+            case 1:
+                fragmentTransaction.replace(R.id.Main_Frame, kat_favoritesFragment);
+                fragmentTransaction.commit();
+                break;
+
+            case 2:
+                fragmentTransaction.replace(R.id.Main_Frame, kat_rankingFragment);
+                fragmentTransaction.commit();
+                break;
+
+
+        }
     }
 
     // 맵 데이터 받아오기
@@ -179,32 +257,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         }
     }
 
-
-    // 전적 검색 클릭
-    public void onUserSearchClick(View view){
-        Intent intent = new Intent(kat_Player_MainActivity.this, kat_Player_RecentSearchActivity.class);
-        intent.putExtra("type", "players");
-        startActivity(intent);
-    }
-
-    public void onClubSearchClick(View view){
-        Intent intent = new Intent(kat_Player_MainActivity.this, kat_Player_RecentSearchActivity.class);
-        intent.putExtra("type", "clubs");
-        startActivity(intent);
-    }
-
-
-
-
-    public void onMyAccountDecisionClick(View view){
-
-        // 만약 저장된 본인 계정을 변경했다면 playerTag 역시 변경해준다.
-
-        katService.getPlayerTag = playerTag;
-    }
-
-
-
     private class testThread extends Thread{
         public void run(){
             while(true){
@@ -215,21 +267,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     }
 
 
-    // service 시작 및 종료
-    public void onStartClick(View view){
-        endClickToUnbind = false;
-        getPermission();
-        testThread tt = new testThread();
-        tt.start();
-    }
-
-    public void onEndClick(View view){
-        Intent intent = new Intent(this, kat_Service_OverdrawActivity.class);
-        if(katService != null && !endClickToUnbind) {
-            endClickToUnbind = true;
-            unbindService(katConnection);
-        }
-    }
 
 
     public class unbindThread extends Thread{
@@ -243,6 +280,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                         endClickToUnbind = true;
                         unbindService(katConnection);
                         bound = false;
+                        isServiceStart = false;
                         sleep(3000);
                     }
                 }
@@ -293,8 +331,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
 
     public ServiceConnection katConnection = new ServiceConnection() {
         @Override

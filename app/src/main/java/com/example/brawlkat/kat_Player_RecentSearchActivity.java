@@ -42,7 +42,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     @Override
     protected void onStart(){
         super.onStart();
-
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_RecentSearchActivity")) recentSearchUpdate();
     }
 

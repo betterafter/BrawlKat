@@ -35,7 +35,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     public      ConstraintLayout                constraintLayout;
     public      View                            mapRecommendView;
     public      LayoutInflater                  layoutInflater;
-    private kat_Service_EventActivity events;
+    private     kat_Service_EventActivity       events;
     public      buttonLongClickToExitThread     buttonThread;
 
 

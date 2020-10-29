@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
@@ -8,18 +7,21 @@
     android:background="@color/background">
 
     <LinearLayout
+        android:id="@+id/linearLayout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_margin="10dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        tools:layout_editor_absoluteX="10dp"
+        tools:layout_editor_absoluteY="10dp">
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="match_parent"
-            android:layout_height="300dp"
+            android:layout_height="250dp"
             android:fontFamily="@font/lilita_one"
-            android:text="BrawlKat"
             android:gravity="center"
+            android:text="BrawlKat"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/Color1"
@@ -37,7 +39,6 @@
                 android:id="@+id/player_user_searchInput_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:onClick="onUserSearchClick"
                 android:orientation="horizontal">
 
 
@@ -52,14 +53,14 @@
                     android:clickable="false"
                     android:contextClickable="false"
                     android:cursorVisible="false"
+                    android:enabled="false"
                     android:focusable="false"
                     android:focusableInTouchMode="false"
-                    android:linksClickable="false"
-                    android:longClickable="false"
-                    android:enabled="false"
-
                     android:fontFamily="sans-serif"
                     android:hint="  플레이어 태그 입력"
+
+                    android:linksClickable="false"
+                    android:longClickable="false"
                     android:text=""
                     android:textColor="@color/colorWhite"
                     android:textColorHint="@color/colorWhite" />
@@ -71,8 +72,58 @@
                     android:layout_gravity="center"
                     android:layout_marginRight="15dp"
                     android:background="#00ff0000"
-                    android:onClick="onUserSearchClick"
-                    android:src="@drawable/search_30" />
+                    android:src="@drawable/round_search_white_24" />
+
+            </LinearLayout>
+
+        </com.google.android.material.textfield.TextInputLayout>
+
+        <com.google.android.material.textfield.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:layout_marginHorizontal="20dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/player_main_input_click"
+            android:backgroundTint="@color/semiBlack">
+
+            <LinearLayout
+
+                android:id="@+id/player_club_searchInput_layout"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/player_club_searchInput"
+                    android:layout_width="0dp"
+                    android:layout_height="match_parent"
+                    android:layout_margin="5dp"
+                    android:layout_weight="10"
+                    android:background="@null"
+
+                    android:clickable="false"
+                    android:contextClickable="false"
+                    android:cursorVisible="false"
+                    android:enabled="false"
+                    android:focusable="false"
+                    android:focusableInTouchMode="false"
+                    android:fontFamily="sans-serif"
+                    android:hint="  클럽 태그 입력"
+
+                    android:linksClickable="false"
+                    android:longClickable="false"
+                    android:text=""
+                    android:textColor="@color/colorWhite"
+                    android:textColorHint="@color/colorWhite" />
+
+                <ImageButton
+                    android:id="@+id/imageButton2"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center"
+                    android:layout_marginRight="15dp"
+                    android:background="#00ff0000"
+                    android:src="@drawable/round_search_white_24" />
 
             </LinearLayout>
 
@@ -86,102 +137,46 @@
 
         </LinearLayout>
 
-
-        <com.google.android.material.textfield.TextInputLayout
+        <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="50dp"
+            android:layout_height="match_parent"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/player_main_input_click">
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="50dp"
+            android:background="@drawable/card_my_account"
+            android:gravity="center"
+            android:orientation="vertical">
+
 
             <LinearLayout
-
-                android:id="@+id/player_club_searchInput_layout"
+                android:id="@+id/player_main_inputMyAccount"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal"
-                android:onClick="onClubSearchClick">
+                android:gravity="center"
+                android:orientation="vertical">
 
-                <com.google.android.material.textfield.TextInputEditText
-                    android:id="@+id/player_club_searchInput"
-                    android:layout_width="0dp"
-                    android:layout_height="match_parent"
-                    android:layout_margin="5dp"
-                    android:layout_weight="10"
-                    android:background="@null"
-
-                    android:clickable="false"
-                    android:contextClickable="false"
-                    android:cursorVisible="false"
-                    android:focusable="false"
-                    android:focusableInTouchMode="false"
-                    android:linksClickable="false"
-                    android:longClickable="false"
-                    android:enabled="false"
-
-                    android:fontFamily="sans-serif"
-                    android:hint="  클럽 태그 입력"
-                    android:text=""
-                    android:textColor="@color/colorWhite"
-                    android:textColorHint="@color/colorWhite" />
-
-                <ImageButton
-                    android:id="@+id/imageButton2"
+                <ImageView
+                    android:id="@+id/imageView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginRight="15dp"
-                    android:background="#00ff0000"
-                    android:onClick="onClubSearchClick"
-                    android:src="@drawable/search_30" />
+                    android:layout_marginBottom="10dp"
+                    android:background="@drawable/round_add_24"
+                    android:backgroundTint="@color/colorWhite" />
 
+                <TextView
+                    android:id="@+id/textView12"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="@font/lilita_one"
+                    android:gravity="center"
+                    android:text="내 계정 태그를 입력해보세요."
+                    android:textColor="@color/colorWhite"
+                    android:textSize="14sp"
+                    android:textStyle="bold" />
             </LinearLayout>
 
-        </com.google.android.material.textfield.TextInputLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginHorizontal="20dp"
-            android:orientation="horizontal">
-
-            <TextView
-                android:id="@+id/textView13"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="서비스 실행"
-                android:textColor="@color/colorWhite"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/button2"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/semi_round_button_inner_click"
-                android:onClick="onStartClick"
-                android:text="시작"
-                android:textColor="@color/colorWhite"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
-            <Button
-                android:id="@+id/button3"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_margin="5dp"
-                android:background="@drawable/semi_round_button_inner_click"
-                android:onClick="onEndClick"
-                android:text="종료"
-                android:textColor="@color/colorWhite"
-                android:textSize="18sp"
-                android:textStyle="bold" />
-
         </LinearLayout>
-
-
     </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

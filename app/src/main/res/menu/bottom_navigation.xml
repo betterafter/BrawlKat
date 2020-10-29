@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/action_search"
+        android:enabled="true"
+        android:icon="@drawable/round_search_24"
+        android:title="search"/>
+
+    <item
+        android:id="@+id/action_favorites"
+        android:enabled="true"
+        android:icon="@drawable/round_star_24"
+        android:title="fravorites"/>
+
+    <item
+        android:id="@+id/action_ranking"
+        android:enabled="true"
+        android:icon="@drawable/round_assignment_24"
+        android:title="ranking"/>
+
+</menu>
