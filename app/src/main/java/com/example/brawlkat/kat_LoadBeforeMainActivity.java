@@ -1,5 +1,6 @@
 package com.example.brawlkat;
 
+import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.brawlkat.database.kat_database;
@@ -28,11 +29,16 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 1);
             kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
 
-
-            kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
-            String tag = kataMyAccountBase.getTag();
-            String realTag = tag.substring(1);
-            kset.SearchStart(realTag, "players");
+            if(kataMyAccountBase.size() == 1) {
+                kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
+                String tag = kataMyAccountBase.getTag();
+                String realTag = tag.substring(1);
+                kset.SearchStart(realTag, "players");
+            }
+            else{
+                Intent intent = new Intent(this, kat_Player_MainActivity.class);
+                startActivity(intent);
+            }
         }
     }
 }

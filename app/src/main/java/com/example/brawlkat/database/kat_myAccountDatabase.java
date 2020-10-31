@@ -108,7 +108,9 @@ public class kat_myAccountDatabase extends SQLiteOpenHelper {
         SQLiteDatabase database = getWritableDatabase();
         Cursor cursor = database.rawQuery("SELECT * FROM kataFavoritesBase", null);
         cursor.moveToLast();
-        return cursor.getString(2);
+        if(cursor.getCount() > 0)
+            return cursor.getString(2);
+        else return "";
     }
 
 
