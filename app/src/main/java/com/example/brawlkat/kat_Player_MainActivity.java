@@ -99,6 +99,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
+        layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
             // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
             bottomNavigationView = findViewById(R.id.bottomNavi);
@@ -153,9 +155,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                     return false;
                 }
             });
-
-
-            layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             // setFrag(0)를 할 때 Recent_Search로 넘어가지 않는 오류가 있었는데, Recent_Search에서 fragment 를 담을 Main_Frame이 없다고 한다.
             // 생각해보니 Recent_Search는 MainActivity를 상속 받기 때문에 MainActivity의 onCreate나 onStart도 상속을 받아서
