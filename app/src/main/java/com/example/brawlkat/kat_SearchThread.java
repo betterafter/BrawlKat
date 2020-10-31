@@ -16,15 +16,17 @@ import androidx.annotation.Nullable;
 
 public class kat_SearchThread extends kat_Player_MainActivity {
 
-    Activity activity;
+    Activity fromActivity;
+    Activity toActivity;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
-    public kat_SearchThread(Activity activity){
-        this.activity = activity;
+    public kat_SearchThread(Activity fromActivity){
+        this.fromActivity = fromActivity;
     }
 
 
@@ -112,9 +114,9 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 // 2020.10.26
                 // activity.startActivity(intent) 와
                 // startActivity(intent) 의 차이점은 뭘까?
-                Intent intent = new Intent(activity, kat_Player_PlayerDetailActivity.class);
+                Intent intent = new Intent(fromActivity, kat_Player_PlayerDetailActivity.class);
                 intent.putExtra("playerData", playerData);
-                activity.startActivity(intent);
+                fromActivity.startActivity(intent);
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -147,11 +149,11 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 katabase.delete(type);
                 katabase.insert(type, tag, name, isAccount);
 
-                Intent intent = new Intent(activity, kat_Player_ClubDetailActivity.class);
+                Intent intent = new Intent(fromActivity, kat_Player_ClubDetailActivity.class);
                 intent.putExtra("clubData", clubData);
                 intent.putExtra("clubLogData", clubLogData);
 
-                activity.startActivity(intent);
+                fromActivity.startActivity(intent);
 
             }
             catch (Exception e){

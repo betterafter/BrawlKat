@@ -6,9 +6,6 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
-import android.view.animation.Animation;
-import android.view.animation.AnimationSet;
-import android.view.animation.AnimationUtils;
 import android.widget.LinearLayout;
 
 import com.example.brawlkat.R;
@@ -45,34 +42,12 @@ public class kat_SearchFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.player_main, container, false);
-        view.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                System.out.println(    touchOutsideOfMyAccount);
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN){
-                    if(touchOutsideOfMyAccount){
-                        onMyAccountDecisionClick(inputMyAccount);
-                    }
-                    touchOutsideOfMyAccount = false;
-                }
-
-                return false;
-            }
-        });
 
         TextInputEditText player_user_search = (TextInputEditText) view.findViewById(R.id.player_user_searchInput);
         TextInputEditText player_club_search = (TextInputEditText) view.findViewById(R.id.player_club_searchInput);
         LinearLayout player_user_search_layout = (LinearLayout) view.findViewById(R.id.player_user_searchInput_layout);
         LinearLayout player_club_search_layout = (LinearLayout) view.findViewById(R.id.player_club_searchInput_layout);
 
-        inputMyAccount = (LinearLayout) view.findViewById(R.id.player_main_inputMyAccount);
-        inputMyAccount.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                touchOutsideOfMyAccount = true;
-                return false;
-            }
-        });
 
 
         player_user_search_layout.setOnTouchListener(new View.OnTouchListener(){
@@ -100,25 +75,6 @@ public class kat_SearchFragment extends Fragment {
             }
         });
         return view;
-    }
-
-
-
-
-    public void onMyAccountDecisionClick(View view){
-
-        AnimationSet animationSet = new AnimationSet(true);
-
-        Animation moveAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.move_to_corner);
-        Animation sizeAnimation = AnimationUtils.loadAnimation(getActivity().getApplicationContext(), R.anim.size_down);
-
-        animationSet.addAnimation(moveAnimation);
-        animationSet.addAnimation(sizeAnimation);
-
-        animationSet.setFillAfter(true);
-
-        view.startAnimation(animationSet);
-
     }
 
 

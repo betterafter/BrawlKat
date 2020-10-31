@@ -32,14 +32,15 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/player_main_input_click">
+            android:layout_marginBottom="10dp">
 
             <LinearLayout
                 android:id="@+id/player_user_searchInput_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:background="@drawable/player_main_input_click">
 
 
                 <com.google.android.material.textfield.TextInputEditText
@@ -82,16 +83,17 @@
             android:layout_width="match_parent"
             android:layout_height="50dp"
             android:layout_marginHorizontal="20dp"
-            android:layout_marginBottom="10dp"
-            android:background="@drawable/player_main_input_click"
-            android:backgroundTint="@color/semiBlack">
+            android:layout_marginBottom="10dp">
 
             <LinearLayout
 
                 android:id="@+id/player_club_searchInput_layout"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:clickable="true"
+                android:background="@drawable/player_main_input_click"
+                android:backgroundTint="@color/semiBlack">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/player_club_searchInput"
@@ -140,10 +142,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="20dp"
-            android:layout_marginTop="50dp"
-            android:layout_marginBottom="50dp"
-            android:background="@drawable/card_my_account"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:background="@drawable/card_my_account_click"
+            android:clickable="true"
             android:gravity="center"
             android:orientation="vertical">
 
@@ -160,20 +163,19 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center"
-                    android:layout_marginBottom="10dp"
                     android:background="@drawable/round_add_24"
                     android:backgroundTint="@color/colorWhite" />
 
                 <TextView
-                    android:id="@+id/textView12"
+                    android:id="@+id/textView11"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:fontFamily="@font/lilita_one"
-                    android:gravity="center"
+                    android:layout_margin="10dp"
                     android:text="내 계정 태그를 입력해보세요."
                     android:textColor="@color/colorWhite"
-                    android:textSize="14sp"
+                    android:gravity="center"
                     android:textStyle="bold" />
+
             </LinearLayout>
 
         </LinearLayout>

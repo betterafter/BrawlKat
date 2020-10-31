@@ -1,6 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
-<selector xmlns:android="http://schemas.android.com/apk/res/android">
-    <item android:state_pressed="true"
-        android:drawable="@drawable/player_main_input_selected" /> <!-- pressed -->
+<ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/colorWhite">
     <item android:drawable="@drawable/player_main_input_normal" /> <!-- default -->
-</selector>
+</ripple>
