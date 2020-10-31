@@ -353,7 +353,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
                 String realTag = playerInfo.getTag().substring(1);
                 System.out.println("realTag : " + realTag);
 
-                kat_SearchThread kset = new kat_SearchThread(getActivity());
+                kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class);
                 kset.SearchStart(realTag, "players");
             }
         });

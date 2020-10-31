@@ -16,8 +16,6 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
 
-import com.example.brawlkat.database.kat_database;
-import com.example.brawlkat.database.kat_favoritesDatabase;
 import com.example.brawlkat.dataparser.kat_brawlersParser;
 import com.example.brawlkat.dataparser.kat_clubLogParser;
 import com.example.brawlkat.dataparser.kat_mapsParser;
@@ -36,11 +34,10 @@ import java.util.Stack;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class kat_Player_MainActivity extends AppCompatActivity {
+public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     // 하단 네비게이션 바 관련
     private             BottomNavigationView                                                    bottomNavigationView;
@@ -84,10 +81,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     private             boolean                                                                 bound = false;
     private             boolean                                                                 endClickToUnbind = false;
 
-
-    public              static kat_database                                                     katabase;
-    public              static kat_favoritesDatabase                                            kataFavoritesBase;
-
     public              LayoutInflater                                                          layoutInflater;
 
     public              kat_mapsParser                                                          mapsParser;
@@ -106,75 +99,69 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main);
 
-        // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
-        bottomNavigationView = findViewById(R.id.bottomNavi);
-        bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener()
-        {
-            @Override
-            public boolean onNavigationItemSelected(@NonNull MenuItem menuItem)
-            {
-                switch (menuItem.getItemId())
-                {
-                    case R.id.action_search:
-                        setFrag(0);
-                        break;
-                    case R.id.action_favorites:
-                        setFrag(1);
-                        break;
-                    case R.id.action_ranking:
-                        setFrag(2);
-                        break;
-                }
-                return true;
-            }
-        });
-
-        kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
-        kat_favoritesFragment = new kat_FavoritesFragment();
-        kat_rankingFragment = new kat_RankingFragment();
-
-        // ...........................................................................................................
-
-        unbindThread ubt = new unbindThread();
-        if(!ubt.isAlive()) ubt.start();
-
-        client.init();
-
-        katabase = new kat_database(getApplicationContext(), "kat", null, 1);
-        kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 1);
-
-
-        serviceButton = (ImageButton)findViewById(R.id.main_serviceButton);
-        serviceButton.setOnTouchListener(new View.OnTouchListener(){
-            @Override
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                    if (isServiceStart) {
-                        if (katService != null && !endClickToUnbind) {
-                            endClickToUnbind = true;
-                            unbindService(katConnection);
-                            isServiceStart = false;
-                        }
-                    } else {
-                        endClickToUnbind = false;
-                        getPermission();
-                        testThread tt = new testThread();
-                        tt.start();
-                        isServiceStart = true;
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
+            // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
+            bottomNavigationView = findViewById(R.id.bottomNavi);
+            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
+                @Override
+                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+                    switch (menuItem.getItemId()) {
+                        case R.id.action_search:
+                            setFrag(0);
+                            break;
+                        case R.id.action_favorites:
+                            setFrag(1);
+                            break;
+                        case R.id.action_ranking:
+                            setFrag(2);
+                            break;
                     }
+                    return true;
                 }
-                return false;
-            }
-        });
+            });
+
+            kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
+            kat_favoritesFragment = new kat_FavoritesFragment();
+            kat_rankingFragment = new kat_RankingFragment();
+
+            // ...........................................................................................................
+
+            unbindThread ubt = new unbindThread();
+            if (!ubt.isAlive()) ubt.start();
+
+            client.init();
+
+            serviceButton = (ImageButton) findViewById(R.id.main_serviceButton);
+            serviceButton.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View v, MotionEvent motionEvent) {
+                    if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                        if (isServiceStart) {
+                            if (katService != null && !endClickToUnbind) {
+                                endClickToUnbind = true;
+                                unbindService(katConnection);
+                                isServiceStart = false;
+                            }
+                        } else {
+                            endClickToUnbind = false;
+                            getPermission();
+                            testThread tt = new testThread();
+                            tt.start();
+                            isServiceStart = true;
+                        }
+                    }
+                    return false;
+                }
+            });
 
 
-        layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        // setFrag(0)를 할 때 Recent_Search로 넘어가지 않는 오류가 있었는데, Recent_Search에서 fragment 를 담을 Main_Frame이 없다고 한다.
-        // 생각해보니 Recent_Search는 MainActivity를 상속 받기 때문에 MainActivity의 onCreate나 onStart도 상속을 받아서
-        // setFrag 메소드를 실행해버린다. 그래서 recent_Search에 자꾸 fragment 화면을 띄우려고 한 것.
-        // setFrag를 MainActivity에서만 실행하게 해준다.
-        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) setFrag(0);
+            // setFrag(0)를 할 때 Recent_Search로 넘어가지 않는 오류가 있었는데, Recent_Search에서 fragment 를 담을 Main_Frame이 없다고 한다.
+            // 생각해보니 Recent_Search는 MainActivity를 상속 받기 때문에 MainActivity의 onCreate나 onStart도 상속을 받아서
+            // setFrag 메소드를 실행해버린다. 그래서 recent_Search에 자꾸 fragment 화면을 띄우려고 한 것.
+            // setFrag를 MainActivity에서만 실행하게 해준다.
+        }
     }
 
 
@@ -184,6 +171,17 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         super.onStart();
         getMapDataThread mdt = new getMapDataThread();
         if (!mdt.isAlive()) mdt.start();
+
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
+            setFrag(0);
+
+            Intent intent = getIntent();
+            if (intent != null) {
+                kat_searchFragment.getPlayerData(
+                        (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData"));
+                setFrag(0);
+            }
+        }
 
         //test t = new test();
         //t.start();

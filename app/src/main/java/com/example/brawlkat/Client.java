@@ -103,7 +103,6 @@ public class Client {
                     reader.close();
                     socket.close();
                     workDone = true;
-                    System.out.println("workDone : " + workDone);
                     break;
                 }
             }

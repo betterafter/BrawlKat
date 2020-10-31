@@ -31,7 +31,8 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
                 if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
-                    kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this);
+                    kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
+                            kat_Player_PlayerDetailActivity.class);
                     kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
                 }
                 return false;
@@ -94,7 +95,8 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     // 전적 검색 클릭
     public void onUserClubSearchClick(View view){
 
-        kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this);
+        kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
+                 kat_Player_PlayerDetailActivity.class);
         kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
     }
 
@@ -104,7 +106,8 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         String RawTag = ((TextView) linearLayout.getChildAt(1)).getText().toString();
         String newTag = RawTag.substring(1);
 
-        kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this);
+        kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
+                 kat_Player_PlayerDetailActivity.class);
         kset.SearchStart(newTag, type);
     }
 

@@ -257,7 +257,8 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
                     String realTag = memberData.get(idx).getTag().substring(1);
                     System.out.println("realTag : " + realTag);
 
-                    kat_SearchThread kset = new kat_SearchThread(kat_Player_ClubDetailActivity.this);
+                    kat_SearchThread kset = new kat_SearchThread(kat_Player_ClubDetailActivity.this,
+                            kat_Player_PlayerDetailActivity.class);
                     kset.SearchStart(realTag, "players");
                 }
             });

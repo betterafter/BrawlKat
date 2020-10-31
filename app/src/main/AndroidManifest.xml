@@ -16,17 +16,19 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".kat_Player_MainActivity">
+        <activity android:name=".kat_LoadBeforeMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity android:name=".kat_Player_MainActivity"></activity>
         <activity android:name=".kat_Player_RecentSearchActivity"></activity>
         <activity android:name=".kat_Player_PlayerDetailActivity"></activity>
         <activity android:name=".kat_Player_ClubDetailActivity"></activity>
         <activity android:name=".kat_Player_PlayerBattleLogDetailActivity"></activity>
+        <activity android:name=".kat_SearchAccountForSaveActivity"></activity>
         <service android:name=".kat_Service_OverdrawActivity"></service>
         <meta-data
             android:name="preloaded_fonts"

@@ -17,7 +17,7 @@ import androidx.annotation.Nullable;
 public class kat_SearchThread extends kat_Player_MainActivity {
 
     Activity fromActivity;
-    Activity toActivity;
+    Class toClass;
 
 
     @Override
@@ -25,8 +25,9 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         super.onCreate(savedInstanceState);
     }
 
-    public kat_SearchThread(Activity fromActivity){
+    public kat_SearchThread(Activity fromActivity, Class toclass){
         this.fromActivity = fromActivity;
+        this.toClass = toclass;
     }
 
 
@@ -87,9 +88,10 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
         // 제대로 가져오지 못했을 경우 알림
         if(sendData.get(0).equals("{none}")){
-            Toast toast = Toast.makeText(getApplicationContext(), "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
-            toast.show();
-
+//            Toast toast = Toast.makeText(fromActivity.getApplicationContext(),
+//                    "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
+//            toast.show();
+            System.out.println("something wrong....");
         }
         // 제대로 가져왔을 경우
         else{
@@ -111,11 +113,16 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 katabase.delete(type);
                 katabase.insert(type, Tag, name, isAccount);
 
+                if(fromActivity.getClass().getName().equals("com.example.brawlkat.kat_SearchAccountForSaveActivity")){
+                    setMyAccount();
+                }
+
                 // 2020.10.26
                 // activity.startActivity(intent) 와
                 // startActivity(intent) 의 차이점은 뭘까?
-                Intent intent = new Intent(fromActivity, kat_Player_PlayerDetailActivity.class);
+                Intent intent = new Intent(fromActivity, toClass);
                 intent.putExtra("playerData", playerData);
+
                 fromActivity.startActivity(intent);
             }
             catch (Exception e){
@@ -162,9 +169,19 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         }
     }
 
+
     public void SearchStart(String tag, String type){
         SearchThread searchThread = new SearchThread(tag, type);
         searchThread.start();
+    }
+
+    public void setMyAccount(){
+        if(kataMyAccountBase.size() < 1) {
+            kataMyAccountBase.insert("player", playerData.getTag(), playerData.getName());
+        }
+        System.out.println("add my account");
+        System.out.println(kataMyAccountBase.size());
+        kataMyAccountBase.print();
     }
 
 }
