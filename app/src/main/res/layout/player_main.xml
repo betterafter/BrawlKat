@@ -18,14 +18,23 @@
         <TextView
             android:id="@+id/textView9"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="150dp"
             android:fontFamily="@font/lilita_one"
-            android:gravity="center"
+            android:gravity="bottom"
             android:text="BrawlKat"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/Color1"
             android:textSize="50sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView12"
+            android:layout_width="match_parent"
+            android:layout_height="100dp"
+            android:text="브롤스타즈 전적 검색 앱"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
             android:textStyle="bold" />
 
         <com.google.android.material.textfield.TextInputLayout
@@ -131,18 +140,11 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
-        <LinearLayout
-            android:id="@+id/player_layout_userInfo"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal">
-
-        </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_marginHorizontal="30dp"
+            android:layout_marginHorizontal="20dp"
             android:layout_marginTop="10dp"
             android:layout_marginBottom="10dp"
             android:background="@drawable/card_my_account_click"
