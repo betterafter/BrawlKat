@@ -65,6 +65,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     public              kat_official_clubInfoParser                                             official_clubInfoParser;
     public              kat_clubLogParser                                                       clubLogParser;
     private             ArrayList<String>                                                       offi_PlayerArrayList;
+
+    public              static kat_official_playerInfoParser.playerData                         MyPlayerData;
     public              kat_official_playerInfoParser.playerData                                playerData;
     public              kat_official_clubInfoParser.clubData                                    clubData;
     public              kat_clubLogParser.clubLogData                                           clubLogData;
@@ -97,11 +99,21 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
+
+            kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
+            kat_favoritesFragment = new kat_FavoritesFragment();
+            kat_rankingFragment = new kat_RankingFragment();
+
             // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
             bottomNavigationView = findViewById(R.id.bottomNavi);
             bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
                 @Override
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+
+                    kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
+                    kat_favoritesFragment = new kat_FavoritesFragment();
+                    kat_rankingFragment = new kat_RankingFragment();
+
                     switch (menuItem.getItemId()) {
                         case R.id.action_search:
                             setFrag(0);
@@ -117,9 +129,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 }
             });
 
-            kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
-            kat_favoritesFragment = new kat_FavoritesFragment();
-            kat_rankingFragment = new kat_RankingFragment();
 
             // ...........................................................................................................
 
@@ -169,32 +178,12 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
             Intent intent = getIntent();
             if (intent != null) {
-                kat_searchFragment.getPlayerData(
-                        (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData"));
+                MyPlayerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
                 setFrag(0);
             }
         }
-
-        //test t = new test();
-        //t.start();
-
     }
 
-
-    private class test extends Thread{
-        public void run(){
-            while(true){
-                try{
-                    sleep(3000);
-                    setFrag(0);
-                    break;
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     // 프레그먼트 교체
     public void setFrag(int n)

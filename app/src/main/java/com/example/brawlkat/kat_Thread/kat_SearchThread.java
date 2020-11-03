@@ -5,12 +5,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.brawlkat.kat_Player_ClubDetailActivity;
+import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
-import com.example.brawlkat.kat_Player_ClubDetailActivity;
-import com.example.brawlkat.kat_Player_MainActivity;
 
 import java.util.ArrayList;
 
@@ -20,7 +20,9 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
     Activity fromActivity;
     Class toClass;
+    boolean setData = false;
 
+    SearchThread searchThread;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,11 +52,9 @@ public class kat_SearchThread extends kat_Player_MainActivity {
             sendData = new ArrayList<>();
 
             if(type.equals("players")){
-
                 client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
-
                 while(!client.workDone){
-                    System.out.println("client wait");
+                    System.out.println("break point 1");
                     if(client.workDone){
                         client.workDone = false;
                         sendData.add(client.getAllTypeData().get(0));
@@ -122,9 +122,21 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 // 2020.10.26
                 // activity.startActivity(intent) 와
                 // startActivity(intent) 의 차이점은 뭘까?
+
+                if(fromActivity.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")){
+                    if(kat_GetStarlistDataThread.BrawlersArrayList != null)
+                        System.out.println(kat_GetStarlistDataThread.BrawlersArrayList.size());
+
+                    if(kat_GetStarlistDataThread.isEmptyListCheckThread.isAlive()){
+                        kat_GetStarlistDataThread.isEmptyListCheckThread.join();
+                    }
+
+                    if(kat_GetStarlistDataThread.BrawlersArrayList != null)
+                        System.out.println(kat_GetStarlistDataThread.BrawlersArrayList.size());
+                }
+
                 Intent intent = new Intent(fromActivity, toClass);
                 intent.putExtra("playerData", playerData);
-
                 fromActivity.startActivity(intent);
             }
             catch (Exception e){
@@ -173,8 +185,9 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
 
     public void SearchStart(String tag, String type){
-        SearchThread searchThread = new SearchThread(tag, type);
+        searchThread = new SearchThread(tag, type);
         searchThread.start();
+
     }
 
     public void setMyAccount(){

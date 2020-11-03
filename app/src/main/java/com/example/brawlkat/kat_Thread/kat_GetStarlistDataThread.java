@@ -24,6 +24,10 @@ public class kat_GetStarlistDataThread extends AppCompatActivity {
     public                      static ArrayList<kat_eventsParser.pair>     EventArrayList;
     public                      static ArrayList<HashMap<String, Object>>   BrawlersArrayList;
 
+    public                      static GetStarListDataThread                getStarListDataThread;
+    public                      static isEmptyListCheckThread               isEmptyListCheckThread;
+
+
     public kat_GetStarlistDataThread(kat_LoadBeforeMainActivity kat_loadBeforeMainActivity){
         this.kat_loadBeforeMainActivity = kat_loadBeforeMainActivity;
     }
@@ -69,9 +73,24 @@ public class kat_GetStarlistDataThread extends AppCompatActivity {
         }
     }
 
+    public class isEmptyListCheckThread extends Thread{
+        public void run(){
+            while(true){
+                System.out.println("empty");
+                if(BrawlersArrayList != null && EventArrayList != null){
+                    System.out.println("not empty");
+                    break;
+                }
+            }
+        }
+    }
+
     public void init(){
-        GetStarListDataThread getThread = new GetStarListDataThread();
-        getThread.start();
+        getStarListDataThread = new GetStarListDataThread();
+        getStarListDataThread.start();
+
+        isEmptyListCheckThread = new isEmptyListCheckThread();
+        isEmptyListCheckThread.start();
     }
 
     public ArrayList<kat_eventsParser.pair> getEventArrayList(){

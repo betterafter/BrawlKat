@@ -76,6 +76,7 @@ public class kat_SearchFragment extends Fragment {
         width = metrics.widthPixels;
     }
 
+
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.player_main, container, false);
 
@@ -91,6 +92,8 @@ public class kat_SearchFragment extends Fragment {
 
             final View tempView = player_main_inputMyAccount.getChildAt(0);
             final Drawable tempDrawable = player_main_inputMyAccount.getBackground();
+
+            playerData = kat_Player_MainActivity.MyPlayerData;
 
             // 현재 있는 뷰 일단 지워주기
             player_main_inputMyAccount.removeAllViews();
@@ -113,26 +116,36 @@ public class kat_SearchFragment extends Fragment {
 
 
             // 플레이어의 모스트 3 브롤러 가져오기. 다 똑같으면 이름 순으로
-            ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
+            ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData
+                    = new ArrayList<>();
+            if(kat_Player_MainActivity.MyPlayerData != null) {
+                brawlerData = kat_Player_MainActivity.MyPlayerData.getBrawlerData();
+            }
             Collections.sort(brawlerData, new brawlerSort());
 
             kat_GetStarlistDataThread getStarlistDataThread = new kat_GetStarlistDataThread(kat_player_mainActivity);
             getStarlistDataThread.init();
             BrawlerArrayList = new ArrayList<>();
-            if(kat_LoadBeforeMainActivity.BrawlersArrayList != null && kat_LoadBeforeMainActivity.BrawlersArrayList.size() > 0) {
-                BrawlerArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+            if(kat_GetStarlistDataThread.BrawlersArrayList != null && kat_GetStarlistDataThread.BrawlersArrayList.size() > 0) {
+                BrawlerArrayList = kat_GetStarlistDataThread.BrawlersArrayList;
             }
 
             FrameLayout brawler1 = accountView.findViewById(R.id.brawler1);
             FrameLayout brawler2 = accountView.findViewById(R.id.brawler2);
             FrameLayout brawler3 = accountView.findViewById(R.id.brawler3);
 
-
+            findBrawler(brawler1, kat_Player_MainActivity.MyPlayerData, BrawlerArrayList, 0);
+            findBrawler(brawler2, kat_Player_MainActivity.MyPlayerData, BrawlerArrayList, 1);
+            findBrawler(brawler3, kat_Player_MainActivity.MyPlayerData, BrawlerArrayList, 2);
 
 
 
             // 이미지 링크 선언
-            String url_profile = "https://www.starlist.pro/assets/profile/" + playerData.getIconId() + ".png?v=1";
+            String url_profile = "";
+            if(kat_Player_MainActivity.MyPlayerData != null){
+                url_profile = "https://www.starlist.pro/assets/profile/" +
+                        kat_Player_MainActivity.MyPlayerData.getIconId() + ".png?v=1";
+            }
             String url_icon_trophies = "https://www.starlist.pro/assets/icon/trophy.png";
 
             // 이미지 세팅
@@ -227,10 +240,6 @@ public class kat_SearchFragment extends Fragment {
     }
 
 
-    public void getPlayerData(kat_official_playerInfoParser.playerData playerData){
-        this.playerData = playerData;
-    }
-
     public void GlideImage(String url, int width, int height, ImageView view){
 
         Glide.with(getActivity().getApplicationContext())
@@ -264,8 +273,28 @@ public class kat_SearchFragment extends Fragment {
         }
     }
 
-    public void BrawlerMatching(){
 
+    public void findBrawler(FrameLayout frameLayout,
+                            kat_official_playerInfoParser.playerData playerData,
+                            ArrayList<HashMap<String, Object>> BrawlerArrayList,
+                            int i){
+        if(playerData == null) return;
+        System.out.println(BrawlerArrayList.size());
+        ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
+        for(int j = 0; j <BrawlerArrayList.size(); j++){
+
+            if(brawlerData.get(i).getId().equals(BrawlerArrayList.get(j).get("id").toString())){
+                System.out.println(brawlerData.get(i).getId() + ", " + BrawlerArrayList.get(j).get("id").toString());
+                ImageView imageView = (ImageView) frameLayout.getChildAt(0);
+                TextView textView = (TextView) frameLayout.getChildAt(1);
+
+                GlideImage(BrawlerArrayList.get(j).get("imageUrl").toString(), width / 10, height / 10, imageView);
+                textView.setText(Integer.toString(brawlerData.get(i).getTrophies()));
+
+                break;
+            }
+        }
     }
+
 
 }

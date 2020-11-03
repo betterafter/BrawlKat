@@ -24,7 +24,8 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     public              static kat_myAccountDatabase                   kataMyAccountBase;
 
     public              static Client                                  client = new Client();
-    public              static kat_GetStarlistDataThread                getStarlistDataThread;
+
+    public              kat_GetStarlistDataThread                      getStarlistDataThread;
     public              static ArrayList<kat_eventsParser.pair>        EventArrayList;
     public              static ArrayList<HashMap<String, Object>>      BrawlersArrayList;
     // ..............................................................................................................//
@@ -45,35 +46,13 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             getStarlistDataThread = new kat_GetStarlistDataThread(kat_LoadBeforeMainActivity.this);
             getStarlistDataThread.init();
 
-            moveToMain moveToMain = new moveToMain();
-            moveToMain.start();
-
             move();
-        }
-    }
-
-    public class moveToMain extends Thread{
-        public void run(){
-            try {
-                while (true) {
-
-                    if(kat_GetStarlistDataThread.EventArrayList == null) continue;
-                    if(kat_GetStarlistDataThread.BrawlersArrayList == null) continue;
-
-                    EventArrayList = kat_GetStarlistDataThread.EventArrayList;
-                    BrawlersArrayList = kat_GetStarlistDataThread.BrawlersArrayList;
-
-                    break;
-                }
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
         }
     }
 
     private void move(){
         if(kataMyAccountBase.size() == 1) {
+            System.out.println("ready to move");
             kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
             String tag = kataMyAccountBase.getTag();
             String realTag = tag.substring(1);
@@ -84,5 +63,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             startActivity(intent);
         }
     }
+
 
 }
