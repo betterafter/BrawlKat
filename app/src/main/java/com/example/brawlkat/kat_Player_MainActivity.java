@@ -15,17 +15,18 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.Toast;
 
-import com.example.brawlkat.dataparser.kat_brawlersParser;
-import com.example.brawlkat.dataparser.kat_clubLogParser;
-import com.example.brawlkat.dataparser.kat_mapsParser;
-import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
-import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
-import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
-import com.example.brawlkat.dataparser.kat_official_playerParser;
-import com.example.brawlkat.katfragment.kat_FavoritesFragment;
-import com.example.brawlkat.katfragment.kat_RankingFragment;
-import com.example.brawlkat.katfragment.kat_SearchFragment;
+import com.example.brawlkat.kat_Fragment.kat_FavoritesFragment;
+import com.example.brawlkat.kat_Fragment.kat_RankingFragment;
+import com.example.brawlkat.kat_Fragment.kat_SearchFragment;
+import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
+import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
+import com.example.brawlkat.kat_dataparser.kat_mapsParser;
+import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerParser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -54,12 +55,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     public              static String                                                           official = "official";
     public              static String                                                           nofficial = "nofficial";
-
-
-    public              static Client                                                           client = new Client();
-
-
-
 
     public              static String                                                           playerTag;
     private             String                                                                  clubTag;
@@ -130,8 +125,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
             unbindThread ubt = new unbindThread();
             if (!ubt.isAlive()) ubt.start();
-
-            client.init();
 
             serviceButton = (ImageButton) findViewById(R.id.main_serviceButton);
             serviceButton.setOnTouchListener(new View.OnTouchListener() {
@@ -344,4 +337,27 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     };
 
 
+    long backKeyPressedTime;
+
+    @Override
+    public void onBackPressed() {
+        //1번째 백버튼 클릭
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")){
+            if(System.currentTimeMillis()>backKeyPressedTime+2000){
+                backKeyPressedTime = System.currentTimeMillis();
+                Toast.makeText(this, "앱을 종료시키려면 뒤로 가기 버튼을 눌러주세요", Toast.LENGTH_SHORT).show();
+            }
+            //2번째 백버튼 클릭 (종료)
+            else{
+                AppFinish();
+            }
+        }
+    }
+
+    //앱종료
+    public void AppFinish(){
+        finish();
+        System.exit(0);
+        android.os.Process.killProcess(android.os.Process.myPid());
+    }
 }

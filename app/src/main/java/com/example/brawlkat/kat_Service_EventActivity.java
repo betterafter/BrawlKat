@@ -13,9 +13,9 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
-import com.example.brawlkat.dataparser.kat_brawlersParser;
-import com.example.brawlkat.dataparser.kat_eventsParser;
-import com.example.brawlkat.dataparser.kat_official_playerParser;
+import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
+import com.example.brawlkat.kat_dataparser.kat_eventsParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -145,7 +145,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     }
 
                     System.out.println("success to get data'\n");
-                    int time = 1000 * 6;
+                    int time = 1000 * 60;
                     sleep(time);
                 }
             }

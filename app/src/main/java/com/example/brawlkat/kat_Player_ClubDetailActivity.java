@@ -22,8 +22,9 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.brawlkat.dataparser.kat_clubLogParser;
-import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
+import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 
 import java.util.ArrayList;
 import java.util.HashMap;

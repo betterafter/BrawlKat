@@ -1,4 +1,4 @@
-package com.example.brawlkat.katfragment;
+package com.example.brawlkat.kat_Fragment;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -12,9 +12,9 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.R;
-import com.example.brawlkat.dataparser.kat_mapsParser;
-import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
-import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_dataparser.kat_mapsParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_Player_PlayerDetailActivity;
 

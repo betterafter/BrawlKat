@@ -45,14 +45,14 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:backgroundTint="@color/Color1"
-                        android:hint="#"
-                        android:focusable="false"
                         android:clickable="false"
-                        android:enabled="false"
-                        android:focusableInTouchMode="false"
                         android:cursorVisible="false"
+                        android:enabled="false"
+                        android:focusable="false"
+                        android:focusableInTouchMode="false"
+                        android:hint="#"
                         android:textColorHint="@color/colorWhite"
-                        android:textSize="24sp" />
+                        android:textSize="18sp" />
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/account_input_edit_text"
@@ -62,9 +62,10 @@
                         android:backgroundTint="@color/Color1"
                         android:gravity="center"
                         android:hint="당신의 계정 태그를 입력해주세요."
+                        android:textAlignment="textStart"
                         android:textColor="@color/colorWhite"
                         android:textColorHint="@color/colorWhite"
-                        android:textSize="24sp"
+                        android:textSize="18sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 

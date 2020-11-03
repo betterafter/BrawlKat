@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.google.android.material.textfield.TextInputEditText;
 
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package com.example.brawlkat.katfragment;
+package com.example.brawlkat.kat_Fragment;
 
 import androidx.fragment.app.Fragment;
 

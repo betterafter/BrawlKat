@@ -1,13 +1,15 @@
-package com.example.brawlkat.katfragment;
+package com.example.brawlkat.kat_Fragment;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -17,12 +19,20 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.brawlkat.Client;
 import com.example.brawlkat.R;
-import com.example.brawlkat.database.kat_myAccountDatabase;
-import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_Database.kat_myAccountDatabase;
+import com.example.brawlkat.kat_LoadBeforeMainActivity;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_Player_RecentSearchActivity;
 import com.example.brawlkat.kat_SearchAccountForSaveActivity;
+import com.example.brawlkat.kat_Thread.kat_GetStarlistDataThread;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -32,9 +42,12 @@ public class kat_SearchFragment extends Fragment {
 
 
     private             kat_Player_MainActivity                                                 kat_player_mainActivity;
+    private             Client                                                                  client;
+
     private             boolean                                                                 touchOutsideOfMyAccount = true;
     private             LinearLayout                                                            inputMyAccount;
     private             kat_official_playerInfoParser.playerData                                playerData;
+    private             ArrayList<HashMap<String, Object>>                                      BrawlerArrayList;
 
     private             RequestOptions                                                          options;
     public              static int                                                              height;
@@ -49,6 +62,8 @@ public class kat_SearchFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        client = kat_player_mainActivity.client;
 
         options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -67,32 +82,54 @@ public class kat_SearchFragment extends Fragment {
         LinearLayout player_user_search_layout = (LinearLayout) view.findViewById(R.id.player_user_searchInput_layout);
         LinearLayout player_club_search_layout = (LinearLayout) view.findViewById(R.id.player_club_searchInput_layout);
 
-        LinearLayout player_main_inputMyAccount = (LinearLayout) view.findViewById(R.id.player_main_inputMyAccount);
+        final LinearLayout player_main_inputMyAccount = (LinearLayout) view.findViewById(R.id.player_main_inputMyAccount);
 
 
         // 내 계정 뷰 보여주기......................................................................................................//
         kat_myAccountDatabase kataMyAccountBase = kat_player_mainActivity.kataMyAccountBase;
         if(kataMyAccountBase.size() == 1){
 
+            final View tempView = player_main_inputMyAccount.getChildAt(0);
+            final Drawable tempDrawable = player_main_inputMyAccount.getBackground();
+
             // 현재 있는 뷰 일단 지워주기
             player_main_inputMyAccount.removeAllViews();
             player_main_inputMyAccount.setBackground(null);
 
-            player_main_inputMyAccount.setClickable(false);
-            player_main_inputMyAccount.setEnabled(false);
-            player_main_inputMyAccount.setFocusable(false);
-
             LayoutInflater layoutInflater =
                     (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             View accountView = layoutInflater.inflate(R.layout.player_my_account, null);
+            accountView.setClickable(true);
 
-            // 뷰 가져오기
+            // 뷰 가져오기 .....................................
             ImageView playerIcon = accountView.findViewById(R.id.player_my_account_image);
             TextView player_my_account_name = accountView.findViewById(R.id.player_my_account_name);
             TextView player_my_account_tag = accountView.findViewById(R.id.player_my_account_tag);
             ImageView player_my_account_trophies_icon = accountView.findViewById(R.id.player_my_account_trophies_image);
             TextView player_my_account_trophies = accountView.findViewById(R.id.player_my_account_trophies);
             TextView player_my_account_level = accountView.findViewById(R.id.player_my_account_level_icon_text);
+            ImageView player_my_account_close = accountView.findViewById(R.id.player_my_account_close);
+            // ..............................................
+
+
+            // 플레이어의 모스트 3 브롤러 가져오기. 다 똑같으면 이름 순으로
+            ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
+            Collections.sort(brawlerData, new brawlerSort());
+
+            kat_GetStarlistDataThread getStarlistDataThread = new kat_GetStarlistDataThread(kat_player_mainActivity);
+            getStarlistDataThread.init();
+            BrawlerArrayList = new ArrayList<>();
+            if(kat_LoadBeforeMainActivity.BrawlersArrayList != null && kat_LoadBeforeMainActivity.BrawlersArrayList.size() > 0) {
+                BrawlerArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+            }
+
+            FrameLayout brawler1 = accountView.findViewById(R.id.brawler1);
+            FrameLayout brawler2 = accountView.findViewById(R.id.brawler2);
+            FrameLayout brawler3 = accountView.findViewById(R.id.brawler3);
+
+
+
+
 
             // 이미지 링크 선언
             String url_profile = "https://www.starlist.pro/assets/profile/" + playerData.getIconId() + ".png?v=1";
@@ -109,6 +146,18 @@ public class kat_SearchFragment extends Fragment {
             player_my_account_level.setText(Integer.toString(playerData.getExpLevel()));
 
             player_main_inputMyAccount.addView(accountView);
+
+            player_my_account_close.setOnTouchListener(new View.OnTouchListener(){
+                @Override
+                public boolean onTouch(View v, MotionEvent motionEvent){
+
+                    player_main_inputMyAccount.removeAllViews();
+                    player_main_inputMyAccount.addView(tempView);
+                    player_main_inputMyAccount.setBackground(tempDrawable);
+
+                    return false;
+                }
+            });
 
 
 
@@ -150,13 +199,31 @@ public class kat_SearchFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent motionEvent){
 
-                Intent intent = new Intent(getActivity(), kat_SearchAccountForSaveActivity.class);
-                startActivity(intent);
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    Intent intent = new Intent(getActivity(), kat_SearchAccountForSaveActivity.class);
+                    startActivity(intent);
+                }
                 return false;
             }
         });
 
         return view;
+    }
+
+    public class getParsedData extends Thread{
+        public void run(){
+            while(true){
+                if(kat_LoadBeforeMainActivity.BrawlersArrayList == null) continue;
+                if(kat_LoadBeforeMainActivity.EventArrayList == null) continue;
+
+                if(kat_LoadBeforeMainActivity.BrawlersArrayList.size() <= 0) continue;
+                if(kat_LoadBeforeMainActivity.EventArrayList.size() <= 0) continue;
+
+                BrawlerArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+
+                break;
+            }
+        }
     }
 
 
@@ -180,6 +247,25 @@ public class kat_SearchFragment extends Fragment {
                 .apply(new RequestOptions().circleCrop().circleCrop())
                 .override(width, height)
                 .into(view);
+
+
+    }
+
+    class brawlerSort implements Comparator<kat_official_playerInfoParser.playerBrawlerData> {
+
+        @Override
+        public int compare(kat_official_playerInfoParser.playerBrawlerData t1,
+                           kat_official_playerInfoParser.playerBrawlerData t2) {
+
+
+            if(t1.getTrophies() < t2.getTrophies()) return 1;
+            else if(t1.getTrophies() > t2.getTrophies()) return -1;
+            return 0;
+        }
+    }
+
+    public void BrawlerMatching(){
+
     }
 
 }

@@ -1,4 +1,4 @@
-package com.example.brawlkat.database;
+package com.example.brawlkat.kat_Database;
 
 import android.content.Context;
 import android.database.Cursor;

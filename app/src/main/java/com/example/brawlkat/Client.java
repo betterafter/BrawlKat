@@ -14,11 +14,11 @@ public class Client {
     private                 Socket                          socket                  = null;
     private                 InputStream                     data;
     private                 OutputStream                    tagdata;
-    private                 static ArrayList<String>        resData                 = new ArrayList<>();
-    private                 static ArrayList<String>        resOffiData             = new ArrayList<>();
+    public                  static ArrayList<String>        resData                 = new ArrayList<>();
+    public                  static ArrayList<String>        resOffiData             = new ArrayList<>();
     public                  getApiThread                    getThread;
     public                  kat_Service_OverdrawActivity    kat_Service_overdrawActivity;
-    public getAllTypeApiThread officialApiThread;
+    public                  getAllTypeApiThread             officialApiThread;
     public                  boolean                         workDone = false;
     public                  boolean                         socketFail = false;
 

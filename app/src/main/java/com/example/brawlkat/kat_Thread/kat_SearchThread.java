@@ -1,14 +1,16 @@
-package com.example.brawlkat;
+package com.example.brawlkat.kat_Thread;
 
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
-import com.example.brawlkat.dataparser.kat_clubLogParser;
-import com.example.brawlkat.dataparser.kat_official_clubInfoParser;
-import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
-import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_Player_ClubDetailActivity;
+import com.example.brawlkat.kat_Player_MainActivity;
 
 import java.util.ArrayList;
 

@@ -1,9 +1,9 @@
 package com.example.brawlkat;
 
-import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
-import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
-import com.example.brawlkat.katfragment.kat_Player_PlayerBattleLogDetailMapFragment;
-import com.example.brawlkat.katfragment.kat_Player_PlayerBattleLogDetailPlayerInfoFragment;
+import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_Fragment.kat_Player_PlayerBattleLogDetailMapFragment;
+import com.example.brawlkat.kat_Fragment.kat_Player_PlayerBattleLogDetailPlayerInfoFragment;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

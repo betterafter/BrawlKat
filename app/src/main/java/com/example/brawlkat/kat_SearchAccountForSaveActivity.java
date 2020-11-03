@@ -6,6 +6,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
 
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.google.android.material.textfield.TextInputEditText;
 
 import androidx.annotation.Nullable;
@@ -34,10 +35,6 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
         });
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
 
     public void onSearchClick(){
         kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);

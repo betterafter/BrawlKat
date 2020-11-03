@@ -17,8 +17,8 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
-import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 

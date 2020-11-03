@@ -1,4 +1,4 @@
-package com.example.brawlkat.katfragment;
+package com.example.brawlkat.kat_Fragment;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -17,11 +17,11 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.Client;
 import com.example.brawlkat.R;
-import com.example.brawlkat.dataparser.kat_official_playerBattleLogParser;
-import com.example.brawlkat.dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_Player_PlayerDetailActivity;
-import com.example.brawlkat.kat_SearchThread;
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 
 import java.util.ArrayList;
 import java.util.Collections;

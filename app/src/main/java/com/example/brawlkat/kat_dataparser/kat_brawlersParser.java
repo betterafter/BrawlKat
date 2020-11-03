@@ -1,4 +1,4 @@
-package com.example.brawlkat.dataparser;
+package com.example.brawlkat.kat_dataparser;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
