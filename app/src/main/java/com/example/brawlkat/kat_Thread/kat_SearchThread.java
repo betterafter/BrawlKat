@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.widget.Toast;
 
+import com.example.brawlkat.Client;
 import com.example.brawlkat.kat_Player_ClubDetailActivity;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
@@ -53,34 +54,37 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
             if(type.equals("players")){
                 client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
-                while(!client.workDone){
-                    System.out.println("break point 1");
-                    if(client.workDone){
-                        client.workDone = false;
-                        sendData.add(client.getAllTypeData().get(0));
-                        sendData.add(client.getAllTypeData().get(1));
-                        playerSearch(sendData);
-
-                        break;
+                if(!client.workDone){
+                    if(Client.workThread.isAlive()) {
+                        try {
+                            Client.workThread.join();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                client.workDone = false;
+                sendData.add(client.getAllTypeData().get(0));
+                sendData.add(client.getAllTypeData().get(1));
+                playerSearch(sendData);
             }
 
             else if(type.equals("clubs")){
 
                 client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
-                while(!client.workDone){
-                    System.out.println("client wait");
-
-                    if(client.workDone){
-                        client.workDone = false;
-                        sendData.add(client.getAllTypeData().get(0));
-                        sendData.add(client.getAllTypeData().get(1));
-                        clubSearch(sendData);
-
-                        break;
+                if(!client.workDone){
+                    if(Client.workThread.isAlive()) {
+                        try {
+                            Client.workThread.join();
+                        } catch (Exception e) {
+                            e.printStackTrace();
+                        }
                     }
                 }
+                client.workDone = false;
+                sendData.add(client.getAllTypeData().get(0));
+                sendData.add(client.getAllTypeData().get(1));
+                clubSearch(sendData);
             }
         }
     }

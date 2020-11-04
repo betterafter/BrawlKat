@@ -22,6 +22,8 @@ public class Client {
     public                  boolean                         workDone = false;
     public                  boolean                         socketFail = false;
 
+    public                  static workThread               workThread;
+
 
     public Client(){
 
@@ -193,7 +195,13 @@ public class Client {
         }
     }
 
-
+    public class workThread extends Thread{
+        public void run(){
+            while(true){
+                if(workDone) break;
+            }
+        }
+    }
 
 
 
@@ -201,6 +209,9 @@ public class Client {
     public void init(){
         getThread = new getApiThread();
         if(!getThread.isAlive()) getThread.start();
+
+        workThread = new workThread();
+        workThread.start();
     }
 
     public void AllTypeInit(String tag, String type, String apiType){

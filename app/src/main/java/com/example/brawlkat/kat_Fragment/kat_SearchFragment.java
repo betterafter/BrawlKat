@@ -288,7 +288,7 @@ public class kat_SearchFragment extends Fragment {
                 ImageView imageView = (ImageView) frameLayout.getChildAt(0);
                 TextView textView = (TextView) frameLayout.getChildAt(1);
 
-                GlideImage(BrawlerArrayList.get(j).get("imageUrl").toString(), width / 10, height / 10, imageView);
+                GlideImageWithRoundCorner(BrawlerArrayList.get(j).get("imageUrl").toString(), width / 7, height / 7, imageView);
                 textView.setText(Integer.toString(brawlerData.get(i).getTrophies()));
 
                 break;

@@ -24,7 +24,8 @@ public class kat_official_clubInfoParser implements Serializable {
 
         cd.setTag(jsonObject.getString("tag"));
         cd.setName(jsonObject.getString("name"));
-        cd.setDescription(jsonObject.getString("description"));
+        if(!jsonObject.isNull("description"))
+            cd.setDescription(jsonObject.getString("description"));
         cd.setTrophies(jsonObject.getInt("trophies"));
         cd.setRequiredTrophies(jsonObject.getInt("requiredTrophies"));
         cd.setBadgeId(jsonObject.getInt("badgeId"));

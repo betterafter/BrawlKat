@@ -341,6 +341,9 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 AppFinish();
             }
         }
+        else{
+            super.onBackPressed();
+        }
     }
 
     //앱종료
