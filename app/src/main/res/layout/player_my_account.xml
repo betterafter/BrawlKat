@@ -66,12 +66,6 @@
                         app:layout_constraintVertical_bias="1.0" />
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <ImageView
-                    android:id="@+id/player_my_account_close"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:src="@drawable/round_close_24" />
-
                 <LinearLayout
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
@@ -140,6 +134,12 @@
 
                 </LinearLayout>
 
+                <ImageView
+                    android:id="@+id/player_my_account_close"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:src="@drawable/round_close_24" />
+
 
             </LinearLayout>
 
@@ -147,6 +147,7 @@
                 android:id="@+id/player_my_account_brawlers"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:layout_marginBottom="40dp"
                 android:gravity="center"
                 android:orientation="horizontal">
 

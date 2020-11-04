@@ -179,6 +179,7 @@ public class kat_SearchFragment extends Fragment {
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.MATCH_PARENT
             );
+            ;
             accountView.setLayoutParams(params);
         }
         // ..................................................................................................................//

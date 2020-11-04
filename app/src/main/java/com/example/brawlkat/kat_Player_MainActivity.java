@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.IBinder;
+import android.os.SystemClock;
 import android.provider.Settings;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -91,6 +92,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
 
 
+    private             static long                                                             mLastClickTime = 0;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -140,19 +143,33 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 @Override
                 public boolean onTouch(View v, MotionEvent motionEvent) {
                     if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-                        if (isServiceStart) {
-                            if (katService != null && !endClickToUnbind) {
-                                endClickToUnbind = true;
-                                unbindService(katConnection);
-                                isServiceStart = false;
-                            }
-                        } else {
-                            endClickToUnbind = false;
-                            getPermission();
-                            testThread tt = new testThread();
-                            tt.start();
-                            isServiceStart = true;
+
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 3000){
+                            Toast toast = Toast.makeText(getApplicationContext(),
+                                    "너무 빨리 눌렀습니다. 천천히 눌러주세요.",
+                                    Toast.LENGTH_SHORT);
+
+                            toast.show();
+                            return false;
                         }
+
+                        else {
+                            if (isServiceStart) {
+                                if (katService != null && !endClickToUnbind) {
+                                    endClickToUnbind = true;
+                                    unbindService(katConnection);
+                                    isServiceStart = false;
+                                }
+                            } else {
+                                endClickToUnbind = false;
+                                getPermission();
+                                testThread tt = new testThread();
+                                tt.start();
+                                isServiceStart = true;
+                            }
+                        }
+
+                        mLastClickTime = SystemClock.elapsedRealtime();
                     }
                     return false;
                 }
@@ -332,14 +349,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     public void onBackPressed() {
         //1번째 백버튼 클릭
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")){
-            if(System.currentTimeMillis()>backKeyPressedTime+2000){
-                backKeyPressedTime = System.currentTimeMillis();
-                Toast.makeText(this, "앱을 종료시키려면 뒤로 가기 버튼을 눌러주세요", Toast.LENGTH_SHORT).show();
-            }
-            //2번째 백버튼 클릭 (종료)
-            else{
-                AppFinish();
-            }
+            AppFinish();
         }
         else{
             super.onBackPressed();
@@ -348,8 +358,10 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     //앱종료
     public void AppFinish(){
-        finish();
+
+        moveTaskToBack(true);						// 태스크를 백그라운드로 이동
+        finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
+        android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
         System.exit(0);
-        android.os.Process.killProcess(android.os.Process.myPid());
     }
 }
