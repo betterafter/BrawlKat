@@ -21,9 +21,7 @@ import android.widget.Toast;
 import com.example.brawlkat.kat_Fragment.kat_FavoritesFragment;
 import com.example.brawlkat.kat_Fragment.kat_RankingFragment;
 import com.example.brawlkat.kat_Fragment.kat_SearchFragment;
-import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
-import com.example.brawlkat.kat_dataparser.kat_mapsParser;
 import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
@@ -31,7 +29,6 @@ import com.example.brawlkat.kat_dataparser.kat_official_playerParser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.Stack;
 
 import androidx.annotation.NonNull;
@@ -80,12 +77,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     private             boolean                                                                 endClickToUnbind = false;
 
     public              LayoutInflater                                                          layoutInflater;
-
-    public              kat_mapsParser                                                          mapsParser;
-    public              kat_brawlersParser                                                      brawlersParser;
-    public              static HashMap<String, kat_mapsParser.mapData>                          mapData;
-    public              static ArrayList<HashMap<String, Object>>                               BrawlersArrayList = new ArrayList<>();
-
 
     public              static Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>> playerBattleDataListStack = new Stack<>();
     public              static Stack<kat_Player_PlayerDetailActivity>                                player_playerDetailActivities = new Stack<>();
@@ -144,7 +135,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 public boolean onTouch(View v, MotionEvent motionEvent) {
                     if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < 3000){
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1500){
                             Toast toast = Toast.makeText(getApplicationContext(),
                                     "너무 빨리 눌렀습니다. 천천히 눌러주세요.",
                                     Toast.LENGTH_SHORT);
@@ -187,8 +178,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     protected void onStart() {
 
         super.onStart();
-        getMapDataThread mdt = new getMapDataThread();
-        if (!mdt.isAlive()) mdt.start();
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
             setFrag(0);
@@ -197,6 +186,10 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             if (intent != null) {
                 MyPlayerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
                 setFrag(0);
+            }
+
+            if(kataMyAccountBase.size() > 0){
+                playerTag = kataMyAccountBase.getTag().substring(1);
             }
         }
     }
@@ -228,30 +221,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         }
     }
 
-    // 맵 데이터 받아오기
-    private class getMapDataThread extends Thread{
-        public void run(){
-            try{
-                while(true) {
-                    if(client.getData() == null || client.getData().size() <= 2) continue;
-                    if (client.getData().get(2) != null) {
-
-                        mapsParser = new kat_mapsParser(client.getData().get(2));
-                        mapData = mapsParser.DataParser();
-
-                        brawlersParser = new kat_brawlersParser(client.getData().get(1));
-                        BrawlersArrayList = brawlersParser.DataParser();
-
-                        int time = 1000 * 60 * 30;
-                        sleep(time);
-                    }
-                }
-            }
-            catch (Exception e){
-               // e.printStackTrace();
-            }
-        }
-    }
 
     private class testThread extends Thread{
         public void run(){
@@ -333,6 +302,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
             kat_Service_OverdrawActivity.LocalBinder binder = (kat_Service_OverdrawActivity.LocalBinder) iBinder;
             katService = binder.getService();
+            katService.getPlayerTag = playerTag;
             bound = true;
         }
 

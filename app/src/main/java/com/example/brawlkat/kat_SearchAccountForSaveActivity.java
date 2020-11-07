@@ -29,7 +29,9 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
         searchButton.setOnTouchListener(new View.OnTouchListener(){
             @Override
             public boolean onTouch(View v, MotionEvent motionEvent){
-                onSearchClick();
+                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                    onSearchClick();
+                }
                 return false;
             }
         });
@@ -37,8 +39,13 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
 
 
     public void onSearchClick(){
-        kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
+
+        kat_LoadingDialog dialog = new kat_LoadingDialog(this);
+        dialog.show();
+
+        kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class, dialog);
         kset.SearchStart(AccountInputEditText.getText().toString(), "players");
+
     }
 
 }

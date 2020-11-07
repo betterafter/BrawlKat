@@ -11,7 +11,7 @@
         android:id="@+id/action_favorites"
         android:enabled="true"
         android:icon="@drawable/round_star_24"
-        android:title="fravorites"/>
+        android:title="favorites" />
 
     <item
         android:id="@+id/action_ranking"

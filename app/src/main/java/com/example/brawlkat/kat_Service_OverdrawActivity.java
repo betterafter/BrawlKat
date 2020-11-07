@@ -6,8 +6,8 @@ import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
 import android.os.Binder;
 import android.os.Build;
 import android.os.IBinder;
@@ -15,10 +15,12 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
-import android.widget.ImageButton;
+import android.widget.Button;
+import android.widget.LinearLayout;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.res.ResourcesCompat;
 
 public class kat_Service_OverdrawActivity extends Service implements View.OnTouchListener {
 
@@ -31,7 +33,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
 
     // 뷰
-    private     ImageButton                     btn;
+    private     Button                          btn;
     public      ConstraintLayout                constraintLayout;
     public      View                            mapRecommendView;
     public      LayoutInflater                  layoutInflater;
@@ -99,10 +101,11 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     @Override
     public void onCreate() {
         super.onCreate();
-        init_Inflater();
-        init_windowManager();
 
         context = getApplicationContext();
+
+        init_Inflater();
+        init_windowManager();
 
         // EventActivity 선언 및 뷰 생성
         events = new kat_Service_EventActivity(context, this);
@@ -119,10 +122,22 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         constraintLayout = new ConstraintLayout(this);
 
-        btn = new ImageButton(this);
-        btn.setImageResource(R.drawable.logo);
-        btn.setBackgroundColor(Color.TRANSPARENT);
+        btn = new Button(this);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(240, 240);
+
+        btn.setLayoutParams(params);
+        //btn.setImageResource(R.drawable.logo);
+        btn.setBackground(context.getResources().getDrawable(R.drawable.service_click));
+
+        btn.setText("BK");
+        btn.setTextColor(context.getResources().getColor(R.color.Color1));
+        Typeface typeface = ResourcesCompat.getFont(context, R.font.lilita_one);
+        btn.setTypeface(typeface);
+        btn.setTextSize(28);
+
         btn.setOnTouchListener(this);
+
         constraintLayout.addView(btn);
     }
 

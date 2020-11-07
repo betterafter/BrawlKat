@@ -153,7 +153,6 @@
 
                 <FrameLayout
                     android:id="@+id/brawler1"
-                    android:background="@drawable/circle"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent">
@@ -182,7 +181,6 @@
                 <FrameLayout
                     android:id="@+id/brawler2"
                     android:layout_marginHorizontal="30dp"
-                    android:background="@drawable/circle"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent">
@@ -210,7 +208,6 @@
 
                 <FrameLayout
                     android:id="@+id/brawler3"
-                    android:background="@drawable/circle"
                     android:layout_gravity="center"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent">

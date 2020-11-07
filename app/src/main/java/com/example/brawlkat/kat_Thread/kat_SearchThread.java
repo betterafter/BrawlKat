@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.widget.Toast;
 
 import com.example.brawlkat.Client;
+import com.example.brawlkat.kat_LoadingDialog;
 import com.example.brawlkat.kat_Player_ClubDetailActivity;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
@@ -21,9 +22,10 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
     Activity fromActivity;
     Class toClass;
-    boolean setData = false;
+    kat_LoadingDialog kat_loadingDialog;
 
-    SearchThread searchThread;
+
+    boolean setData = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,6 +35,12 @@ public class kat_SearchThread extends kat_Player_MainActivity {
     public kat_SearchThread(Activity fromActivity, Class toclass){
         this.fromActivity = fromActivity;
         this.toClass = toclass;
+    }
+
+    public kat_SearchThread(Activity fromActivity, Class toclass, kat_LoadingDialog kat_loadingDialog){
+        this.fromActivity = fromActivity;
+        this.toClass = toclass;
+        this.kat_loadingDialog = kat_loadingDialog;
     }
 
 
@@ -53,35 +61,34 @@ public class kat_SearchThread extends kat_Player_MainActivity {
             sendData = new ArrayList<>();
 
             if(type.equals("players")){
+                System.out.println(tag + ", " + type);
                 client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
-                if(!client.workDone){
-                    if(Client.workThread.isAlive()) {
-                        try {
-                            Client.workThread.join();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                if(client.getAllTypeData().size() <= 0){
+                    try {
+                        Client.getAllTypeApiThread apiThread = client.apiThread();
+                        apiThread.join();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
                 }
-                client.workDone = false;
                 sendData.add(client.getAllTypeData().get(0));
                 sendData.add(client.getAllTypeData().get(1));
                 playerSearch(sendData);
+
             }
 
             else if(type.equals("clubs")){
 
                 client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
-                if(!client.workDone){
-                    if(Client.workThread.isAlive()) {
-                        try {
-                            Client.workThread.join();
-                        } catch (Exception e) {
-                            e.printStackTrace();
-                        }
+                if(client.getAllTypeData().size() <= 0){
+                    try {
+                        Client.getAllTypeApiThread apiThread = client.apiThread();
+                        apiThread.join();
+                    } catch (Exception e) {
+                        e.printStackTrace();
                     }
+
                 }
-                client.workDone = false;
                 sendData.add(client.getAllTypeData().get(0));
                 sendData.add(client.getAllTypeData().get(1));
                 clubSearch(sendData);
@@ -128,20 +135,15 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 // startActivity(intent) 의 차이점은 뭘까?
 
                 if(fromActivity.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")){
-                    if(kat_GetStarlistDataThread.BrawlersArrayList != null)
-                        System.out.println(kat_GetStarlistDataThread.BrawlersArrayList.size());
 
-                    if(kat_GetStarlistDataThread.isEmptyListCheckThread.isAlive()){
-                        kat_GetStarlistDataThread.isEmptyListCheckThread.join();
-                    }
-
-                    if(kat_GetStarlistDataThread.BrawlersArrayList != null)
-                        System.out.println(kat_GetStarlistDataThread.BrawlersArrayList.size());
+                    client.getFirstInitThread().join();
                 }
 
                 Intent intent = new Intent(fromActivity, toClass);
                 intent.putExtra("playerData", playerData);
                 fromActivity.startActivity(intent);
+
+                if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -180,6 +182,7 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
                 fromActivity.startActivity(intent);
 
+                if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
             }
             catch (Exception e){
                 e.printStackTrace();
@@ -189,7 +192,7 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
 
     public void SearchStart(String tag, String type){
-        searchThread = new SearchThread(tag, type);
+        SearchThread searchThread = new SearchThread(tag, type);
         searchThread.start();
 
     }

@@ -23,10 +23,12 @@ import com.example.brawlkat.Client;
 import com.example.brawlkat.R;
 import com.example.brawlkat.kat_Database.kat_myAccountDatabase;
 import com.example.brawlkat.kat_LoadBeforeMainActivity;
+import com.example.brawlkat.kat_LoadingDialog;
 import com.example.brawlkat.kat_Player_MainActivity;
+import com.example.brawlkat.kat_Player_PlayerDetailActivity;
 import com.example.brawlkat.kat_Player_RecentSearchActivity;
 import com.example.brawlkat.kat_SearchAccountForSaveActivity;
-import com.example.brawlkat.kat_Thread.kat_GetStarlistDataThread;
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
@@ -123,12 +125,7 @@ public class kat_SearchFragment extends Fragment {
             }
             Collections.sort(brawlerData, new brawlerSort());
 
-            kat_GetStarlistDataThread getStarlistDataThread = new kat_GetStarlistDataThread(kat_player_mainActivity);
-            getStarlistDataThread.init();
-            BrawlerArrayList = new ArrayList<>();
-            if(kat_GetStarlistDataThread.BrawlersArrayList != null && kat_GetStarlistDataThread.BrawlersArrayList.size() > 0) {
-                BrawlerArrayList = kat_GetStarlistDataThread.BrawlersArrayList;
-            }
+            BrawlerArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
 
             FrameLayout brawler1 = accountView.findViewById(R.id.brawler1);
             FrameLayout brawler2 = accountView.findViewById(R.id.brawler2);
@@ -168,11 +165,32 @@ public class kat_SearchFragment extends Fragment {
                     player_main_inputMyAccount.addView(tempView);
                     player_main_inputMyAccount.setBackground(tempDrawable);
 
-                    return false;
+                    kat_player_mainActivity.kataMyAccountBase.delete(playerData.getTag());
+
+                    return true;
                 }
             });
 
 
+            accountView.setOnTouchListener(new View.OnTouchListener(){
+                @Override
+                public boolean onTouch(View v, MotionEvent motionEvent){
+                    if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+
+                        kat_LoadingDialog dialog = new kat_LoadingDialog(getActivity());
+                        dialog.show();
+
+                        String RawTag = playerData.getTag();
+                        String newTag = RawTag.substring(1);
+
+                        kat_SearchThread kset = new kat_SearchThread(getActivity(),
+                                kat_Player_PlayerDetailActivity.class, dialog);
+                        kset.SearchStart(newTag, "players");
+
+                    }
+                    return false;
+                }
+            });
 
             // 부모 뷰와 크기 맞추기
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -214,6 +232,7 @@ public class kat_SearchFragment extends Fragment {
             public boolean onTouch(View v, MotionEvent motionEvent){
 
                 if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+
                     Intent intent = new Intent(getActivity(), kat_SearchAccountForSaveActivity.class);
                     startActivity(intent);
                 }
@@ -224,21 +243,6 @@ public class kat_SearchFragment extends Fragment {
         return view;
     }
 
-    public class getParsedData extends Thread{
-        public void run(){
-            while(true){
-                if(kat_LoadBeforeMainActivity.BrawlersArrayList == null) continue;
-                if(kat_LoadBeforeMainActivity.EventArrayList == null) continue;
-
-                if(kat_LoadBeforeMainActivity.BrawlersArrayList.size() <= 0) continue;
-                if(kat_LoadBeforeMainActivity.EventArrayList.size() <= 0) continue;
-
-                BrawlerArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
-
-                break;
-            }
-        }
-    }
 
 
     public void GlideImage(String url, int width, int height, ImageView view){
@@ -280,12 +284,11 @@ public class kat_SearchFragment extends Fragment {
                             ArrayList<HashMap<String, Object>> BrawlerArrayList,
                             int i){
         if(playerData == null) return;
-        System.out.println(BrawlerArrayList.size());
         ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
+        if(brawlerData.size() - 1 < i) return;
         for(int j = 0; j <BrawlerArrayList.size(); j++){
 
             if(brawlerData.get(i).getId().equals(BrawlerArrayList.get(j).get("id").toString())){
-                System.out.println(brawlerData.get(i).getId() + ", " + BrawlerArrayList.get(j).get("id").toString());
                 ImageView imageView = (ImageView) frameLayout.getChildAt(0);
                 TextView textView = (TextView) frameLayout.getChildAt(1);
 

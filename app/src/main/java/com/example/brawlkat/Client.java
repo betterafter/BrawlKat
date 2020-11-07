@@ -1,5 +1,9 @@
 package com.example.brawlkat;
 
+import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
+import com.example.brawlkat.kat_dataparser.kat_eventsParser;
+import com.example.brawlkat.kat_dataparser.kat_mapsParser;
+
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
@@ -14,15 +18,16 @@ public class Client {
     private                 Socket                          socket                  = null;
     private                 InputStream                     data;
     private                 OutputStream                    tagdata;
-    public                  static ArrayList<String>        resData                 = new ArrayList<>();
-    public                  static ArrayList<String>        resOffiData             = new ArrayList<>();
+    public                  static ArrayList<String>        resData;
+    public                  ArrayList<String>               resOffiData;
     public                  getApiThread                    getThread;
     public                  kat_Service_OverdrawActivity    kat_Service_overdrawActivity;
     public                  getAllTypeApiThread             officialApiThread;
-    public                  boolean                         workDone = false;
-    public                  boolean                         socketFail = false;
 
-    public                  static workThread               workThread;
+    public                  boolean                         socketFail = false;
+    public                  boolean                         firstInit = false;
+
+    private                 firstInitThread                 firstInitThread;
 
 
     public Client(){
@@ -104,7 +109,6 @@ public class Client {
                     data.close();
                     reader.close();
                     socket.close();
-                    workDone = true;
                     break;
                 }
             }
@@ -170,6 +174,21 @@ public class Client {
                         startidx = split + 1;
                     }
 
+                    kat_eventsParser eventsParser;
+                    kat_brawlersParser brawlersParser;
+                    kat_mapsParser mapsParser;
+
+                    eventsParser = new kat_eventsParser(resData.get(0));
+                    brawlersParser = new kat_brawlersParser(resData.get(1));
+                    mapsParser = new kat_mapsParser(resData.get(2));
+
+                    kat_LoadBeforeMainActivity.EventArrayList = eventsParser.DataParser();
+                    kat_LoadBeforeMainActivity.BrawlersArrayList = brawlersParser.DataParser();
+                    kat_LoadBeforeMainActivity.mapData = mapsParser.DataParser();
+
+                    System.out.println("mapdata size : " + kat_LoadBeforeMainActivity.mapData.size());
+
+                    firstInit = true;
                     reader.close();
 
                     os.close();
@@ -195,14 +214,16 @@ public class Client {
         }
     }
 
-    public class workThread extends Thread{
+    public class firstInitThread extends Thread{
         public void run(){
             while(true){
-                if(workDone) break;
+                System.out.println("Client/firstInitThread/ : waiting...");
+                if(firstInit){
+                    break;
+                }
             }
         }
     }
-
 
 
 
@@ -210,11 +231,19 @@ public class Client {
         getThread = new getApiThread();
         if(!getThread.isAlive()) getThread.start();
 
-        workThread = new workThread();
-        workThread.start();
+        firstInitThread = new firstInitThread();
+        firstInitThread.start();
     }
 
+    public firstInitThread getFirstInitThread(){
+        return firstInitThread;
+    }
+
+
     public void AllTypeInit(String tag, String type, String apiType){
+
+        resOffiData = new ArrayList<>();
+
         officialApiThread = new getAllTypeApiThread(tag, type, apiType);
         if(!officialApiThread.isAlive()) officialApiThread.start();
     }
@@ -227,4 +256,7 @@ public class Client {
         return resOffiData;
     }
 
+    public getAllTypeApiThread apiThread(){
+        return officialApiThread;
+    }
 }

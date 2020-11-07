@@ -34,7 +34,8 @@ public class kat_official_playerBattleLogParser implements Serializable {
             // 플레이 이벤트 정보
             JSONObject event = (JSONObject) item.get("event");
             pbd.setEventId(event.getString("id"));
-            pbd.setEventMode(event.getString("mode"));
+            if(!event.isNull("mode"))
+                pbd.setEventMode(event.getString("mode"));
             pbd.setEventMap(event.getString("map"));
 
             // 전투 정보
@@ -141,8 +142,10 @@ public class kat_official_playerBattleLogParser implements Serializable {
                     JSONObject brawlers = (JSONObject) playerInfo.get("brawler");
                     info.setBrawler_Id(brawlers.getString("id"));
                     info.setBrawler_name(brawlers.getString("name"));
-                    info.setBrawler_power(brawlers.getString("power"));
-                    info.setBrawler_trophies(brawlers.getString("trophies"));
+                    if(!brawlers.isNull("power"))
+                        info.setBrawler_power(brawlers.getString("power"));
+                    if(!brawlers.isNull("trophies"))
+                        info.setBrawler_trophies(brawlers.getString("trophies"));
 
                     eachTeamItem.add(info);
                 }

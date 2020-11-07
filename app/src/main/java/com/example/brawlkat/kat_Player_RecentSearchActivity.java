@@ -1,6 +1,7 @@
 package com.example.brawlkat;
 
 import android.os.Bundle;
+import android.text.InputFilter;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,6 +18,7 @@ import androidx.annotation.Nullable;
 public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
     private                                     TextInputEditText                               player_detail_user_club_search;
+    private                                     LinearLayout                                    player_detail_user_club_search_layout;
     private                                     String                                          type;
 
     @Override
@@ -27,7 +29,9 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         type = getIntent().getStringExtra("type");
 
         player_detail_user_club_search = findViewById(R.id.player_detail_user_club_searchInput);
-        player_detail_user_club_search.setOnKeyListener(new View.OnKeyListener(){
+        player_detail_user_club_search_layout = findViewById(R.id.player_detail_user_club_search_layout);
+        player_detail_user_club_search.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        player_detail_user_club_search_layout.setOnKeyListener(new View.OnKeyListener(){
 
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
@@ -52,16 +56,16 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
         LinearLayout linearLayout = findViewById(R.id.player_detail_recent_search_layout);
         linearLayout.removeAllViews();
+        if(katabase != null) {
+            katabase.print();
+            ArrayList<ArrayList<String>> resultList = katabase.get(type);
 
-        katabase.print();
-        ArrayList<ArrayList<String>> resultList = katabase.get(type);
+            for (int i = 0; i < 9; i++) {
 
-        for(int i = 0; i < 9; i++){
-
-            if(i >= resultList.size()) break;
-            recentSearchResultList(linearLayout, layoutInflater, resultList.get(i));
+                if (i >= resultList.size()) break;
+                recentSearchResultList(linearLayout, layoutInflater, resultList.get(i));
+            }
         }
-
     }
 
     // 버튼을 클릭했을 때 최근 전적 기록을 갱신함.
@@ -96,19 +100,28 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     // 전적 검색 클릭
     public void onUserClubSearchClick(View view){
 
+        kat_LoadingDialog dialog = new kat_LoadingDialog(this);
+        dialog.show();
+
         kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
-                 kat_Player_PlayerDetailActivity.class);
+                 kat_Player_PlayerDetailActivity.class, dialog);
         kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
     }
 
     // 리스트를 터치했을 때 발생 함수
     private void listClick(View view){
+
+        kat_LoadingDialog dialog = new kat_LoadingDialog(this);
+        dialog.show();
+
         LinearLayout linearLayout = (LinearLayout) view.getParent();
         String RawTag = ((TextView) linearLayout.getChildAt(1)).getText().toString();
         String newTag = RawTag.substring(1);
 
+        System.out.println(newTag);
+
         kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
-                 kat_Player_PlayerDetailActivity.class);
+                 kat_Player_PlayerDetailActivity.class, dialog);
         kset.SearchStart(newTag, type);
     }
 

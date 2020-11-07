@@ -255,11 +255,15 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             view.setOnClickListener(new View.OnClickListener(){
                 @Override
                 public void onClick(View v){
+
+                    kat_LoadingDialog dialog = new kat_LoadingDialog(kat_Player_ClubDetailActivity.this);
+                    dialog.show();
+
                     String realTag = memberData.get(idx).getTag().substring(1);
                     System.out.println("realTag : " + realTag);
 
                     kat_SearchThread kset = new kat_SearchThread(kat_Player_ClubDetailActivity.this,
-                            kat_Player_PlayerDetailActivity.class);
+                            kat_Player_PlayerDetailActivity.class, dialog);
                     kset.SearchStart(realTag, "players");
                 }
             });

@@ -15,13 +15,13 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.brawlkat.Client;
 import com.example.brawlkat.R;
-import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
-import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+import com.example.brawlkat.kat_LoadingDialog;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_Player_PlayerDetailActivity;
 import com.example.brawlkat.kat_Thread.kat_SearchThread;
+import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -46,10 +46,6 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
     private                 int                                                                     height;
     private                 int[]                                                                   colorArray;
     private                 int[]                                                                   colorArray2;
-    private                 String[]                                                                winComment;
-    private                 String[]                                                                loseComment;
-    private                 String[]                                                                drawComment;
-    private                 Client                                                                  client = kat_Player_MainActivity.client;
 
 
     public kat_Player_PlayerBattleLogDetailPlayerInfoFragment(kat_official_playerInfoParser.playerData playerData,
@@ -59,8 +55,9 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         this.battleData = battleData;
     }
 
-    public static kat_Player_PlayerBattleLogDetailPlayerInfoFragment newInstance(kat_official_playerInfoParser.playerData playerData,
-                                                                                 kat_official_playerBattleLogParser.playerBattleData battleData){
+    public static kat_Player_PlayerBattleLogDetailPlayerInfoFragment newInstance
+            (kat_official_playerInfoParser.playerData playerData,
+             kat_official_playerBattleLogParser.playerBattleData battleData){
 
         kat_Player_PlayerBattleLogDetailPlayerInfoFragment fragment
                 = new kat_Player_PlayerBattleLogDetailPlayerInfoFragment(playerData, battleData);
@@ -90,21 +87,6 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
                 R.color.Color1, R.color.Color2, R.color.Color3, R.color.Color4, R.color.Color5,
                 R.color.Color6, R.color.Color7, R.color.Color8, R.color.Color9, R.color.Color10
         };
-
-        winComment = new String[]{
-                "축하해요! 이겼어요!", "승리를 축하해요!", "승리하셨군요!", "당신이 이길 줄 알았어요!",
-                "이 기세를 살려 연승을!", "실력이 뛰어나시군요! 또 이겼어요!", "이것이 너와 나의 차이다"
-        };
-        loseComment = new String[]{
-                "이번에는 물러가지만 다음엔 어림 없어요!", "패배할 수도 있죠.", "다음엔 꼭 이겨봐요",
-                "항상 이길 수는 없는 법이죠.", "정말 아쉬워요. 다음엔 이길거예요.", "졌지만 잘 싸웠다.",
-                "운으로 게임하네"
-        };
-        drawComment = new String[]{
-                "지는 것보단 낫죠.", "이걸 비기네", "무승부예요!", "이길 수 있었는데...", "질 뻔 했는데 다행이다",
-                "좋은 승부였다.", "이걸?"
-        };
-
     }
 
     @Nullable
@@ -235,7 +217,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
 
             System.out.println(battleData.getEventMode());
 
-            if(battleData.getEventMode().equals("soloShowdown"))
+            if(battleData.getEventMode() != null && battleData.getEventMode().equals("soloShowdown"))
                 battleResultText_showDown(layoutParams, innerLayout, j);
             else
                 battleResultText_event(layoutParams, innerLayout, j);
@@ -316,7 +298,8 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
     private View playerItem(final kat_official_playerBattleLogParser.playTeamInfo playerInfo,
                             int i){
         LayoutInflater layoutInflater =
-                (LayoutInflater) Objects.requireNonNull(getActivity()).getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                (LayoutInflater) Objects.requireNonNull(getActivity()).getApplicationContext().
+                        getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         View v = layoutInflater.inflate(R.layout.player_player_detail_battle_log_detail_player_profile, null);
         ImageView brawler_image = v.findViewById(R.id.player_player_detail_battle_log_detail_player_profile_brawler_image);
@@ -349,11 +332,15 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         v.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v){
+
+                kat_LoadingDialog dialog = new kat_LoadingDialog(getActivity());
+                dialog.show();
+
                 System.out.println("tag : " + playerInfo.getTag());
                 String realTag = playerInfo.getTag().substring(1);
                 System.out.println("realTag : " + realTag);
 
-                kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class);
+                kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class, dialog);
                 kset.SearchStart(realTag, "players");
             }
         });

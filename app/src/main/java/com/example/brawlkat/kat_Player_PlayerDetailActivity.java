@@ -52,9 +52,6 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_player_detail);
 
-        Intent intent = getIntent();
-        playerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
-
         playerIcon = findViewById(R.id.player_detail_image);
         player_detail_name = findViewById(R.id.player_detail_name);
         player_detail_tag = findViewById(R.id.player_detail_tag);
@@ -78,12 +75,17 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     protected void onStart(){
         super.onStart();
 
-        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_PlayerDetailActivity")) setData();
-        if(!kataFavoritesBase.isFavorites(playerData.getTag())){
-            player_detail_favorites.setBackground(getResources().getDrawable(R.drawable.round_star_border_24));
-        }
-        else{
-            player_detail_favorites.setBackground(getResources().getDrawable(R.drawable.round_star_24));
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_PlayerDetailActivity")) {
+            Intent intent = getIntent();
+            playerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
+            setData();
+
+            if (!kataFavoritesBase.isFavorites(playerData.getTag())) {
+                player_detail_favorites.setBackground(getResources().getDrawable(R.drawable.round_star_border_24));
+            }
+            else {
+                player_detail_favorites.setBackground(getResources().getDrawable(R.drawable.round_star_24));
+            }
         }
     }
 
@@ -187,6 +189,8 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
                 || (!playerBattleDataListStack.empty() && playerBattleDataListStack.peek() == null)) return;
         playerBattleDataList = playerBattleDataListStack.peek();
 
+        //BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout linearLayout = findViewById(R.id.player_detail_battle_log_layout);
         linearLayout.removeAllViews();
@@ -276,9 +280,12 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
 
             // starlist.pro에서 제공 받은 brawler 정보를 받아와 내가 플레이한 브롤러 이미지 표시하기
+            System.out.println(BrawlersArrayList.size());
             for(int j = 0; j < BrawlersArrayList.size(); j++){
                 if(BrawlersArrayList.get(j).get("name").toString().toLowerCase().equals(userBrawler.toLowerCase())){
-                    GlideImage(BrawlersArrayList.get(j).get("imageUrl").toString(), width / 10, width / 10, battleLogBrawler);
+                    System.out.println(BrawlersArrayList.get(j).get("name").toString());
+                    GlideImage(BrawlersArrayList.get(j).get("imageUrl").toString(),
+                            width / 10, width / 10, battleLogBrawler);
                 }
             }
 
@@ -299,7 +306,17 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             else
                 battleLogBrawlerTrophy.setText("+" + battleData.getBattleTrophyChange());
 
-            GlideImage(mapData.get(battleData.getEventId()).getGameModeIconUrl(), width / 20, width / 20, battleLogEventIcon);
+            System.out.println(mapData.get(battleData.getEventId()));
+
+            System.out.println("mapdata size : " + kat_LoadBeforeMainActivity.mapData.size());
+            System.out.println("battleData.getEventId  : " + battleData.getEventId());
+            if(!battleData.getEventId().equals("0") && mapData.get(battleData.getEventId()) != null){
+                GlideImage(mapData.get(battleData.getEventId()).getGameModeIconUrl(),
+                        width / 20,
+                        width / 20,
+                        battleLogEventIcon);
+            }
+
 
             String time = battleData.getBattleTime();
             String year = time.substring(0, 4);
@@ -309,7 +326,12 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             String min = time.substring(11, 13);
             String sec = time.substring(13, 15);
             battleLogTime.setText(year + "." + month + "." + day + "   " + hour + "시 " + min + "분 " + sec + "초");
-            battleLogEventName.setText(mapData.get(battleData.getEventId()).getName());
+
+            if(!battleData.getEventId().equals("0") && mapData.get(battleData.getEventId()) != null)
+                battleLogEventName.setText(mapData.get(battleData.getEventId()).getName());
+
+            else
+                battleLogEventName.setText("custom map");
 
             view.setOnClickListener(new View.OnClickListener(){
                 @Override

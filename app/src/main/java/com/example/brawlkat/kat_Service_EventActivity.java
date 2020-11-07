@@ -2,6 +2,8 @@ package com.example.brawlkat;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
+import android.graphics.Typeface;
+import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -20,6 +22,7 @@ import com.example.brawlkat.kat_dataparser.kat_official_playerParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 
@@ -33,14 +36,17 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     private         kat_eventsParser                    eventsParser;
     private         kat_brawlersParser                  brawlersParser;
     private         kat_official_playerParser           official_playerParser;
+
     public          ArrayList<kat_eventsParser.pair>    EventArrayList;
     public          ArrayList<HashMap<String, Object>>  BrawlersArrayList;
+
     public          ArrayList<String>                   offi_PlayerArrayList;
     private         ViewPager2                          viewPager               = null;
     public          kat_EventAdapter                    eventAdapter;
     public          boolean                             changeRecommendView = false;
     public          String                              playerTag;
 
+    private         static long                         mLastClickTime = 0;
 
 
     public kat_Service_EventActivity(Context context, kat_Service_OverdrawActivity overdrawActivity){
@@ -90,6 +96,9 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     // 서버에서 가져온 api 데이터 불러오고 리스트에 넣기
     public void getCurrentEventsInformation(){
 
+        EventArrayList = kat_LoadBeforeMainActivity.EventArrayList;
+        BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+
         client = new Client(overdrawActivity);
         client.init();
         eventsThread = new getEventsThread();
@@ -110,10 +119,6 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         return true;
     }
 
-
-
-
-
     // starlist.pro api 데이터 받고 저장
     public class getEventsThread extends Thread{
 
@@ -121,22 +126,6 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
             try{
                 while (true){
-
-                    if(!client.getThread.isAlive()) continue;
-                    if(client.getData() == null) continue;
-
-                    ArrayList<String> dataSet = client.getData();
-                    System.out.println(dataSet.size());
-
-                    if(dataSet.size() < 2) continue;
-
-                    eventsParser = new kat_eventsParser(dataSet.get(0));
-                    brawlersParser = new kat_brawlersParser(dataSet.get(1));
-
-                    EventArrayList = eventsParser.DataParser();
-                    BrawlersArrayList = brawlersParser.DataParser();
-
-                    //eventsParser.testPrint(EventArrayList);
 
                     if(viewPager == null){
                         viewPager = (ViewPager2) overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
@@ -160,9 +149,6 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
 
     public void Change(){
-        while(BrawlersArrayList == null || EventArrayList == null || eventAdapter == null) continue;
-//        System.out.println("BrawlersArrayList size : " + BrawlersArrayList.size());
-//        System.out.println("EventArrayList size : " + EventArrayList.size());
         viewPager.setAdapter(eventAdapter);
     }
 
@@ -172,45 +158,62 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
         Button btn = new Button(context);
         LinearLayout buttonGroup = (LinearLayout) overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        params.setMargins(5, 5,5,5);
+
+        btn.setLayoutParams(params);
+
+        btn.setBackgroundColor(context.getResources().getColor(R.color.semiBlack));
+        btn.setText("my");
+        btn.setAllCaps(false);
+        btn.setTextColor(context.getResources().getColor(R.color.Color1));
+        Typeface typeface = ResourcesCompat.getFont(context, R.font.lilita_one);
+        btn.setTypeface(typeface);
+        btn.setTextSize(12);
         buttonGroup.addView(btn);
 
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1500){
+                    return;
+                }
+
                 if(overdrawActivity.getPlayerTag == null){
+                    mLastClickTime = SystemClock.elapsedRealtime();
                     return;
                 }
 
                 client.AllTypeInit(overdrawActivity.getPlayerTag, "players", kat_Player_MainActivity.official);
-                System.out.println("get own data button click - player tag : " + overdrawActivity.getPlayerTag);
-                GetOffiApiThread offiApiThread = new GetOffiApiThread();
-                if(!offiApiThread.isAlive()) offiApiThread.start();
+                if(client.getAllTypeData().size() <= 0){
+                    try {
+                        Client.getAllTypeApiThread apiThread = client.apiThread();
+                        apiThread.join();
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+                try {
+                    official_playerParser = new kat_official_playerParser(client.getAllTypeData().get(0));
+                    offi_PlayerArrayList = official_playerParser.DataParser();
+                }
+                catch (Exception e){
+                    e.printStackTrace();
+                }
+
                 // 버튼 클릭 시 유저 추천 뷰 <-> 전체 추천 뷰 전환
                 if(changeRecommendView) changeRecommendView = false;
                 else changeRecommendView = true;
                 eventAdapter.refresh();
+
+                mLastClickTime = SystemClock.elapsedRealtime();
             }
         });
-    }
-
-
-    private class GetOffiApiThread extends Thread{
-        public void run(){
-            try{
-                while(true){
-
-                    if(client.getAllTypeData() == null) continue;
-                    System.out.println("client data not null : " + client.getAllTypeData());
-                    official_playerParser = new kat_official_playerParser(client.getAllTypeData().get(0));
-                    offi_PlayerArrayList = official_playerParser.DataParser();
-                    break;
-                }
-            }
-            catch (Exception e){
-                e.printStackTrace();
-            }
-        }
     }
 
 

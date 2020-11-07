@@ -12,6 +12,15 @@
         <item name="android:windowTranslucentNavigation">true</item>
     </style>
 
+    <style name="EditTextStyle" parent="Widget.AppCompat.EditText">
+        <item name="colorControlNormal">@color/mainBlue</item>
+        <item name="colorControlActivated">@color/mainBlue</item>
+        <item name="android:textCursorDrawable">@color/mainBlue</item>
+        <item name="android:textColor">@color/mainBlue</item>
+        <item name="android:textColorHint">@color/mainBlue</item>
+        <item name="android:textColorHighlight">@color/mainBlue</item>
+    </style>
+
     <style name="Widget.Design.TextInputLayout" parent="AppTheme">
         <item name="hintTextAppearance">@style/AppTheme.TextFloatLabelAppearance</item>
         <item name="errorTextAppearance">@style/AppTheme.TextErrorAppearance</item>
