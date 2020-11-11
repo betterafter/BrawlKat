@@ -39,7 +39,8 @@
             android:layout_weight="1"
             android:scrollbars="horizontal"
             android:scrollHorizontally="true"
-            android:maxLines="1"
+            android:ellipsize="marquee"
+            android:singleLine="true"
             android:text="sdkjfskjfdskfjsfksfksafkjsf"
             android:textAlignment="textStart"
             android:textColor="@color/colorWhite" />

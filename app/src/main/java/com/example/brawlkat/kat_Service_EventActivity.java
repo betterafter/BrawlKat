@@ -74,7 +74,6 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 PixelFormat.TRANSLUCENT
         );
 
-
         if(overdrawActivity.mapWindowManager == null)
             overdrawActivity.mapWindowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
 
@@ -147,16 +146,13 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         }
     }
 
-
     public void Change(){
         viewPager.setAdapter(eventAdapter);
     }
 
-
-
     public void ChangeRecommendViewClick(){
 
-        Button btn = new Button(context);
+        final Button btn = new Button(context);
         LinearLayout buttonGroup = (LinearLayout) overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -207,8 +203,16 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 }
 
                 // 버튼 클릭 시 유저 추천 뷰 <-> 전체 추천 뷰 전환
-                if(changeRecommendView) changeRecommendView = false;
-                else changeRecommendView = true;
+                if(changeRecommendView) {
+                    changeRecommendView = false;
+                    btn.setText("My");
+                    btn.setTextSize(12);
+                }
+                else {
+                    changeRecommendView = true;
+                    btn.setText("All");
+                    btn.setTextSize(10);
+                }
                 eventAdapter.refresh();
 
                 mLastClickTime = SystemClock.elapsedRealtime();
@@ -268,9 +272,6 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
             buttonGroup.addView(btn);
         }
     }
-
-
-
 
     @Override
     public void onDestroy() {

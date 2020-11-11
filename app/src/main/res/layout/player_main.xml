@@ -157,7 +157,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:paddingVertical="40dp"
+                android:paddingVertical="70dp"
                 android:gravity="center"
                 android:orientation="vertical">
 

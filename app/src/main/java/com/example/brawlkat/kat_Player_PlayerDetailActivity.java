@@ -359,7 +359,18 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     public void onFavoritesClick(View view){
         kataFavoritesBase.print();
         if(!kataFavoritesBase.isFavorites(playerData.getTag())) {
-            kataFavoritesBase.insert("player", playerData.getTag(), playerData.getName());
+
+            String tag = "", name = "", trophies = "", highestTrophies = "", iconId = "", level = "";
+            if(playerData.getTag() != null) tag = playerData.getTag();
+            if(playerData.getName() != null) name = playerData.getName();
+            if(playerData.getTrophies() != 0) trophies = Integer.toString(playerData.getTrophies());
+            if(playerData.getHighestTrophies() != 0) highestTrophies = Integer.toString(playerData.getHighestTrophies());
+            if(playerData.getIconId() != null) iconId = playerData.getIconId();
+            if(playerData.getExpLevel() != 0) level = Integer.toString(playerData.getExpLevel());
+
+            kataFavoritesBase.insert(
+                    "players", tag, name, trophies, highestTrophies, iconId, level
+            );
             view.setBackground(getResources().getDrawable(R.drawable.round_star_24));
         }
         else {

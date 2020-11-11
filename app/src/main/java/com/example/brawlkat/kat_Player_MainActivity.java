@@ -84,6 +84,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
 
     private             static long                                                             mLastClickTime = 0;
+    private             boolean                                                                 firstStart = true;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -95,7 +96,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
 
             kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
-            kat_favoritesFragment = new kat_FavoritesFragment();
+            kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
             kat_rankingFragment = new kat_RankingFragment();
 
             // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
@@ -105,7 +106,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                     kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
-                    kat_favoritesFragment = new kat_FavoritesFragment();
+                    kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
                     kat_rankingFragment = new kat_RankingFragment();
 
                     switch (menuItem.getItemId()) {
@@ -180,12 +181,15 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         super.onStart();
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
-            setFrag(0);
+            //setFrag(0);
 
             Intent intent = getIntent();
             if (intent != null) {
                 MyPlayerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
-                setFrag(0);
+                if(firstStart) {
+                    firstStart = false;
+                    setFrag(0);
+                }
             }
 
             if(kataMyAccountBase.size() > 0){

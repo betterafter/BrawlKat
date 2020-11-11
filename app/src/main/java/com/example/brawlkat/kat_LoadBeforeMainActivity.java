@@ -46,9 +46,12 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         setContentView(R.layout.loading);
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")) {
-            katabase = new kat_database(getApplicationContext(), "kat", null, 1);
-            kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 1);
+
+            katabase = new kat_database(getApplicationContext(), "kat", null, 2);
+            kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);
             kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
+
+            System.out.println("kat favorites database size : " + kataFavoritesBase.size());
 
             client.init();
 

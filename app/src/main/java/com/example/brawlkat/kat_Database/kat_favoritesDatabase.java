@@ -12,22 +12,22 @@ import androidx.annotation.Nullable;
 public class kat_favoritesDatabase extends SQLiteOpenHelper {
 
 
-    // 1. 타입 (플레이어 또는 클럽),
-    // 2. 태그
-    // 3. 계정명
-    // 4. 자신의 계정인지 확인하는 bool 값
-    // 을 저장하는 검색기록 저장 데이터베이스
-
     public kat_favoritesDatabase(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
     }
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
-        sqLiteDatabase.execSQL("CREATE TABLE kataFavoritesBase (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
-                "searchType TEXT," +
-                "searchTag TEXT," +
-                "userAccount TEXT);");
+        String sql = "CREATE TABLE kataFavoritesBase (id INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "searchType TEXT, " +
+                "searchTag TEXT, " +
+                "userAccount TEXT," +
+                "userTrophies TEXT," +
+                "userHighestTropthies TEXT," +
+                "userIconID TEXT," +
+                "userLevel TEXT" +
+                ")";
+        sqLiteDatabase.execSQL(sql);
     }
 
     @Override
@@ -45,7 +45,7 @@ public class kat_favoritesDatabase extends SQLiteOpenHelper {
         return dbSzie;
     }
 
-    public void insert(String Type, String Tag, String Account){
+    public void insert(String Type, String Tag, String Account, String Trophies, String HighestTrophies, String IconId, String Level){
 
         SQLiteDatabase database = getWritableDatabase();
 
@@ -53,9 +53,21 @@ public class kat_favoritesDatabase extends SQLiteOpenHelper {
         Cursor cursor = database.rawQuery("SELECT * FROM kataFavoritesBase", null);
         cursor.moveToLast();
 
+
+        //2020.11.12 - no colums 에러 : string을 잘못 썼음. string 제대로 확인할 것.
+        String sql = "INSERT INTO kataFavoritesBase VALUES(null, "
+                + "'" + Type + "'" + ", "
+                + "'" + Tag + "'" + ", "
+                + "'" + Account + "'" + ", "
+                + "'" + Trophies + "'" + ", "
+                + "'" + HighestTrophies + "'" + ", "
+                + "'" + IconId + "'" + ", "
+                + "'" + Level + "'"
+                + ")";
+
         // 테이블이 비었으면 그냥 삽입하고 종료
         if(cursor.getCount() <= 0){
-            database.execSQL("INSERT INTO kataFavoritesBase VALUES(null, '" + Type + "', '" + Tag + "', '" + Account + "');");
+            database.execSQL(sql);
             return;
         }
 
@@ -68,7 +80,7 @@ public class kat_favoritesDatabase extends SQLiteOpenHelper {
         while(cursor.moveToPrevious());
 
         // 중복되는 데이터가 없으면 그냥 삽입
-        database.execSQL("INSERT INTO kataFavoritesBase VALUES(null, '" + Type + "', '" + Tag + "', '" + Account + "');");
+        database.execSQL(sql);
     }
 
     public boolean isFavorites(String Tag){
@@ -105,7 +117,7 @@ public class kat_favoritesDatabase extends SQLiteOpenHelper {
         do {
             if(cursor.getString(1).equals(type)) {
                 ArrayList<String> inner = new ArrayList<>();
-                for (int i = 1; i < 5; i++) {
+                for (int i = 1; i < 8; i++) {
                     inner.add(cursor.getString(i));
                 }
 
@@ -118,25 +130,36 @@ public class kat_favoritesDatabase extends SQLiteOpenHelper {
         return resultList;
     }
 
-    public void SetFavorites(String tag){
-
-        SQLiteDatabase database = getWritableDatabase();
-        System.out.println("your tag : " + tag);
-        String sql = "UPDATE kataFavoritesBase SET isUserAccount = 'YES' WHERE searchTag = " + tag;
-        database.execSQL(sql);
-
-    }
-
-    public void SetNotFavorites(String tag){
-
-        SQLiteDatabase database = getWritableDatabase();
-        String sql = "UPDATE kataFavoritesBase SET isUserAccount = 'NO' WHERE searchTag = tag";
-        database.execSQL(sql);
-    }
-
     public void delete(String tag){
         SQLiteDatabase database = getWritableDatabase();
         database.execSQL("DELETE FROM kataFavoritesBase WHERE searchTag = " + "'" + tag + "'");
+    }
+
+    public ArrayList< ArrayList<String> > getItem(){
+
+        ArrayList<ArrayList<String> > result = new ArrayList<>();
+        SQLiteDatabase database = getWritableDatabase();
+
+        Cursor cursor = database.rawQuery("SELECT * FROM kataFavoritesBase", null);
+        cursor.moveToFirst();
+
+        if(cursor.getCount() > 0) {
+            do {
+                ArrayList<String> res = new ArrayList<>();
+                res.add(cursor.getString(0));
+                res.add(cursor.getString(1));
+                res.add(cursor.getString(2));
+                res.add(cursor.getString(3));
+                res.add(cursor.getString(4));
+                res.add(cursor.getString(5));
+                res.add(cursor.getString(6));
+                res.add(cursor.getString(7));
+                result.add(res);
+            }
+            while (cursor.moveToNext());
+        }
+
+        return result;
     }
 
 
@@ -149,9 +172,11 @@ public class kat_favoritesDatabase extends SQLiteOpenHelper {
 
         if(cursor.getCount() > 0) {
             do {
-                System.out.println(cursor.getString(1) + ", " + cursor.getString(2) + ", " + cursor.getString(3));
+                System.out.println(cursor.getString(1) + ", " + cursor.getString(2) + ", " + cursor.getString(3) +
+                        ", " + cursor.getString(4) + ", " + cursor.getString(5) + ", " + cursor.getString(6) +
+                        cursor.getString(7));
             }
-            while (cursor.moveToPrevious());
+            while (cursor.moveToNext());
         }
     }
 }
