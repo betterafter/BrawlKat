@@ -1,6 +1,8 @@
 package com.example.brawlkat.kat_Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -9,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -37,8 +40,11 @@ public class kat_FavoritesFragment extends Fragment {
     private             RequestOptions                                                          options;
     public              static int                                                              height;
     public              static int                                                              width;
-    private             GridView                                                                gridView;
 
+    private             GridView                                                                gridView;
+    public              static gridAdapter                                                      gridAdapter;
+
+    private             ArrayList<ArrayList<String>>                                            databaseItem;
 
     public kat_FavoritesFragment(kat_Player_MainActivity kat_player_mainActivity){
         this.kat_player_mainActivity = kat_player_mainActivity;
@@ -66,20 +72,26 @@ public class kat_FavoritesFragment extends Fragment {
 
         View view = inflater.inflate(R.layout.player_favorites, null);
         kat_favoritesDatabase database = kat_LoadBeforeMainActivity.kataFavoritesBase;
-        ArrayList<ArrayList<String>> databaseItem = database.getItem();
+        databaseItem = database.getItem();
 
         gridView = view.findViewById(R.id.player_favorites_gridview);
-        gridAdapter gridAdapter = new gridAdapter(databaseItem);
+        gridAdapter = new gridAdapter(databaseItem);
         gridView.setAdapter(gridAdapter);
         gridAdapter.notifyDataSetChanged();
 
         return view;
     }
 
+    public void refresh(){
+        gridAdapter.refreshData();
+        System.out.println("after item : " + gridAdapter.databaseItem);
+        gridAdapter.notifyDataSetChanged();
+    }
+
 
     private class gridAdapter extends BaseAdapter{
 
-        private ArrayList<ArrayList<String> >   databaseItem;
+        public  ArrayList<ArrayList<String> >   databaseItem;
         private String                          url_icon_trophies = "https://www.starlist.pro/assets/icon/trophy.png";
 
         public gridAdapter(ArrayList<ArrayList<String>> databaseItem){
@@ -102,13 +114,23 @@ public class kat_FavoritesFragment extends Fragment {
             return i;
         }
 
+        public void refreshData(){
+            databaseItem = kat_LoadBeforeMainActivity.kataFavoritesBase.getItem();
+        }
+
+        // 아이템 뷰 디자인
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             LayoutInflater layoutInflater =
                     (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.player_favorites_item, viewGroup, false);
+            LinearLayout backgroundLayout = view.findViewById(R.id.player_favorites_background_layout);
 
+            backgroundLayout.setBackgroundColor(Color.parseColor("#282830"));
+
+
+            // 그리드뷰 아이템 클릭
             final int moveIdx = i;
             view.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View view){
@@ -122,6 +144,7 @@ public class kat_FavoritesFragment extends Fragment {
                 }
             });
 
+
             ImageView player_image = view.findViewById(R.id.player_favorites_image);
             TextView player_level = view.findViewById(R.id.player_favorites_level);
             TextView player_name = view.findViewById(R.id.player_favorites_name);
@@ -131,13 +154,19 @@ public class kat_FavoritesFragment extends Fragment {
             ImageView player_close = view.findViewById(R.id.player_favorites_close);
 
             String url_profile = "https://www.starlist.pro/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
-            GlideImageWithRoundCorner(url_profile, width / 5, height / 5, player_image);
+            GlideImageWithRoundCorner(url_profile, width / 8, height / 8, player_image);
             player_level.setText(databaseItem.get(i).get(7));
             player_name.setText(databaseItem.get(i).get(3));
             GlideImageWithRoundCorner(url_icon_trophies, width / 30, height / 30, player_trophies_image);
             player_trophies.setText(databaseItem.get(i).get(4) + " / " + databaseItem.get(i).get(5));
             player_tag.setText(databaseItem.get(i).get(2));
 
+            player_name.setTextColor(getResources().getColor(R.color.Color1));
+            Drawable drawable = player_tag.getBackground();
+            drawable.setTint(getResources().getColor(R.color.semiBlack));
+
+
+            // 그리드뷰 닫기 버튼 클릭
             final int removeIdx = i;
             player_close.setOnClickListener(new View.OnClickListener(){
                 public void onClick(View view){
@@ -151,6 +180,7 @@ public class kat_FavoritesFragment extends Fragment {
             return view;
         }
     }
+
 
 
     public void GlideImage(String url, int width, int height, ImageView view){

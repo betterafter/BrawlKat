@@ -101,7 +101,7 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
                                 android:layout_marginLeft="15dp"
-                                android:fontFamily="sans-serif"
+                                android:fontFamily="@font/lilita_one"
                                 android:text="TextView"
                                 android:textAlignment="textStart"
                                 android:textColor="@color/colorWhite"
@@ -113,6 +113,7 @@
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
+                            android:gravity="center"
                             android:orientation="horizontal">
 
                             <ImageView
@@ -137,14 +138,18 @@
 
                         <TextView
                             android:id="@+id/player_detail_tag"
-                            android:layout_width="match_parent"
+                            android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/semi_round_button_inner_normal"
                             android:fontFamily="sans-serif"
+                            android:paddingHorizontal="4dp"
                             android:text="TextView"
                             android:textAlignment="textStart"
                             android:textColor="@color/cardview_light_background"
-                            android:textSize="14sp" />
+                            android:textSize="14sp"
+                            android:textStyle="bold" />
 
                     </LinearLayout>
 

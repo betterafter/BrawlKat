@@ -17,6 +17,7 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.brawlkat.kat_Fragment.kat_FavoritesFragment;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
@@ -24,6 +25,7 @@ import java.util.ArrayList;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
+import androidx.fragment.app.Fragment;
 
 public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActivity {
 
@@ -130,7 +132,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         player_detail_trophies.setText(playerData.getTrophies() + " / " + playerData.getHighestTrophies());
         player_detail_level.setText(Integer.toString(playerData.getExpLevel()));
 
-        GlideImage(url_icon_trophies, width / 20, width / 20, player_detail_trophies_icon);
+        GlideImage(url_icon_trophies, width / 30, width / 30, player_detail_trophies_icon);
 
         playerInformationList(iconImage, modeType, modeValue);
         playerBattleLogList();
@@ -357,7 +359,6 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     }
 
     public void onFavoritesClick(View view){
-        kataFavoritesBase.print();
         if(!kataFavoritesBase.isFavorites(playerData.getTag())) {
 
             String tag = "", name = "", trophies = "", highestTrophies = "", iconId = "", level = "";
@@ -377,6 +378,14 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             kataFavoritesBase.delete(playerData.getTag());
             view.setBackground(getResources().getDrawable(R.drawable.round_star_border_24));
         }
+
+        for(Fragment fragment : kat_player_mainActivity.getSupportFragmentManager().getFragments()){
+            System.out.println(fragment);
+            if(fragment instanceof kat_FavoritesFragment){
+                ((kat_FavoritesFragment) fragment).refresh();
+            }
+        }
+
     }
 
 

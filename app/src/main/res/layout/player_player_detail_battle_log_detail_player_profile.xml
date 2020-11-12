@@ -67,7 +67,8 @@
                     android:text="TextView"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
-                    android:textSize="18sp" />
+                    android:textSize="18sp"
+                    android:textStyle="bold" />
 
                 <TextView
                     android:id="@+id/player_player_detail_battle_log_detail_player_profile_player_tag"

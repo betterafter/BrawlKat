@@ -35,4 +35,11 @@
     <color name="Color10">#e11ec0</color>
     <color name="Color11">#f179d7</color>
     <color name="Color12">#79F193</color>
+
+    <color name="randomColor1">#7c47e9</color>
+    <color name="randomColor2">#1ea1f7</color>
+    <color name="randomColor3">#00bba3</color>
+    <color name="randomColor4">#7fd047</color>
+    <color name="randomColor5">#ffc11f</color>
+    <color name="randomColor6">#e0231f</color>
 </resources>

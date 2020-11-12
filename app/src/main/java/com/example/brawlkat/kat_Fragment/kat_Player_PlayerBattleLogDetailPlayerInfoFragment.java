@@ -127,7 +127,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
 
                 ArrayList<kat_official_playerBattleLogParser.playTeamInfo> teams =
                         ((kat_official_playerBattleLogParser.team) TeamOrPlayer.get(i)).getPlayTeamInfo();
-                if(battleData.getEventMode().equals("duoShowDown")){
+                if(battleData.getEventMode().equals("duoShowdown")){
                     Team_result_duoShowDown_SetLinearLayout(teams, i, linearLayout, "duoShowDown");
                 }
                 else Team_resultSetLinearLayout(teams, i, linearLayout, "not3vs3");
@@ -176,7 +176,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
     private void Team_result_duoShowDown_SetLinearLayout(ArrayList<kat_official_playerBattleLogParser.playTeamInfo> teams,
                                             int i, LinearLayout linearLayout, String type){
 
-        for(int j = 0; j < teams.size(); j++){
+        for(int j = 0; j < teams.size(); j+=2){
 
             LinearLayout innerLayout = new LinearLayout(Objects.requireNonNull(getActivity()).getApplicationContext());
             innerLayout.setOrientation(LinearLayout.VERTICAL);
@@ -185,19 +185,20 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
             );
-            layoutParams.setMargins(20, 10, 20, 10);
-            innerLayout.setPadding(15, 15, 15, 15);
+            layoutParams.setMargins(0, 10, 0, 10);
+            innerLayout.setPadding(0, 15, 0, 15);
             innerLayout.setLayoutParams(layoutParams);
 
             battleResultText_showDown(layoutParams, innerLayout, i);
 
-            kat_official_playerBattleLogParser.playTeamInfo playerInfo = teams.get(j);
-            innerLayout.addView(playerItem(playerInfo, i));
+            for(int k = j; k < j + 2; k++){
+                kat_official_playerBattleLogParser.playTeamInfo playerInfo = teams.get(j + k);
+                innerLayout.addView(playerItem(playerInfo, i));
+            }
 
             linearLayout.addView(innerLayout);
         }
     }
-
 
     private void Player_resultSetLinearLayout(ArrayList<kat_official_playerBattleLogParser.playTeamInfo> players,
                                               int i, LinearLayout linearLayout, String type){
@@ -229,11 +230,19 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         }
     }
 
-
     private void battleResultText_3vs3(LinearLayout.LayoutParams layoutParams, LinearLayout innerLayout, int i){
+
+        LinearLayout.LayoutParams TextViewLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        TextViewLayoutParams.setMargins(10,10,10,10);
+
         TextView tv = new TextView(Objects.requireNonNull(getActivity()).getApplicationContext());
         tv.setTextSize(24);
-        tv.setLayoutParams(layoutParams);
+        tv.setBackground(getResources().getDrawable(R.drawable.card_bottom_line));
+        tv.setLayoutParams(TextViewLayoutParams);
+        tv.setPadding(20,10,0,20);
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
 
         System.out.println(battleData.getBattleResult());
@@ -264,11 +273,20 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         }
         innerLayout.addView(tv);
     }
-
+    // 각 플레이어를 표시하는 레이아웃 디자인 (innerlayout 디자인)
     private void battleResultText_showDown(LinearLayout.LayoutParams layoutParams, LinearLayout innerLayout, int i){
+
+        LinearLayout.LayoutParams TextViewLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+
         TextView tv = new TextView(Objects.requireNonNull(getActivity()).getApplicationContext());
         tv.setTextSize(24);
-        tv.setLayoutParams(layoutParams);
+        tv.setBackground(getResources().getDrawable(R.drawable.card_bottom_line));
+        tv.setLayoutParams(TextViewLayoutParams);
+        tv.setPadding(20,10,0,20);
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
 
         tv.setText(i + 1 + "등");
@@ -278,9 +296,17 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
     }
 
     private void battleResultText_event(LinearLayout.LayoutParams layoutParams, LinearLayout innerLayout, int i){
+
+        LinearLayout.LayoutParams TextViewLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
         TextView tv = new TextView(Objects.requireNonNull(getActivity()).getApplicationContext());
         tv.setTextSize(24);
-        tv.setLayoutParams(layoutParams);
+        tv.setBackground(getResources().getDrawable(R.drawable.card_bottom_line));
+        tv.setLayoutParams(TextViewLayoutParams);
+        tv.setPadding(20,10,0,20);
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
 
         tv.setText("승리");
@@ -301,6 +327,12 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
                 (LayoutInflater) Objects.requireNonNull(getActivity()).getApplicationContext().
                         getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+        layoutParams.setMargins(10,0,0,0);
+
         View v = layoutInflater.inflate(R.layout.player_player_detail_battle_log_detail_player_profile, null);
         ImageView brawler_image = v.findViewById(R.id.player_player_detail_battle_log_detail_player_profile_brawler_image);
         TextView player_name = v.findViewById(R.id.player_player_detail_battle_log_detail_player_profile_player_name);
@@ -308,6 +340,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         TextView player_trophy = v.findViewById(R.id.player_player_detail_battle_log_detail_player_profile_player_trophy);
         TextView player_tag = v.findViewById(R.id.player_player_detail_battle_log_detail_player_profile_player_tag);
 
+        v.setLayoutParams(layoutParams);
 
         for(int k = 0; k < BrawlersArrayList.size(); k++){
 

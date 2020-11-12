@@ -25,7 +25,6 @@ import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
-import com.example.brawlkat.kat_dataparser.kat_official_playerParser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -43,9 +42,9 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     private             FragmentManager                                                         fragmentManager;
     private             FragmentTransaction                                                     fragmentTransaction;
 
-    private             kat_SearchFragment                                                      kat_searchFragment;
-    private             kat_FavoritesFragment                                                   kat_favoritesFragment;
-    private             kat_RankingFragment                                                     kat_rankingFragment;
+    public              kat_SearchFragment                                                      kat_searchFragment;
+    public              kat_FavoritesFragment                                                   kat_favoritesFragment;
+    public              kat_RankingFragment                                                     kat_rankingFragment;
     //.................................................................................................................//
 
     public              ImageButton                                                             serviceButton;
@@ -55,14 +54,12 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     public              static String                                                           nofficial = "nofficial";
 
     public              static String                                                           playerTag;
-    private             String                                                                  clubTag;
 
-    public              kat_official_playerParser                                               official_playerParser;
     public              kat_official_playerInfoParser                                           official_playerInfoParser;
     public              kat_official_playerBattleLogParser                                      official_playerBattleLogParser;
     public              kat_official_clubInfoParser                                             official_clubInfoParser;
     public              kat_clubLogParser                                                       clubLogParser;
-    private             ArrayList<String>                                                       offi_PlayerArrayList;
+
 
     public              static kat_official_playerInfoParser.playerData                         MyPlayerData;
     public              kat_official_playerInfoParser.playerData                                playerData;
@@ -79,12 +76,11 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     public              LayoutInflater                                                          layoutInflater;
 
     public              static Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>> playerBattleDataListStack = new Stack<>();
-    public              static Stack<kat_Player_PlayerDetailActivity>                                player_playerDetailActivities = new Stack<>();
-
-
 
     private             static long                                                             mLastClickTime = 0;
     private             boolean                                                                 firstStart = true;
+
+    public              static kat_Player_MainActivity                                          kat_player_mainActivity;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -94,6 +90,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
+
+            kat_player_mainActivity = this;
 
             kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
             kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
@@ -155,8 +153,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                             } else {
                                 endClickToUnbind = false;
                                 getPermission();
-                                testThread tt = new testThread();
-                                tt.start();
                                 isServiceStart = true;
                             }
                         }
@@ -181,7 +177,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         super.onStart();
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
-            //setFrag(0);
 
             Intent intent = getIntent();
             if (intent != null) {
@@ -220,24 +215,12 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 fragmentTransaction.replace(R.id.Main_Frame, kat_rankingFragment);
                 fragmentTransaction.commit();
                 break;
-
-
-        }
-    }
-
-
-    private class testThread extends Thread{
-        public void run(){
-            while(true){
-                if(katService != null && playerTag != null)
-                    katService.getPlayerTag = playerTag;
-            }
         }
     }
 
 
 
-
+    // service .....................................................................................
     public class unbindThread extends Thread{
 
         public void run(){
@@ -283,7 +266,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             //startService(intent);
         }
     }
-
     @TargetApi(Build.VERSION_CODES.M)
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -315,9 +297,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             bound = false;
         }
     };
+    //..............................................................................................
 
-
-    long backKeyPressedTime;
 
     @Override
     public void onBackPressed() {

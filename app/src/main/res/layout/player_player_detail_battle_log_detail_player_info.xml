@@ -18,6 +18,7 @@
                 android:id="@+id/player_player_detail_battle_log_detail_player_info_playerlist"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginHorizontal="10dp"
                 android:orientation="vertical"></LinearLayout>
         </LinearLayout>
     </ScrollView>
