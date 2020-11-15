@@ -11,6 +11,7 @@ import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_eventsParser;
 import com.example.brawlkat.kat_dataparser.kat_mapsParser;
+import com.example.brawlkat.kat_dataparser.kat_official_PlayerRankingParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -37,6 +38,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
     public              static ArrayList<kat_eventsParser.pair>        EventArrayList;
     public              static ArrayList<HashMap<String, Object>>      BrawlersArrayList;
+    public              static ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList;
     // ..............................................................................................................//
 
 

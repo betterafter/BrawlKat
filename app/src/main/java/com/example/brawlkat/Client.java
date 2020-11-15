@@ -3,6 +3,7 @@ package com.example.brawlkat;
 import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_eventsParser;
 import com.example.brawlkat.kat_dataparser.kat_mapsParser;
+import com.example.brawlkat.kat_dataparser.kat_official_PlayerRankingParser;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -16,10 +17,17 @@ import java.util.ArrayList;
 public class Client {
 
     private                 Socket                          socket                  = null;
+
     private                 InputStream                     data;
     private                 OutputStream                    tagdata;
+
+    // data 배열 리스트 ...............................................................................
     public                  static ArrayList<String>        resData;
     public                  ArrayList<String>               resOffiData;
+    public                  ArrayList<String>               resRankingData;
+    public                  ArrayList<String>               resPowerPlayOrBrawlerRankingData;
+    // .............................................................................................
+
     public                  getApiThread                    getThread;
     public                  kat_Service_OverdrawActivity    kat_Service_overdrawActivity;
     public                  getAllTypeApiThread             officialApiThread;
@@ -38,8 +46,7 @@ public class Client {
         this.kat_Service_overdrawActivity = kat_Service_overdrawActivity;
     }
 
-
-    // 버튼 클릭 시에 해당 스레드 실행
+    // 플레이어 및 클럽 전적 검색 스레드
     public class getAllTypeApiThread extends Thread{
 
         private String tag;
@@ -119,8 +126,108 @@ public class Client {
                     socketFail = true;
                 }
             }
+        }
+    }
+
+    // 랭킹 검색 스레드
+    public class getRankingApiThread extends Thread{
+
+        String countryCode;
+        String Id;
+        String status;
+        kat_LoadingDialog dialog;
+
+        public getRankingApiThread(String countryCode, String Id, String status, kat_LoadingDialog dialog){
+            this.countryCode = countryCode;
+            this.Id = Id;
+            this.status = status;
+            this.dialog = dialog;
+        }
+
+        public void run(){
+
+            try{
+
+                while(true){
+
+                    Socket socket = new Socket("35.237.9.225", 9000);
+
+                    byte[] bytes = null;
+                    String result = null;
+
+                    // 데이터 보내기
+                    if(status.equals("PowerPlay"))
+                        result = "rankings" + "/" + countryCode + "PowerPlay" + Id + "/" + "official";
+                    else if(status.equals("Brawler"))
+                        result = "rankings" + "/" + countryCode + Id + "/" + "official";
+                    else
+                        result = "rankings" + "/" + countryCode + "/" + "official";
+                    OutputStream os = socket.getOutputStream();
+                    bytes = result.getBytes("UTF-8");
+                    os.write(bytes);
+                    os.flush();
+
+                    // os 를 flush한 후 데이터 종료 완료를 알리기 위해 개행문자를 보내 데이터 수신을 완료한다.
+                    String end = "\n";
+                    os.write(end.getBytes());
+                    os.flush();
+
+                    InputStream data = socket.getInputStream();
+                    InputStreamReader input = new InputStreamReader(data);
+                    BufferedReader reader = new BufferedReader(input);
+                    result = reader.readLine();
+
+                    int startidx = 0; int split = 0;
+
+                    // API 데이터 파싱
+                    String splited;
+                    resRankingData = new ArrayList<>();
+
+                    while (split != -1) {
+
+                        split = result.indexOf("}{", startidx);
+
+                        if (split == -1) splited = result.substring(startidx);
+                        else splited = result.substring(startidx, split + 1);
+
+                        System.out.println(splited);
+                        resRankingData.add(splited);
+                        startidx = split + 1;
+                    }
+
+                    // 파싱 할 부분 ...................................................................
+                    kat_official_PlayerRankingParser playerRankingParser;
+
+                    playerRankingParser = new kat_official_PlayerRankingParser(resRankingData.get(1));
+
+                    kat_LoadBeforeMainActivity.PlayerRankingArrayList = playerRankingParser.DataParser();
 
 
+                    // 임시 출력
+                    //for(int i = 0; i < kat_LoadBeforeMainActivity.PlayerRankingArrayList.size(); i++){
+                    //kat_official_PlayerRankingParser.playerData playerData = kat_LoadBeforeMainActivity.PlayerRankingArrayList.get(i);
+                    //System.out.println(playerData.getRank() + " : " + playerData.getName() + ", " + playerData.getTag() + ", " + playerData.getTrophies());
+                    //}
+
+
+                    // .............................................................................
+
+
+                    input.close();
+                    data.close();
+                    reader.close();
+                    socket.close();
+                    if(dialog != null) dialog.dismiss();
+                    break;
+                }
+            }
+
+            catch (Exception e){
+                e.printStackTrace();
+                if(e instanceof SocketTimeoutException){
+                    socketFail = true;
+                }
+            }
         }
 
     }
@@ -246,6 +353,11 @@ public class Client {
 
         officialApiThread = new getAllTypeApiThread(tag, type, apiType);
         if(!officialApiThread.isAlive()) officialApiThread.start();
+    }
+
+    public void RankingInit(String countryCode, String Id, String status, kat_LoadingDialog dialog){
+        getRankingApiThread getRankingApiThread = new getRankingApiThread(countryCode, Id, status, dialog);
+        getRankingApiThread.start();
     }
 
 

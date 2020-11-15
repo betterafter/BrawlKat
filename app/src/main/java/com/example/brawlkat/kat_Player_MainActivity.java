@@ -44,7 +44,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     public              kat_SearchFragment                                                      kat_searchFragment;
     public              kat_FavoritesFragment                                                   kat_favoritesFragment;
-    public              kat_RankingFragment                                                     kat_rankingFragment;
+    public kat_RankingFragment kat_rankingFragment;
     //.................................................................................................................//
 
     public              ImageButton                                                             serviceButton;
