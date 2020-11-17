@@ -3,7 +3,11 @@ package com.example.brawlkat;
 import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_eventsParser;
 import com.example.brawlkat.kat_dataparser.kat_mapsParser;
+import com.example.brawlkat.kat_dataparser.kat_official_BrawlerRankingParser;
+import com.example.brawlkat.kat_dataparser.kat_official_ClubRankingParser;
 import com.example.brawlkat.kat_dataparser.kat_official_PlayerRankingParser;
+import com.example.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonParser;
+import com.example.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonRankingParser;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
@@ -36,6 +40,7 @@ public class Client {
     public                  boolean                         firstInit = false;
 
     private                 firstInitThread                 firstInitThread;
+    private                 getRankingApiThread             getRankingApiThread;
 
 
     public Client(){
@@ -196,11 +201,50 @@ public class Client {
                     }
 
                     // 파싱 할 부분 ...................................................................
-                    kat_official_PlayerRankingParser playerRankingParser;
 
-                    playerRankingParser = new kat_official_PlayerRankingParser(resRankingData.get(1));
+                    if(status.equals("PowerPlay")){
+                        kat_official_PowerPlaySeasonRankingParser powerPlaySeasonRankingParser;
 
-                    kat_LoadBeforeMainActivity.PlayerRankingArrayList = playerRankingParser.DataParser();
+                        powerPlaySeasonRankingParser = new kat_official_PowerPlaySeasonRankingParser(resRankingData.get(0));
+
+                        if(countryCode.equals("global"))
+                            kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList = powerPlaySeasonRankingParser.DataParser();
+                        else
+                            kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList = powerPlaySeasonRankingParser.DataParser();
+                    }
+
+                    else if(status.equals("Brawler")){
+                        kat_official_BrawlerRankingParser brawlerRankingParser;
+
+                        brawlerRankingParser = new kat_official_BrawlerRankingParser(resRankingData.get(0));
+
+                        if(countryCode.equals("global"))
+                            kat_LoadBeforeMainActivity.BrawlerRankingArrayList = brawlerRankingParser.DataParser();
+                        else
+                            kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList = brawlerRankingParser.DataParser();
+                    }
+
+                    else{
+                        kat_official_ClubRankingParser clubRankingParser;
+                        kat_official_PlayerRankingParser playerRankingParser;
+                        kat_official_PowerPlaySeasonParser powerPlaySeasonParser;
+
+                        clubRankingParser = new kat_official_ClubRankingParser(resRankingData.get(0));
+                        playerRankingParser = new kat_official_PlayerRankingParser(resRankingData.get(1));
+                        powerPlaySeasonParser = new kat_official_PowerPlaySeasonParser(resRankingData.get(2));
+
+                        if(countryCode.equals("global")) {
+                            kat_LoadBeforeMainActivity.PlayerRankingArrayList = playerRankingParser.DataParser();
+                            kat_LoadBeforeMainActivity.ClubRankingArrayList = clubRankingParser.DataParser();
+                            kat_LoadBeforeMainActivity.PowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
+                        }
+                        else{
+                            kat_LoadBeforeMainActivity.MyPlayerRankingArrayList = playerRankingParser.DataParser();
+                            kat_LoadBeforeMainActivity.MyClubRankingArrayList = clubRankingParser.DataParser();
+                            kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
+                        }
+                    }
+
 
 
                     // 임시 출력
@@ -356,7 +400,7 @@ public class Client {
     }
 
     public void RankingInit(String countryCode, String Id, String status, kat_LoadingDialog dialog){
-        getRankingApiThread getRankingApiThread = new getRankingApiThread(countryCode, Id, status, dialog);
+        getRankingApiThread = new getRankingApiThread(countryCode, Id, status, dialog);
         getRankingApiThread.start();
     }
 
@@ -371,4 +415,5 @@ public class Client {
     public getAllTypeApiThread apiThread(){
         return officialApiThread;
     }
+    public getRankingApiThread getRankingApiThread() { return getRankingApiThread; }
 }

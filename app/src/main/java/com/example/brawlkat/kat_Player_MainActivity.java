@@ -82,6 +82,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     public              static kat_Player_MainActivity                                          kat_player_mainActivity;
 
+    public              kat_LoadingDialog                                                       dialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -91,11 +93,13 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
 
+            dialog = new kat_LoadingDialog(this);
+
             kat_player_mainActivity = this;
 
             kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
             kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
-            kat_rankingFragment = new kat_RankingFragment();
+            kat_rankingFragment = new kat_RankingFragment(dialog);
 
             // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
             bottomNavigationView = findViewById(R.id.bottomNavi);
@@ -105,7 +109,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
                     kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
                     kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
-                    kat_rankingFragment = new kat_RankingFragment();
+                    kat_rankingFragment = new kat_RankingFragment(dialog);
 
                     switch (menuItem.getItemId()) {
                         case R.id.action_search:
@@ -115,6 +119,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                             setFrag(1);
                             break;
                         case R.id.action_ranking:
+                            dialog.show();
                             setFrag(2);
                             break;
                     }

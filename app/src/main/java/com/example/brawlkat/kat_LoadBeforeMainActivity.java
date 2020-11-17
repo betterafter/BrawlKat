@@ -9,9 +9,14 @@ import com.example.brawlkat.kat_Database.kat_favoritesDatabase;
 import com.example.brawlkat.kat_Database.kat_myAccountDatabase;
 import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
+import com.example.brawlkat.kat_dataparser.kat_countryCodeParser;
 import com.example.brawlkat.kat_dataparser.kat_eventsParser;
 import com.example.brawlkat.kat_dataparser.kat_mapsParser;
+import com.example.brawlkat.kat_dataparser.kat_official_BrawlerRankingParser;
+import com.example.brawlkat.kat_dataparser.kat_official_ClubRankingParser;
 import com.example.brawlkat.kat_dataparser.kat_official_PlayerRankingParser;
+import com.example.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonParser;
+import com.example.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonRankingParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -22,23 +27,36 @@ import androidx.appcompat.app.AppCompatActivity;
 public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
     // database .....................................................................................................//
-    public              static kat_database                            katabase;
-    public              static kat_favoritesDatabase                   kataFavoritesBase;
-    public              static kat_myAccountDatabase                   kataMyAccountBase;
+    public    static kat_database                                                                       katabase;
+    public    static kat_favoritesDatabase                                                              kataFavoritesBase;
+    public    static kat_myAccountDatabase                                                              kataMyAccountBase;
 
 
 
 
-    public              static Client                                  client = new Client();
-    public              static HashMap<String, kat_mapsParser.mapData> mapData;
+    public    static Client                                                                             client = new Client();
+    public    static HashMap<String, kat_mapsParser.mapData>                                            mapData;
 
-    public              kat_mapsParser                                 mapsParser;
-    public              kat_brawlersParser                             brawlersParser;
+    public    kat_mapsParser                                                                            mapsParser;
+    public    kat_brawlersParser                                                                        brawlersParser;
 
 
-    public              static ArrayList<kat_eventsParser.pair>        EventArrayList;
-    public              static ArrayList<HashMap<String, Object>>      BrawlersArrayList;
-    public              static ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList;
+    public    static ArrayList<kat_eventsParser.pair>                                                   EventArrayList;
+    public    static ArrayList<HashMap<String, Object>>                                                 BrawlersArrayList;
+
+    public    static HashMap<String, String>                                                            countryCodeMap;
+
+    public    static ArrayList<kat_official_PlayerRankingParser.playerData>                             PlayerRankingArrayList;
+    public    static ArrayList<kat_official_ClubRankingParser.clubData>                                 ClubRankingArrayList;
+    public    static ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>                    BrawlerRankingArrayList;
+    public    static ArrayList<kat_official_PowerPlaySeasonParser.powerPlaySeasonsData>                 PowerPlaySeasonArrayList;
+    public    static ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>    PowerPlaySeasonRankingArrayList;
+
+    public    static ArrayList<kat_official_PlayerRankingParser.playerData>                             MyPlayerRankingArrayList;
+    public    static ArrayList<kat_official_ClubRankingParser.clubData>                                 MyClubRankingArrayList;
+    public    static ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>                    MyBrawlerRankingArrayList;
+    public    static ArrayList<kat_official_PowerPlaySeasonParser.powerPlaySeasonsData>                 MyPowerPlaySeasonArrayList;
+    public    static ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>    MyPowerPlaySeasonRankingArrayList;
     // ..............................................................................................................//
 
 
@@ -54,6 +72,14 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
 
             System.out.println("kat favorites database size : " + kataFavoritesBase.size());
+
+            kat_countryCodeParser countryCodeParser = new kat_countryCodeParser(this);
+            try {
+                countryCodeMap = countryCodeParser.DataParser();
+            }
+            catch (Exception e){
+                e.printStackTrace();
+            }
 
             client.init();
 
