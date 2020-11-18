@@ -149,6 +149,12 @@ public class Client {
             this.dialog = dialog;
         }
 
+        public getRankingApiThread(String countryCode, String Id, String status){
+            this.countryCode = countryCode;
+            this.Id = Id;
+            this.status = status;
+        }
+
         public void run(){
 
             try{
@@ -400,7 +406,12 @@ public class Client {
     }
 
     public void RankingInit(String countryCode, String Id, String status, kat_LoadingDialog dialog){
-        getRankingApiThread = new getRankingApiThread(countryCode, Id, status, dialog);
+        getRankingApiThread getRankingApiThread = new getRankingApiThread(countryCode, Id, status, dialog);
+        getRankingApiThread.start();
+    }
+
+    public void RankingInit(String countryCode, String Id, String status){
+        getRankingApiThread getRankingApiThread = new getRankingApiThread(countryCode, Id, status);
         getRankingApiThread.start();
     }
 

@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 
+import com.example.brawlkat.kat_Database.kat_countryDatabase;
 import com.example.brawlkat.kat_Database.kat_database;
 import com.example.brawlkat.kat_Database.kat_favoritesDatabase;
 import com.example.brawlkat.kat_Database.kat_myAccountDatabase;
@@ -30,6 +31,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     public    static kat_database                                                                       katabase;
     public    static kat_favoritesDatabase                                                              kataFavoritesBase;
     public    static kat_myAccountDatabase                                                              kataMyAccountBase;
+    public    static kat_countryDatabase                                                                kataCountryBase;
 
 
 
@@ -70,6 +72,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             katabase = new kat_database(getApplicationContext(), "kat", null, 2);
             kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);
             kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
+            kataCountryBase = new kat_countryDatabase(getApplicationContext(), "katcountry", null, 1);
 
             System.out.println("kat favorites database size : " + kataFavoritesBase.size());
 
@@ -82,6 +85,12 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             }
 
             client.init();
+
+            String countryName = countryCodeMap.get("KR");
+            kataCountryBase.insert("KR", countryName);
+
+            kat_LoadBeforeMainActivity.client.RankingInit("global", "", "");
+            kat_LoadBeforeMainActivity.client.RankingInit("KR", "", "");
 
             getMapDataThread mdt = new getMapDataThread();
             if (!mdt.isAlive()) mdt.start();

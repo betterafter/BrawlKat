@@ -119,7 +119,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                             setFrag(1);
                             break;
                         case R.id.action_ranking:
-                            dialog.show();
                             setFrag(2);
                             break;
                     }

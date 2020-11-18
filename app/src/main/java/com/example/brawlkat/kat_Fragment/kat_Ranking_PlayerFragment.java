@@ -29,9 +29,13 @@ public class kat_Ranking_PlayerFragment extends Fragment {
 
     private kat_LoadingDialog dialog;
 
+    public kat_Ranking_PlayerFragment(){}
+
     public kat_Ranking_PlayerFragment(kat_LoadingDialog dialog){
         this.dialog = dialog;
     }
+
+
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -69,17 +73,6 @@ public class kat_Ranking_PlayerFragment extends Fragment {
 
     public void globalClick(LinearLayout player_ranking_player_layout){
 
-        kat_LoadBeforeMainActivity.client.RankingInit("global", "", "", dialog);
-
-        if(kat_LoadBeforeMainActivity.client.getRankingApiThread().isAlive()) {
-            try {
-                kat_LoadBeforeMainActivity.client.getRankingApiThread().join();
-                System.out.println(kat_LoadBeforeMainActivity.PlayerRankingArrayList.size());
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
         player_ranking_player_layout.removeAllViews();
         ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList
                 = kat_LoadBeforeMainActivity.PlayerRankingArrayList;
@@ -90,16 +83,6 @@ public class kat_Ranking_PlayerFragment extends Fragment {
 
     public void myCountryClick(LinearLayout player_ranking_player_layout){
 
-        kat_LoadBeforeMainActivity.client.RankingInit("KR", "", "", dialog);
-
-        if(kat_LoadBeforeMainActivity.client.getRankingApiThread().isAlive()) {
-            try {
-                kat_LoadBeforeMainActivity.client.getRankingApiThread().join();
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-        }
-
         player_ranking_player_layout.removeAllViews();
         ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList
                 = kat_LoadBeforeMainActivity.MyPlayerRankingArrayList;
@@ -109,8 +92,32 @@ public class kat_Ranking_PlayerFragment extends Fragment {
 
     }
 
+
+    public class getRankingDataThread extends Thread{
+
+        ArrayList<kat_official_PlayerRankingParser.playerData> arrayList = new ArrayList<>();
+        kat_LoadingDialog dialog;
+
+        public getRankingDataThread(ArrayList<kat_official_PlayerRankingParser.playerData> arrayList, kat_LoadingDialog dialog){
+            this.arrayList = arrayList;
+            this.dialog = dialog;
+        }
+
+        public void run(){
+            while(true){
+                if(arrayList.size() > 0){
+                    if(dialog != null) dialog.dismiss();
+                    break;
+                }
+            }
+        }
+    }
+
     public void setView(LinearLayout player_ranking_player_layout,
                         ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList){
+
+        getRankingDataThread getRankingDataThread = new getRankingDataThread(PlayerRankingArrayList, dialog);
+        getRankingDataThread.start();
 
         LayoutInflater layoutInflater =
                 (LayoutInflater) Objects.requireNonNull(getActivity()).getApplicationContext().
