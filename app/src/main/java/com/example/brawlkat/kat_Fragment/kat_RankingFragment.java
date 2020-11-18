@@ -46,7 +46,7 @@ public class kat_RankingFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         dialog  = new kat_LoadingDialog(getActivity());
-        //dialog.show();
+
 
         options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -58,32 +58,11 @@ public class kat_RankingFragment extends Fragment {
         height = metrics.heightPixels;
         width = metrics.widthPixels;
 
-        //kat_LoadBeforeMainActivity.client.RankingInit("global", "", "", dialog);
-        //kat_LoadBeforeMainActivity.client.RankingInit("KR", "", "", dialog);
     }
 
     @Override
     public void onStart() {
         super.onStart();
-        //dialog.show();
-        //kat_LoadBeforeMainActivity.client.RankingInit("global", "", "Brawler", dialog);
-
-
-    }
-
-    @Nullable
-    @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
-        View view = inflater.inflate(R.layout.player_ranking, container, false);
-
-        viewPager2 = view.findViewById(R.id.player_ranking_viewpager);
-        tabLayout = view.findViewById(R.id.player_ranking_tablayout);
-        countryChangeButton = view.findViewById(R.id.player_ranking_countrychange);
-
-
-        fragmentStateAdapter = new kat_Player_RankingAdapter(this, dialog);
-        viewPager2.setAdapter(fragmentStateAdapter);
 
         countryChangeButton.setOnClickListener(new View.OnClickListener(){
             @Override
@@ -121,6 +100,21 @@ public class kat_RankingFragment extends Fragment {
             }
         });
 
+    }
+
+    @Nullable
+    @Override
+    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+        View view = inflater.inflate(R.layout.player_ranking, container, false);
+
+        viewPager2 = view.findViewById(R.id.player_ranking_viewpager);
+        tabLayout = view.findViewById(R.id.player_ranking_tablayout);
+        countryChangeButton = view.findViewById(R.id.player_ranking_countrychange);
+
+        fragmentStateAdapter = new kat_Player_RankingAdapter(this, dialog);
+        viewPager2.setAdapter(fragmentStateAdapter);
+
         new TabLayoutMediator(tabLayout, viewPager2,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
@@ -132,7 +126,6 @@ public class kat_RankingFragment extends Fragment {
                     }
                 }).attach();
 
-        //dialog.dismiss();
         return view;
     }
 

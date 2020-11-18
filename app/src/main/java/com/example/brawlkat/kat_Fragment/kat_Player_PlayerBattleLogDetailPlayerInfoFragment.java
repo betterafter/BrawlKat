@@ -369,9 +369,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
                 kat_LoadingDialog dialog = new kat_LoadingDialog(getActivity());
                 dialog.show();
 
-                System.out.println("tag : " + playerInfo.getTag());
                 String realTag = playerInfo.getTag().substring(1);
-                System.out.println("realTag : " + realTag);
 
                 kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class, dialog);
                 kset.SearchStart(realTag, "players");

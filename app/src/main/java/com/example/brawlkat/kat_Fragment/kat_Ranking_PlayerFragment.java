@@ -1,9 +1,9 @@
 package com.example.brawlkat.kat_Fragment;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -16,6 +16,8 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.R;
 import com.example.brawlkat.kat_LoadBeforeMainActivity;
 import com.example.brawlkat.kat_LoadingDialog;
+import com.example.brawlkat.kat_Player_PlayerDetailActivity;
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_official_PlayerRankingParser;
 
 import java.util.ArrayList;
@@ -27,7 +29,8 @@ import androidx.fragment.app.Fragment;
 
 public class kat_Ranking_PlayerFragment extends Fragment {
 
-    private kat_LoadingDialog dialog;
+    private                         kat_LoadingDialog                           dialog;
+    public                          boolean                                     set = false;
 
     public kat_Ranking_PlayerFragment(){}
 
@@ -40,6 +43,7 @@ public class kat_Ranking_PlayerFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
     }
 
     @Nullable
@@ -49,103 +53,162 @@ public class kat_Ranking_PlayerFragment extends Fragment {
         View view = inflater.inflate(R.layout.player_ranking_player, container, false);
         final LinearLayout player_ranking_player_layout = view.findViewById(R.id.player_ranking_player_layout);
 
-        globalClick(player_ranking_player_layout);
+        dialog.show();
+        globalClick(player_ranking_player_layout, dialog);
 
         final Button globalButton = view.findViewById(R.id.player_ranking_player_global);
         final Button MyButton = view.findViewById(R.id.player_ranking_player_mycountry);
 
-        globalButton.setOnTouchListener(new View.OnTouchListener(){
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                globalClick(player_ranking_player_layout);
-                return false;
+        globalButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                dialog.show();
+                globalClick(player_ranking_player_layout, dialog);
             }
         });
 
-        MyButton.setOnTouchListener(new View.OnTouchListener(){
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                myCountryClick(player_ranking_player_layout);
-                return false;
+        MyButton.setOnClickListener(new View.OnClickListener(){
+            public void onClick(View v){
+                dialog.show();
+                myCountryClick(player_ranking_player_layout, dialog);
             }
         });
 
         return view;
     }
 
-    public void globalClick(LinearLayout player_ranking_player_layout){
+    public void globalClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
 
-        player_ranking_player_layout.removeAllViews();
+        DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
+        databaseChangeThread.start();
+
+        //player_ranking_player_layout.removeAllViews();
         ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList
                 = kat_LoadBeforeMainActivity.PlayerRankingArrayList;
 
-        setView(player_ranking_player_layout, PlayerRankingArrayList);
-
+        setUiOnMainView setUiOnMainView = new setUiOnMainView(player_ranking_player_layout, PlayerRankingArrayList,
+                dialog, databaseChangeThread);
+        setUiOnMainView.start();
     }
 
-    public void myCountryClick(LinearLayout player_ranking_player_layout){
+    public void myCountryClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
 
-        player_ranking_player_layout.removeAllViews();
+        DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
+        databaseChangeThread.start();
+
+        //player_ranking_player_layout.removeAllViews();
         ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList
                 = kat_LoadBeforeMainActivity.MyPlayerRankingArrayList;
 
-        setView(player_ranking_player_layout, PlayerRankingArrayList);
-
+        setUiOnMainView setUiOnMainView = new setUiOnMainView(player_ranking_player_layout, PlayerRankingArrayList,
+                dialog, databaseChangeThread);
+        setUiOnMainView.start();
 
     }
 
 
-    public class getRankingDataThread extends Thread{
+    private class setUiOnMainView extends Thread{
 
-        ArrayList<kat_official_PlayerRankingParser.playerData> arrayList = new ArrayList<>();
+        LinearLayout player_ranking_player_layout;
+        ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList;
         kat_LoadingDialog dialog;
+        DatabaseChangeThread databaseChangeThread;
 
-        public getRankingDataThread(ArrayList<kat_official_PlayerRankingParser.playerData> arrayList, kat_LoadingDialog dialog){
-            this.arrayList = arrayList;
+        public setUiOnMainView(LinearLayout player_ranking_player_layout,
+                               ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList,
+                               kat_LoadingDialog dialog,
+                               DatabaseChangeThread databaseChangeThread){
+            this.player_ranking_player_layout = player_ranking_player_layout;
+            this.PlayerRankingArrayList = PlayerRankingArrayList;
             this.dialog = dialog;
+            this.databaseChangeThread = databaseChangeThread;
         }
 
         public void run(){
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+
+                    if(databaseChangeThread.isAlive()) {
+                        try {
+                            databaseChangeThread.join();
+                        } catch (InterruptedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    setView(player_ranking_player_layout, PlayerRankingArrayList, dialog);
+                }
+            });
+        }
+    }
+
+    private class DatabaseChangeThread extends Thread{
+        @Override
+        public void run(){
             while(true){
-                if(arrayList.size() > 0){
-                    if(dialog != null) dialog.dismiss();
-                    break;
+                if(kat_LoadBeforeMainActivity.MyPlayerRankingArrayList != null &&
+                kat_LoadBeforeMainActivity.PlayerRankingArrayList != null) {
+                    if (kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.size() > 0 &&
+                            kat_LoadBeforeMainActivity.PlayerRankingArrayList.size() > 0) {
+                        break;
+                    }
                 }
             }
         }
     }
 
-    public void setView(LinearLayout player_ranking_player_layout,
-                        ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList){
 
-        getRankingDataThread getRankingDataThread = new getRankingDataThread(PlayerRankingArrayList, dialog);
-        getRankingDataThread.start();
+    public void setView(LinearLayout player_ranking_player_layout,
+                        ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList,
+                        kat_LoadingDialog dialog){
 
         LayoutInflater layoutInflater =
                 (LayoutInflater) Objects.requireNonNull(getActivity()).getApplicationContext().
                         getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        player_ranking_player_layout.removeAllViews();
+
         for(int i = 0; i < PlayerRankingArrayList.size(); i++){
 
             View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
-            kat_official_PlayerRankingParser.playerData playerData = PlayerRankingArrayList.get(i);
+            final kat_official_PlayerRankingParser.playerData playerData = PlayerRankingArrayList.get(i);
 
             ImageView player_ranking_player_image = itemView.findViewById(R.id.player_ranking_image);
             TextView player_ranking_player_name = itemView.findViewById(R.id.player_ranking_name);
             TextView player_ranking_player_tag = itemView.findViewById(R.id.player_ranking_tag);
             TextView player_ranking_player_club = itemView.findViewById(R.id.player_ranking_club);
             TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
+            TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
 
             GlideImage(kat_RankingFragment.ImageUrl(playerData.getIconId()),
-                    kat_RankingFragment.width / 20,
-                    kat_RankingFragment.height / 20,
+                    kat_RankingFragment.height / 15,
+                    kat_RankingFragment.height / 15,
                     player_ranking_player_image);
 
             player_ranking_player_name.setText(playerData.getName());
             player_ranking_player_tag.setText(playerData.getTag());
             player_ranking_player_club.setText(playerData.getClubName());
             player_ranking_player_trophies.setText(playerData.getTrophies());
+            player_ranking_player_rank.setText(playerData.getRank());
+
+            String nameColor = "#" + playerData.getNameColor().substring(2);
+            System.out.println(nameColor);
+            player_ranking_player_name.setTextColor(Color.parseColor(nameColor));
+
+            itemView.setOnClickListener(new View.OnClickListener(){
+                public void onClick(View v){
+                    kat_LoadingDialog dialog = new kat_LoadingDialog(getActivity());
+                    dialog.show();
+
+                    String realTag = playerData.getTag().substring(1);
+
+                    kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class, dialog);
+                    kset.SearchStart(realTag, "players");
+                }
+            });
 
             player_ranking_player_layout.addView(itemView);
         }
+        if(dialog != null) dialog.dismiss();
     }
 
 
