@@ -15,6 +15,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
+import com.example.brawlkat.kat_adapter.kat_EventAdapter;
 import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_eventsParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerParser;
@@ -42,7 +43,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
     public          ArrayList<String>                   offi_PlayerArrayList;
     private         ViewPager2                          viewPager               = null;
-    public          kat_EventAdapter                    eventAdapter;
+    public kat_EventAdapter eventAdapter;
     public          boolean                             changeRecommendView = false;
     public          String                              playerTag;
 

@@ -1,5 +1,6 @@
 package com.example.brawlkat.kat_Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -12,9 +13,10 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.R;
+import com.example.brawlkat.kat_CountrySelectionPopUpActivity;
 import com.example.brawlkat.kat_LoadBeforeMainActivity;
 import com.example.brawlkat.kat_LoadingDialog;
-import com.example.brawlkat.kat_Player_RankingAdapter;
+import com.example.brawlkat.kat_adapter.kat_Player_RankingAdapter;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 
@@ -35,6 +37,8 @@ public class kat_RankingFragment extends Fragment {
     public                          static RequestOptions                       options;
     public                          static int                                  height;
     public                          static int                                  width;
+
+    public                          String                                      checkCountryCode = "KR";
 
 
     public kat_RankingFragment(kat_LoadingDialog dialog){
@@ -58,6 +62,8 @@ public class kat_RankingFragment extends Fragment {
         height = metrics.heightPixels;
         width = metrics.widthPixels;
 
+        checkCountryCodeChangedThread checkCountryCodeChangedThread = new checkCountryCodeChangedThread();
+        checkCountryCodeChangedThread.start();
     }
 
     @Override
@@ -68,35 +74,8 @@ public class kat_RankingFragment extends Fragment {
             @Override
             public void onClick(View view){
 
-                dialog.show();
-                if(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode().equals("KR")){
-
-                    kat_LoadBeforeMainActivity.kataCountryBase.insert("AF", "Afghanistan");
-                    countryChangeButton.setText("Afghanistan");
-
-                    kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();
-                    kat_LoadBeforeMainActivity.MyClubRankingArrayList.clear();
-                    kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.clear();
-
-                    kat_LoadBeforeMainActivity.client.RankingInit("AF", "", "");
-
-                    MyCountryDatabaseChangeThread myCountryDatabaseChangeThread = new MyCountryDatabaseChangeThread();
-                    myCountryDatabaseChangeThread.start();
-                }
-                else{
-                    kat_LoadBeforeMainActivity.kataCountryBase.insert("KR", "Korea, Republic of");
-
-                    countryChangeButton.setText("Korea, Republic of");
-
-                    kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();
-                    kat_LoadBeforeMainActivity.MyClubRankingArrayList.clear();
-                    kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.clear();
-
-                    kat_LoadBeforeMainActivity.client.RankingInit("KR", "", "");
-
-                    MyCountryDatabaseChangeThread myCountryDatabaseChangeThread = new MyCountryDatabaseChangeThread();
-                    myCountryDatabaseChangeThread.start();
-                }
+                Intent intent = new Intent(getActivity().getApplicationContext(), kat_CountrySelectionPopUpActivity.class);
+                startActivity(intent);
             }
         });
 
@@ -148,6 +127,38 @@ public class kat_RankingFragment extends Fragment {
                     });
 
                     break;
+                }
+            }
+        }
+    }
+
+    private class checkCountryCodeChangedThread extends Thread {
+
+        public void run(){
+            while(true){
+                System.out.println(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode());
+                try{
+                    if(!kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode().equals(checkCountryCode)){
+
+                        dialog.show();
+                        kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();
+                        kat_LoadBeforeMainActivity.MyClubRankingArrayList.clear();
+                        kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.clear();
+
+                        kat_LoadBeforeMainActivity.client.RankingInit(checkCountryCode, "", "");
+                        countryChangeButton.setText(checkCountryCode);
+
+                        getActivity().runOnUiThread(new Runnable() {
+                            @Override
+                            public void run() {
+                                MyCountryDatabaseChangeThread myCountryDatabaseChangeThread = new MyCountryDatabaseChangeThread();
+                                myCountryDatabaseChangeThread.start();
+                            }
+                        });
+                    }
+                }
+                catch (Exception e){
+                    e.printStackTrace();
                 }
             }
         }

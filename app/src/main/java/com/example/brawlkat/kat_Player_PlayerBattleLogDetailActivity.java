@@ -6,6 +6,7 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import com.example.brawlkat.kat_adapter.kat_Player_PlayerBattleLogDetailAdapter;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 import com.google.android.material.tabs.TabLayout;

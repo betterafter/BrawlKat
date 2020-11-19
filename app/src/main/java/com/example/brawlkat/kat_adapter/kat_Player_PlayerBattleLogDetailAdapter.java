@@ -1,4 +1,4 @@
-package com.example.brawlkat;
+package com.example.brawlkat.kat_adapter;
 
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;

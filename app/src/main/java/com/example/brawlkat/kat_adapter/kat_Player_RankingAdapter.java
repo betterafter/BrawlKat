@@ -1,9 +1,10 @@
-package com.example.brawlkat;
+package com.example.brawlkat.kat_adapter;
 
 import com.example.brawlkat.kat_Fragment.kat_Ranking_BrawlerFragment;
 import com.example.brawlkat.kat_Fragment.kat_Ranking_ClubFragment;
 import com.example.brawlkat.kat_Fragment.kat_Ranking_PlayerFragment;
 import com.example.brawlkat.kat_Fragment.kat_Ranking_PowerPlayFragment;
+import com.example.brawlkat.kat_LoadingDialog;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;

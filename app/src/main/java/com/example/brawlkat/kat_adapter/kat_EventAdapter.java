@@ -1,4 +1,4 @@
-package com.example.brawlkat;
+package com.example.brawlkat.kat_adapter;
 
 import android.content.Context;
 import android.graphics.Color;
@@ -16,6 +16,8 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.brawlkat.R;
+import com.example.brawlkat.kat_Service_EventActivity;
 import com.example.brawlkat.kat_dataparser.kat_eventsParser;
 
 import java.util.ArrayList;
@@ -31,7 +33,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     private                 Context                                             context;
     private                 ArrayList<kat_eventsParser.pair>                    EventArrayList;
     private                 ArrayList<HashMap<String, Object>>                  BrawlersArrayList;
-    private                 kat_Service_EventActivity                           eventActivity;
+    private kat_Service_EventActivity eventActivity;
     private                 ArrayList<String>                                   playerBrawlersArrayList;
 
 

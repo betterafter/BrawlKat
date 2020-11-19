@@ -188,7 +188,9 @@ public class kat_Ranking_PlayerFragment extends Fragment {
             player_ranking_player_trophies.setText(playerData.getTrophies());
             player_ranking_player_rank.setText(playerData.getRank());
 
-            String nameColor = "#" + playerData.getNameColor().substring(2);
+            String nameColor = "#ffffff";
+            if(playerData.getNameColor() != null)
+                nameColor = "#" + playerData.getNameColor().substring(2);
             System.out.println(nameColor);
             player_ranking_player_name.setTextColor(Color.parseColor(nameColor));
 
