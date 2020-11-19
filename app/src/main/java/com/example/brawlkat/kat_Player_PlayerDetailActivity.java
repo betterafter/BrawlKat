@@ -94,7 +94,11 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     // player_player_detail 레이아웃에 데이터 바인드
     private void setData(){
 
-        String url_profile = "https://www.starlist.pro/assets/profile/" + playerData.getIconId() + ".png?v=1";
+        String url_profile = "";
+        if(playerData.getIconId() != null)
+            url_profile = "https://www.starlist.pro/assets/profile/" + playerData.getIconId() + ".png?v=1";
+        else
+            url_profile = "https://www.starlist.pro/assets/profile/" + "28000000" + ".png?v=1";
         String url_icon_trophies = "https://www.starlist.pro/assets/icon/trophy.png";
 
         String[] iconImage = new String[]{

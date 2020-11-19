@@ -16,21 +16,38 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="30dp"
             android:orientation="horizontal">
 
             <Button
                 android:id="@+id/player_ranking_player_global"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0"
+                android:background="@drawable/semi_round_button_inner_click"
+                android:fontFamily="@font/actor"
+                android:paddingHorizontal="20dp"
+                android:text="global"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"
+                android:textStyle="bold" />
 
             <Button
                 android:id="@+id/player_ranking_player_mycountry"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_weight="1"
-                android:text="Button" />
+                android:layout_height="35dp"
+                android:layout_marginTop="10dp"
+                android:layout_margin="5dp"
+                android:paddingHorizontal="20dp"
+                android:layout_weight="0"
+                android:background="@drawable/semi_round_button_inner_click"
+                android:fontFamily="@font/actor"
+                android:text="Button"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"
+                android:textStyle="bold" />
         </LinearLayout>
 
         <ScrollView

@@ -16,9 +16,19 @@ public class kat_clubLogParser implements Serializable {
 
     public clubLogData DataParser() throws Exception {
 
+        System.out.println(data);
+
+        if(data.equals("{none}")){
+            clubLogData clubLogData = new clubLogData();
+            clubLogData.setStatus("forbidden");
+
+            return clubLogData;
+        }
+
         JSONObject jsonObject = new JSONObject(data);
         clubLogData clubLogData = new clubLogData();
 
+        clubLogData.setStatus("access");
         JSONObject updated = jsonObject.getJSONObject("club").getJSONObject("updated");
         clubLogData.setData(updated.getString("data"));
         clubLogData.setDataFormat(updated.getString("dataFormat"));
@@ -74,6 +84,16 @@ public class kat_clubLogParser implements Serializable {
     }
 
     public class clubLogData implements Serializable{
+        String status;
+
+        public String getStatus() {
+            return status;
+        }
+
+        public void setStatus(String status) {
+            this.status = status;
+        }
+
         String data;
         String dataFormat;
         String history;

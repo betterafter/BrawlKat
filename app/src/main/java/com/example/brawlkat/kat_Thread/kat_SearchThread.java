@@ -3,11 +3,9 @@ package com.example.brawlkat.kat_Thread;
 import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.Toast;
 
 import com.example.brawlkat.Client;
 import com.example.brawlkat.kat_LoadingDialog;
-import com.example.brawlkat.kat_Player_ClubDetailActivity;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
@@ -155,9 +153,9 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
         // 제대로 가져오지 못했을 경우 알림
         if(sendData.get(0).equals("{none}")){
-            Toast toast = Toast.makeText(getApplicationContext(), "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
-            toast.show();
-
+//            Toast toast = Toast.makeText(getApplicationContext(), "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
+//            toast.show();
+            System.out.println("something wrong on clubSearch...");
         }
         // 제대로 가져왔을 경우
         else{
@@ -176,7 +174,7 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 katabase.delete(type);
                 katabase.insert(type, tag, name, isAccount);
 
-                Intent intent = new Intent(fromActivity, kat_Player_ClubDetailActivity.class);
+                Intent intent = new Intent(fromActivity, toClass);
                 intent.putExtra("clubData", clubData);
                 intent.putExtra("clubLogData", clubLogData);
 

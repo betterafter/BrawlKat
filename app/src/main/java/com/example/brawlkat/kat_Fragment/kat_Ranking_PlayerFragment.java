@@ -81,7 +81,6 @@ public class kat_Ranking_PlayerFragment extends Fragment {
         DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
         databaseChangeThread.start();
 
-        //player_ranking_player_layout.removeAllViews();
         ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList
                 = kat_LoadBeforeMainActivity.PlayerRankingArrayList;
 
@@ -95,7 +94,6 @@ public class kat_Ranking_PlayerFragment extends Fragment {
         DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
         databaseChangeThread.start();
 
-        //player_ranking_player_layout.removeAllViews();
         ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList
                 = kat_LoadBeforeMainActivity.MyPlayerRankingArrayList;
 
@@ -179,7 +177,7 @@ public class kat_Ranking_PlayerFragment extends Fragment {
             TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
             TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
 
-            GlideImage(kat_RankingFragment.ImageUrl(playerData.getIconId()),
+            GlideImage(kat_RankingFragment.PlayerImageUrl(playerData.getIconId()),
                     kat_RankingFragment.height / 15,
                     kat_RankingFragment.height / 15,
                     player_ranking_player_image);

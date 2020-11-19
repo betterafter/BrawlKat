@@ -154,7 +154,11 @@ public class kat_RankingFragment extends Fragment {
     }
 
 
-    public static String ImageUrl(String iconId){
+    public static String PlayerImageUrl(String iconId){
         return "https://www.starlist.pro/assets/profile/" + iconId + ".png?v=1";
     }
+    public static String ClubImageUrl(String badgeId){
+        return "https://cdn.starlist.pro/club/" + badgeId + ".png?v=1";
+    }
+
 }

@@ -113,6 +113,7 @@ public class Client {
                         else splited = result.substring(startidx, split + 1);
 
                         resOffiData.add(splited);
+                        System.out.println(splited);
                         startidx = split + 1;
                     }
 

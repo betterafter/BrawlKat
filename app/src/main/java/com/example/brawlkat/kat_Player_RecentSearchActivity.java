@@ -103,9 +103,16 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         kat_LoadingDialog dialog = new kat_LoadingDialog(this);
         dialog.show();
 
-        kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
-                 kat_Player_PlayerDetailActivity.class, dialog);
-        kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
+        if(type.equals("players")){
+            kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
+                    kat_Player_PlayerDetailActivity.class, dialog);
+            kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
+        }
+        else{
+            kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
+                    kat_Player_ClubDetailActivity.class, dialog);
+            kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
+        }
     }
 
     // 리스트를 터치했을 때 발생 함수
@@ -120,9 +127,16 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
         System.out.println(newTag);
 
-        kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
-                 kat_Player_PlayerDetailActivity.class, dialog);
-        kset.SearchStart(newTag, type);
+        if(type.equals("players")){
+            kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
+                    kat_Player_PlayerDetailActivity.class, dialog);
+            kset.SearchStart(newTag, type);
+        }
+        else{
+            kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
+                    kat_Player_ClubDetailActivity.class, dialog);
+            kset.SearchStart(newTag, type);
+        }
     }
 
 }

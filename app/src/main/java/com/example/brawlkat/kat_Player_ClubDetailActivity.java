@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
@@ -22,15 +23,16 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
-import com.example.brawlkat.kat_Thread.kat_SearchThread;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import androidx.annotation.Nullable;
+import androidx.core.content.res.ResourcesCompat;
 
 public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivity {
 
@@ -276,6 +278,40 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
+
+        if(clubLogData.getStatus().equals("forbidden")){
+
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.MATCH_PARENT
+            );
+            params.setMargins(0, 50, 0, 0);
+
+            TextView forbiddenText = new TextView(getApplicationContext());
+            TextView forbiddenText2 = new TextView(getApplicationContext());
+
+            Typeface typeface = ResourcesCompat.getFont(getApplicationContext(), R.font.lilita_one);
+            forbiddenText.setTypeface(typeface);
+            forbiddenText.setGravity(Gravity.CENTER);
+            forbiddenText2.setGravity(Gravity.CENTER);
+
+            forbiddenText.setText("This club is not tracked. \n");
+            forbiddenText2.setText(Html.fromHtml("You can toggle it by going to " +
+                    "<font color=\"#2a7de2\"><b>https://www.starlist.pro/stats/clublog/JJQP98G0</b></font>" +
+                    " and enabling tracking. <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>"));
+
+            forbiddenText.setTextSize(24);
+            forbiddenText.setTextColor(getResources().getColor(R.color.colorWhite));
+            forbiddenText.setLayoutParams(params);
+
+            forbiddenText2.setTextSize(18);
+            forbiddenText2.setTextColor(getResources().getColor(R.color.colorWhite));
+
+            linearLayout.addView(forbiddenText);
+            linearLayout.addView(forbiddenText2);
+            return;
+        }
+
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ArrayList<Object> cld = clubLogData.getHistoryData();
         for(int i = 0; i < cld.size(); i++){
