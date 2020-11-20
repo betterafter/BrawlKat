@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
@@ -12,13 +13,33 @@
         android:layout_height="match_parent"
         android:orientation="vertical" >
 
-        <Button
-            android:id="@+id/player_ranking_countrychange"
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_gravity="center"
             android:gravity="right"
-            android:layout_gravity="right"
-            android:text="Button" />
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/player_ranking_countrychange"
+                android:layout_width="30dp"
+                android:layout_height="wrap_content"
+                android:layout_gravity="right"
+                android:background="@android:color/transparent"
+                android:gravity="center"
+                android:text="KR"
+                android:textColor="@color/Color1"
+                android:textSize="18sp"
+                android:textStyle="bold" />
+
+            <ImageView
+                android:id="@+id/imageView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:background="@drawable/round_arrow_drop_down_24" />
+
+        </LinearLayout>
 
         <com.google.android.material.tabs.TabLayout
             android:id="@+id/player_ranking_tablayout"

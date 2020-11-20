@@ -1,6 +1,7 @@
 package com.example.brawlkat;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -41,7 +42,6 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
         getWindow().getAttributes().height = height;
 
         ArrayList<Pair> data = MapToString();
-        System.out.println(data.size());
 
         setView(data);
     }
@@ -94,7 +94,8 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
         RecyclerView recyclerView = findViewById(R.id.country_select_popup_recyclerview);
         recyclerView.setLayoutManager(new LinearLayoutManager(this)) ;
 
-        final kat_CountrySelectionAdapter countrySelectionAdapter = new kat_CountrySelectionAdapter(data);
+        final kat_CountrySelectionAdapter countrySelectionAdapter
+                = new kat_CountrySelectionAdapter(data, this);
         recyclerView.setAdapter(countrySelectionAdapter);
 
         TextInputEditText editText = findViewById(R.id.country_select_editText);
@@ -114,5 +115,12 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
                 countrySelectionAdapter.search(editable.toString());
             }
         });
+    }
+
+    public void ChangeFinish(String changedCountryCode){
+        Intent intent = new Intent();
+        intent.putExtra("changedCountryCode", changedCountryCode);
+        setResult(1112, intent);
+        finish();
     }
 }

@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@android:color/transparent">
+    android:background="@color/semiBlack">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -15,19 +15,24 @@
         <com.google.android.material.textfield.TextInputLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:textColorHint="@color/colorWhite"
             android:theme="@style/Theme.AppCompat.Dialog">
 
             <com.google.android.material.textfield.TextInputEditText
                 android:id="@+id/country_select_editText"
+                style="@style/EditTextStyle"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="hint" />
+                android:hint="당신의 국가를 입력해보세요."
+                android:textColorHint="@color/Color1" />
         </com.google.android.material.textfield.TextInputLayout>
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/country_select_popup_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent"
+            android:layout_margin="10dp"/>
 
     </LinearLayout>
 

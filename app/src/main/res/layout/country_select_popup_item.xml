@@ -12,17 +12,26 @@
 
         <TextView
             android:id="@+id/country_select_popup_key"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="TextView" />
+            android:fontFamily="@font/lilita_one"
+            android:layout_weight="2"
+            android:text="KR"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp" />
 
         <Button
             android:id="@+id/country_select_popup_value"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:text="Button" />
+            android:layout_margin="5dp"
+            android:layout_weight="10"
+            android:backgroundTint="@color/Color1"
+            android:fontFamily="sans-serif"
+            android:text="Button"
+            android:textAlignment="textStart"
+            android:textAllCaps="false"
+            android:textStyle="bold" />
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -62,8 +62,6 @@ public class kat_RankingFragment extends Fragment {
         height = metrics.heightPixels;
         width = metrics.widthPixels;
 
-        checkCountryCodeChangedThread checkCountryCodeChangedThread = new checkCountryCodeChangedThread();
-        checkCountryCodeChangedThread.start();
     }
 
     @Override
@@ -75,7 +73,7 @@ public class kat_RankingFragment extends Fragment {
             public void onClick(View view){
 
                 Intent intent = new Intent(getActivity().getApplicationContext(), kat_CountrySelectionPopUpActivity.class);
-                startActivity(intent);
+                startActivityForResult(intent, 1111);
             }
         });
 
@@ -134,36 +132,49 @@ public class kat_RankingFragment extends Fragment {
 
     private class checkCountryCodeChangedThread extends Thread {
 
+        String countryCode;
+
+        public checkCountryCodeChangedThread(String countryCode){
+            this.countryCode = countryCode;
+        }
+
         public void run(){
-            while(true){
-                System.out.println(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode());
-                try{
-                    if(!kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode().equals(checkCountryCode)){
 
+            System.out.println(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode() + " , " + checkCountryCode);
+            if(!kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode().equals(checkCountryCode)){
+
+                kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();
+                kat_LoadBeforeMainActivity.MyClubRankingArrayList.clear();
+                kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.clear();
+                checkCountryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
+
+                kat_LoadBeforeMainActivity.client.RankingInit(checkCountryCode, "", "");
+
+                getActivity().runOnUiThread(new Runnable() {
+                    @Override
+                    public void run() {
                         dialog.show();
-                        kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();
-                        kat_LoadBeforeMainActivity.MyClubRankingArrayList.clear();
-                        kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.clear();
-
-                        kat_LoadBeforeMainActivity.client.RankingInit(checkCountryCode, "", "");
                         countryChangeButton.setText(checkCountryCode);
-
-                        getActivity().runOnUiThread(new Runnable() {
-                            @Override
-                            public void run() {
-                                MyCountryDatabaseChangeThread myCountryDatabaseChangeThread = new MyCountryDatabaseChangeThread();
-                                myCountryDatabaseChangeThread.start();
-                            }
-                        });
+                        MyCountryDatabaseChangeThread myCountryDatabaseChangeThread = new MyCountryDatabaseChangeThread();
+                        myCountryDatabaseChangeThread.start();
                     }
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
+                });
             }
         }
     }
 
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==1111){
+            if(resultCode == 1112){
+                //데이터 받기
+                String result = data.getStringExtra("changedCountryCode");
+                checkCountryCodeChangedThread checkCountryCodeChangedThread = new checkCountryCodeChangedThread(result);
+                checkCountryCodeChangedThread.start();
+            }
+        }
+    }
 
     public static String PlayerImageUrl(String iconId){
         return "https://www.starlist.pro/assets/profile/" + iconId + ".png?v=1";

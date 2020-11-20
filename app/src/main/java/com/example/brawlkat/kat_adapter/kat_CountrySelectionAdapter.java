@@ -2,6 +2,7 @@ package com.example.brawlkat.kat_adapter;
 
 import android.content.Context;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -22,10 +23,17 @@ public class kat_CountrySelectionAdapter extends RecyclerView.Adapter<kat_Countr
     ArrayList<kat_CountrySelectionPopUpActivity.Pair> list;
     ArrayList<kat_CountrySelectionPopUpActivity.Pair> rawList = new ArrayList<>();
 
+    kat_CountrySelectionPopUpActivity kat_countrySelectionPopUpActivity;
+
     public kat_CountrySelectionAdapter(ArrayList<kat_CountrySelectionPopUpActivity.Pair> list){
         this.list = list;
+        rawList.addAll(list);
+    }
 
-        System.out.println(list);
+    public kat_CountrySelectionAdapter(ArrayList<kat_CountrySelectionPopUpActivity.Pair> list,
+                                       kat_CountrySelectionPopUpActivity kat_countrySelectionPopUpActivity){
+        this.list = list;
+        this.kat_countrySelectionPopUpActivity = kat_countrySelectionPopUpActivity;
         rawList.addAll(list);
     }
 
@@ -54,10 +62,14 @@ public class kat_CountrySelectionAdapter extends RecyclerView.Adapter<kat_Countr
             Button country_select_value = itemView.findViewById(R.id.country_select_popup_value);
 
             final String k = key, v = value;
-            country_select_value.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View view){
-                    kat_LoadBeforeMainActivity.kataCountryBase.insert(k, v);
-                    System.out.println("test");
+            country_select_value.setOnTouchListener(new View.OnTouchListener() {
+                @Override
+                public boolean onTouch(View view, MotionEvent motionEvent) {
+                    if(motionEvent.getAction() == MotionEvent.ACTION_UP){
+                        kat_LoadBeforeMainActivity.kataCountryBase.insert(k, v);
+                        onFinishClick(k);
+                    }
+                    return true;
                 }
             });
 
@@ -66,16 +78,22 @@ public class kat_CountrySelectionAdapter extends RecyclerView.Adapter<kat_Countr
         }
     }
 
+    public void onFinishClick(String key){
+        kat_countrySelectionPopUpActivity.ChangeFinish(key);
+    }
+
     @Override
     public void onBindViewHolder(@NonNull kat_CountrySelectionAdapter.ViewHolder holder, int position) {
 
         String key = list.get(position).getKey();
         String value = list.get(position).getValue();
 
+        System.out.println(key + " , " + value);
+
         key = key.toUpperCase();
         value = value.toLowerCase();
 
-        System.out.println("data size : " + list.size() + " key : " + key + " value : " + value);
+        System.out.println(key + " , " + value);
 
         holder.bind(key, value);
     }
@@ -91,8 +109,8 @@ public class kat_CountrySelectionAdapter extends RecyclerView.Adapter<kat_Countr
         else{
             for(int i = 0; i < rawList.size(); i++){
 
-                String rawKey = rawList.get(i).getKey();
-                String rawValue = rawList.get(i).getValue();
+                String rawKey = rawList.get(i).getKey().toLowerCase();
+                String rawValue = rawList.get(i).getValue().toLowerCase();
 
                 if(rawKey.contains(charText) || rawValue.contains(charText)){
                     list.add(rawList.get(i));
