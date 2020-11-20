@@ -69,7 +69,10 @@ public class kat_official_clubInfoParser implements Serializable {
             memberData.add(clubMemberData);
         }
         cd.setTrophyRange((int)lowestTrophy + " ~ " + (int) highestTrophy);
-        cd.setAverageTrophy(cd.getTrophies() / memberData.size());
+        if(memberData.size() == 0)
+            cd.setAverageTrophy(0);
+        else
+            cd.setAverageTrophy(cd.getTrophies() / memberData.size());
         cd.setMembersRole(roles);
         cd.setMemberDatas(memberData);
 

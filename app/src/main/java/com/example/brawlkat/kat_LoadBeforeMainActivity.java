@@ -87,7 +87,8 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             client.init();
 
             String countryName = countryCodeMap.get("KR");
-            kataCountryBase.insert("KR", countryName);
+            if(kataCountryBase.size() == 0)
+                kataCountryBase.insert("KR", countryName);
 
             kat_LoadBeforeMainActivity.client.RankingInit("global", "", "");
             kat_LoadBeforeMainActivity.client.RankingInit("KR", "", "");

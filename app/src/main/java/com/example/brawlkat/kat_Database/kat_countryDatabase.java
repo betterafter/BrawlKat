@@ -73,4 +73,14 @@ public class kat_countryDatabase extends SQLiteOpenHelper {
 
         return cursor.getString(2);
     }
+
+    public int size(){
+        SQLiteDatabase database = getWritableDatabase();
+
+        // 일단 전체 테이블을 선택하고 커서를 마지막으로 보낸다.
+        Cursor cursor = database.rawQuery("SELECT * FROM kataFavoritesBase", null);
+        cursor.moveToLast();
+
+        return cursor.getCount();
+    }
 }

@@ -22,15 +22,15 @@
 
             <Button
                 android:id="@+id/player_ranking_countrychange"
-                android:layout_width="30dp"
+                android:layout_width="50dp"
                 android:layout_height="wrap_content"
                 android:layout_gravity="right"
                 android:background="@android:color/transparent"
+                android:fontFamily="@font/lilita_one"
                 android:gravity="center"
                 android:text="KR"
                 android:textColor="@color/Color1"
-                android:textSize="18sp"
-                android:textStyle="bold" />
+                android:textSize="18sp" />
 
             <ImageView
                 android:id="@+id/imageView4"

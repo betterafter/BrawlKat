@@ -89,6 +89,8 @@ public class kat_RankingFragment extends Fragment {
         tabLayout = view.findViewById(R.id.player_ranking_tablayout);
         countryChangeButton = view.findViewById(R.id.player_ranking_countrychange);
 
+        countryChangeButton.setText(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode());
+
         fragmentStateAdapter = new kat_Player_RankingAdapter(this, dialog);
         viewPager2.setAdapter(fragmentStateAdapter);
 
