@@ -14,7 +14,6 @@ import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
-import com.example.brawlkat.Client;
 import com.example.brawlkat.R;
 import com.example.brawlkat.kat_BrawlerSelectionPopUpActivity;
 import com.example.brawlkat.kat_LoadBeforeMainActivity;
@@ -111,7 +110,13 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     public void globalClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
 
-        DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
+        if(!kat_LoadBeforeMainActivity.BrawlerRankingArrayList.containsKey(initId)){
+            kat_LoadBeforeMainActivity.client.RankingInit(
+                    "global", initId, "Brawler"
+            );
+        }
+
+        DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread("global");
         databaseChangeThread.start();
 
         setUiOnMainView setUiOnMainView
@@ -121,7 +126,17 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     public void myCountryClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
 
-        DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
+        String countryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
+
+        if(!kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode) ||
+                (kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode) &&
+                !kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.get(countryCode).containsKey(initId))){
+            kat_LoadBeforeMainActivity.client.RankingInit(
+                    countryCode, initId, "Brawler"
+            );
+        }
+
+        DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread(countryCode);
         databaseChangeThread.start();
 
         setUiOnMainView setUiOnMainView = new setUiOnMainView(player_ranking_player_layout, dialog, databaseChangeThread,
@@ -149,14 +164,18 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
         }
 
         public void run(){
-            getActivity().runOnUiThread(new Runnable() {
+
+            Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
 
                     try {
+                        System.out.println("before join");
                         databaseChangeThread.join();
+                        System.out.println(kat_LoadBeforeMainActivity.BrawlerRankingArrayList.get(initId).size());
 
                         if(type.equals("global")) {
+                            System.out.println("let");
                             setView(player_ranking_player_layout, kat_LoadBeforeMainActivity.BrawlerRankingArrayList.get(initId), dialog);
                         }
 
@@ -169,68 +188,57 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
                             setView(player_ranking_player_layout, MyBrawlerRankingArrayList, dialog);
                         }
 
+                        synchronized (this){
+                            this.notify();
+                        }
+
                     } catch (InterruptedException e) {
                         e.printStackTrace();
                     }
                 }
-            });
+            };
+
+            synchronized (runnable) {
+                getActivity().runOnUiThread(runnable);
+                try {
+                    runnable.wait();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+            }
         }
     }
 
     private class DatabaseChangeThread extends Thread{
 
-        Client.getRankingApiThread rankingApiThread[] = new Client.getRankingApiThread[2];
+        String type;
+
+        public DatabaseChangeThread(String type){
+            this.type = type;
+        }
 
         @Override
         public void run(){
 
-            if(!kat_LoadBeforeMainActivity.BrawlerRankingArrayList.containsKey(initId) ||
+            System.out.println("databaseChageThread start");
+            String countryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
 
-                    !kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
-                            .containsKey(kat_LoadBeforeMainActivity
-                                    .kataCountryBase
-                                    .getCountryCode())
+            while(true){
 
-                    || (kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
-                    .containsKey(kat_LoadBeforeMainActivity
-                            .kataCountryBase
-                            .getCountryCode())
-                    &&
-                            !kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
-                            .get(kat_LoadBeforeMainActivity
-                            .kataCountryBase
-                            .getCountryCode())
-                            .containsKey(initId))
-            ){
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        rankingApiThread[0]
-                                = kat_LoadBeforeMainActivity.client.RankingResearch(
-                                "global", initId, "Brawler"
-                        );
-                        rankingApiThread[1]
-                                = kat_LoadBeforeMainActivity.client.RankingResearch(
-                                kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode(),
-                                initId, "Brawler"
-                        );
-
-                        while (true) {
-                            try {
-                                rankingApiThread[0].start();
-                                rankingApiThread[1].start();
-
-                                rankingApiThread[0].join();
-                                rankingApiThread[1].join();
-
-                                break;
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
-                            }
-                        }
+                if(type.equals("global")){
+                    if(!kat_LoadBeforeMainActivity.BrawlerRankingArrayList.containsKey(initId)){
+                        continue;
                     }
-                });
+                    else break;
+                }
+                else{
+                    if(!kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode) ||
+                            (kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode) &&
+                                    !kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.get(countryCode).containsKey(initId))){
+                        continue;
+                    }
+                    else break;
+                }
             }
         }
     }

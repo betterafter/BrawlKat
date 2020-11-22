@@ -164,6 +164,8 @@ public class Client {
 
                 while(true){
 
+                    System.out.println("ranking thread start");
+
                     Socket socket = new Socket("35.237.9.225", 9000);
 
                     byte[] bytes = null;
@@ -280,6 +282,7 @@ public class Client {
                     reader.close();
                     socket.close();
                     if(dialog != null) dialog.dismiss();
+                    System.out.println("ranking Thread finish");
                     break;
                 }
             }
