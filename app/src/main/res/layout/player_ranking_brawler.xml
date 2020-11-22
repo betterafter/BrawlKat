@@ -58,12 +58,20 @@
                 android:text="브롤러 선택"
                 android:textColor="@color/colorWhite"
                 android:textStyle="bold" />
+
         </LinearLayout>
 
-        <LinearLayout
-            android:id="@+id/player_ranking_brawler_layout"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="vertical"></LinearLayout>
+            android:layout_height="match_parent"
+            android:layout_weight="0">
+
+            <LinearLayout
+                android:id="@+id/player_ranking_brawler_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+        </ScrollView>
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

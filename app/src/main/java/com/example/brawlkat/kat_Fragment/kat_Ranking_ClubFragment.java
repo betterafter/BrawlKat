@@ -31,6 +31,7 @@ public class kat_Ranking_ClubFragment extends Fragment {
 
     private                         kat_LoadingDialog                           dialog;
     public                          boolean                                     set = false;
+    private                         LinearLayout                                player_ranking_player_layout;
 
     public kat_Ranking_ClubFragment(){}
 
@@ -52,10 +53,7 @@ public class kat_Ranking_ClubFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.player_ranking_player, container, false);
-        final LinearLayout player_ranking_player_layout = view.findViewById(R.id.player_ranking_player_layout);
-
-        dialog.show();
-        globalClick(player_ranking_player_layout, dialog);
+        player_ranking_player_layout = view.findViewById(R.id.player_ranking_player_layout);
 
         final Button globalButton = view.findViewById(R.id.player_ranking_player_global);
         final Button MyButton = view.findViewById(R.id.player_ranking_player_mycountry);
@@ -75,6 +73,14 @@ public class kat_Ranking_ClubFragment extends Fragment {
         });
 
         return view;
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+
+        dialog.show();
+        globalClick(player_ranking_player_layout, dialog);
     }
 
     private void globalClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
