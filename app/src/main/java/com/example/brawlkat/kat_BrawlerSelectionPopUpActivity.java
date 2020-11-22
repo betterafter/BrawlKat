@@ -5,7 +5,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.Display;
+import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.ImageButton;
@@ -54,6 +56,18 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
     public void setView(){
 
         LinearLayout linearLayout = findViewById(R.id.brawler_select_popup_layout);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params.gravity = Gravity.CENTER;
+
+        LinearLayout.LayoutParams params2 = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.WRAP_CONTENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+        );
+        params2.setMargins(5,5,5,5);
+
 
         if(kat_LoadBeforeMainActivity.BrawlersArrayList.size() > 0){
 
@@ -61,6 +75,10 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
             while(idx < kat_LoadBeforeMainActivity.BrawlersArrayList.size()){
 
                 LinearLayout VerticalLayout = new LinearLayout(getApplicationContext());
+
+                VerticalLayout.setLayoutParams(params);
+
+
                 for(int i = 0; i < 3; i++, idx++){
                     if(idx >= kat_LoadBeforeMainActivity.BrawlersArrayList.size()) break;
 
@@ -69,6 +87,9 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
                     final String name = kat_LoadBeforeMainActivity.BrawlersArrayList.get(idx).get("name").toString();
 
                     ImageButton button = new ImageButton(getApplicationContext());
+                    button.setBackgroundColor(getResources().getColor(R.color.semiBlack));
+                    button.setLayoutParams(params2);
+
                     GlideImage(imageUrl, ScreenWidth / 5, ScreenWidth / 5, button);
 
                     button.setOnClickListener(new View.OnClickListener(){
