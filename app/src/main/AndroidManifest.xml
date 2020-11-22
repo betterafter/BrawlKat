@@ -30,6 +30,8 @@
         <activity android:name=".kat_Player_PlayerBattleLogDetailActivity"></activity>
         <activity android:name=".kat_SearchAccountForSaveActivity"></activity>
         <activity android:name=".kat_CountrySelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog"></activity>
+        <activity android:name=".kat_BrawlerSelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog"></activity>
+
         <service android:name=".kat_Service_OverdrawActivity"></service>
         <meta-data
             android:name="preloaded_fonts"

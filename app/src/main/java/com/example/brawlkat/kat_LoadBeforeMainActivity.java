@@ -50,13 +50,13 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
     public    static ArrayList<kat_official_PlayerRankingParser.playerData>                             PlayerRankingArrayList;
     public    static ArrayList<kat_official_ClubRankingParser.clubData>                                 ClubRankingArrayList;
-    public    static ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>                    BrawlerRankingArrayList;
+    public    static HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>   BrawlerRankingArrayList = new HashMap<>();
     public    static ArrayList<kat_official_PowerPlaySeasonParser.powerPlaySeasonsData>                 PowerPlaySeasonArrayList;
     public    static ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>    PowerPlaySeasonRankingArrayList;
 
     public    static ArrayList<kat_official_PlayerRankingParser.playerData>                             MyPlayerRankingArrayList;
     public    static ArrayList<kat_official_ClubRankingParser.clubData>                                 MyClubRankingArrayList;
-    public    static ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>                    MyBrawlerRankingArrayList;
+    public    static HashMap<String, HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>>     MyBrawlerRankingArrayList = new HashMap<>();
     public    static ArrayList<kat_official_PowerPlaySeasonParser.powerPlaySeasonsData>                 MyPowerPlaySeasonArrayList;
     public    static ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>    MyPowerPlaySeasonRankingArrayList;
     // ..............................................................................................................//
@@ -96,6 +96,9 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             getMapDataThread mdt = new getMapDataThread();
             if (!mdt.isAlive()) mdt.start();
 
+            //getBrawlerRankingThread getBrawlerRankingThread = new getBrawlerRankingThread();
+            //getBrawlerRankingThread.start();
+
             move();
         }
     }
@@ -132,9 +135,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                         mapsParser = new kat_mapsParser(client.getData().get(2));
                         mapData = mapsParser.DataParser();
 
-//                        brawlersParser = new kat_brawlersParser(client.getData().get(1));
-//                        BrawlersArrayList = brawlersParser.DataParser();
-
                         int time = 1000 * 60 * 30;
                         sleep(time);
                     }
@@ -145,7 +145,4 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
 }

@@ -168,7 +168,7 @@ public class kat_RankingFragment extends Fragment {
     @Override
     public void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        if(requestCode==1111){
+        if(requestCode == 1111){
             if(resultCode == 1112){
                 //데이터 받기
                 String result = data.getStringExtra("changedCountryCode");

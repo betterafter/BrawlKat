@@ -17,6 +17,7 @@ import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 public class Client {
 
@@ -156,6 +157,7 @@ public class Client {
             this.status = status;
         }
 
+
         public void run(){
 
             try{
@@ -225,10 +227,31 @@ public class Client {
 
                         brawlerRankingParser = new kat_official_BrawlerRankingParser(resRankingData.get(0));
 
-                        if(countryCode.equals("global"))
-                            kat_LoadBeforeMainActivity.BrawlerRankingArrayList = brawlerRankingParser.DataParser();
-                        else
-                            kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList = brawlerRankingParser.DataParser();
+                        if(countryCode.equals("global")) {
+                            if (!kat_LoadBeforeMainActivity.BrawlerRankingArrayList.containsKey(Id))
+                                kat_LoadBeforeMainActivity.BrawlerRankingArrayList.put(Id, brawlerRankingParser.DataParser());
+                        }
+                        else{
+                            if(kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode)){
+                                if(!kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.get(countryCode).containsKey(Id)) {
+                                    kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
+                                            .get(countryCode)
+                                            .put(Id, brawlerRankingParser.DataParser());
+                                }
+                            }
+                            else{
+                                kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.put(countryCode,
+                                        new HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>());
+
+                                kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
+                                        .get(countryCode)
+                                        .put(Id, brawlerRankingParser.DataParser());
+                            }
+                        }
+
+                        //else
+                        //    if()
+                        // 이렇게 적으니까 else if로 되어버림...
                     }
 
                     else{
@@ -251,18 +274,6 @@ public class Client {
                             kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
                         }
                     }
-
-
-
-                    // 임시 출력
-                    //for(int i = 0; i < kat_LoadBeforeMainActivity.PlayerRankingArrayList.size(); i++){
-                    //kat_official_PlayerRankingParser.playerData playerData = kat_LoadBeforeMainActivity.PlayerRankingArrayList.get(i);
-                    //System.out.println(playerData.getRank() + " : " + playerData.getName() + ", " + playerData.getTag() + ", " + playerData.getTrophies());
-                    //}
-
-
-                    // .............................................................................
-
 
                     input.close();
                     data.close();
@@ -344,6 +355,7 @@ public class Client {
                     kat_LoadBeforeMainActivity.BrawlersArrayList = brawlersParser.DataParser();
                     kat_LoadBeforeMainActivity.mapData = mapsParser.DataParser();
 
+
                     System.out.println("mapdata size : " + kat_LoadBeforeMainActivity.mapData.size());
 
                     firstInit = true;
@@ -414,6 +426,12 @@ public class Client {
     public void RankingInit(String countryCode, String Id, String status){
         getRankingApiThread getRankingApiThread = new getRankingApiThread(countryCode, Id, status);
         getRankingApiThread.start();
+    }
+
+    public getRankingApiThread RankingResearch(String countryCode, String Id, String status){
+        getRankingApiThread t = new getRankingApiThread(countryCode, Id, status);
+
+        return t;
     }
 
 
