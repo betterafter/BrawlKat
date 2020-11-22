@@ -77,7 +77,7 @@ public class kat_Ranking_ClubFragment extends Fragment {
         return view;
     }
 
-    public void globalClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
+    private void globalClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
 
         DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
         databaseChangeThread.start();
@@ -90,7 +90,7 @@ public class kat_Ranking_ClubFragment extends Fragment {
         setUiOnMainView.start();
     }
 
-    public void myCountryClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
+    private void myCountryClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
 
         DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
         databaseChangeThread.start();

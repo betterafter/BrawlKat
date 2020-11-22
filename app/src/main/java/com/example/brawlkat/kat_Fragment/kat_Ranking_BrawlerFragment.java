@@ -34,7 +34,9 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     private                         kat_LoadingDialog                           dialog;
     private                         String                                      initId;
+    private                         String                                      initName;
     private                         LinearLayout                                player_ranking_brawler_layout;
+    private                         Button                                      button;
 
     public kat_Ranking_BrawlerFragment(kat_LoadingDialog dialog){
         this.dialog = dialog;
@@ -45,6 +47,7 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         initId = kat_LoadBeforeMainActivity.BrawlersArrayList.get(0).get("id").toString();
+        initName = kat_LoadBeforeMainActivity.BrawlersArrayList.get(0).get("name").toString();
     }
 
     @Nullable
@@ -57,7 +60,8 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
         dialog.show();
         globalClick(player_ranking_brawler_layout, dialog);
 
-        Button button = view.findViewById(R.id.player_ranking_brawler_select);
+        button = view.findViewById(R.id.player_ranking_brawler_select);
+        button.setText(initName);
         button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -95,6 +99,9 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
             if(resultCode == 1113){
                 //데이터 받기
                 initId = data.getStringExtra("BrawlerId");
+                initName = data.getStringExtra("BrawlerName");
+                button.setText(initName);
+
                 dialog.show();
                 globalClick(player_ranking_brawler_layout, dialog);
             }
@@ -146,24 +153,24 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
                 @Override
                 public void run() {
 
-                    if(databaseChangeThread.isAlive()) {
-                        try {
-                            databaseChangeThread.join();
-                        } catch (InterruptedException e) {
-                            e.printStackTrace();
+                    try {
+                        databaseChangeThread.join();
+
+                        if(type.equals("global")) {
+                            setView(player_ranking_player_layout, kat_LoadBeforeMainActivity.BrawlerRankingArrayList.get(initId), dialog);
                         }
-                    }
-                    if(type.equals("global")) {
-                        setView(player_ranking_player_layout, kat_LoadBeforeMainActivity.BrawlerRankingArrayList.get(initId), dialog);
-                    }
 
-                    else {
-                        ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData> MyBrawlerRankingArrayList
-                                = kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
-                                .get(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode())
-                                .get(initId);
+                        else {
+                            ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData> MyBrawlerRankingArrayList
+                                    = kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
+                                    .get(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode())
+                                    .get(initId);
 
-                        setView(player_ranking_player_layout, MyBrawlerRankingArrayList, dialog);
+                            setView(player_ranking_player_layout, MyBrawlerRankingArrayList, dialog);
+                        }
+
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
                     }
                 }
             });

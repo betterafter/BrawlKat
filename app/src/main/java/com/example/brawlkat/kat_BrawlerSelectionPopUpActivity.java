@@ -66,13 +66,14 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
 
                     final String id = kat_LoadBeforeMainActivity.BrawlersArrayList.get(idx).get("id").toString();
                     String imageUrl = kat_LoadBeforeMainActivity.BrawlersArrayList.get(idx).get("imageUrl").toString();
+                    final String name = kat_LoadBeforeMainActivity.BrawlersArrayList.get(idx).get("name").toString();
 
                     ImageButton button = new ImageButton(getApplicationContext());
                     GlideImage(imageUrl, ScreenWidth / 5, ScreenWidth / 5, button);
 
                     button.setOnClickListener(new View.OnClickListener(){
                         public void onClick(View view){
-                            ChangeFinish(id);
+                            ChangeFinish(id, name);
                         }
                     });
 
@@ -84,9 +85,10 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
         }
     }
 
-    public void ChangeFinish(String BrawlerId){
+    public void ChangeFinish(String BrawlerId, String BrawlerName){
         Intent intent = new Intent();
         intent.putExtra("BrawlerId", BrawlerId);
+        intent.putExtra("BrawlerName", BrawlerName);
         setResult(1113, intent);
         finish();
     }
