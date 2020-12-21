@@ -52,18 +52,22 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     public    static ArrayList<kat_official_ClubRankingParser.clubData>                                 ClubRankingArrayList;
     public    static HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>   BrawlerRankingArrayList = new HashMap<>();
     public    static ArrayList<kat_official_PowerPlaySeasonParser.powerPlaySeasonsData>                 PowerPlaySeasonArrayList;
-    public    static ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>    PowerPlaySeasonRankingArrayList;
+    public    static HashMap<String, ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>> PowerPlaySeasonRankingArrayList = new HashMap<>();
 
     public    static ArrayList<kat_official_PlayerRankingParser.playerData>                             MyPlayerRankingArrayList;
     public    static ArrayList<kat_official_ClubRankingParser.clubData>                                 MyClubRankingArrayList;
-    public    static HashMap<String, HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>>     MyBrawlerRankingArrayList = new HashMap<>();
+    public    static HashMap<String, HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>> MyBrawlerRankingArrayList = new HashMap<>();
     public    static ArrayList<kat_official_PowerPlaySeasonParser.powerPlaySeasonsData>                 MyPowerPlaySeasonArrayList;
-    public    static ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>    MyPowerPlaySeasonRankingArrayList;
+    public    static HashMap<String, HashMap<String, ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>>> MyPowerPlaySeasonRankingArrayList = new HashMap<>();
+
+    private   kat_LoadingDialog                                                                         dialog;
+
     // ..............................................................................................................//
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
 
@@ -73,8 +77,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);
             kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
             kataCountryBase = new kat_countryDatabase(getApplicationContext(), "katcountry", null, 1);
-
-            System.out.println("kat favorites database size : " + kataFavoritesBase.size());
 
             kat_countryCodeParser countryCodeParser = new kat_countryCodeParser(this);
             try {
@@ -96,9 +98,20 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             getMapDataThread mdt = new getMapDataThread();
             if (!mdt.isAlive()) mdt.start();
 
-            //getBrawlerRankingThread getBrawlerRankingThread = new getBrawlerRankingThread();
-            //getBrawlerRankingThread.start();
+            //move();
+        }
+    }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")){
             move();
         }
     }
@@ -106,7 +119,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     private void move(){
 
         if(kataMyAccountBase.size() == 1) {
-            System.out.println("ready to move");
             kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
             String tag = kataMyAccountBase.getTag();
             String realTag = tag.substring(1);
@@ -120,9 +132,10 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                     Intent intent = new Intent(kat_LoadBeforeMainActivity.this, kat_Player_MainActivity.class);
                     startActivity(intent);
                 }
-            }, 4000);
+            }, 3000);
         }
     }
+
 
     // 맵 데이터 받아오기
     private class getMapDataThread extends Thread{

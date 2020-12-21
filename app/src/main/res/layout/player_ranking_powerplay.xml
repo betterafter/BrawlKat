@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="30dp"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/player_ranking_powerplay_global"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0"
+                android:background="@drawable/semi_round_button_inner_click"
+                android:fontFamily="@font/actor"
+                android:paddingHorizontal="20dp"
+                android:text="전세계"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Button
+                android:id="@+id/player_ranking_powerplay_mycountry"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
+                android:layout_weight="0"
+                android:background="@drawable/semi_round_button_inner_click"
+                android:fontFamily="@font/actor"
+                android:paddingHorizontal="20dp"
+                android:text="내 지역"
+                android:textColor="@color/colorWhite"
+                android:textSize="14sp"
+                android:textStyle="bold" />
+
+            <Spinner
+                android:id="@+id/player_ranking_powerplay_select"
+                android:layout_width="wrap_content"
+                android:layout_height="35dp"
+                android:layout_margin="5dp"
+                android:layout_marginTop="10dp"
+                android:background="@drawable/semi_round_button_inner_click"
+                android:backgroundTint="@color/semiBlack"
+                android:overlapAnchor="false"
+                android:popupBackground="@drawable/card_background"
+                android:spinnerMode="dropdown"
+                android:textColor="@color/colorWhite" />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="15dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:orientation="horizontal">
+
+            <TextView
+                android:id="@+id/powerplay_seasonid"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/lilita_one"
+                android:text=""
+                android:textAlignment="center"
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/powerplay_seasondate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/lilita_one"
+                android:layout_marginLeft="15dp"
+                android:text=""
+                android:textColor="@color/colorWhite"
+                android:textSize="16sp"
+                android:textStyle="bold" />
+        </LinearLayout>
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_weight="0">
+
+            <LinearLayout
+                android:id="@+id/player_ranking_powerplay_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"></LinearLayout>
+        </ScrollView>
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

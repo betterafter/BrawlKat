@@ -1,5 +1,6 @@
 package com.example.brawlkat.kat_Fragment;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -40,6 +41,7 @@ public class kat_RankingFragment extends Fragment {
 
     public                          String                                      checkCountryCode = "KR";
 
+    private                         Context                                     mContext;
 
     public kat_RankingFragment(kat_LoadingDialog dialog){
         this.dialog = dialog;
@@ -51,7 +53,6 @@ public class kat_RankingFragment extends Fragment {
 
         dialog  = new kat_LoadingDialog(getActivity());
 
-
         options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .centerCrop()
@@ -62,7 +63,9 @@ public class kat_RankingFragment extends Fragment {
         height = metrics.heightPixels;
         width = metrics.widthPixels;
 
+        mContext = getActivity().getApplicationContext();
     }
+
 
     @Override
     public void onStart() {
@@ -91,7 +94,7 @@ public class kat_RankingFragment extends Fragment {
 
         countryChangeButton.setText(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode());
 
-        fragmentStateAdapter = new kat_Player_RankingAdapter(this, dialog);
+        fragmentStateAdapter = new kat_Player_RankingAdapter(this, dialog, mContext);
         viewPager2.setAdapter(fragmentStateAdapter);
 
         new TabLayoutMediator(tabLayout, viewPager2,

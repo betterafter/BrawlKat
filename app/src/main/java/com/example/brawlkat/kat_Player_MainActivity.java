@@ -197,6 +197,21 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         }
     }
 
+    private class setBaseDataThread extends Thread{
+        public void run(){
+            while(true){
+                if(PlayerRankingArrayList != null && ClubRankingArrayList != null
+                        && PowerPlaySeasonArrayList != null) {
+                    if (PlayerRankingArrayList.size() > 0 && ClubRankingArrayList.size() > 0
+                            && PowerPlaySeasonArrayList.size() > 0) {
+                        if(dialog != null) dialog.dismiss();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
 
     // 프레그먼트 교체
     public void setFrag(int n)
@@ -216,6 +231,15 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 break;
 
             case 2:
+                dialog.show();
+                setBaseDataThread baseDataThread = new setBaseDataThread();
+                baseDataThread.start();
+
+                try {
+                    baseDataThread.join();
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
                 fragmentTransaction.replace(R.id.Main_Frame, kat_rankingFragment);
                 fragmentTransaction.commit();
                 break;

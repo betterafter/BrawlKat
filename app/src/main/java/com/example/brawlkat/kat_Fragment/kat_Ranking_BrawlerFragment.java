@@ -23,7 +23,6 @@ import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_official_BrawlerRankingParser;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,8 +36,11 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
     private                         LinearLayout                                player_ranking_brawler_layout;
     private                         Button                                      button;
 
-    public kat_Ranking_BrawlerFragment(kat_LoadingDialog dialog){
+    private                         Context                                     mContext;
+
+    public kat_Ranking_BrawlerFragment(kat_LoadingDialog dialog, Context mContext){
         this.dialog = dialog;
+        this.mContext = mContext;
     }
 
     @Override
@@ -170,12 +172,9 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
                 public void run() {
 
                     try {
-                        System.out.println("before join");
                         databaseChangeThread.join();
-                        System.out.println(kat_LoadBeforeMainActivity.BrawlerRankingArrayList.get(initId).size());
 
                         if(type.equals("global")) {
-                            System.out.println("let");
                             setView(player_ranking_player_layout, kat_LoadBeforeMainActivity.BrawlerRankingArrayList.get(initId), dialog);
                         }
 
@@ -220,7 +219,6 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
         @Override
         public void run(){
 
-            System.out.println("databaseChageThread start");
             String countryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
 
             while(true){
@@ -249,8 +247,7 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
                         kat_LoadingDialog dialog){
 
         LayoutInflater layoutInflater =
-                (LayoutInflater) Objects.requireNonNull(getActivity()).getApplicationContext().
-                        getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         player_ranking_player_layout.removeAllViews();
 
@@ -302,7 +299,7 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     public void GlideImage(String url, int width, int height, ImageView view){
 
-        Glide.with(getActivity().getApplicationContext())
+        Glide.with(mContext)
                 .applyDefaultRequestOptions(kat_RankingFragment.options)
                 .load(url)
                 .override(width, height)

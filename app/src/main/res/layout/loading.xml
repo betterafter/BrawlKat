@@ -7,21 +7,36 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:layout_gravity="center"
         android:orientation="vertical">
+
+        <Space
+            android:layout_width="match_parent"
+            android:layout_height="200dp" />
 
         <TextView
             android:id="@+id/textView9"
             android:layout_width="match_parent"
-            android:layout_height="250dp"
+            android:layout_height="wrap_content"
             android:fontFamily="@font/lilita_one"
             android:gravity="center"
-            android:text="BrawlKat"
+            android:padding="10dp"
+            android:text="Bk"
             android:textAlignment="center"
             android:textAllCaps="false"
             android:textColor="@color/Color1"
             android:textSize="50sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/textView16"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="브롤스타즈 전적검색 앱"
+            android:textAlignment="center"
+            android:textColor="@color/colorWhite"
+            android:textSize="14sp"
+            android:textStyle="bold" />
 
 
     </LinearLayout>

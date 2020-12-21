@@ -218,10 +218,26 @@ public class Client {
 
                         powerPlaySeasonRankingParser = new kat_official_PowerPlaySeasonRankingParser(resRankingData.get(0));
 
-                        if(countryCode.equals("global"))
-                            kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList = powerPlaySeasonRankingParser.DataParser();
-                        else
-                            kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList = powerPlaySeasonRankingParser.DataParser();
+                        if(countryCode.equals("global")) {
+                            if (!kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList.containsKey(Id))
+                                kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList.put(Id, powerPlaySeasonRankingParser.DataParser());
+                        }
+                        else {
+                            if (kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode)) {
+                                if (!kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(Id)) {
+                                    kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList
+                                            .get(countryCode)
+                                            .put(Id, powerPlaySeasonRankingParser.DataParser());
+                                }
+                            }
+                            else{
+                                kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.put(countryCode,
+                                        new HashMap<String, ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>>());
+                                kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList
+                                        .get(countryCode)
+                                        .put(Id, powerPlaySeasonRankingParser.DataParser());
+                            }
+                        }
                     }
 
                     else if(status.equals("Brawler")){

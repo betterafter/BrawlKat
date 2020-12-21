@@ -21,7 +21,6 @@ import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_official_ClubRankingParser;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -33,10 +32,13 @@ public class kat_Ranking_ClubFragment extends Fragment {
     public                          boolean                                     set = false;
     private                         LinearLayout                                player_ranking_player_layout;
 
+    private                         Context                                     mContext;
+
     public kat_Ranking_ClubFragment(){}
 
-    public kat_Ranking_ClubFragment(kat_LoadingDialog dialog){
+    public kat_Ranking_ClubFragment(kat_LoadingDialog dialog, Context mContext){
         this.dialog = dialog;
+        this.mContext = mContext;
     }
 
 
@@ -167,8 +169,7 @@ public class kat_Ranking_ClubFragment extends Fragment {
                         kat_LoadingDialog dialog){
 
         LayoutInflater layoutInflater =
-                (LayoutInflater) Objects.requireNonNull(getActivity()).getApplicationContext().
-                        getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         player_ranking_player_layout.removeAllViews();
 
@@ -230,7 +231,7 @@ public class kat_Ranking_ClubFragment extends Fragment {
 
     public void GlideImage(String url, int width, int height, ImageView view){
 
-        Glide.with(getActivity().getApplicationContext())
+        Glide.with(mContext)
                 .applyDefaultRequestOptions(kat_RankingFragment.options)
                 .load(url)
                 .override(width, height)
