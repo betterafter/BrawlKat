@@ -21,6 +21,7 @@ import android.widget.Toast;
 import com.example.brawlkat.kat_Fragment.kat_FavoritesFragment;
 import com.example.brawlkat.kat_Fragment.kat_RankingFragment;
 import com.example.brawlkat.kat_Fragment.kat_SearchFragment;
+import com.example.brawlkat.kat_Fragment.kat_SettingFragment;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
@@ -44,11 +45,19 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     public              kat_SearchFragment                                                      kat_searchFragment;
     public              kat_FavoritesFragment                                                   kat_favoritesFragment;
-    public kat_RankingFragment kat_rankingFragment;
+    public              kat_RankingFragment                                                     kat_rankingFragment;
+    public              kat_SettingFragment                                                     kat_settingFragment;
     //.................................................................................................................//
 
+    //.........................................service.................................................................//
     public              ImageButton                                                             serviceButton;
-    private             boolean                                                                 isServiceStart = false;
+    public              boolean                                                                 isServiceStart = false;
+    public              kat_Service_OverdrawActivity                                            katService;
+    public              boolean                                                                 bound = false;
+    public              boolean                                                                 endClickToUnbind = false;
+    private             static long                                                             mLastClickTime = 0;
+    //.................................................................................................................//
+
 
     public              static String                                                           official = "official";
     public              static String                                                           nofficial = "nofficial";
@@ -69,15 +78,12 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     private             static final int                                                        ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
 
-    public              kat_Service_OverdrawActivity                                            katService;
-    private             boolean                                                                 bound = false;
-    private             boolean                                                                 endClickToUnbind = false;
 
     public              LayoutInflater                                                          layoutInflater;
 
     public              static Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>> playerBattleDataListStack = new Stack<>();
 
-    private             static long                                                             mLastClickTime = 0;
+
     private             boolean                                                                 firstStart = true;
 
     public              static kat_Player_MainActivity                                          kat_player_mainActivity;
@@ -100,6 +106,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
             kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
             kat_rankingFragment = new kat_RankingFragment(dialog);
+            kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
 
             // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
             bottomNavigationView = findViewById(R.id.bottomNavi);
@@ -110,6 +117,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                     kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
                     kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
                     kat_rankingFragment = new kat_RankingFragment(dialog);
+                    kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
 
                     switch (menuItem.getItemId()) {
                         case R.id.action_search:
@@ -120,6 +128,9 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                             break;
                         case R.id.action_ranking:
                             setFrag(2);
+                            break;
+                        case R.id.action_setting:
+                            setFrag(3);
                             break;
                     }
                     return true;
@@ -138,7 +149,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 public boolean onTouch(View v, MotionEvent motionEvent) {
                     if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1500){
+                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
                             Toast toast = Toast.makeText(getApplicationContext(),
                                     "너무 빨리 눌렀습니다. 천천히 눌러주세요.",
                                     Toast.LENGTH_SHORT);
@@ -243,6 +254,10 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 fragmentTransaction.replace(R.id.Main_Frame, kat_rankingFragment);
                 fragmentTransaction.commit();
                 break;
+
+            case 3:
+                fragmentTransaction.replace(R.id.Main_Frame, kat_settingFragment);
+                fragmentTransaction.commit();
         }
     }
 
@@ -343,8 +358,9 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     public void AppFinish(){
 
         moveTaskToBack(true);						// 태스크를 백그라운드로 이동
-        finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
-        android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
+        //finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
+        finish();
+        //android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
         System.exit(0);
     }
 }

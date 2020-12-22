@@ -37,9 +37,11 @@
         android:id="@+id/bottomNavi"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/background"
         app:itemBackground="@color/background"
         app:itemIconTint="#ffffff"
         app:itemTextColor="#ffffff"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:menu="@menu/bottom_navigation" />
 </androidx.constraintlayout.widget.ConstraintLayout>

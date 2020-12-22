@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     package="com.example.brawlkat">
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
@@ -7,6 +8,8 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.SYSTEM_ALERT_WINDOW" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+    <uses-permission android:name="android.permission.PACKAGE_USAGE_STATS"
+        tools:ignore="ProtectedPermissions"/>
 
 
     <application
@@ -23,16 +26,17 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".kat_Player_MainActivity"></activity>
-        <activity android:name=".kat_Player_RecentSearchActivity"></activity>
-        <activity android:name=".kat_Player_PlayerDetailActivity"></activity>
-        <activity android:name=".kat_Player_ClubDetailActivity"></activity>
-        <activity android:name=".kat_Player_PlayerBattleLogDetailActivity"></activity>
-        <activity android:name=".kat_SearchAccountForSaveActivity"></activity>
-        <activity android:name=".kat_CountrySelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog"></activity>
-        <activity android:name=".kat_BrawlerSelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog"></activity>
+        <activity android:name=".kat_Player_MainActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".kat_Player_RecentSearchActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".kat_Player_PlayerDetailActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".kat_Player_ClubDetailActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".kat_Player_PlayerBattleLogDetailActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".kat_SearchAccountForSaveActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".kat_CountrySelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
+        <activity android:name=".kat_BrawlerSelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
 
         <service android:name=".kat_Service_OverdrawActivity"></service>
+        <service android:name=".kat_Service_BrawlStarsNotifActivity"></service>
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
