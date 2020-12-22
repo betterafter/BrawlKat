@@ -206,12 +206,17 @@ public class Client {
                         if (split == -1) splited = result.substring(startidx);
                         else splited = result.substring(startidx, split + 1);
 
-                        System.out.println(splited);
                         resRankingData.add(splited);
                         startidx = split + 1;
                     }
 
                     // 파싱 할 부분 ...................................................................
+
+                    System.out.println("--------------------------data----------------------------");
+                    for(int i = 0; i < resRankingData.size(); i++){
+                        System.out.println(resRankingData);
+                    }
+                    System.out.println("--------------------------data----------------------------");
 
                     if(status.equals("PowerPlay")){
                         kat_official_PowerPlaySeasonRankingParser powerPlaySeasonRankingParser;
@@ -276,6 +281,10 @@ public class Client {
                         kat_official_ClubRankingParser clubRankingParser;
                         kat_official_PlayerRankingParser playerRankingParser;
                         kat_official_PowerPlaySeasonParser powerPlaySeasonParser;
+
+                        System.out.println("club : " + resRankingData.get(0));
+                        System.out.println("player : " + resRankingData.get(1));
+                        System.out.println("powerplay : " + resRankingData.get(2));
 
                         clubRankingParser = new kat_official_ClubRankingParser(resRankingData.get(0));
                         playerRankingParser = new kat_official_PlayerRankingParser(resRankingData.get(1));

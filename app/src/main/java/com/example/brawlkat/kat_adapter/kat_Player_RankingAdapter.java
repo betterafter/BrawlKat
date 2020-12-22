@@ -41,10 +41,21 @@ public class kat_Player_RankingAdapter extends FragmentStateAdapter {
     @NonNull
     @Override
     public Fragment createFragment(int position) {
-        if(position == 0) return new kat_Ranking_PlayerFragment(dialog, mContext);
-        else if(position == 1) return new kat_Ranking_ClubFragment(dialog, mContext);
-        else if(position == 2) return new kat_Ranking_BrawlerFragment(dialog, mContext);
-        else if(position == 3) return new kat_Ranking_PowerPlayFragment(dialog, mContext);
+
+        System.out.println("pos : " + position);
+
+        if(position == 0) {
+            return new kat_Ranking_PlayerFragment();
+        }
+        else if(position == 1) {
+            return new kat_Ranking_ClubFragment();
+        }
+        else if(position == 2) {
+            return new kat_Ranking_BrawlerFragment();
+        }
+        else if(position == 3) {
+            return new kat_Ranking_PowerPlayFragment();
+        }
         else return null;
     }
 

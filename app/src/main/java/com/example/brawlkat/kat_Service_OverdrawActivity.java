@@ -124,17 +124,20 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         btn = new Button(this);
 
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(240, 240);
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                240,
+                240
+        );
 
-        btn.setLayoutParams(params);
-        //btn.setImageResource(R.drawable.logo);
         btn.setBackground(context.getResources().getDrawable(R.drawable.service_click));
 
-        btn.setText("BK");
+        btn.setText("Bk");
         btn.setTextColor(context.getResources().getColor(R.color.Color1));
         Typeface typeface = ResourcesCompat.getFont(context, R.font.lilita_one);
         btn.setTypeface(typeface);
         btn.setTextSize(28);
+
+        btn.setLayoutParams(params);
 
         btn.setOnTouchListener(this);
 

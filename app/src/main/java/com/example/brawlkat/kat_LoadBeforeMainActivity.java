@@ -93,7 +93,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                 kataCountryBase.insert("KR", countryName);
 
             kat_LoadBeforeMainActivity.client.RankingInit("global", "", "");
-            kat_LoadBeforeMainActivity.client.RankingInit("KR", "", "");
 
             getMapDataThread mdt = new getMapDataThread();
             if (!mdt.isAlive()) mdt.start();

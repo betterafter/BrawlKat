@@ -52,6 +52,12 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
     }
 
 
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+        dialog = new kat_LoadingDialog(mContext);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {

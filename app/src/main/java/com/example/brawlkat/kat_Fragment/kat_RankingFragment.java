@@ -43,6 +43,7 @@ public class kat_RankingFragment extends Fragment {
 
     private                         Context                                     mContext;
 
+
     public kat_RankingFragment(kat_LoadingDialog dialog){
         this.dialog = dialog;
     }
@@ -50,6 +51,8 @@ public class kat_RankingFragment extends Fragment {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        kat_LoadBeforeMainActivity.client.RankingInit(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode(), "", "");
 
         dialog  = new kat_LoadingDialog(getActivity());
 
@@ -100,7 +103,6 @@ public class kat_RankingFragment extends Fragment {
         new TabLayoutMediator(tabLayout, viewPager2,
                 new TabLayoutMediator.TabConfigurationStrategy() {
                     @Override public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        tab.setText("Tab " + (position + 1));
                         if(position == 0) tab.setText("플레이어");
                         else if(position == 1) tab.setText("클럽");
                         else if(position == 2) tab.setText("브롤러");
@@ -145,7 +147,6 @@ public class kat_RankingFragment extends Fragment {
 
         public void run(){
 
-            System.out.println(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode() + " , " + checkCountryCode);
             if(!kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode().equals(checkCountryCode)){
 
                 kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();

@@ -38,9 +38,18 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     private                         Context                                     mContext;
 
+    public kat_Ranking_BrawlerFragment(){};
+
     public kat_Ranking_BrawlerFragment(kat_LoadingDialog dialog, Context mContext){
         this.dialog = dialog;
         this.mContext = mContext;
+    }
+
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+        dialog = new kat_LoadingDialog(mContext);
     }
 
     @Override

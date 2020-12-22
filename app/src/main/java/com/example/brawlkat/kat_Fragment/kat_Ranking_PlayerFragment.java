@@ -1,5 +1,6 @@
 package com.example.brawlkat.kat_Fragment;
 
+import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -33,6 +34,7 @@ public class kat_Ranking_PlayerFragment extends Fragment {
     private                         LinearLayout                                player_ranking_player_layout;
 
     private                         Context                                     mContext;
+    private                         Activity                                    activity;
 
     public kat_Ranking_PlayerFragment(){}
 
@@ -41,7 +43,13 @@ public class kat_Ranking_PlayerFragment extends Fragment {
         this.mContext = mContext;
     }
 
-
+    @Override
+    public void onAttach(@NonNull Context context) {
+        super.onAttach(context);
+        mContext = context;
+        activity = getActivity();
+        dialog = new kat_LoadingDialog(mContext);
+    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -76,9 +84,17 @@ public class kat_Ranking_PlayerFragment extends Fragment {
         return view;
     }
 
+//    @Override
+//    public void onStart() {
+//        super.onStart();
+//        dialog.show();
+//        globalClick(player_ranking_player_layout, dialog);
+//
+//    }
+
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onResume() {
+        super.onResume();
         dialog.show();
         globalClick(player_ranking_player_layout, dialog);
 
@@ -89,11 +105,9 @@ public class kat_Ranking_PlayerFragment extends Fragment {
         DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
         databaseChangeThread.start();
 
-        ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList
-                = kat_LoadBeforeMainActivity.PlayerRankingArrayList;
-
-        setUiOnMainView setUiOnMainView = new setUiOnMainView(player_ranking_player_layout, PlayerRankingArrayList,
-                dialog, databaseChangeThread);
+        setUiOnMainView setUiOnMainView = new setUiOnMainView(player_ranking_player_layout,
+                dialog, databaseChangeThread, "global");
+        setUiOnMainView.setPriority(10);
         setUiOnMainView.start();
     }
 
@@ -102,11 +116,9 @@ public class kat_Ranking_PlayerFragment extends Fragment {
         DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread();
         databaseChangeThread.start();
 
-        ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList
-                = kat_LoadBeforeMainActivity.MyPlayerRankingArrayList;
-
-        setUiOnMainView setUiOnMainView = new setUiOnMainView(player_ranking_player_layout, PlayerRankingArrayList,
-                dialog, databaseChangeThread);
+        setUiOnMainView setUiOnMainView = new setUiOnMainView(player_ranking_player_layout,
+                dialog, databaseChangeThread, "else");
+        setUiOnMainView.setPriority(9);
         setUiOnMainView.start();
 
     }
@@ -115,22 +127,22 @@ public class kat_Ranking_PlayerFragment extends Fragment {
     private class setUiOnMainView extends Thread{
 
         LinearLayout player_ranking_player_layout;
-        ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList;
         kat_LoadingDialog dialog;
         DatabaseChangeThread databaseChangeThread;
+        String type;
 
         public setUiOnMainView(LinearLayout player_ranking_player_layout,
-                               ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList,
                                kat_LoadingDialog dialog,
-                               DatabaseChangeThread databaseChangeThread){
+                               DatabaseChangeThread databaseChangeThread,
+                               String type){
             this.player_ranking_player_layout = player_ranking_player_layout;
-            this.PlayerRankingArrayList = PlayerRankingArrayList;
             this.dialog = dialog;
             this.databaseChangeThread = databaseChangeThread;
+            this.type = type;
         }
 
         public void run(){
-            getActivity().runOnUiThread(new Runnable() {
+            activity.runOnUiThread(new Runnable() {
                 @Override
                 public void run() {
 
@@ -140,6 +152,14 @@ public class kat_Ranking_PlayerFragment extends Fragment {
                         } catch (InterruptedException e) {
                             e.printStackTrace();
                         }
+                    }
+
+                    ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList;
+                    if(type.equals("global")){
+                        PlayerRankingArrayList = kat_LoadBeforeMainActivity.PlayerRankingArrayList;
+                    }
+                    else{
+                        PlayerRankingArrayList = kat_LoadBeforeMainActivity.MyPlayerRankingArrayList;
                     }
                     setView(player_ranking_player_layout, PlayerRankingArrayList, dialog);
                 }
