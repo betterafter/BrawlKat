@@ -1,14 +1,11 @@
 package com.example.brawlkat;
 
 import android.annotation.TargetApi;
-import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
-import android.content.ServiceConnection;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.SystemClock;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -51,10 +48,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     //.........................................service.................................................................//
     public              ImageButton                                                             serviceButton;
-    public              boolean                                                                 isServiceStart = false;
-    public              kat_Service_OverdrawActivity                                            katService;
-    public              boolean                                                                 bound = false;
-    public              boolean                                                                 endClickToUnbind = false;
+    public              static boolean                                                          isServiceStart = false;
+    public              static Intent                                                           serviceIntent;
     private             static long                                                             mLastClickTime = 0;
     //.................................................................................................................//
 
@@ -99,6 +94,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
 
+            serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
             dialog = new kat_LoadingDialog(this);
 
             kat_player_mainActivity = this;
@@ -140,9 +136,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
             // ...........................................................................................................
 
-            unbindThread ubt = new unbindThread();
-            if (!ubt.isAlive()) ubt.start();
-
             serviceButton = (ImageButton) findViewById(R.id.main_serviceButton);
             serviceButton.setOnTouchListener(new View.OnTouchListener() {
                 @Override
@@ -160,13 +153,9 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
                         else {
                             if (isServiceStart) {
-                                if (katService != null && !endClickToUnbind) {
-                                    endClickToUnbind = true;
-                                    unbindService(katConnection);
-                                    isServiceStart = false;
-                                }
+                                stopService(serviceIntent);
+                                isServiceStart = false;
                             } else {
-                                endClickToUnbind = false;
                                 getPermission();
                                 isServiceStart = true;
                             }
@@ -264,27 +253,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
 
     // service .....................................................................................
-    public class unbindThread extends Thread{
 
-        public void run(){
-            while(true){
-                try{
-                    if(katService == null) continue;
-                    if(katService.unbindCall && bound){
-                        katService.unbindCall = false;
-                        endClickToUnbind = true;
-                        unbindService(katConnection);
-                        bound = false;
-                        isServiceStart = false;
-                        sleep(3000);
-                    }
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
 
     public void getPermission(){
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   // 마시멜로우 이상일 경우
@@ -297,16 +266,18 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             else {
                 Intent intent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
                 intent.putExtra("playerTag", playerTag);
-                bindService(intent, katConnection, Context.BIND_AUTO_CREATE);
-                //startService(intent);
+
+                kat_Service_OverdrawActivity.getPlayerTag = playerTag;
+                startService(serviceIntent);
             }
         }
 
         else {
             Intent intent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
             intent.putExtra("playerTag", playerTag);
-            bindService(intent, katConnection, Context.BIND_AUTO_CREATE);
-            //startService(intent);
+
+            kat_Service_OverdrawActivity.getPlayerTag = playerTag;
+            startService(serviceIntent);
         }
     }
     @TargetApi(Build.VERSION_CODES.M)
@@ -320,26 +291,14 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             } else {
                 Intent intent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
                 intent.putExtra("playerTag", playerTag);
-                bindService(intent, katConnection, Context.BIND_AUTO_CREATE);
-                startService(intent);
+
+                kat_Service_OverdrawActivity.getPlayerTag = playerTag;
+                startService(serviceIntent);
             }
         }
     }
 
-    public ServiceConnection katConnection = new ServiceConnection() {
-        @Override
-        public void onServiceConnected(ComponentName componentName, IBinder iBinder) {
-            kat_Service_OverdrawActivity.LocalBinder binder = (kat_Service_OverdrawActivity.LocalBinder) iBinder;
-            katService = binder.getService();
-            katService.getPlayerTag = playerTag;
-            bound = true;
-        }
 
-        @Override
-        public void onServiceDisconnected(ComponentName componentName) {
-            bound = false;
-        }
-    };
     //..............................................................................................
 
 

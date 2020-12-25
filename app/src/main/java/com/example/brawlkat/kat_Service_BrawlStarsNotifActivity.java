@@ -1,5 +1,8 @@
 package com.example.brawlkat;
 
+import android.app.Notification;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
@@ -13,6 +16,7 @@ import com.example.brawlkat.kat_Fragment.kat_SettingFragment;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.NotificationCompat;
 
 public class kat_Service_BrawlStarsNotifActivity extends Service {
 
@@ -40,6 +44,19 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         myToast.show();
         checkThread = new BrawlStarsPlayCheckThread();
         checkThread.start();
+
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
+                    NotificationManager.IMPORTANCE_DEFAULT);
+            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+
+            Notification notification = new NotificationCompat.Builder(this, "channel")
+                    .setContentTitle("")
+                    .setContentText("").build();
+
+            startForeground(2, notification);
+        }
+
         return START_REDELIVER_INTENT;
     }
 
@@ -50,20 +67,21 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         kat_SettingFragment.serviceStarted = false;
     }
 
+
+
     private class BrawlStarsPlayCheckThread extends Thread{
         public void run(){
             while(true){
+                System.out.println(getTopPackageName(getApplicationContext()));
+                System.out.println(alreadyStart);
                 // 브롤스타즈가 실행되고 서비스가 아직 실행되지 않았다면
                 if(getTopPackageName(getApplicationContext()).toLowerCase().contains("brawlstar") && !alreadyStart){
 
                     if (kat_player_mainActivity.isServiceStart) {
-                        if (kat_player_mainActivity.katService != null && !kat_player_mainActivity.endClickToUnbind) {
-                            kat_player_mainActivity.endClickToUnbind = true;
-                            unbindService(kat_player_mainActivity.katConnection);
-                            kat_player_mainActivity.isServiceStart = false;
-                        }
+                        stopService(kat_player_mainActivity.serviceIntent);
+                        kat_player_mainActivity.isServiceStart = false;
+
                     } else {
-                        kat_player_mainActivity.endClickToUnbind = false;
                         kat_player_mainActivity.getPermission();
                         kat_player_mainActivity.isServiceStart = true;
                     }
@@ -97,17 +115,12 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         // 1 minute ago
         final long begin = end - INTERVAL;
 
-        System.out.println(end);
-        System.out.println(begin);
-
         LongSparseArray packageNameMap = new LongSparseArray<>();
         final UsageEvents usageEvents = usageStatsManager.queryEvents(begin, end);
-        System.out.println(usageEvents.hasNextEvent());
         while (usageEvents.hasNextEvent()) {
             UsageEvents.Event event = new UsageEvents.Event();
             usageEvents.getNextEvent(event);
 
-            System.out.println("before isForeGroundEvent");
             if(isForeGroundEvent(event)) {
                 packageNameMap.put(event.getTimeStamp(), event.getPackageName());
                 if(event.getTimeStamp() > lastRunAppTimeStamp) {
@@ -120,8 +133,6 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     }
 
     private static boolean isForeGroundEvent(UsageEvents.Event event) {
-
-        System.out.println("isForeGroundEvent");
 
         if(event == null) {
             return false;
