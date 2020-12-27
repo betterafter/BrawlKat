@@ -48,8 +48,10 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     //.........................................service.................................................................//
     public              ImageButton                                                             serviceButton;
+    public              static boolean                                                          isForegroundServiceAlreadyStarted = false;
     public              static boolean                                                          isServiceStart = false;
     public              static Intent                                                           serviceIntent;
+    public              static Intent                                                           foregroundServiceIntent;
     private             static long                                                             mLastClickTime = 0;
     //.................................................................................................................//
 
@@ -93,6 +95,17 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
+
+            foregroundServiceIntent = new Intent(getApplicationContext(), kat_Service_BrawlStarsNotifActivity.class);
+            if(kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1){
+                startService(foregroundServiceIntent);
+                isForegroundServiceAlreadyStarted = true;
+            }
+
+            if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 1){
+                kat_SettingFragment.analyticsServiceStarted = true;
+            }
+
 
             serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
             dialog = new kat_LoadingDialog(this);

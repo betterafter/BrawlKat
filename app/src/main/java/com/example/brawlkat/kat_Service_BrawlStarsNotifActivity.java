@@ -10,7 +10,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.util.LongSparseArray;
-import android.widget.Toast;
 
 import com.example.brawlkat.kat_Fragment.kat_SettingFragment;
 
@@ -40,10 +39,9 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
-        Toast myToast = Toast.makeText(getApplicationContext(), "service start", Toast.LENGTH_SHORT);
-        myToast.show();
         checkThread = new BrawlStarsPlayCheckThread();
         checkThread.start();
+
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
@@ -70,8 +68,10 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
 
     private class BrawlStarsPlayCheckThread extends Thread{
+
         public void run(){
             while(true){
+                if(!kat_SettingFragment.analyticsServiceStarted) continue;
                 System.out.println(getTopPackageName(getApplicationContext()));
                 System.out.println(alreadyStart);
                 // 브롤스타즈가 실행되고 서비스가 아직 실행되지 않았다면

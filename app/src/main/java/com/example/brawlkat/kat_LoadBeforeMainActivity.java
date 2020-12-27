@@ -8,6 +8,7 @@ import com.example.brawlkat.kat_Database.kat_countryDatabase;
 import com.example.brawlkat.kat_Database.kat_database;
 import com.example.brawlkat.kat_Database.kat_favoritesDatabase;
 import com.example.brawlkat.kat_Database.kat_myAccountDatabase;
+import com.example.brawlkat.kat_Database.kat_settingDatabase;
 import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_countryCodeParser;
@@ -32,7 +33,9 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     public    static kat_favoritesDatabase                                                              kataFavoritesBase;
     public    static kat_myAccountDatabase                                                              kataMyAccountBase;
     public    static kat_countryDatabase                                                                kataCountryBase;
+    public    static kat_settingDatabase                                                                kataSettingBase;
 
+    // ..............................................................................................................//
 
 
 
@@ -77,6 +80,9 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);
             kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
             kataCountryBase = new kat_countryDatabase(getApplicationContext(), "katcountry", null, 1);
+            kataSettingBase = new kat_settingDatabase(getApplicationContext(), "kataSetting", null, 2);
+
+            kataSettingBase.init();
 
             kat_countryCodeParser countryCodeParser = new kat_countryCodeParser(this);
             try {

@@ -21,7 +21,8 @@
     <color name="mainBlue">#2295dd</color>
     <color name="selectedBlue">#2274dd</color>
     <color name="semiBlack">#18181c</color>
-
+    <color name="switchOff">#FF424242</color>
+    <color name="switchOn">#ffffff</color>
 
     <color name="Color1">#00bcff</color>
     <color name="Color2">#00BBAC</color>
