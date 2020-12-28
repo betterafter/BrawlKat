@@ -67,7 +67,7 @@
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="10dp"
                             android:layout_marginBottom="5dp"
-                            android:fontFamily="@font/actor"
+                            android:fontFamily="@font/lilita_one"
                             android:text="CODEMAGIC"
                             android:textColor="@color/colorWhite"
                             android:textSize="24sp"

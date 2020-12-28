@@ -94,7 +94,7 @@
                         <LinearLayout
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="horizontal">
+                            android:orientation="vertical">
 
                             <TextView
                                 android:id="@+id/player_detail_name"
@@ -109,10 +109,27 @@
 
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/player_detail_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/semi_round_button_inner_normal"
+                            android:paddingHorizontal="4dp"
+                            android:backgroundTint="@color/colorBlack"
+                            android:fontFamily="sans-serif"
+                            android:text="TextView"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/cardview_light_background"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="5dp"
+                            android:layout_marginLeft="15dp"
                             android:gravity="center"
                             android:orientation="horizontal">
 
@@ -136,20 +153,31 @@
 
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/player_detail_tag"
+                        <LinearLayout
+                            android:id="@+id/player_detail_clubname_layout"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginLeft="15dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/semi_round_button_inner_normal"
-                            android:fontFamily="sans-serif"
-                            android:paddingHorizontal="4dp"
-                            android:text="TextView"
-                            android:textAlignment="textStart"
-                            android:textColor="@color/cardview_light_background"
-                            android:textSize="14sp"
-                            android:textStyle="bold" />
+                            android:layout_marginTop="10dp"
+                            android:orientation="vertical">
+
+
+                            <LinearLayout
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:orientation="horizontal" />
+
+                            <TextView
+                                android:id="@+id/player_detail_clubname"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:fontFamily="@font/lilita_one"
+                                android:textAlignment="textStart"
+                                android:textColor="@color/colorWhite"
+                                android:textSize="18sp"
+                                android:textStyle="bold" />
+
+                        </LinearLayout>
 
                     </LinearLayout>
 

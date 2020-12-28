@@ -125,8 +125,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         String RawTag = ((TextView) linearLayout.getChildAt(1)).getText().toString();
         String newTag = RawTag.substring(1);
 
-        System.out.println(newTag);
-
         if(type.equals("players")){
             kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
                     kat_Player_PlayerDetailActivity.class, dialog);

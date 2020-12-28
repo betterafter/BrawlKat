@@ -59,7 +59,6 @@ public class kat_SearchThread extends kat_Player_MainActivity {
             sendData = new ArrayList<>();
 
             if(type.equals("players")){
-                System.out.println(tag + ", " + type);
                 client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
                 if(client.getAllTypeData().size() <= 0){
                     try {

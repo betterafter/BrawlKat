@@ -2,6 +2,7 @@ package com.example.brawlkat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
@@ -102,6 +103,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         player_club_name.setText(clubData.getName());
         player_club_tag.setText(clubData.getTag());
         player_club_description.setText(clubData.getDescription());
+
 
         setClubInformationList();
         setClubMemberList();
@@ -238,6 +240,10 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             club_member_name.setText(memberData.get(i).getName());
             club_member_trophy.setText(Integer.toString(memberData.get(i).getTrophies()));
             club_member_role.setText(memberData.get(i).getRole());
+
+            String nameColor = memberData.get(i).getNameColor();
+            nameColor = nameColor.replace("0x", "#");
+            club_member_name.setTextColor(Color.parseColor(nameColor));
 
             club_member_trophy.setTextColor(getResources().getColor(R.color.trophiesYellow));
             if(memberData.get(i).getRole().equals("member")){

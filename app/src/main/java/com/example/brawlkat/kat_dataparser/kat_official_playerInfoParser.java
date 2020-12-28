@@ -41,16 +41,17 @@ public class kat_official_playerInfoParser implements Serializable {
         pd.set_event(jsonObject.getInt("bestRoboRumbleTime"));
         pd.set_bigBrawler(jsonObject.getInt("bestTimeAsBigBrawler"));
 
+        if(!jsonObject.isNull("club")) {
+            JSONObject club = (JSONObject) jsonObject.get("club");
+            if (!club.isNull("tag")) {
+                String clubId = club.get("tag").toString();
+                String clubNAme = club.get("name").toString();
 
-        JSONObject club = (JSONObject) jsonObject.get("club");
-        if(!club.isNull("tag")) {
-            String clubId = club.get("tag").toString();
-            String clubNAme = club.get("name").toString();
-
-            club c = new club();
-            c.setId(clubId);
-            c.setName(clubNAme);
-            pd.setClub(c);
+                club c = new club();
+                c.setId(clubId);
+                c.setName(clubNAme);
+                pd.setClub(c);
+            }
         }
 
 
@@ -382,7 +383,7 @@ public class kat_official_playerInfoParser implements Serializable {
         }
     }
 
-    private class club implements Serializable{
+    public class club implements Serializable{
 
         private String id, name;
 

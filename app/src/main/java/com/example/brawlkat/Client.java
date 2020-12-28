@@ -101,6 +101,7 @@ public class Client {
                     result = reader.readLine();
 
                     int startidx = 0; int split = 0;
+                    int UnterminatedName = 0;
 
                     // API 데이터 파싱
                     String splited;
@@ -108,13 +109,19 @@ public class Client {
 
                     while (split != -1) {
 
-                        split = result.indexOf("}{", startidx);
+                        split = result.indexOf("}{", startidx + UnterminatedName);
+                        int temp = result.indexOf("\"nameColor\":", split);
+
+                        if(temp > split && temp - split < 30) {
+                            UnterminatedName = split + 1; continue;
+                        }
 
                         if (split == -1) splited = result.substring(startidx);
                         else splited = result.substring(startidx, split + 1);
 
+                        UnterminatedName = 0;
                         resOffiData.add(splited);
-                        System.out.println(splited);
+                        System.out.println("client result : " + splited);
                         startidx = split + 1;
                     }
 

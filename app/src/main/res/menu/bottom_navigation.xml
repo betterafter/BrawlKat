@@ -22,7 +22,7 @@
     <item
         android:id="@+id/action_setting"
         android:enabled="true"
-        android:icon="@drawable/round_assignment_24"
+        android:icon="@drawable/round_settings_24"
         android:title="setting" />
 
 </menu>

@@ -2,6 +2,7 @@ package com.example.brawlkat;
 
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
@@ -18,6 +19,7 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.kat_Fragment.kat_FavoritesFragment;
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
@@ -38,7 +40,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     private                             TextView                                player_detail_tag;
     private                             TextView                                player_detail_trophies;
     private                             TextView                                player_detail_level;
-
+    private                             TextView                                player_detail_clubName;
 
 
 
@@ -60,7 +62,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         player_detail_trophies_icon = findViewById(R.id.player_detail_trophies_image);
         player_detail_trophies = findViewById(R.id.player_detail_trophies);
         player_detail_level = findViewById(R.id.player_detail_level_icon_text);
-
+        player_detail_clubName = findViewById(R.id.player_detail_clubname);
         player_detail_favorites = findViewById(R.id.player_detail_favorites);
 
         options = new RequestOptions()
@@ -100,6 +102,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         else
             url_profile = "https://www.starlist.pro/assets/profile/" + "28000000" + ".png?v=1";
         String url_icon_trophies = "https://www.starlist.pro/assets/icon/trophy.png";
+        String url_icon_define_club = "https://cdn.starlist.pro/club/8000006.png?v=1";
 
         String[] iconImage = new String[]{
                 "https://www.starlist.pro/assets/icon/Power-Play.png",
@@ -136,7 +139,33 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         player_detail_trophies.setText(playerData.getTrophies() + " / " + playerData.getHighestTrophies());
         player_detail_level.setText(Integer.toString(playerData.getExpLevel()));
 
+        String nameColor = playerData.getNameColor().replace("0x", "#");
+        player_detail_name.setTextColor(Color.parseColor(nameColor));
+        player_detail_tag.getBackground().setTint(Color.parseColor(nameColor));
+
         GlideImage(url_icon_trophies, width / 30, width / 30, player_detail_trophies_icon);
+
+        if(playerData.getClub().getId() != null && playerData.getClub().getName() != null) {
+            player_detail_clubName.setText(playerData.getClub().getName());
+            player_detail_clubName.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    kat_LoadingDialog dialog = new kat_LoadingDialog(kat_Player_PlayerDetailActivity.this);
+                    dialog.show();
+
+                    String RawTag = playerData.getClub().getId();
+                    String newTag = RawTag.substring(1);
+
+                    kat_SearchThread kset = new kat_SearchThread(kat_Player_PlayerDetailActivity.this,
+                            kat_Player_ClubDetailActivity.class, dialog);
+                    kset.SearchStart(newTag, "clubs");
+                }
+            });
+        }
+        else{
+            LinearLayout clubNameLayout = findViewById(R.id.player_detail_clubname_layout);
+            clubNameLayout.removeView(player_detail_clubName);
+        }
 
         playerInformationList(iconImage, modeType, modeValue);
         playerBattleLogList();
