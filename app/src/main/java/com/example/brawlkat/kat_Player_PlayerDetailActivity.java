@@ -9,6 +9,8 @@ import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -20,10 +22,12 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.kat_Fragment.kat_FavoritesFragment;
 import com.example.brawlkat.kat_Thread.kat_SearchThread;
+import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -42,6 +46,8 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     private                             TextView                                player_detail_level;
     private                             TextView                                player_detail_clubName;
 
+    private                             Button                                  player_detail_information_button;
+    private                             Button                                  player_detail_battle_log_button;
 
 
     private                             RequestOptions                          options;
@@ -93,6 +99,14 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         }
     }
 
+
+
+
+
+
+
+
+
     // player_player_detail 레이아웃에 데이터 바인드
     private void setData(){
 
@@ -143,6 +157,10 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         player_detail_name.setTextColor(Color.parseColor(nameColor));
         player_detail_tag.getBackground().setTint(Color.parseColor(nameColor));
 
+        if(nameColor.equals("#ffffffff")){
+            player_detail_tag.setTextColor(Color.parseColor("#000000"));
+        }
+
         GlideImage(url_icon_trophies, width / 30, width / 30, player_detail_trophies_icon);
 
         if(playerData.getClub().getId() != null && playerData.getClub().getName() != null) {
@@ -166,14 +184,47 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             LinearLayout clubNameLayout = findViewById(R.id.player_detail_clubname_layout);
             clubNameLayout.removeView(player_detail_clubName);
         }
-
         playerInformationList(iconImage, modeType, modeValue);
         playerBattleLogList();
+
+        // 버튼을 눌렀을 때 플레이어 정보 <-> 배틀 로그가 바뀌게 만들기.........................................//
+        final LinearLayout playerInfoLayout = (LinearLayout) findViewById(R.id.player_detail_player_info_layout);
+        final LinearLayout playerBattleLogLayout = findViewById(R.id.player_detail_battle_log_layout);
+
+        // 기본 설정은 플레이어 정보부터 보여주기
+        playerInfoLayout.setVisibility(View.VISIBLE);
+        playerBattleLogLayout.setVisibility(View.GONE);
+
+        player_detail_information_button = findViewById(R.id.player_detail_information_button);
+        player_detail_information_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playerInfoLayout.setVisibility(View.VISIBLE);
+                playerBattleLogLayout.setVisibility(View.GONE);
+            }
+        });
+
+        player_detail_battle_log_button = findViewById(R.id.player_detail_battlelog_button);
+        player_detail_battle_log_button.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                playerInfoLayout.setVisibility(View.GONE);
+                playerBattleLogLayout.setVisibility(View.VISIBLE);
+            }
+        });
+        //..........................................................................................
     }
+
+
+
+
+
+
 
     // 플레이어의 게임 전체 플레이 타임 정보
     private void playerInformationList(String[] iconImage, String[] modeType, String[] modeValue){
 
+        // 메인 정보 6개 만들기 .........................................................................
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.player_detail_player_info_layout);
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         linearLayout.removeAllViews();
@@ -217,14 +268,157 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             }
             linearLayout.addView(lin);
         }
+
+        // 시즌 보상 & 리셋 트로피 레이아웃 ...............................................................
+        View view = layoutInflater.inflate(R.layout.player_player_detail_reward_and_reset_text, null);
+        TextView reward_text = view.findViewById(R.id.player_detail_reward);
+        TextView after_trophies_text = view.findViewById(R.id.player_detail_after_trophies);
+
+        kat_SeasonRewardsCalculator seasonRewardsCalculator = new kat_SeasonRewardsCalculator(playerData);
+
+        int seasonRewards = seasonRewardsCalculator.SeasonsRewardsCalculator();
+        int seasonReset = seasonRewardsCalculator.SeasonsResetTrophiesCalculator();
+        int diff = playerData.getTrophies() - seasonReset;
+        reward_text.setText(Integer.toString(seasonRewards) + " points");
+        after_trophies_text.setText(Integer.toString(seasonReset) + " (-" + diff + ")");
+
+        linearLayout.addView(view);
+        //..........................................................................................
+
+
+        // 가지고 있는 브롤러 정보........................................................................
+        playerInformation_ShowPlayerBrawlers();
     }
+
+
+
+    private void playerInformation_ShowPlayerBrawlers(){
+
+        LinearLayout linearLayout = findViewById(R.id.player_detail_get_brawlers_layout);
+        linearLayout.setGravity(Gravity.CENTER);
+        ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
+        ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+
+        TextView getBrawlerText = findViewById(R.id.player_detail_player_get_brawler_text);
+        getBrawlerText.setText("  획득한 브롤러 " + "(" + brawlerData.size() + "/" + BrawlersArrayList.size() + ")");
+
+        // 유저가 가지고 있는 브롤러 탐색
+        for(int i = 0; i < brawlerData.size(); ){
+
+            LinearLayout HorizontalLayout = new LinearLayout(getApplicationContext());
+            HorizontalLayout.setOrientation(LinearLayout.HORIZONTAL);
+            HorizontalLayout.setWeightSum(3);
+            HorizontalLayout.setGravity(Gravity.CENTER);
+            LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                    LinearLayout.LayoutParams.MATCH_PARENT,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+            params.gravity = Gravity.CENTER;
+            HorizontalLayout.setLayoutParams(params);
+
+            // 한 줄에 3개의 브롤러 이미지 보여줄 것.
+            for(int k = 0; k < 3; k++){
+
+                // 탐색하다가 유저의 브롤러가 더 이상 없으면 끝
+                if(i >= brawlerData.size()) break;
+                LayoutInflater layoutInflater
+                        = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                View view = layoutInflater.inflate(R.layout.player_player_detail_playerinfo_brawlers, null);
+                LinearLayout.LayoutParams vp = new LinearLayout.LayoutParams(
+                        0,
+                        LinearLayout.LayoutParams.MATCH_PARENT
+                );
+                vp.weight = 1;
+                vp.setMargins(5,5,5,5);
+                view.setBackground(getResources().getDrawable(R.drawable.card_background));
+
+                view.setLayoutParams(vp);
+
+                ImageView brawler_image = view.findViewById(R.id.brawlers_imageView);
+                TextView brawler_trophies = view.findViewById(R.id.brawlers_trophies_highestTrophies);
+                LinearLayout starPowersList = view.findViewById(R.id.brawlers_starpower_list);
+                LinearLayout gadgetsList = view.findViewById(R.id.brawlers_gadgets_list);
+
+                // 현재 탐색 대상 브롤러와 전체 브롤러 비교 및 세팅
+                kat_official_playerInfoParser.playerBrawlerData currentBrawler = brawlerData.get(i);
+                for(int j = 0; j < BrawlersArrayList.size(); j++){
+                    if(currentBrawler.getName().equals(BrawlersArrayList
+                            .get(j)
+                            .get("name")
+                            .toString()
+                            .toUpperCase())){
+                        GlideImage(BrawlersArrayList.get(j).get("imageUrl").toString(),
+                                width / 5,
+                                width / 5,
+                                brawler_image);
+                        brawler_trophies.setText(brawlerData.get(i).getTrophies() + " / " + brawlerData.get(i).getHighestTrophies());
+                        ArrayList<kat_brawlersParser.StarPowers> starPowersArrayList
+                                = (ArrayList<kat_brawlersParser.StarPowers>) BrawlersArrayList.get(j).get("starPowers");
+                        ArrayList<kat_brawlersParser.Gadgets> gadgetsArrayList
+                                = (ArrayList<kat_brawlersParser.Gadgets>) BrawlersArrayList.get(j).get("gadgets");
+
+                        for(int x = 0; x < starPowersArrayList.size(); x++){
+
+                            for(int xx = 0; xx < currentBrawler.getStarPowers().size(); xx++){
+                                if(starPowersArrayList.get(x).getName().toLowerCase().equals(currentBrawler
+                                        .getStarPowers()
+                                        .get(xx).getName().toLowerCase())){
+                                    ImageView starPower = new ImageView(getApplicationContext());
+                                    LinearLayout.LayoutParams sp = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                                            ViewGroup.LayoutParams.WRAP_CONTENT
+                                    );
+                                    sp.setMargins(5,5,5,5);
+                                    starPower.setLayoutParams(sp);
+                                    GlideImage(starPowersArrayList.get(x).getImageUrl(), width / 30, width / 30, starPower);
+                                    starPowersList.addView(starPower);
+                                    break;
+                                }
+                            }
+
+
+                        }
+                        for(int y = 0; y < gadgetsArrayList.size(); y++){
+
+                            for(int yy = 0; yy < currentBrawler.getGadgets().size(); yy++){
+                                if(gadgetsArrayList.get(y).getName().toLowerCase().equals(currentBrawler
+                                .getGadgets()
+                                .get(yy).getName().toLowerCase())){
+                                    ImageView gadget = new ImageView(getApplicationContext());
+                                    LinearLayout.LayoutParams gg = new LinearLayout.LayoutParams(
+                                            ViewGroup.LayoutParams.WRAP_CONTENT,
+                                            ViewGroup.LayoutParams.WRAP_CONTENT
+                                    );
+                                    gg.setMargins(5,5,5,5);
+                                    gadget.setLayoutParams(gg);
+                                    GlideImage(gadgetsArrayList.get(y).getImageUrl(), width / 30, width / 30, gadget);
+                                    gadgetsList.addView(gadget);
+                                    break;
+                                }
+                            }
+                        }
+                        HorizontalLayout.addView(view);
+                        break;
+                    }
+                }
+                i++;
+            }
+
+            linearLayout.addView(HorizontalLayout);
+        }
+    }
+
+
+
+
+
+
+
 
     private void playerBattleLogList(){
         if(client.getData().get(1).equals("{none}")
                 || (!playerBattleDataListStack.empty() && playerBattleDataListStack.peek() == null)) return;
         playerBattleDataList = playerBattleDataListStack.peek();
-
-        //BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
 
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         LinearLayout linearLayout = findViewById(R.id.player_detail_battle_log_layout);
@@ -315,10 +509,8 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
 
             // starlist.pro에서 제공 받은 brawler 정보를 받아와 내가 플레이한 브롤러 이미지 표시하기
-            System.out.println(BrawlersArrayList.size());
             for(int j = 0; j < BrawlersArrayList.size(); j++){
                 if(BrawlersArrayList.get(j).get("name").toString().toLowerCase().equals(userBrawler.toLowerCase())){
-                    System.out.println(BrawlersArrayList.get(j).get("name").toString());
                     GlideImage(BrawlersArrayList.get(j).get("imageUrl").toString(),
                             width / 10, width / 10, battleLogBrawler);
                 }

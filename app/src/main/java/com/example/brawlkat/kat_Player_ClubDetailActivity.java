@@ -7,16 +7,13 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.method.ScrollingMovementMethod;
 import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ScrollView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -211,7 +208,6 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
     public void setClubMemberList(){
 
-        final ScrollView club_member_scrollView = findViewById(R.id.player_club_member_scrollview);
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -223,15 +219,6 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             TextView club_member_name = view.findViewById(R.id.player_club_detail_members_name);
             TextView club_member_trophy = view.findViewById(R.id.player_club_detail_members_trophy);
             TextView club_member_role = view.findViewById(R.id.player_club_detail_members_role);
-            club_member_name.setMovementMethod(new ScrollingMovementMethod());
-
-            club_member_name.setOnTouchListener(new TextView.OnTouchListener(){
-                @Override
-                public boolean onTouch(View view, MotionEvent motionevent){
-                    club_member_scrollView.requestDisallowInterceptTouchEvent(true);
-                    return false;
-                }
-            });
 
             String iconUrl = "https://www.starlist.pro/assets/profile-low/" +
                     memberData.get(i).getIconId() + ".png?v=1";

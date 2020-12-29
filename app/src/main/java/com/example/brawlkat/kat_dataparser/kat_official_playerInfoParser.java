@@ -341,7 +341,7 @@ public class kat_official_playerInfoParser implements Serializable {
         }
     }
 
-    private class starPower implements Serializable{
+    public class starPower implements Serializable{
 
         private String id, name;
 
@@ -362,7 +362,7 @@ public class kat_official_playerInfoParser implements Serializable {
         }
     }
 
-    private class gadget implements Serializable{
+    public class gadget implements Serializable{
 
         private String id, name;
 
