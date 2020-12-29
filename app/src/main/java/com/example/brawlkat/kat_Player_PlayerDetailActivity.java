@@ -295,6 +295,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     private void playerInformation_ShowPlayerBrawlers(){
 
         LinearLayout linearLayout = findViewById(R.id.player_detail_get_brawlers_layout);
+        linearLayout.removeAllViews();
         linearLayout.setGravity(Gravity.CENTER);
         ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
         ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
