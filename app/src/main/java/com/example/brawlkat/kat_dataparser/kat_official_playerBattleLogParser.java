@@ -42,7 +42,8 @@ public class kat_official_playerBattleLogParser implements Serializable {
             JSONObject battle = (JSONObject) item.get("battle");
 
 
-
+            if(!battle.isNull("rank"))
+                pbd.setRank(battle.getString("rank"));
 
             // trophyChange 가 없는 경우 :
             // 1. 동점      2. 이벤트 모드
@@ -171,6 +172,16 @@ public class kat_official_playerBattleLogParser implements Serializable {
         String battleResult, battleDuration, battleTrophyChange;
         String battleStarPlayerTag;
         String starPlayer;
+        String rank;
+
+        public String getRank() {
+            return rank;
+        }
+
+        public void setRank(String rank) {
+            this.rank = rank;
+        }
+
         ArrayList<Object> teamOrPlayer = new ArrayList<>();
 
         public ArrayList<Object> getTeamOrPlayer() {

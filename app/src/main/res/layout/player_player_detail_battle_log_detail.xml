@@ -36,7 +36,6 @@
             android:layout_height="wrap_content"
             android:layout_marginHorizontal="10dp"
             android:layout_marginVertical="10dp"
-            app:tabBackground="@color/backgroundCard"
             app:tabIndicatorColor="@color/mainBlue"
             app:tabTextColor="@color/colorWhite"
             app:tabSelectedTextColor="@color/mainBlue">
@@ -60,7 +59,8 @@
         <androidx.viewpager2.widget.ViewPager2
             android:id="@+id/player_player_detail_battle_log_detail_viewPager"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"/>
 
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

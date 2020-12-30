@@ -168,6 +168,7 @@
                 android:id="@+id/player_club_member_scrollview"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:layout_marginBottom="60dp"
                 android:layout_marginHorizontal="10dp">
 
                 <LinearLayout

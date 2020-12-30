@@ -28,6 +28,7 @@ import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 
 import androidx.annotation.Nullable;
 import androidx.core.content.ContextCompat;
@@ -189,18 +190,27 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
         // 버튼을 눌렀을 때 플레이어 정보 <-> 배틀 로그가 바뀌게 만들기.........................................//
         final LinearLayout playerInfoLayout = (LinearLayout) findViewById(R.id.player_detail_player_info_layout);
-        final LinearLayout playerBattleLogLayout = findViewById(R.id.player_detail_battle_log_layout);
+        final LinearLayout playerGetBrawlersLayout = findViewById(R.id.player_detail_get_brawlers_layout);
+        final LinearLayout playerBattleLogLayout = findViewById(R.id.player_detail_battlelog_layout);
+        final LinearLayout playerWinRateLayout = findViewById(R.id.player_detail_winrate_layout);
+        final LinearLayout playerTogetherLayout = findViewById(R.id.play_together_info_layout);
 
         // 기본 설정은 플레이어 정보부터 보여주기
         playerInfoLayout.setVisibility(View.VISIBLE);
+        playerGetBrawlersLayout.setVisibility(View.VISIBLE);
         playerBattleLogLayout.setVisibility(View.GONE);
+        playerWinRateLayout.setVisibility(View.GONE);
+        playerTogetherLayout.setVisibility(View.GONE);
 
         player_detail_information_button = findViewById(R.id.player_detail_information_button);
         player_detail_information_button.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 playerInfoLayout.setVisibility(View.VISIBLE);
+                playerGetBrawlersLayout.setVisibility(View.VISIBLE);
                 playerBattleLogLayout.setVisibility(View.GONE);
+                playerWinRateLayout.setVisibility(View.GONE);
+                playerTogetherLayout.setVisibility(View.GONE);
             }
         });
 
@@ -209,7 +219,10 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             @Override
             public void onClick(View view) {
                 playerInfoLayout.setVisibility(View.GONE);
+                playerGetBrawlersLayout.setVisibility(View.GONE);
                 playerBattleLogLayout.setVisibility(View.VISIBLE);
+                playerWinRateLayout.setVisibility(View.VISIBLE);
+                playerTogetherLayout.setVisibility(View.VISIBLE);
             }
         });
         //..........................................................................................
@@ -289,6 +302,9 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         // 가지고 있는 브롤러 정보........................................................................
         playerInformation_ShowPlayerBrawlers();
     }
+
+
+
 
 
 
@@ -425,6 +441,17 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         LinearLayout linearLayout = findViewById(R.id.player_detail_battle_log_layout);
         linearLayout.removeAllViews();
 
+        int victoryCount = 0;
+        int loseCount = 0;
+        int drawCount = 0;
+        int firstCount = 0;
+        int GetStarPlayerCount = 0;
+
+        HashMap<String[], Integer> playTogether = new HashMap<>();
+        HashMap<String, Integer> playTogetherCount = new HashMap<>();
+        HashMap<String, String> playTogetherTag = new HashMap<>();
+
+
         for(int i = 0; i < playerBattleDataList.size(); i++){
 
             final kat_official_playerBattleLogParser.playerBattleData battleData = playerBattleDataList.get(i);
@@ -443,23 +470,45 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             ImageView battleLogDetail = view.findViewById(R.id.player_detail_battle_log_show_detail);
 
 
-            String userBrawler = ""; boolean check = false;
+            String userBrawler = ""; boolean check = false; boolean userFind = false;
             for(int j = 0; j < teams.size(); j++){
 
                 // TeamOrPlayer 가 team 일 때, PlayTeamInfo에서 내 계정 정보 찾기
                 if(teams.get(j) instanceof kat_official_playerBattleLogParser.team){
 
+                    // 각 팀의 정보
                     kat_official_playerBattleLogParser.team item = (kat_official_playerBattleLogParser.team)teams.get(j);
+                    // 같이 한 플레이어 저장
+                    ArrayList<String[]> playTogetherArrayList = new ArrayList<>();
 
+                    // 팀을 전부 탐색하면서 자신이 포함되어 있는 팀의 같이한 플레이어 따로 저장해주기
                     for(int k = 0; k < item.getPlayTeamInfo().size(); k++){
                         kat_official_playerBattleLogParser.playTeamInfo info
                                 = item.getPlayTeamInfo().get(k);
 
+                        playTogetherArrayList.add(new String[]{info.getTag(), info.getName()});
                         if(info.getTag().equals(playerData.getTag())){
-                            userBrawler = info.getBrawler_name(); check = true; break;
+                            userFind = true;
+                            userBrawler = info.getBrawler_name();
                         }
                     }
-                    if(check) break;
+
+                    // 자신의 팀을 이미 한번 찾았다면 HashMap에 다시 저장하고 탐색 종료
+                    if(userFind){
+
+                        for(int ii = 0; ii < playTogetherArrayList.size(); ii++){
+
+                            if(playTogetherCount.get((playTogetherArrayList.get(ii))[0]) == null){
+                                playTogetherCount.put(playTogetherArrayList.get(ii)[0], 1);
+                                playTogetherTag.put(playTogetherArrayList.get(ii)[0], playTogetherArrayList.get(ii)[1]);
+                            }
+                            else{
+                                playTogetherCount.put(playTogetherArrayList.get(ii)[0],
+                                        playTogetherCount.get(playTogetherArrayList.get(ii)[0]) + 1);
+                            }
+                        }
+                        break;
+                    }
                 }
 
                 // TeamOrPlayer 가 player 일 때, PlayTeamInfo에서 내 계정 정보 찾기
@@ -478,10 +527,17 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
                     if(check) break;
                 }
             }
+            // 1등 몇번 했는지 && 스타 플레이어 몇번 받았는지 확인
+            if(battleData.getRank() != null && battleData.getRank().equals("1")) firstCount++;
+            if(battleData.getStarPlayer() != null && battleData.getStarPlayer().toLowerCase()
+                    .equals(playerData.getTag().toLowerCase()))
+                GetStarPlayerCount++;
+
 
             // 왼쪽의 승패 여부를 표시하는 텍스트 디자인
             if(battleData.getBattleResult().equals("victory") || (battleData.getBattleTrophyChange() != null
                     && !battleData.getBattleTrophyChange().contains("-"))) {
+                victoryCount++;
                 battleLogResult.setText("승");
                 Drawable drawable = battleLogResult.getBackground();
                 drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.winColor));
@@ -491,6 +547,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             }
 
             else if(battleData.getBattleResult().equals("draw") || battleData.getBattleTrophyChange() == null){
+                drawCount++;
                 battleLogResult.setText("무");
                 Drawable drawable = battleLogResult.getBackground();
                 drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.drawColor));
@@ -500,6 +557,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             }
 
             else{
+                loseCount++;
                 battleLogResult.setText("패");
                 Drawable drawable = battleLogResult.getBackground();
                 drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.loseColor));
@@ -518,14 +576,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             }
 
             battleLogBrawlerName.setText(userBrawler.toLowerCase());
-            kat_official_playerInfoParser.playerBrawlerData brawlerData = null;
 
-            for(int j = 0; j < playerData.getBrawlerData().size(); j++){
-                if(playerData.getBrawlerData().get(j).getName().toLowerCase().equals(userBrawler.toLowerCase())){
-                    brawlerData = playerData.getBrawlerData().get(j);
-                    break;
-                }
-            }
 
             if(battleData.getBattleTrophyChange() == null)
                 battleLogBrawlerTrophy.setText("+0");
@@ -534,10 +585,6 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             else
                 battleLogBrawlerTrophy.setText("+" + battleData.getBattleTrophyChange());
 
-            System.out.println(mapData.get(battleData.getEventId()));
-
-            System.out.println("mapdata size : " + kat_LoadBeforeMainActivity.mapData.size());
-            System.out.println("battleData.getEventId  : " + battleData.getEventId());
             if(!battleData.getEventId().equals("0") && mapData.get(battleData.getEventId()) != null){
                 GlideImage(mapData.get(battleData.getEventId()).getGameModeIconUrl(),
                         width / 20,
@@ -572,6 +619,54 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
                 }
             });
             linearLayout.addView(view);
+        }
+
+        // 전적 기록 - 승률 & 스타 플레이어 횟수 & 1등 횟수 보여주기
+        double rate = ((double)victoryCount / (double)(victoryCount + loseCount + drawCount)) * 100;
+        String rateString = String.format("%.1f", rate);
+        TextView winRateText = findViewById(R.id.winrate);
+        winRateText.setText(victoryCount + "승 " + drawCount + "무 " + loseCount + "패 " + "(" + rateString + "%)");
+
+        TextView starPlayerText = findViewById(R.id.starplayer);
+        starPlayerText.setText(GetStarPlayerCount + "번");
+
+        TextView firstText = findViewById(R.id.first);
+        firstText.setText(firstCount + "번");
+
+
+        // 같이 한 플레이어 리스트 구현
+        LinearLayout playTogetherLayout = findViewById(R.id.play_together_layout);
+        playTogetherLayout.removeAllViews();
+        Iterator<String> keys = playTogetherCount.keySet().iterator();
+        while ( keys.hasNext() ) {
+            final String key = keys.next();
+
+            if(playTogetherCount.get(key) >= 2 && !key.equals(playerData.getTag())) {
+                View view = layoutInflater.inflate(R.layout.player_player_detail_battle_play_together_item, null);
+                TextView play_together_name = view.findViewById(R.id.play_together_name);
+                TextView play_together_tag = view.findViewById(R.id.play_together_tag);
+                TextView play_together_count = view.findViewById(R.id.play_together_count);
+
+                play_together_name.setText(playTogetherTag.get(key));
+                play_together_tag.setText(key);
+                play_together_count.setText(playTogetherCount.get(key).toString());
+
+                view.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        kat_LoadingDialog dialog = new kat_LoadingDialog(kat_Player_PlayerDetailActivity.this);
+                        dialog.show();
+
+                        String realTag = key.substring(1);
+
+                        kat_SearchThread kset = new kat_SearchThread(kat_Player_PlayerDetailActivity.this,
+                                kat_Player_PlayerDetailActivity.class, dialog);
+                        kset.SearchStart(realTag, "players");
+                    }
+                });
+
+                playTogetherLayout.addView(view);
+            }
         }
     }
 
