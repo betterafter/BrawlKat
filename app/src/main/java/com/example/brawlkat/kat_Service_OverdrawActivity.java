@@ -1,8 +1,8 @@
 package com.example.brawlkat;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -66,45 +66,32 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     @Override
     public int onStartCommand(Intent intent, int flags, int startId )
     {
-//        // QQQ: 두번 이상 호출되지 않도록 조치해야 할 것 같다.
-//        Intent clsIntent = new Intent(this, kat_Player_MainActivity.class);
-//        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, clsIntent, 0);
-//
-//        NotificationCompat.Builder clsBuilder;
-//        if( Build.VERSION.SDK_INT >= 26 )
-//        {
-//            String CHANNEL_ID = "channel_id";
-//            NotificationChannel clsChannel = new NotificationChannel( CHANNEL_ID, "서비스 앱", NotificationManager.IMPORTANCE_DEFAULT );
-//            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel( clsChannel );
-//
-//            clsBuilder = new NotificationCompat.Builder(this, CHANNEL_ID );
-//        }
-//        else
-//        {
-//            clsBuilder = new NotificationCompat.Builder(this );
-//        }
-//
-//        // QQQ: notification 에 보여줄 타이틀, 내용을 수정한다.
-//        clsBuilder.setSmallIcon( R.drawable.logo)
-//                .setContentTitle( "서비스 앱" ).setContentText( "서비스 앱" )
-//                .setContentIntent( pendingIntent );
-//
-//        // foreground 서비스로 실행한다.
-//        startForeground( 1, clsBuilder.build() );
-//
-//        // QQQ: 쓰레드 등을 실행하여서 서비스에 적합한 로직을 구현한다.
+
+        Intent clsIntent = new Intent(getApplicationContext(), kat_LoadBeforeMainActivity.class);
+        clsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                1,
+                clsIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+                    NotificationManager.IMPORTANCE_HIGH);
 
-            Notification notification = new NotificationCompat.Builder(this, "channel")
-                    .setContentTitle("")
-                    .setContentText("").build();
+            NotificationManager mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+            mNotificationManager.createNotificationChannel(channel);
 
-            startForeground(1, notification);
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "channel")
+                    .setSmallIcon(R.drawable.player_level_icon)
+                    .setContentTitle("test")
+                    .setContentIntent(pendingIntent)
+                    .setContentText("test");
+
+            mNotificationManager.notify(2, notification.build());
+            startForeground(2, notification.build());
         }
+
         return START_NOT_STICKY;
     }
 

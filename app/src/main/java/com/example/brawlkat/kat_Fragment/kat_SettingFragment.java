@@ -7,6 +7,7 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
 import android.view.LayoutInflater;
@@ -102,8 +103,14 @@ public class kat_SettingFragment extends Fragment {
             }
             if(!serviceStarted) {
                 serviceStarted = true;
-                if(!kat_Player_MainActivity.isForegroundServiceAlreadyStarted)
-                    kat_player_mainActivity.startService(serviceIntent);
+                if(!kat_Player_MainActivity.isForegroundServiceAlreadyStarted) {
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        kat_player_mainActivity.startForegroundService(serviceIntent);
+                    }
+                    else{
+                        kat_player_mainActivity.startService(serviceIntent);
+                    }
+                }
                 Toast myToast = Toast.makeText(kat_player_mainActivity.getApplicationContext(),
                         "서비스가 시작되었습니다.", Toast.LENGTH_SHORT);
                 myToast.show();

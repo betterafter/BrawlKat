@@ -1,8 +1,8 @@
 package com.example.brawlkat;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.app.Service;
 import android.app.usage.UsageEvents;
 import android.app.usage.UsageStatsManager;
@@ -42,20 +42,33 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         checkThread = new BrawlStarsPlayCheckThread();
         checkThread.start();
 
+        Intent clsIntent = new Intent(getApplicationContext(), kat_LoadBeforeMainActivity.class);
+        clsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
+        PendingIntent pendingIntent = PendingIntent.getActivity(
+                this,
+                1,
+                clsIntent,
+                PendingIntent.FLAG_CANCEL_CURRENT);
+
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
-                    NotificationManager.IMPORTANCE_DEFAULT);
-            ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE)).createNotificationChannel(channel);
+                    NotificationManager.IMPORTANCE_HIGH);
 
-            Notification notification = new NotificationCompat.Builder(this, "channel")
-                    .setContentTitle("")
-                    .setContentText("").build();
+            NotificationManager mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+            mNotificationManager.createNotificationChannel(channel);
 
-            startForeground(2, notification);
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "channel")
+                    .setSmallIcon(R.drawable.player_level_icon)
+                    .setContentTitle("test")
+                    .setContentIntent(pendingIntent)
+                    .setContentText("test");
+
+            mNotificationManager.notify(1, notification.build());
+            startForeground(1, notification.build());
         }
 
-        return START_REDELIVER_INTENT;
+        return START_STICKY;
     }
 
     @Override
