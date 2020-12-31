@@ -30,6 +30,7 @@ import java.util.Stack;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
@@ -315,14 +316,15 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     //..............................................................................................
 
 
+
+
     @Override
     public void onBackPressed() {
-        //1번째 백버튼 클릭
+        super.onBackPressed();
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")){
-            AppFinish();
-        }
-        else{
-            super.onBackPressed();
+            ActivityCompat.finishAffinity(this);
+            finishAffinity();
+            finish();
         }
     }
 
@@ -333,6 +335,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         //finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
         finish();
         //android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
-        System.exit(0);
+        //System.exit(0);
     }
 }

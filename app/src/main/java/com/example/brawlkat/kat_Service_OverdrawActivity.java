@@ -68,7 +68,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     {
 
         Intent clsIntent = new Intent(getApplicationContext(), kat_LoadBeforeMainActivity.class);
-        clsIntent.setFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP | Intent.FLAG_ACTIVITY_SINGLE_TOP);
         PendingIntent pendingIntent = PendingIntent.getActivity(
                 this,
                 1,
@@ -77,7 +76,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
-                    NotificationManager.IMPORTANCE_HIGH);
+                    NotificationManager.IMPORTANCE_DEFAULT);
 
             NotificationManager mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
             mNotificationManager.createNotificationChannel(channel);

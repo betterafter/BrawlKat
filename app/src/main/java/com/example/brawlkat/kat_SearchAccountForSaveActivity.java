@@ -47,5 +47,4 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
         kset.SearchStart(AccountInputEditText.getText().toString(), "players");
 
     }
-
 }

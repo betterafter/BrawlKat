@@ -25,6 +25,7 @@ import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
 public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
@@ -161,6 +162,39 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             catch (Exception e){
                 // e.printStackTrace();
             }
+        }
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")){
+            ActivityCompat.finishAffinity(this);
+            finishAffinity();
+        }
+    }
+
+    @Override
+    protected void onStop() {
+        super.onStop();
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")){
+            finish();
+        }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")){
+            finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")){
+            finish();
         }
     }
 }
