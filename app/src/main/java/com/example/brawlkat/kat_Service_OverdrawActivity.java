@@ -2,7 +2,6 @@ package com.example.brawlkat;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
@@ -67,26 +66,20 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     public int onStartCommand(Intent intent, int flags, int startId )
     {
 
-        Intent clsIntent = new Intent(getApplicationContext(), kat_LoadBeforeMainActivity.class);
-        PendingIntent pendingIntent = PendingIntent.getActivity(
-                this,
-                1,
-                clsIntent,
-                PendingIntent.FLAG_CANCEL_CURRENT);
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
+            NotificationChannel channel = new NotificationChannel("subChannel", "brawl stars analytics play",
                     NotificationManager.IMPORTANCE_DEFAULT);
 
             NotificationManager mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
             mNotificationManager.createNotificationChannel(channel);
 
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "channel")
+            NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "subChannel")
                     .setSmallIcon(R.drawable.player_level_icon)
-                    .setContentTitle("test")
-                    .setContentIntent(pendingIntent)
+                    .setContentTitle("맵 승률 통계")
                     .setContentText("test");
 
+            // id 값은 0보다 큰 양수가 들어가야 한다.
             mNotificationManager.notify(2, notification.build());
             startForeground(2, notification.build());
         }
@@ -167,12 +160,9 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
             if(constraintLayout != null && constraintLayout.getWindowToken() != null)
                 windowManager.removeView(constraintLayout);
         }
-        // 서비스 종료 시 모든 스레드 종료
-        events.eventsThread.interrupt();
-        events.client.getThread.interrupt();
-        buttonThread.interrupt();
 
         unbindCall = true;
+        kat_Player_MainActivity.isServiceStart = false;
 
         super.onDestroy();
     }
@@ -262,8 +252,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 while(true){
 
                     if(stopCount >= 3){
-                        stopCount = 0; onDestroy(); this.interrupt();
-                        kat_Player_MainActivity.isServiceStart = false;
+                        stopCount = 0; onDestroy();
                         stopSelf();
 
                         break;

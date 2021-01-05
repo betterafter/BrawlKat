@@ -110,10 +110,10 @@ public class kat_SettingFragment extends Fragment {
                     else{
                         kat_player_mainActivity.startService(serviceIntent);
                     }
+                    Toast myToast = Toast.makeText(kat_player_mainActivity.getApplicationContext(),
+                            "서비스가 시작되었습니다.", Toast.LENGTH_SHORT);
+                    myToast.show();
                 }
-                Toast myToast = Toast.makeText(kat_player_mainActivity.getApplicationContext(),
-                        "서비스가 시작되었습니다.", Toast.LENGTH_SHORT);
-                myToast.show();
             }
             // 데이터베이스 업데이트 및 자식 스위치인 아날리틱스 스위치 모양 변경
             kat_LoadBeforeMainActivity.kataSettingBase.update("ForegroundService", true);

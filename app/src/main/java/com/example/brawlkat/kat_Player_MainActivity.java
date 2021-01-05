@@ -1,6 +1,7 @@
 package com.example.brawlkat;
 
 import android.annotation.TargetApi;
+import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -26,6 +27,7 @@ import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.Stack;
 
 import androidx.annotation.NonNull;
@@ -99,8 +101,31 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
             foregroundServiceIntent = new Intent(getApplicationContext(), kat_Service_BrawlStarsNotifActivity.class);
             if(kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1){
-                startService(foregroundServiceIntent);
-                isForegroundServiceAlreadyStarted = true;
+
+                ActivityManager am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(1000);
+                if(rs.size() > 0){
+                    isForegroundServiceAlreadyStarted = true;
+                }
+                else{
+                    isForegroundServiceAlreadyStarted = true;
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                        startForegroundService(foregroundServiceIntent);
+                    }
+                    else{
+                        startService(foregroundServiceIntent);
+                    }
+                }
+
+//                if(isForegroundServiceAlreadyStarted){
+//                    Toast myToast = Toast.makeText(kat_player_mainActivity.getApplicationContext(),
+//                            "서비스가 이미 시작했으므로 더 이상 시작하지 않아도 됩니다.", Toast.LENGTH_SHORT);
+//                    myToast.show();
+//                }
+//                else {
+//                    startService(foregroundServiceIntent);
+//                    isForegroundServiceAlreadyStarted = true;
+//                }
             }
 
             if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 1){
@@ -278,18 +303,12 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
             }
             else {
-                Intent intent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
-                intent.putExtra("playerTag", playerTag);
-
                 kat_Service_OverdrawActivity.getPlayerTag = playerTag;
                 startService(serviceIntent);
             }
         }
 
         else {
-            Intent intent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
-            intent.putExtra("playerTag", playerTag);
-
             kat_Service_OverdrawActivity.getPlayerTag = playerTag;
             startService(serviceIntent);
         }
@@ -303,9 +322,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 // TODO 동의를 얻지 못했을 경우의 처리
 
             } else {
-                Intent intent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
-                intent.putExtra("playerTag", playerTag);
-
                 kat_Service_OverdrawActivity.getPlayerTag = playerTag;
                 startService(serviceIntent);
             }

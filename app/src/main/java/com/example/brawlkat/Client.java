@@ -341,6 +341,7 @@ public class Client {
             try {
                 while (true) {
 
+
                     socket = new Socket("35.237.9.225", 9000);
 
                     byte[] bytes = null;

@@ -39,6 +39,11 @@
         <service android:name=".kat_Service_OverdrawActivity"></service>
         <service android:name=".kat_Service_BrawlStarsNotifActivity"></service>
 
+        <receiver android:name=".kat_BroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED"/>
+            </intent-filter>
+        </receiver>
         
         <meta-data
             android:name="preloaded_fonts"

@@ -126,6 +126,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
             try{
                 while (true){
+                    if(!kat_Player_MainActivity.isServiceStart) break;
 
                     if(viewPager == null){
                         viewPager = (ViewPager2) overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
@@ -276,6 +277,8 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
     @Override
     public void onDestroy() {
+
+        client = null;
 
         if(overdrawActivity.mapWindowManager != null){
             if(overdrawActivity.mapRecommendView != null)
