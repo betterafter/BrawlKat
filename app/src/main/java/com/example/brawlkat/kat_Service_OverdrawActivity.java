@@ -6,9 +6,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.graphics.Typeface;
 import android.os.Binder;
 import android.os.IBinder;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
-import androidx.core.content.res.ResourcesCompat;
 
 public class kat_Service_OverdrawActivity extends Service implements View.OnTouchListener {
 
@@ -112,20 +111,17 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         constraintLayout = new ConstraintLayout(this);
 
         btn = new Button(this);
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        int setWidth = Math.min(width, height);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                240,
-                240
+                setWidth / 5,
+                setWidth / 5
         );
 
         btn.setBackground(context.getResources().getDrawable(R.drawable.service_click));
-
-        btn.setText("Bk");
-        btn.setTextColor(context.getResources().getColor(R.color.Color1));
-        Typeface typeface = ResourcesCompat.getFont(context, R.font.lilita_one);
-        btn.setTypeface(typeface);
-        btn.setTextSize(28);
-
         btn.setLayoutParams(params);
 
         btn.setOnTouchListener(this);
@@ -172,11 +168,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
 
-        if(ev.getAction() == MotionEvent.ACTION_DOWN) System.out.println("DOWN");
-        else if(ev.getAction() == MotionEvent.ACTION_UP) System.out.println("UP");
-        else if(ev.getAction() == MotionEvent.ACTION_OUTSIDE) System.out.println("OUTSIDE");
-        else if(ev.getAction() == MotionEvent.ACTION_MOVE) System.out.println("MOVE");
-
         switch (ev.getAction()) {
 
 
@@ -201,7 +192,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 windowManager.updateViewLayout(constraintLayout, layoutParams);
 
                 // 버튼 움직임을 의도한 모션을 취할 때는 '3초 누르기' 모션 해제
-                if(Math.abs(mWidgetStartingX - layoutParams.x) > 10 || Math.abs(mWidgetStartingY - layoutParams.y) > 10){
+                if(Math.abs(mWidgetStartingX - layoutParams.x) > 30 || Math.abs(mWidgetStartingY - layoutParams.y) > 30){
                     buttonThread.stopLongClickAction = true;
                 }
                 // 그렇지 않으면 '3초 누르기' 모션 유지
@@ -216,7 +207,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 buttonThread.stopLongClickAction = true;
                 if(ServiceButtonTouchedCase != 3){
 
-                    if(Math.abs(mWidgetStartingX - layoutParams.x) > 10 || Math.abs(mWidgetStartingY - layoutParams.y) > 10){
+                    if(Math.abs(mWidgetStartingX - layoutParams.x) > 30 || Math.abs(mWidgetStartingY - layoutParams.y) > 30){
                         ServiceButtonTouchedCase = 1;
                     }
 

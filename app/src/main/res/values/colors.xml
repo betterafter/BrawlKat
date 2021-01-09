@@ -24,6 +24,7 @@
     <color name="halfBlack">#1C1C1F</color>
     <color name="switchOff">#FF424242</color>
     <color name="switchOn">#ffffff</color>
+    <color name="gray">#707074</color>
 
     <color name="Color1">#00bcff</color>
     <color name="Color2">#00BBAC</color>

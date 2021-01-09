@@ -34,6 +34,17 @@
             android:thumb="@drawable/switch_thumb_selector"
             android:track="@drawable/switch_track_selector" />
 
+
+        <TextView
+            android:id="@+id/textView18"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="100dp"
+            android:text="이용자가 설정을 바꾸기 전까지 서비스가 유지되며 기기의 전원을 켰을 때 포그라운드 서비스가 자동으로 실행됩니다."
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp" />
+
         <Switch
             android:id="@+id/analyticsServiceSwitch"
             android:layout_width="match_parent"
@@ -48,6 +59,65 @@
 
             android:thumb="@drawable/switch_thumb_selector"
             android:track="@drawable/switch_track_selector" />
+
+        <TextView
+            android:id="@+id/textView22"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginTop="50dp"
+            android:text="맵 별 브롤러 승률 서비스란?"
+            android:textColor="@color/colorWhite"
+            android:textSize="18sp"
+            android:textStyle="bold" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal">
+
+            <Button
+                android:id="@+id/button3"
+                android:layout_width="65dp"
+                android:layout_height="65dp"
+                android:layout_marginLeft="20dp"
+                android:layout_marginTop="20dp"
+                android:background="@drawable/round_insert_chart_24" />
+
+            <Button
+                android:id="@+id/button2"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:layout_margin="20dp"
+                android:background="@drawable/card"
+                android:fontFamily="@font/lilita_one"
+                android:text="Bk"
+                android:textColor="@color/Color1"
+                android:textSize="18sp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/textView26"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="10dp"
+            android:fontFamily="@font/lilita_one"
+            android:text="메인 화면에서 왼쪽의 파란 버튼을 터치하면 오른쪽의 버튼이 생성됩니다."
+            android:textColor="@color/Color1"
+            android:textSize="12sp"
+            android:textStyle="bold|italic" />
+
+        <TextView
+            android:id="@+id/textView24"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:text="위의 버튼을 터치 시 서비스가 시작되며 일정량의 데이터를 수집하여 특정 맵에 대해 각 브롤러의 승률을 높은 순서로 나타냅니다. 이 서비스는 버튼을 3초 이상 길게 누르고 있으면 종료됩니다."
+            android:textColor="@color/colorWhite" />
+
 
     </LinearLayout>
 

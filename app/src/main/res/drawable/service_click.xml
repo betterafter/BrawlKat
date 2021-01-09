@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ripple xmlns:android="http://schemas.android.com/apk/res/android" android:color="@color/colorWhite">
-    <item android:drawable="@drawable/service">
+    <item android:drawable="@drawable/main_icon">
     </item> <!-- default -->
 </ripple>

@@ -3,6 +3,8 @@ package com.example.brawlkat;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
+import android.os.Handler;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -43,7 +45,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
     public          ArrayList<String>                   offi_PlayerArrayList;
     private         ViewPager2                          viewPager               = null;
-    public kat_EventAdapter eventAdapter;
+    public          kat_EventAdapter                    eventAdapter;
     public          boolean                             changeRecommendView = false;
     public          String                              playerTag;
 
@@ -54,6 +56,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         super();
         this.context = context;
         this.overdrawActivity = overdrawActivity;
+
     }
 
     // map inflater 초기화
@@ -134,7 +137,6 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                                 kat_Service_EventActivity.this);
                     }
 
-                    System.out.println("success to get data'\n");
                     int time = 1000 * 60;
                     sleep(time);
                 }
@@ -154,6 +156,8 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
     public void ChangeRecommendViewClick(){
 
+        final kat_LoadingDialog kat_loadingDialog = new kat_LoadingDialog(context);
+
         final Button btn = new Button(context);
         LinearLayout buttonGroup = (LinearLayout) overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
 
@@ -168,15 +172,24 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         btn.setBackgroundColor(context.getResources().getColor(R.color.semiBlack));
         btn.setText("my");
         btn.setAllCaps(false);
-        btn.setTextColor(context.getResources().getColor(R.color.Color1));
+        if(kat_LoadBeforeMainActivity.kataMyAccountBase.getTag().equals("")) {
+            btn.setTextColor(context.getResources().getColor(R.color.gray));
+            btn.setEnabled(false);
+        }
+        else {
+            btn.setTextColor(context.getResources().getColor(R.color.Color1));
+            btn.setEnabled(true);
+        }
         Typeface typeface = ResourcesCompat.getFont(context, R.font.lilita_one);
         btn.setTypeface(typeface);
         btn.setTextSize(12);
         buttonGroup.addView(btn);
 
+
         btn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
 
                 if (SystemClock.elapsedRealtime() - mLastClickTime < 1500){
                     return;
@@ -187,41 +200,66 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     return;
                 }
 
-                client.AllTypeInit(overdrawActivity.getPlayerTag, "players", kat_Player_MainActivity.official);
-                if(client.getAllTypeData().size() <= 0){
-                    try {
-                        Client.getAllTypeApiThread apiThread = client.apiThread();
-                        apiThread.join();
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                    }
-                }
-                try {
-                    official_playerParser = new kat_official_playerParser(client.getAllTypeData().get(0));
-                    offi_PlayerArrayList = official_playerParser.DataParser();
-                }
-                catch (Exception e){
-                    e.printStackTrace();
-                }
+                Player_NonPlayer_ViewChangeThread viewChangeThread = new Player_NonPlayer_ViewChangeThread(btn);
+                viewChangeThread.start();
 
-                // 버튼 클릭 시 유저 추천 뷰 <-> 전체 추천 뷰 전환
-                if(changeRecommendView) {
-                    changeRecommendView = false;
-                    btn.setText("My");
-                    btn.setTextSize(12);
-                }
-                else {
-                    changeRecommendView = true;
-                    btn.setText("All");
-                    btn.setTextSize(10);
-                }
-                eventAdapter.refresh();
+                int length = ((ViewGroup)btn.getParent()).getWidth();
+
+                    // 이미지 버튼 스타일링
+                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                            length - 10,
+                            length - 10
+                    );
+                    params.setMargins(5, 5,5,5);
+                    btn.setLayoutParams(params);
+
+                Drawable drawable = context.getResources().getDrawable(R.drawable.round_rotate_right_24_small);
+                btn.setBackground(drawable);
+                btn.setText("");
 
                 mLastClickTime = SystemClock.elapsedRealtime();
             }
         });
     }
 
+    private class Player_NonPlayer_ViewChangeThread extends Thread{
+
+        Handler viewChangeHandler = new Handler();
+        Button btn;
+
+        public Player_NonPlayer_ViewChangeThread(Button btn){
+            this.btn = btn;
+        }
+
+        public void run(){
+            Runnable runnable = new Runnable() {
+                @Override
+                public void run() {
+                    try {
+
+                        // 버튼 클릭 시 유저 추천 뷰 <-> 전체 추천 뷰 전환
+                        if(changeRecommendView) {
+                            changeRecommendView = false;
+                            btn.setText("My");
+                            btn.setTextSize(12);
+                            btn.setBackground(null);
+                        }
+                        else {
+                            changeRecommendView = true;
+                            btn.setText("All");
+                            btn.setTextSize(10);
+                            btn.setBackground(null);
+                        }
+                        eventAdapter.refresh();
+                    }
+                    catch (Exception e){
+                        e.printStackTrace();
+                    }
+                }
+            };
+            viewChangeHandler.post(runnable);
+        }
+    }
 
     // 뷰페이저 옆의 이벤트 선택 버튼
     public void addModeButton(){

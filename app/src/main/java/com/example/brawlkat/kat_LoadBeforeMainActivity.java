@@ -19,6 +19,7 @@ import com.example.brawlkat.kat_dataparser.kat_official_ClubRankingParser;
 import com.example.brawlkat.kat_dataparser.kat_official_PlayerRankingParser;
 import com.example.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonParser;
 import com.example.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonRankingParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -46,6 +47,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     public    kat_mapsParser                                                                            mapsParser;
     public    kat_brawlersParser                                                                        brawlersParser;
 
+    public    static kat_official_playerInfoParser.playerData                                           eventsPlayerData;
 
     public    static ArrayList<kat_eventsParser.pair>                                                   EventArrayList;
     public    static ArrayList<HashMap<String, Object>>                                                 BrawlersArrayList;

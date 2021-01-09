@@ -88,12 +88,8 @@ public class kat_CountrySelectionAdapter extends RecyclerView.Adapter<kat_Countr
         String key = list.get(position).getKey();
         String value = list.get(position).getValue();
 
-        System.out.println(key + " , " + value);
-
         key = key.toUpperCase();
         value = value.toLowerCase();
-
-        System.out.println(key + " , " + value);
 
         holder.bind(key, value);
     }

@@ -147,25 +147,22 @@ public class kat_RankingFragment extends Fragment {
 
         public void run(){
 
-            if(!kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode().equals(checkCountryCode)){
+            kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();
+            kat_LoadBeforeMainActivity.MyClubRankingArrayList.clear();
+            kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.clear();
+            checkCountryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
 
-                kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();
-                kat_LoadBeforeMainActivity.MyClubRankingArrayList.clear();
-                kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.clear();
-                checkCountryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
+            kat_LoadBeforeMainActivity.client.RankingInit(checkCountryCode, "", "");
 
-                kat_LoadBeforeMainActivity.client.RankingInit(checkCountryCode, "", "");
-
-                getActivity().runOnUiThread(new Runnable() {
-                    @Override
-                    public void run() {
-                        dialog.show();
-                        countryChangeButton.setText(checkCountryCode);
-                        MyCountryDatabaseChangeThread myCountryDatabaseChangeThread = new MyCountryDatabaseChangeThread();
-                        myCountryDatabaseChangeThread.start();
-                    }
-                });
-            }
+            getActivity().runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    dialog.show();
+                    countryChangeButton.setText(checkCountryCode);
+                    MyCountryDatabaseChangeThread myCountryDatabaseChangeThread = new MyCountryDatabaseChangeThread();
+                    myCountryDatabaseChangeThread.start();
+                }
+            });
         }
     }
 

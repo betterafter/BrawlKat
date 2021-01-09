@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.brawlkat.Client;
+import com.example.brawlkat.kat_LoadBeforeMainActivity;
 import com.example.brawlkat.kat_LoadingDialog;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
@@ -108,7 +109,17 @@ public class kat_SearchThread extends kat_Player_MainActivity {
             official_playerInfoParser = new kat_official_playerInfoParser(sendData.get(0));
             official_playerBattleLogParser = new kat_official_playerBattleLogParser(sendData.get(1));
 
+
             try {
+                // 자신의 플레이어 데이터를 따로 저장. (맵 승률 서비스를 위해 따로 저장하는 리스트)
+                if(!kat_LoadBeforeMainActivity.kataMyAccountBase.getTag().equals("")){
+                    if(kat_LoadBeforeMainActivity.kataMyAccountBase.getTag()
+                            .equals(official_playerInfoParser.DataParser().getTag())) {
+                        kat_LoadBeforeMainActivity.eventsPlayerData = official_playerInfoParser.DataParser();
+                    }
+                }
+
+
                 playerData = official_playerInfoParser.DataParser();
                 if(!client.getAllTypeData().get(1).equals("{none}")) {
                     playerBattleDataList = official_playerBattleLogParser.DataParser();

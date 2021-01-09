@@ -51,7 +51,6 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         checkThread = new BrawlStarsPlayCheckThread();
         checkThread.start();
 
-        makeBroadcastIntent();
         RegisterBroadcastReceiver();
 
         Intent clsIntent = new Intent(getApplicationContext(), kat_LoadBeforeMainActivity.class);
@@ -73,7 +72,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
             NotificationCompat.Builder notification
                     = new NotificationCompat.Builder(getApplicationContext(), "channel")
-                    .setSmallIcon(R.drawable.player_level_icon)
+                    .setSmallIcon(R.drawable.kat_notification_icon)
                     .setContentTitle("test")
                     .setContentIntent(pendingIntent)
                     .setContentText("test");
@@ -172,11 +171,6 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         return event.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND;
     }
 
-    private void makeBroadcastIntent(){
-
-        Intent intent = new Intent(BROADCAST_MASSAGE_SCREEN_ON);
-        sendBroadcast(intent);
-    }
 
     private void RegisterBroadcastReceiver(){
 

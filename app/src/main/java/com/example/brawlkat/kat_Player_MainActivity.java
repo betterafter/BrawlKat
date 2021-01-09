@@ -9,6 +9,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.MotionEvent;
@@ -90,6 +91,10 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
     public              kat_LoadingDialog                                                       dialog;
 
+
+    public              static int                                                              deviceWidth;
+    public              static int                                                              deviceHeight;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -98,6 +103,10 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
+
+            DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
+            deviceWidth = dm.widthPixels;
+            deviceHeight = dm.heightPixels;
 
             foregroundServiceIntent = new Intent(getApplicationContext(), kat_Service_BrawlStarsNotifActivity.class);
             if(kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1){
@@ -116,16 +125,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                         startService(foregroundServiceIntent);
                     }
                 }
-
-//                if(isForegroundServiceAlreadyStarted){
-//                    Toast myToast = Toast.makeText(kat_player_mainActivity.getApplicationContext(),
-//                            "서비스가 이미 시작했으므로 더 이상 시작하지 않아도 됩니다.", Toast.LENGTH_SHORT);
-//                    myToast.show();
-//                }
-//                else {
-//                    startService(foregroundServiceIntent);
-//                    isForegroundServiceAlreadyStarted = true;
-//                }
             }
 
             if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 1){

@@ -17,8 +17,10 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.R;
+import com.example.brawlkat.kat_LoadBeforeMainActivity;
 import com.example.brawlkat.kat_Service_EventActivity;
 import com.example.brawlkat.kat_dataparser.kat_eventsParser;
+import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -33,7 +35,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     private                 Context                                             context;
     private                 ArrayList<kat_eventsParser.pair>                    EventArrayList;
     private                 ArrayList<HashMap<String, Object>>                  BrawlersArrayList;
-    private kat_Service_EventActivity eventActivity;
+    private                 kat_Service_EventActivity                           eventActivity;
     private                 ArrayList<String>                                   playerBrawlersArrayList;
 
 
@@ -143,15 +145,18 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
         // 전체 브롤러 추천 뷰
         public void onBrawlerRecommendsBind(int position, boolean isUserRecommend){
 
-            System.out.println("is User Recommendation? : " + isUserRecommend);
-
             RecommendsLayout.removeAllViews();
 
             if(isUserRecommend){
-                while (eventActivity.offi_PlayerArrayList == null){
-                    continue;
+                playerBrawlersArrayList = new ArrayList<>();
+                if(kat_LoadBeforeMainActivity.eventsPlayerData != null) {
+                    ArrayList<kat_official_playerInfoParser.playerBrawlerData> data
+                            = kat_LoadBeforeMainActivity.eventsPlayerData.getBrawlerData();
+
+                    for(int i = 0; i < data.size(); i++){
+                        playerBrawlersArrayList.add(data.get(i).getName());
+                    }
                 }
-                playerBrawlersArrayList = eventActivity.offi_PlayerArrayList;
             }
 
             DisplayMetrics metrics = context.getResources().getDisplayMetrics();
