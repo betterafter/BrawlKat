@@ -1,0 +1,39 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/layout"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content">
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textView28"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text='맵 별 브롤러 승률 통계 서비스입니다.'
+            android:textColor="@color/colorWhite"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView29"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text='"서비스 종료" 버튼을 누르거나 서비스가 실행된 후에 나타난 버튼을 3초 이상 누르면 서비스가 종료됩니다.'
+            android:textColor="@color/colorWhite"
+            android:textSize="12sp" />
+
+        <Button
+            android:id="@+id/service_exit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@android:color/transparent"
+            android:text="서비스 종료"
+            android:textColor="@color/Color1"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</RelativeLayout>

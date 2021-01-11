@@ -1,9 +1,12 @@
-package com.example.brawlkat;
+package com.example.brawlkat.kat_broadcast_receiver;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
+
+import com.example.brawlkat.kat_LoadBeforeMainActivity;
+import com.example.brawlkat.kat_Service_BrawlStarsNotifActivity;
 
 public class kat_BroadcastReceiver extends BroadcastReceiver {
     @Override

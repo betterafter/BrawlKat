@@ -30,7 +30,6 @@ public class kat_SettingFragment extends Fragment {
 
     kat_Player_MainActivity kat_player_mainActivity;
     public static boolean serviceStarted = false;
-    public static boolean analyticsServiceStarted = false;
     private Intent serviceIntent;
 
 
@@ -82,6 +81,13 @@ public class kat_SettingFragment extends Fragment {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 setAnalyticsSwitch(b);
+                Intent intent = new Intent();
+                if(b){
+                    intent.setAction("com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_START");
+                }else{
+                    intent.setAction("com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_END");
+                }
+                getActivity().sendBroadcast(intent);
             }
         });
 
@@ -142,10 +148,8 @@ public class kat_SettingFragment extends Fragment {
     // 아날리틱스 스위치를 터치할 때 -> 어차피 이건 BrawlStarsNotifActivity의 스레드에서 알아서 돌리니까 boolean만 업데이트 해주면 됨.
     private void setAnalyticsSwitch(boolean b){
         if(b){
-            analyticsServiceStarted = true;
             kat_LoadBeforeMainActivity.kataSettingBase.update("AnalyticsService", true);
         }else{
-            analyticsServiceStarted = false;
             kat_LoadBeforeMainActivity.kataSettingBase.update("AnalyticsService", false);
         }
     }

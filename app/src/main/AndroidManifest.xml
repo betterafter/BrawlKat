@@ -39,13 +39,28 @@
         <service android:name=".kat_Service_OverdrawActivity"></service>
         <service android:name=".kat_Service_BrawlStarsNotifActivity"></service>
 
-        <receiver android:name=".kat_BroadcastReceiver">
+        <receiver android:name=".kat_broadcast_receiver.kat_BroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED"/>
                 <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
             </intent-filter>
         </receiver>
-        
+
+        <receiver android:name=".kat_broadcast_receiver.kat_ButtonBroadcastReceiver">
+            <intent-filter android:priority="10000">
+                <action android:name="android.intent.action.MAIN" />
+            </intent-filter>
+        </receiver>
+
+        <receiver android:name=".kat_broadcast_receiver.kat_ActionBroadcastReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.SCREEN_ON" />
+                <action android:name="android.intent.action.SCREEN_OFF" />
+                <action android:name="com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_START"/>
+                <action android:name="com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_END"/>
+            </intent-filter>
+        </receiver>
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />

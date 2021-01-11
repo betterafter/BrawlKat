@@ -113,10 +113,18 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
                 ActivityManager am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
                 List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(1000);
-                if(rs.size() > 0){
-                    isForegroundServiceAlreadyStarted = true;
+
+                boolean isMainServiceExist = false;
+                for(ActivityManager.RunningServiceInfo info : rs) {
+                    String className = info.service.getClassName();
+                    String packageName = info.service.getPackageName();
+                    if(className.equals("com.example.brawlkat.kat_Service_BrawlStarsNotifActivity")){
+                        isForegroundServiceAlreadyStarted = true;
+                        isMainServiceExist = true;
+                        break;
+                    }
                 }
-                else{
+                if(!isMainServiceExist){
                     isForegroundServiceAlreadyStarted = true;
                     if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                         startForegroundService(foregroundServiceIntent);
@@ -125,10 +133,6 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                         startService(foregroundServiceIntent);
                     }
                 }
-            }
-
-            if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 1){
-                kat_SettingFragment.analyticsServiceStarted = true;
             }
 
 
@@ -213,6 +217,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     }
 
 
+
     @Override
     protected void onStart() {
 
@@ -234,6 +239,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             }
         }
     }
+
+
 
     private class setBaseDataThread extends Thread{
         public void run(){
