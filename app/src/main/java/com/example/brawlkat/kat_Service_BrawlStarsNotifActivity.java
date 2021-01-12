@@ -1,27 +1,37 @@
 package com.example.brawlkat;
 
+import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
-import android.app.PendingIntent;
 import android.app.Service;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.widget.RemoteViews;
+import android.util.DisplayMetrics;
 
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.kat_Fragment.kat_SettingFragment;
 import com.example.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver;
-import com.example.brawlkat.kat_broadcast_receiver.kat_ButtonBroadcastReceiver;
-import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 
 public class kat_Service_BrawlStarsNotifActivity extends Service {
 
-    public static boolean alreadyStart = false;
+    public                              static boolean                          alreadyStart = false;
+
+    private                             RequestOptions                          options;
+    public                              static int                              height;
+    public                              static int                              width;
+
 
     kat_Player_MainActivity kat_player_mainActivity;
 
@@ -31,6 +41,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     private final String BROADCAST_MASSAGE_SCREEN_OFF = "android.intent.action.SCREEN_OFF";
 
     public static NotificationCompat.Builder notification;
+    public static Notification notif;
     public static NotificationManager mNotificationManager;
 
 
@@ -44,49 +55,26 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     public void onCreate() {
         super.onCreate();
         kat_player_mainActivity = kat_Player_MainActivity.kat_player_mainActivity;
+
+        options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .centerCrop()
+                .priority(Priority.HIGH)
+                .format(DecodeFormat.PREFER_RGB_565);
+
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        height = metrics.heightPixels;
+        width = metrics.widthPixels;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         alreadyStart = false;
-
+        // 브로드캐스트 등록
         RegisterBroadcastReceiver();
 
-        kat_official_playerInfoParser.playerData playerData = kat_LoadBeforeMainActivity.eventsPlayerData;
-        RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.main_notification);
-        int seasonRewards;
-        int seasonReset;
-
-        if(playerData != null) {
-            kat_SeasonRewardsCalculator seasonRewardsCalculator = new kat_SeasonRewardsCalculator(playerData);
-
-            seasonRewards = seasonRewardsCalculator.SeasonsRewardsCalculator();
-            seasonReset = seasonRewardsCalculator.SeasonsResetTrophiesCalculator();
-
-            contentView.setTextViewText(R.id.title, playerData.getName());
-            contentView.setTextViewText(R.id.explain_text, " after season end");
-            contentView.setTextViewText(R.id.text, seasonRewards + " points");
-        }
-
-
-        Intent homeIntent = new Intent(this, kat_ButtonBroadcastReceiver.class);
-        homeIntent.setAction("main.HOME");
-
-        Intent analyticsIntent = new Intent(this, kat_ButtonBroadcastReceiver.class);
-        analyticsIntent.setAction("main.ANALYTICS");
-
-
-        PendingIntent HomePendingIntent = PendingIntent.getBroadcast(this, 0, homeIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        // 종료버튼과 펜딩 인텐트 연결
-        PendingIntent AnalyticsPendingIntent = PendingIntent.getBroadcast(this, 0, analyticsIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        contentView.setOnClickPendingIntent(R.id.main_home, HomePendingIntent);
-        contentView.setOnClickPendingIntent(R.id.main_analytics, AnalyticsPendingIntent);
-
-
+        kat_NotificationUpdater updater = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext());
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
@@ -95,24 +83,33 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
             mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
             mNotificationManager.createNotificationChannel(channel);
 
-            notification
-                    = new NotificationCompat.Builder(getApplicationContext(), "channel")
-                    .setSmallIcon(R.drawable.kat_notification_icon)
-                    .setColor(getResources().getColor(R.color.semiBlack))
-                    .setColorized(true)
-                    .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                    .setCustomContentView(contentView)
-                    //.setCustomBigContentView(contentView)
-                    .setShowWhen(false);
-
-            // id 값은 0보다 큰 양수가 들어가야 한다.
-            mNotificationManager.notify(1, notification.build());
+            updater.update();
             startForeground(1, notification.build());
         }
+
 
         return START_STICKY;
     }
 
+    public String UrlForBigContentViewRecommendBrawler(){
+
+        ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+
+        kat_BrawlerRecommendation brawlerRecommendation = new kat_BrawlerRecommendation();
+        brawlerRecommendation.init();
+        String id = brawlerRecommendation.recommend();
+        int index = -1;
+
+        for(int i = 0; i < BrawlersArrayList.size(); i++){
+            String brawlerId = Integer.toString((int)BrawlersArrayList.get(i).get("id"));
+            if(brawlerId.equals(id)){
+                System.out.println(BrawlersArrayList.get(i).get("name"));
+                index = i; break;
+            }
+        }
+        System.out.println(BrawlersArrayList.get(index).get("imageUrl").toString());
+        return BrawlersArrayList.get(index).get("imageUrl").toString();
+    }
 
     @Override
     public void onDestroy() {
@@ -153,4 +150,5 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
             broadcastReceiver = null;
         }
     }
+
 }

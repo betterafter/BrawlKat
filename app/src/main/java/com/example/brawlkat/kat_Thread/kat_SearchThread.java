@@ -1,20 +1,14 @@
 package com.example.brawlkat.kat_Thread;
 
 import android.app.Activity;
-import android.app.PendingIntent;
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.RemoteViews;
 
 import com.example.brawlkat.Client;
-import com.example.brawlkat.R;
 import com.example.brawlkat.kat_LoadBeforeMainActivity;
 import com.example.brawlkat.kat_LoadingDialog;
+import com.example.brawlkat.kat_NotificationUpdater;
 import com.example.brawlkat.kat_Player_MainActivity;
-import com.example.brawlkat.kat_SeasonRewardsCalculator;
-import com.example.brawlkat.kat_Service_BrawlStarsNotifActivity;
-import com.example.brawlkat.kat_broadcast_receiver.kat_ButtonBroadcastReceiver;
 import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
@@ -216,46 +210,11 @@ public class kat_SearchThread extends kat_Player_MainActivity {
     public void setMyAccount(){
         if(kataMyAccountBase.size() < 1) {
 
-            Context context = kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext();
-
             kataMyAccountBase.insert("player", playerData.getTag(), playerData.getName());
             kat_LoadBeforeMainActivity.eventsPlayerData = playerData;
 
-            RemoteViews contentView = new RemoteViews(context.getPackageName(), R.layout.main_notification);
-
-            kat_official_playerInfoParser.playerData playerData
-                    = kat_LoadBeforeMainActivity.eventsPlayerData;
-
-            kat_SeasonRewardsCalculator seasonRewardsCalculator
-                    = new kat_SeasonRewardsCalculator(playerData);
-            int seasonRewards = seasonRewardsCalculator.SeasonsRewardsCalculator();
-
-            contentView.setTextViewText(R.id.title, playerData.getName());
-            contentView.setTextViewText(R.id.explain_text, " after season end");
-            contentView.setTextViewText(R.id.text, seasonRewards + " points");
-
-            // 인텐트 등록
-            Intent homeIntent = new Intent(context, kat_ButtonBroadcastReceiver.class);
-            homeIntent.setAction("main.HOME");
-
-            Intent analyticsIntent = new Intent(context, kat_ButtonBroadcastReceiver.class);
-            analyticsIntent.setAction("main.ANALYTICS");
-
-
-            PendingIntent HomePendingIntent = PendingIntent.getBroadcast(context, 0, homeIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-            // 종료버튼과 펜딩 인텐트 연결
-            PendingIntent AnalyticsPendingIntent = PendingIntent.getBroadcast(context, 0, analyticsIntent,
-                    PendingIntent.FLAG_UPDATE_CURRENT);
-
-            contentView.setOnClickPendingIntent(R.id.main_home, HomePendingIntent);
-            contentView.setOnClickPendingIntent(R.id.main_analytics, AnalyticsPendingIntent);
-
-            kat_Service_BrawlStarsNotifActivity.notification.setCustomContentView(contentView);
-            kat_Service_BrawlStarsNotifActivity.mNotificationManager.notify(1,
-                    kat_Service_BrawlStarsNotifActivity.notification.build());
+            kat_NotificationUpdater updater = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext());
+            updater.update();
         }
-
     }
-
 }

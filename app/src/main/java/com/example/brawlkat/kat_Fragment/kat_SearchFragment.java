@@ -12,7 +12,6 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.RemoteViews;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
@@ -25,11 +24,11 @@ import com.example.brawlkat.R;
 import com.example.brawlkat.kat_Database.kat_myAccountDatabase;
 import com.example.brawlkat.kat_LoadBeforeMainActivity;
 import com.example.brawlkat.kat_LoadingDialog;
+import com.example.brawlkat.kat_NotificationUpdater;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_Player_PlayerDetailActivity;
 import com.example.brawlkat.kat_Player_RecentSearchActivity;
 import com.example.brawlkat.kat_SearchAccountForSaveActivity;
-import com.example.brawlkat.kat_Service_BrawlStarsNotifActivity;
 import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
@@ -170,11 +169,8 @@ public class kat_SearchFragment extends Fragment {
                     kat_player_mainActivity.kataMyAccountBase.delete(playerData.getTag());
                     kat_LoadBeforeMainActivity.eventsPlayerData = null;
 
-                    RemoteViews contentView = new RemoteViews(getActivity().getPackageName(), R.layout.main_notification);
-
-                    kat_Service_BrawlStarsNotifActivity.notification.setCustomContentView(contentView);
-                    kat_Service_BrawlStarsNotifActivity.mNotificationManager.notify(1,
-                            kat_Service_BrawlStarsNotifActivity.notification.build());
+                    kat_NotificationUpdater updater = new kat_NotificationUpdater(getActivity().getApplicationContext());
+                    updater.update();
 
                     return true;
                 }
@@ -308,6 +304,8 @@ public class kat_SearchFragment extends Fragment {
             }
         }
     }
+
+
 
 
 }

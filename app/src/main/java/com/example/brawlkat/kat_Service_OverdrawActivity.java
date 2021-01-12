@@ -22,7 +22,6 @@ import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 
 import com.example.brawlkat.kat_broadcast_receiver.kat_ButtonBroadcastReceiver;
-import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -58,6 +57,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     public      boolean                         unbindCall = false;
 
     private     BrawlStarsPlayCheckThread       checkThread;
+    private     boolean                         isCheckThreadStart;
 
     private NotificationManager mNotificationManager;
 
@@ -82,6 +82,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         checkThread = new BrawlStarsPlayCheckThread(context);
         checkThread.start();
+
+        isCheckThreadStart = true;
 
         // 종료 버튼을 위한 펜딩 인텐트
         Intent buttonIntent = new Intent(this, kat_ButtonBroadcastReceiver.class);
@@ -193,6 +195,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         kat_Player_MainActivity.isServiceStart = false;
         setNotification();
 
+        isCheckThreadStart = false;
         if(checkThread != null) checkThread = null;
 
         super.onDestroy();
@@ -304,48 +307,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     // notification 업데이트
     private void setNotification(){
 
-        Context context = kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext();
-
-        // notification 리모트뷰 생성
-        RemoteViews contentView
-                = new RemoteViews(kat_Player_MainActivity.kat_player_mainActivity.getPackageName(),
-                R.layout.main_notification);
-
-        // 플레이어 데이터 가져오기
-        kat_official_playerInfoParser.playerData playerData
-                = kat_LoadBeforeMainActivity.eventsPlayerData;
-
-        // 스타 포인트 연산
-        kat_SeasonRewardsCalculator seasonRewardsCalculator
-                = new kat_SeasonRewardsCalculator(playerData);
-        int seasonRewards = seasonRewardsCalculator.SeasonsRewardsCalculator();
-
-        // 뷰 연결
-        contentView.setTextViewText(R.id.title, playerData.getName());
-        contentView.setTextViewText(R.id.explain_text, " after season end");
-        contentView.setTextViewText(R.id.text, seasonRewards + " points");
-
-        // 인텐트 등록
-        Intent homeIntent = new Intent(context, kat_ButtonBroadcastReceiver.class);
-        homeIntent.setAction("main.HOME");
-
-        Intent analyticsIntent = new Intent(context, kat_ButtonBroadcastReceiver.class);
-        analyticsIntent.setAction("main.ANALYTICS");
-
-
-        PendingIntent HomePendingIntent = PendingIntent.getBroadcast(context, 0, homeIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-        // 종료버튼과 펜딩 인텐트 연결
-        PendingIntent AnalyticsPendingIntent = PendingIntent.getBroadcast(context, 0, analyticsIntent,
-                PendingIntent.FLAG_UPDATE_CURRENT);
-
-        contentView.setOnClickPendingIntent(R.id.main_home, HomePendingIntent);
-        contentView.setOnClickPendingIntent(R.id.main_analytics, AnalyticsPendingIntent);
-
-        // notification 업데이트
-        kat_Service_BrawlStarsNotifActivity.notification.setCustomContentView(contentView);
-        kat_Service_BrawlStarsNotifActivity.mNotificationManager.notify(1,
-                kat_Service_BrawlStarsNotifActivity.notification.build());
+        kat_NotificationUpdater updater = new kat_NotificationUpdater(context);
+        updater.update();
     }
 
 
@@ -359,7 +322,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         }
 
         public void run(){
-            while(true){
+            while(isCheckThreadStart){
 
                 try {
                     // 브롤스타즈가 실행되고 서비스가 아직 실행되지 않았다면

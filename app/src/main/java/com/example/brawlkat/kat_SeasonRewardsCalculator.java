@@ -8,6 +8,18 @@ public class kat_SeasonRewardsCalculator {
 
     kat_official_playerInfoParser.playerData playerData;
 
+    int[] rewards = new int[]{
+            20, 50, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170,
+            180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290,
+            300, 310, 320, 330, 340, 350
+    };
+
+    int[] resets = new int[]{
+            500, 524, 549, 574, 599, 624, 649, 674, 699, 724, 749, 774,
+            799, 824, 849, 874, 885, 900, 920, 940, 960, 980, 1000, 1020,
+            1040, 1060, 1080, 1100, 1120, 1140, 1150
+    };
+
     public kat_SeasonRewardsCalculator(kat_official_playerInfoParser.playerData playerData){
         this.playerData = playerData;
     }
@@ -39,17 +51,6 @@ public class kat_SeasonRewardsCalculator {
     public ArrayList<Integer> SeasonsRewardAndResetTrophies(int beforeTrophies){
 
         int size = 31;
-        int[] rewards = new int[]{
-                20, 50, 70, 80, 90, 100, 110, 120, 130, 140, 150, 160, 170,
-                180, 190, 200, 210, 220, 230, 240, 250, 260, 270, 280, 290,
-                300, 310, 320, 330, 340, 350
-        };
-
-        int[] resets = new int[]{
-                500, 524, 549, 574, 599, 624, 649, 674, 699, 724, 749, 774,
-                799, 824, 849, 874, 885, 900, 920, 940, 960, 980, 1000, 1020,
-                1040, 1060, 1080, 1100, 1120, 1140, 1150
-        };
 
         int[][] range = new int[size][2];
 
