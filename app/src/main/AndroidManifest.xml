@@ -39,6 +39,7 @@
 
         <service android:name=".kat_Service_OverdrawActivity"></service>
         <service android:name=".kat_Service_BrawlStarsNotifActivity"></service>
+        <service android:name=".kat_onTaskRemovedService"></service>
 
         <receiver android:name=".kat_broadcast_receiver.kat_BroadcastReceiver">
             <intent-filter>

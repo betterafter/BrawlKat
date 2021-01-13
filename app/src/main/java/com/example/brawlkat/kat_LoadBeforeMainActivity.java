@@ -1,6 +1,7 @@
 package com.example.brawlkat;
 
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -82,6 +83,8 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")) {
 
+            // client의 getApiThread를 앱이 종료 후에 같이 종료되어 데이터 손실을 막게 해줌
+            startService(new Intent(this, kat_onTaskRemovedService.class));
             // 초기화
             MobileAds.initialize(this, new OnInitializationCompleteListener() {
                 @Override public void onInitializationComplete(InitializationStatus initializationStatus) {

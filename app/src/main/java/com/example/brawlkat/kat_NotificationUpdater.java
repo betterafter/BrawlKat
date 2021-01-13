@@ -153,42 +153,44 @@ public class kat_NotificationUpdater {
 
     public void update(){
 
-        RemoteViews scv = smallContentView();
-        RemoteViews bcv = bigContentView();
+        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1) {
+            RemoteViews scv = smallContentView();
 
-        if(playerData != null){
-            kat_Service_BrawlStarsNotifActivity.notification
-                    = new NotificationCompat.Builder(context, "channel")
-                    .setSmallIcon(R.drawable.kat_notification_icon)
-                    .setColor(context.getResources().getColor(R.color.semiBlack))
-                    .setColorized(true)
-                    .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                    .setCustomContentView(scv)
-                    .setCustomBigContentView(bcv)
-                    .setShowWhen(false);
+            RemoteViews bcv = bigContentView();
+
+            if (playerData != null) {
+                kat_Service_BrawlStarsNotifActivity.notification
+                        = new NotificationCompat.Builder(context, "channel")
+                        .setSmallIcon(R.drawable.kat_notification_icon)
+                        .setColor(context.getResources().getColor(R.color.semiBlack))
+                        .setColorized(true)
+                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                        .setCustomContentView(scv)
+                        .setCustomBigContentView(bcv)
+                        .setShowWhen(false);
+            } else {
+                kat_Service_BrawlStarsNotifActivity.notification
+                        = new NotificationCompat.Builder(context, "channel")
+                        .setSmallIcon(R.drawable.kat_notification_icon)
+                        .setColor(context.getResources().getColor(R.color.semiBlack))
+                        .setColorized(true)
+                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                        .setCustomContentView(scv)
+                        .setShowWhen(false);
+            }
+
+
+            if (playerData != null) {
+                GlideImageWithNotification(context,
+                        R.id.main_notification_big_img,
+                        bcv,
+                        kat_Service_BrawlStarsNotifActivity.notification.build(),
+                        1,
+                        UrlForBigContentViewRecommendBrawler());
+            }
+
+            updaterNotify();
         }
-        else{
-            kat_Service_BrawlStarsNotifActivity.notification
-                    = new NotificationCompat.Builder(context, "channel")
-                    .setSmallIcon(R.drawable.kat_notification_icon)
-                    .setColor(context.getResources().getColor(R.color.semiBlack))
-                    .setColorized(true)
-                    .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                    .setCustomContentView(scv)
-                    .setShowWhen(false);
-        }
-
-
-        if(playerData != null){
-            GlideImageWithNotification(context,
-                    R.id.main_notification_big_img,
-                    bcv,
-                    kat_Service_BrawlStarsNotifActivity.notification.build(),
-                    1,
-                    UrlForBigContentViewRecommendBrawler());
-        }
-
-        updaterNotify();
     }
 
     public void updaterNotify(){

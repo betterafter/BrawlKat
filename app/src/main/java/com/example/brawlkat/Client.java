@@ -43,6 +43,8 @@ public class Client {
     private                 firstInitThread                 firstInitThread;
     private                 getRankingApiThread             getRankingApiThread;
 
+    public                  static boolean                  isGetApiThreadStop;
+
 
     public Client(){
 
@@ -339,7 +341,7 @@ public class Client {
             BufferedReader reader = null;
 
             try {
-                while (true) {
+                while (!isGetApiThreadStop) {
 
 
                     socket = new Socket("35.237.9.225", 9000);
@@ -400,6 +402,8 @@ public class Client {
                     os.close();
                     socket.close();
 
+                    if(isGetApiThreadStop) System.out.println("get Api Thread stopped");
+
                     int time = 1000 * 60;
                     sleep(time);
                 }
@@ -434,11 +438,24 @@ public class Client {
 
 
     public void init(){
+
+        isGetApiThreadStop = false;
+
         getThread = new getApiThread();
-        if(!getThread.isAlive()) getThread.start();
+        getThread.start();
 
         firstInitThread = new firstInitThread();
         firstInitThread.start();
+    }
+
+    public void remove(){
+        isGetApiThreadStop = true;
+        getThread = null;
+    }
+
+    public boolean isGetApiThreadAlive(){
+        if(getThread != null) return true;
+        else return false;
     }
 
     public firstInitThread getFirstInitThread(){
