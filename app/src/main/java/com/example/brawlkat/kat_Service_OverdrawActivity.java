@@ -21,6 +21,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 
+import com.example.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver;
 import com.example.brawlkat.kat_broadcast_receiver.kat_ButtonBroadcastReceiver;
 
 import androidx.annotation.NonNull;
@@ -77,6 +78,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     @Override
     public int onStartCommand(Intent intent, int flags, int startId )
     {
+        if(!kat_LoadBeforeMainActivity.client.isGetApiThreadAlive())
+            kat_LoadBeforeMainActivity.client.init();
 
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.sub_notification);
 
@@ -194,6 +197,13 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         unbindCall = true;
         kat_Player_MainActivity.isServiceStart = false;
         setNotification();
+
+        kat_ActionBroadcastReceiver forGetPackageName = new kat_ActionBroadcastReceiver();
+        if(!forGetPackageName.getTopPackageName(context).equals("com.example.brawlkat")){
+            System.out.println("overdraw deactivated - getApiThread stop");
+            kat_LoadBeforeMainActivity.client.remove();
+        }
+
 
         isCheckThreadStart = false;
         if(checkThread != null) checkThread = null;

@@ -120,7 +120,7 @@ public class kat_ad {
             int addDp2 = (int)PxToDp(SpToPx(14));
 
             adParams.setMargins(0,(width / 10) / 2 + 10 + addDp1,0,(width / 10) / 2 + 10 + addDp2);
-            adParams.weight = 9.7f;
+            adParams.weight = 8.5f;
             layout.setLayoutParams(adParams);
         }
 
