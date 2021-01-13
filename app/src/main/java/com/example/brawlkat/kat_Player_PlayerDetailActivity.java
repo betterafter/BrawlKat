@@ -25,6 +25,8 @@ import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.AdView;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -56,11 +58,18 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     public                              static int                              height;
     public                              static int                              width;
 
+    private                             AdView                                  playerInformationAdView;
+    private                             AdView                                  playerBattleLogAdView;
+    private                             AdRequest                               adRequest;
 
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        adRequest = new AdRequest.Builder().build();
+
+
         setContentView(R.layout.player_player_detail);
 
         playerIcon = findViewById(R.id.player_detail_image);
@@ -196,8 +205,16 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         final LinearLayout playerTogetherLayout = findViewById(R.id.play_together_info_layout);
 
         // 기본 설정은 플레이어 정보부터 보여주기
+        final LinearLayout adLayout = findViewById(R.id.player_player_detail_player_Ad);
+        final kat_ad ad = new kat_ad(getApplicationContext());
+        ad.init();
+        ad.build(R.layout.kat_ad_unified_small_banner_layout, adLayout);
+        ad.load();
+
         playerInfoLayout.setVisibility(View.VISIBLE);
         playerGetBrawlersLayout.setVisibility(View.VISIBLE);
+        adLayout.setVisibility(View.VISIBLE);
+
         playerBattleLogLayout.setVisibility(View.GONE);
         playerWinRateLayout.setVisibility(View.GONE);
         playerTogetherLayout.setVisibility(View.GONE);
@@ -208,6 +225,9 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             public void onClick(View view) {
                 playerInfoLayout.setVisibility(View.VISIBLE);
                 playerGetBrawlersLayout.setVisibility(View.VISIBLE);
+                adLayout.setVisibility(View.VISIBLE);
+                ad.load();
+
                 playerBattleLogLayout.setVisibility(View.GONE);
                 playerWinRateLayout.setVisibility(View.GONE);
                 playerTogetherLayout.setVisibility(View.GONE);
@@ -220,9 +240,12 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             public void onClick(View view) {
                 playerInfoLayout.setVisibility(View.GONE);
                 playerGetBrawlersLayout.setVisibility(View.GONE);
+                adLayout.setVisibility(View.GONE);
+
                 playerBattleLogLayout.setVisibility(View.VISIBLE);
                 playerWinRateLayout.setVisibility(View.VISIBLE);
                 playerTogetherLayout.setVisibility(View.VISIBLE);
+
             }
         });
         //..........................................................................................
@@ -297,6 +320,8 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
         linearLayout.addView(view);
         //..........................................................................................
+
+
 
 
         // 가지고 있는 브롤러 정보........................................................................
@@ -451,6 +476,18 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         HashMap<String, Integer> playTogetherCount = new HashMap<>();
         HashMap<String, String> playTogetherTag = new HashMap<>();
 
+        //광고 추가 ..................................................................................
+
+        LinearLayout adLayout = new LinearLayout(getApplicationContext());
+
+        final kat_ad ad = new kat_ad(getApplicationContext());
+        ad.init();
+        ad.build(R.layout.kat_ad_unified_battle_item_like_layout, adLayout);
+        ad.load();
+
+        linearLayout.addView(adLayout);
+
+        //..........................................................................................
 
         for(int i = 0; i < playerBattleDataList.size(); i++){
 

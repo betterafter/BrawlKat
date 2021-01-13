@@ -79,28 +79,52 @@ public class kat_BrawlerRecommendation {
     public String recommend(){
 
         ArrayList<kat_official_playerInfoParser.playerBrawlerData> playerBrawlerData = playerData.getBrawlerData();
-        int minDifference = 100000000;
+        int MAX = 10000000;
+        int minDifference = MAX;
         int Trophy = 0;
         int index = -1;
         double winRate = 0;
 
-        for(int i = 0; i < playerBrawlerData.size(); i++){
+        for(int i = 1; i < playerBrawlerData.size(); i++){
+
+            System.out.println(playerBrawlerData.get(i).getName());
 
             int trophies = playerBrawlerData.get(i).getTrophies();
             int difference = 10000000;
-            int curr = 0;
             double rate = 0;
 
             for(int j = 0; j < level.length; j++){
-                if(difference > Math.abs(trophies - level[j])){
-                    curr = j; difference = Math.abs(trophies - level[j]);
+                if(trophies < level[j]){
+                    difference = Math.abs(trophies - level[j]);
+                    break;
                 }
             }
             rate = averageWinRate(playerBrawlerData.get(i).getId());
 
-            if(minDifference > difference && winRate < rate && Trophy < trophies){
-                index = curr; minDifference = difference; winRate = rate;
+            //System.out.println(playerBrawlerData.get(i).getName() + " , " + difference + " , " + playerBrawlerData.get(i).getTrophies() + " , "  + rate);
+            if(difference != 0){
+                if(minDifference > difference){
+                    index = i; minDifference = difference; winRate = rate; Trophy = trophies;
+                }
+                else if(minDifference == difference){
+                    if(Trophy < trophies){
+                        index = i; minDifference = difference; winRate = rate; Trophy = trophies;
+                    }
+                    else if(Trophy == trophies){
+                        if(winRate <= rate){
+                            index = i; minDifference = difference; winRate = rate; Trophy = trophies;
+                        }
+                    }
+                }
             }
+            else if(difference == 0){
+                if(minDifference == MAX && winRate <= rate && Trophy <= trophies){
+                    index = i; winRate = rate; Trophy = trophies;
+                }
+            }
+
+//            System.out.println("decided : " + playerBrawlerData.get(index).getName() + " , " + minDifference + " , " + playerBrawlerData.get(index).getTrophies() + " , "  + winRate);
+//            System.out.println("-------------------------------------------------------------------------------------");
         }
         return playerBrawlerData.get(index).getId();
     }

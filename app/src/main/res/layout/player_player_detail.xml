@@ -245,6 +245,16 @@
                     </LinearLayout>
 
                     <LinearLayout
+                        android:id="@+id/player_player_detail_player_Ad"
+                        android:layout_width="match_parent"
+                        android:layout_height="80dp"
+                        android:layout_marginTop="5dp"
+                        android:layout_marginHorizontal="12dp"
+                        android:background="@drawable/card"
+                        android:backgroundTint="@color/colorBlack"
+                        android:orientation="horizontal" />
+
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_gravity="center"
@@ -434,6 +444,8 @@
 
                     </LinearLayout>
 
+
+
                     <LinearLayout
                         android:id="@+id/player_detail_battlelog_layout"
                         android:layout_width="match_parent"
@@ -458,9 +470,7 @@
                             android:id="@+id/player_detail_battle_log_layout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical">
-
-                        </LinearLayout>
+                            android:orientation="vertical"/>
                     </LinearLayout>
 
                 </LinearLayout>

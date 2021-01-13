@@ -51,7 +51,6 @@ public class kat_NotificationUpdater {
         this.context = kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext();
     }
 
-
     public RemoteViews smallContentView(){
 
         RemoteViews contentView
@@ -104,7 +103,11 @@ public class kat_NotificationUpdater {
             BigContentView.setTextViewText(R.id.text, seasonRewards + " points");
 
             kat_BrawlerRecommendation recommendation = new kat_BrawlerRecommendation();
+            recommendation.init();
             int rIndex = getRecommendationBrawlerIndex();
+
+             System.out.println(rIndex);
+             System.out.println(playerData.getBrawlerData().size());
 
             int current_trophy = playerData.getBrawlerData().get(rIndex).getTrophies();
             int next_trophy = recommendation.leftTrophyToNextLevel(current_trophy);
@@ -148,12 +151,6 @@ public class kat_NotificationUpdater {
         return BigContentView;
     }
 
-
-
-
-
-
-
     public void update(){
 
         RemoteViews scv = smallContentView();
@@ -194,20 +191,10 @@ public class kat_NotificationUpdater {
         updaterNotify();
     }
 
-
     public void updaterNotify(){
         kat_Service_BrawlStarsNotifActivity.mNotificationManager.notify(1,
                 kat_Service_BrawlStarsNotifActivity.notification.build());
     }
-
-
-
-
-
-
-
-
-
 
     public String UrlForBigContentViewRecommendBrawler(){
 
@@ -234,12 +221,11 @@ public class kat_NotificationUpdater {
         kat_BrawlerRecommendation brawlerRecommendation = new kat_BrawlerRecommendation();
         brawlerRecommendation.init();
         String id = brawlerRecommendation.recommend();
-        int index = -1;
+        int index = 0;
 
-        for(int i = 0; i < BrawlersArrayList.size(); i++){
-            String brawlerId = Integer.toString((int)BrawlersArrayList.get(i).get("id"));
+        for(int i = 0; i < playerData.getBrawlerData().size(); i++){
+            String brawlerId = playerData.getBrawlerData().get(i).getId();
             if(brawlerId.equals(id)){
-                System.out.println(BrawlersArrayList.get(i).get("name"));
                 index = i; break;
             }
         }
@@ -267,12 +253,14 @@ public class kat_NotificationUpdater {
                 notif,
                 notificationId);
 
+        int setWidth = Math.min(width, height);
+
         Glide
                 .with(context)
                 .applyDefaultRequestOptions(options)
                 .asBitmap()
                 .load(url)
-                .override(width / 4, width / 4)
+                .override(setWidth / 4, setWidth / 4)
                 .into(notificationTarget);
     }
 }

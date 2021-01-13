@@ -326,7 +326,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
                 try {
                     // 브롤스타즈가 실행되고 서비스가 아직 실행되지 않았다면
-                    if(getTopPackageName(context).toLowerCase().contains("chrome")) {
+                    if(getTopPackageName(context).toLowerCase().contains("brawlstar")) {
                         setNotification();
                     }
                     sleep(1000 * 60 * 5);

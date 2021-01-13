@@ -30,6 +30,7 @@ import com.example.brawlkat.kat_Player_PlayerDetailActivity;
 import com.example.brawlkat.kat_Player_RecentSearchActivity;
 import com.example.brawlkat.kat_SearchAccountForSaveActivity;
 import com.example.brawlkat.kat_Thread.kat_SearchThread;
+import com.example.brawlkat.kat_ad;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
@@ -82,6 +83,16 @@ public class kat_SearchFragment extends Fragment {
 
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.player_main, container, false);
+
+        //광고.......................................................................................
+        LinearLayout test = view.findViewById(R.id.adCardView);
+        kat_ad ad = new kat_ad(getActivity().getApplicationContext());
+        ad.init();
+        ad.build(R.layout.kat_ad_unified_banner_layout, test);
+        ad.load();
+        //..........................................................................................
+
+
 
         LinearLayout player_user_search_layout = (LinearLayout) view.findViewById(R.id.player_user_searchInput_layout);
         LinearLayout player_club_search_layout = (LinearLayout) view.findViewById(R.id.player_club_searchInput_layout);

@@ -135,32 +135,45 @@
             </LinearLayout>
 
             <LinearLayout
-                android:layout_width="wrap_content"
+                android:id="@+id/adView2"
+                android:layout_width="match_parent"
+                android:layout_height="100dp"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="5dp"
+                android:layout_centerHorizontal="true"
+                android:layout_marginHorizontal="10dp"
+                android:background="@drawable/card"
+                android:backgroundTint="@color/semiBlack"
+                android:orientation="horizontal" />
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:weightSum="2"
                 android:layout_marginHorizontal="10dp"
                 android:orientation="horizontal">
+
 
                 <Button
                     android:id="@+id/button"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginHorizontal="5dp"
-                    android:paddingHorizontal="10dp"
-                    android:background="@drawable/semi_round_button_inner_click"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/Color1"
                     android:onClick="onsetClubMemberListClick"
-                    android:text="club member"
+                    android:text="클럽 멤버"
                     android:textColor="@color/colorWhite" />
 
                 <Button
                     android:id="@+id/button4"
                     android:layout_width="wrap_content"
-                    android:layout_height="30dp"
-                    android:layout_marginHorizontal="5dp"
-                    android:background="@drawable/semi_round_button_outter_click"
+                    android:layout_height="wrap_content"
+                    android:layout_weight="1"
+                    android:backgroundTint="@color/Color1"
                     android:onClick="onsetClubLogClick"
-                    android:paddingHorizontal="10dp"
-                    android:text="club log"
-                    android:textColor="@color/Color1"
+                    android:text="클럽 로그"
+                    android:textColor="@color/colorWhite"
                     android:textStyle="bold" />
             </LinearLayout>
 

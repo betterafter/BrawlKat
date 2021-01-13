@@ -25,6 +25,9 @@ import com.example.brawlkat.kat_dataparser.kat_clubLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_clubInfoParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerBattleLogParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
@@ -95,6 +98,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     public              static int                                                              deviceWidth;
     public              static int                                                              deviceHeight;
 
+    private             InterstitialAd                                                          interstitialAd;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -103,6 +108,9 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
+
+            interstitialAd = new InterstitialAd(this);
+            interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
 
             DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
             deviceWidth = dm.widthPixels;
@@ -198,8 +206,29 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                                 stopService(serviceIntent);
                                 isServiceStart = false;
                             } else {
-                                getPermission();
-                                isServiceStart = true;
+                                interstitialAd.loadAd(new AdRequest.Builder().build());
+                                interstitialAd.setAdListener(new AdListener(){
+                                    @Override
+                                    public void onAdClosed() {
+                                        super.onAdClosed();
+                                        getPermission();
+                                        isServiceStart = true;
+                                    }
+
+                                    @Override
+                                    public void onAdFailedToLoad(int errorCode) {
+                                        super.onAdFailedToLoad(errorCode);
+
+                                    }
+
+                                    @Override
+                                    public void onAdLoaded() {
+                                        super.onAdLoaded();
+                                        if (interstitialAd.isLoaded()) {
+                                            interstitialAd.show();
+                                        }
+                                    }
+                                });
                             }
                         }
 
@@ -336,6 +365,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
 
     //..............................................................................................
+
 
 
 

@@ -26,6 +26,7 @@ import com.example.brawlkat.kat_LoadingDialog;
 import com.example.brawlkat.kat_Player_MainActivity;
 import com.example.brawlkat.kat_Player_PlayerDetailActivity;
 import com.example.brawlkat.kat_Thread.kat_SearchThread;
+import com.example.brawlkat.kat_ad;
 
 import java.util.ArrayList;
 
@@ -70,7 +71,20 @@ public class kat_FavoritesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.player_favorites, null);
+        final View view = inflater.inflate(R.layout.player_favorites, null);
+
+        // 광고 ....................................................................................
+
+        LinearLayout test = view.findViewById(R.id.testlayout);
+        kat_ad ad = new kat_ad(getActivity().getApplicationContext());
+        ad.init();
+        ad.build(R.layout.kat_ad_unified_banner_layout, test);
+        ad.load();
+
+        //..........................................................................................
+
+
+
         kat_favoritesDatabase database = kat_LoadBeforeMainActivity.kataFavoritesBase;
         databaseItem = database.getItem();
 

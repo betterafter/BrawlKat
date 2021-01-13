@@ -20,6 +20,9 @@ import com.example.brawlkat.kat_dataparser.kat_official_PlayerRankingParser;
 import com.example.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonParser;
 import com.example.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonRankingParser;
 import com.example.brawlkat.kat_dataparser.kat_official_playerInfoParser;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -78,6 +81,13 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         setContentView(R.layout.loading);
 
         if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")) {
+
+            // 초기화
+            MobileAds.initialize(this, new OnInitializationCompleteListener() {
+                @Override public void onInitializationComplete(InitializationStatus initializationStatus) {
+                }
+            });
+
 
             katabase = new kat_database(getApplicationContext(), "kat", null, 2);
             kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);

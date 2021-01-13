@@ -60,6 +60,13 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_club_detail);
 
+        LinearLayout adLayout = findViewById(R.id.adView2);
+
+        final kat_ad ad = new kat_ad(getApplicationContext());
+        ad.init();
+        ad.build(R.layout.kat_ad_unified_small_banner_layout, adLayout);
+        ad.load();
+
         Intent intent = getIntent();
         clubData = (kat_official_clubInfoParser.clubData) intent.getSerializableExtra("clubData");
         clubLogData = (kat_clubLogParser.clubLogData) intent.getSerializableExtra("clubLogData");
