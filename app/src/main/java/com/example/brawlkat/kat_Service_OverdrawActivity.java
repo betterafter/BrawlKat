@@ -20,6 +20,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 
+import com.example.brawlkat.kat_Thread.kat_SearchThread;
 import com.example.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver;
 import com.example.brawlkat.kat_broadcast_receiver.kat_ButtonBroadcastReceiver;
 
@@ -54,8 +55,12 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
     public      boolean                         unbindCall = false;
 
+
     private     BrawlStarsPlayCheckThread       checkThread;
+    private     timeCountThread                 timeThread;
     private     boolean                         isCheckThreadStart;
+    private     int                             timeCount = 0;
+
 
     private NotificationManager mNotificationManager;
 
@@ -75,6 +80,9 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         checkThread = new BrawlStarsPlayCheckThread(context);
         checkThread.start();
+
+        timeCountThread timeCountThread = new timeCountThread();
+        timeCountThread.start();
 
         isCheckThreadStart = true;
 
@@ -195,6 +203,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         isCheckThreadStart = false;
         if(checkThread != null) checkThread = null;
+        if(timeThread != null) timeThread = null;
 
         super.onDestroy();
     }
@@ -241,6 +250,11 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
             case MotionEvent.ACTION_UP:
 
                 buttonThread.stopLongClickAction = true;
+                if(timeCount > 5){
+                    kat_SearchThread searchThread = new kat_SearchThread();
+                    searchThread.SearchStart(getPlayerTag, "players", context);
+                    timeCount = 0;
+                }
                 if(ServiceButtonTouchedCase != 3){
 
                     if(Math.abs(mWidgetStartingX - layoutParams.x) > 30 || Math.abs(mWidgetStartingY - layoutParams.y) > 30){
@@ -306,6 +320,20 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         kat_NotificationUpdater updater = new kat_NotificationUpdater(context);
         updater.update();
+    }
+
+
+    private class timeCountThread extends Thread{
+        public void run(){
+            while(isCheckThreadStart){
+                try {
+                    timeCount++;
+                    sleep(1000);
+                }catch (Exception e){
+                    e.printStackTrace();
+                }
+            }
+        }
     }
 
 

@@ -34,6 +34,8 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         super.onCreate(savedInstanceState);
     }
 
+    public kat_SearchThread(){};
+
     public kat_SearchThread(Activity fromActivity, Class toclass){
         this.fromActivity = fromActivity;
         this.toClass = toclass;
@@ -107,6 +109,10 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         // 제대로 가져오지 못했을 경우 알림
         if(sendData.get(0).equals("{none}")){
 
+            if(fromActivity.getClass().getName().equals("com.example.brawlkat.kat_Service_OverdrawActivity")){
+                return;
+            }
+
             Intent errorIntent = new Intent(kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext(),
                     kat_ExceptionActivity.class);
             if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
@@ -143,6 +149,16 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
                 katabase.delete(type);
                 katabase.insert(type, Tag, name, isAccount);
+
+
+                if(fromActivity == null){
+                    // 알림창 업데이트
+                    kat_LoadBeforeMainActivity.eventsPlayerData = playerData;
+                    kat_NotificationUpdater updater
+                            = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext());
+                    updater.update();
+                    return;
+                }
 
                 if(fromActivity.getClass().getName().equals("com.example.brawlkat.kat_SearchAccountForSaveActivity")){
                     setMyAccount();
@@ -221,7 +237,6 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         if(kataMyAccountBase.size() < 1) {
 
             kataMyAccountBase.insert("player", playerData.getTag(), playerData.getName());
-            kat_LoadBeforeMainActivity.eventsPlayerData = playerData;
 
             kat_NotificationUpdater updater = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext());
             updater.update();
