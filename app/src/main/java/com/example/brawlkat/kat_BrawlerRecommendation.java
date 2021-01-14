@@ -87,7 +87,6 @@ public class kat_BrawlerRecommendation {
 
         for(int i = 1; i < playerBrawlerData.size(); i++){
 
-            System.out.println(playerBrawlerData.get(i).getName());
 
             int trophies = playerBrawlerData.get(i).getTrophies();
             int difference = 10000000;
@@ -100,8 +99,6 @@ public class kat_BrawlerRecommendation {
                 }
             }
             rate = averageWinRate(playerBrawlerData.get(i).getId());
-
-            //System.out.println(playerBrawlerData.get(i).getName() + " , " + difference + " , " + playerBrawlerData.get(i).getTrophies() + " , "  + rate);
             if(difference != 0){
                 if(minDifference > difference){
                     index = i; minDifference = difference; winRate = rate; Trophy = trophies;
@@ -122,9 +119,6 @@ public class kat_BrawlerRecommendation {
                     index = i; winRate = rate; Trophy = trophies;
                 }
             }
-
-//            System.out.println("decided : " + playerBrawlerData.get(index).getName() + " , " + minDifference + " , " + playerBrawlerData.get(index).getTrophies() + " , "  + winRate);
-//            System.out.println("-------------------------------------------------------------------------------------");
         }
         return playerBrawlerData.get(index).getId();
     }

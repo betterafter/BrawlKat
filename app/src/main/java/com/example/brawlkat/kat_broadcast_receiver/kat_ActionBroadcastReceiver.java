@@ -40,7 +40,6 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
 
     @Override
     public void onReceive(Context context, Intent intent) {
-        System.out.println("BROADCAST NAME : " +intent.getAction());
 
         if(intent.getAction().equals(BROADCAST_MASSAGE_SCREEN_ON)){
             if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 1) {

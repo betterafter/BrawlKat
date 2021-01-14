@@ -31,16 +31,17 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         player_detail_user_club_search = findViewById(R.id.player_detail_user_club_searchInput);
         player_detail_user_club_search_layout = findViewById(R.id.player_detail_user_club_search_layout);
         player_detail_user_club_search.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
-        player_detail_user_club_search_layout.setOnKeyListener(new View.OnKeyListener(){
 
+        player_detail_user_club_search.setOnKeyListener(new View.OnKeyListener() {
             @Override
             public boolean onKey(View view, int i, KeyEvent keyEvent) {
-                if(keyEvent.getAction() == KeyEvent.ACTION_DOWN && i == KeyEvent.KEYCODE_ENTER){
-                    kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
-                            kat_Player_PlayerDetailActivity.class);
-                    kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
+                if(i == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_UP){
+                    onUserClubSearchClick(view);
                 }
-                return false;
+                else if(i == KeyEvent.KEYCODE_BACK){
+                    onBackPressed();
+                }
+                return true;
             }
         });
     }
@@ -57,7 +58,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         LinearLayout linearLayout = findViewById(R.id.player_detail_recent_search_layout);
         linearLayout.removeAllViews();
         if(katabase != null) {
-            katabase.print();
             ArrayList<ArrayList<String>> resultList = katabase.get(type);
 
             for (int i = 0; i < 9; i++) {
@@ -106,14 +106,16 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         if(type.equals("players")){
             kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
                     kat_Player_PlayerDetailActivity.class, dialog);
-            kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
+            kset.SearchStart(player_detail_user_club_search.getText().toString(), type, getApplicationContext());
         }
         else{
             kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
                     kat_Player_ClubDetailActivity.class, dialog);
-            kset.SearchStart(player_detail_user_club_search.getText().toString(), type);
+            kset.SearchStart(player_detail_user_club_search.getText().toString(), type, getApplicationContext());
         }
+        player_detail_user_club_search.setText("");
     }
+
 
     // 리스트를 터치했을 때 발생 함수
     private void listClick(View view){
@@ -128,13 +130,12 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         if(type.equals("players")){
             kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
                     kat_Player_PlayerDetailActivity.class, dialog);
-            kset.SearchStart(newTag, type);
+            kset.SearchStart(newTag, type, getApplicationContext());
         }
         else{
             kat_SearchThread kset = new kat_SearchThread(kat_Player_RecentSearchActivity.this,
                     kat_Player_ClubDetailActivity.class, dialog);
-            kset.SearchStart(newTag, type);
+            kset.SearchStart(newTag, type, getApplicationContext());
         }
     }
-
 }

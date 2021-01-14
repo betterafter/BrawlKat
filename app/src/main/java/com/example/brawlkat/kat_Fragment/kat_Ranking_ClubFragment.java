@@ -236,10 +236,9 @@ public class kat_Ranking_ClubFragment extends Fragment {
                     dialog.show();
 
                     String realTag = clubData.getTag().substring(1);
-                    System.out.println("realTag : " + realTag);
 
                     kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_ClubDetailActivity.class, dialog);
-                    kset.SearchStart(realTag, "clubs");
+                    kset.SearchStart(realTag, "clubs", getActivity().getApplicationContext());
                 }
             });
 

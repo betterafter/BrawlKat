@@ -355,7 +355,7 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
                     String realTag = powerPlaySeasonRankingData.getTag().substring(1);
 
                     kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class, dialog);
-                    kset.SearchStart(realTag, "players");
+                    kset.SearchStart(realTag, "players", getActivity().getApplicationContext());
                 }
             });
 

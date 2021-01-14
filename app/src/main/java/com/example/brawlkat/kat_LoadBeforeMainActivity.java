@@ -1,7 +1,9 @@
 package com.example.brawlkat;
 
+import android.content.Context;
 import android.content.Intent;
-import android.database.sqlite.SQLiteDatabase;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
 
@@ -74,6 +76,9 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
     // ..............................................................................................................//
 
+    public   static final int                                                                           TYPE_WIFI = 1;
+    public   static final int                                                                           TYPE_MOBILE = 2;
+    public   static final int                                                                           TYPE_NOT_CONNECTED = 3;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -81,7 +86,21 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
 
+        ConnectivityManager manager
+                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+        if(networkInfo == null){
+            Intent errorIntent = new Intent(this, kat_ExceptionActivity.class);
+            errorIntent.putExtra("which", "kat_LoadBeforeMainActivity");
+            errorIntent.putExtra("cause", "error.INTERNET");
+            startActivity(errorIntent);
+
+            finish();
+        }
+
+
         if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")) {
+
 
             // client의 getApiThread를 앱이 종료 후에 같이 종료되어 데이터 손실을 막게 해줌
             startService(new Intent(this, kat_onTaskRemovedService.class));
@@ -143,7 +162,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
             String tag = kataMyAccountBase.getTag();
             String realTag = tag.substring(1);
-            kset.SearchStart(realTag, "players");
+            kset.SearchStart(realTag, "players", getApplicationContext());
         }
         else{
 
@@ -182,11 +201,11 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
         if(this.getClass().getName().equals("com.example.brawlkat.kat_LoadBeforeMainActivity")){
             ActivityCompat.finishAffinity(this);
             finishAffinity();
         }
+        else super.onBackPressed();
     }
 
     @Override

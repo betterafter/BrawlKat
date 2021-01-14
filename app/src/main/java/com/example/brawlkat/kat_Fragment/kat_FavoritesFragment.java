@@ -98,7 +98,6 @@ public class kat_FavoritesFragment extends Fragment {
 
     public void refresh(){
         gridAdapter.refreshData();
-        System.out.println("after item : " + gridAdapter.databaseItem);
         gridAdapter.notifyDataSetChanged();
     }
 
@@ -154,7 +153,7 @@ public class kat_FavoritesFragment extends Fragment {
                     String tag = databaseItem.get(moveIdx).get(2).substring(1);
                     kat_SearchThread kset = new kat_SearchThread(getActivity(),
                             kat_Player_PlayerDetailActivity.class, dialog);
-                    kset.SearchStart(tag, "players");
+                    kset.SearchStart(tag, "players", getActivity().getApplicationContext());
                 }
             });
 

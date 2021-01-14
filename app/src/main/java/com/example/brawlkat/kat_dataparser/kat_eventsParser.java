@@ -99,25 +99,25 @@ public class kat_eventsParser {
 
 
 
-    public void testPrint(ArrayList<pair> arrayList){
-        for(pair arr : arrayList){
-
-            HashMap<String, Object> info = arr.info;
-            ArrayList<HashMap<String, Object> > wins = arr.wins;
-
-            System.out.println(info.get("name"));
-            System.out.println(info.get("startTime"));
-            System.out.println(info.get("endTime"));
-            System.out.println(info.get("mapTypeImageUrl"));
-            System.out.println(info.get("gamemodeTypeImageUrl"));
-
-            for(HashMap<String, Object> w : wins){
-                System.out.println(w.get("brawler"));
-                System.out.println(w.get("winRate"));
-                System.out.println(w.get("useRate"));
-                System.out.println('\n');
-            }
-        }
-    }
+//    public void testPrint(ArrayList<pair> arrayList){
+//        for(pair arr : arrayList){
+//
+//            HashMap<String, Object> info = arr.info;
+//            ArrayList<HashMap<String, Object> > wins = arr.wins;
+//
+//            System.out.println(info.get("name"));
+//            System.out.println(info.get("startTime"));
+//            System.out.println(info.get("endTime"));
+//            System.out.println(info.get("mapTypeImageUrl"));
+//            System.out.println(info.get("gamemodeTypeImageUrl"));
+//
+//            for(HashMap<String, Object> w : wins){
+//                System.out.println(w.get("brawler"));
+//                System.out.println(w.get("winRate"));
+//                System.out.println(w.get("useRate"));
+//                System.out.println('\n');
+//            }
+//        }
+//    }
 
 }

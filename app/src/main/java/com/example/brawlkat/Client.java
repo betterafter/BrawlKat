@@ -1,5 +1,10 @@
 package com.example.brawlkat;
 
+import android.content.Context;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
+
 import com.example.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.example.brawlkat.kat_dataparser.kat_eventsParser;
 import com.example.brawlkat.kat_dataparser.kat_mapsParser;
@@ -55,16 +60,20 @@ public class Client {
     }
 
     // 플레이어 및 클럽 전적 검색 스레드
+    // starlist.pro에서 가져옴
+    // 한번만 통신
     public class getAllTypeApiThread extends Thread{
 
         private String tag;
         private String type;
         private String apiType;
+        Context context;
 
-        public getAllTypeApiThread(String tag, String type, String apiType){
+        public getAllTypeApiThread(String tag, String type, String apiType, Context context){
             this.tag = tag;
             this.type = type;
             this.apiType = apiType;
+            this.context = context;
         }
 
         public void run(){
@@ -72,6 +81,20 @@ public class Client {
             try{
 
                 while(true){
+
+                    ConnectivityManager manager
+                            = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
+
+                    NetworkInfo networkInfo = manager.getActiveNetworkInfo();
+                    if(networkInfo == null){
+                        Intent errorIntent = new Intent(context, kat_ExceptionActivity.class);
+                        errorIntent.putExtra("which", "kat_LoadBeforeMainActivity");
+                        errorIntent.putExtra("cause", "error.INTERNET");
+                        errorIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
+                        context.startActivity(errorIntent);
+
+                        break;
+                    }
 
                     if(tag == null) continue;
                     Socket socket = new Socket("35.237.9.225", 9000);
@@ -123,7 +146,6 @@ public class Client {
 
                         UnterminatedName = 0;
                         resOffiData.add(splited);
-                        System.out.println("client result : " + splited);
                         startidx = split + 1;
                     }
 
@@ -146,6 +168,8 @@ public class Client {
     }
 
     // 랭킹 검색 스레드
+    // starlist.pro에서 가져옴
+    // 한번 통신
     public class getRankingApiThread extends Thread{
 
         String countryCode;
@@ -172,8 +196,6 @@ public class Client {
             try{
 
                 while(true){
-
-                    System.out.println("ranking thread start");
 
                     Socket socket = new Socket("35.237.9.225", 9000);
 
@@ -220,12 +242,6 @@ public class Client {
                     }
 
                     // 파싱 할 부분 ...................................................................
-
-                    System.out.println("--------------------------data----------------------------");
-                    for(int i = 0; i < resRankingData.size(); i++){
-                        System.out.println(resRankingData);
-                    }
-                    System.out.println("--------------------------data----------------------------");
 
                     if(status.equals("PowerPlay")){
                         kat_official_PowerPlaySeasonRankingParser powerPlaySeasonRankingParser;
@@ -291,10 +307,6 @@ public class Client {
                         kat_official_PlayerRankingParser playerRankingParser;
                         kat_official_PowerPlaySeasonParser powerPlaySeasonParser;
 
-                        System.out.println("club : " + resRankingData.get(0));
-                        System.out.println("player : " + resRankingData.get(1));
-                        System.out.println("powerplay : " + resRankingData.get(2));
-
                         clubRankingParser = new kat_official_ClubRankingParser(resRankingData.get(0));
                         playerRankingParser = new kat_official_PlayerRankingParser(resRankingData.get(1));
                         powerPlaySeasonParser = new kat_official_PowerPlaySeasonParser(resRankingData.get(2));
@@ -316,7 +328,6 @@ public class Client {
                     reader.close();
                     socket.close();
                     if(dialog != null) dialog.dismiss();
-                    System.out.println("ranking Thread finish");
                     break;
                 }
             }
@@ -331,6 +342,8 @@ public class Client {
 
     }
 
+    // 실시간 통신
+    // 복합 데이터
     public class getApiThread extends Thread{
 
         public void run(){
@@ -394,15 +407,11 @@ public class Client {
                     kat_LoadBeforeMainActivity.mapData = mapsParser.DataParser();
 
 
-                    System.out.println("mapdata size : " + kat_LoadBeforeMainActivity.mapData.size());
-
                     firstInit = true;
                     reader.close();
 
                     os.close();
                     socket.close();
-
-                    if(isGetApiThreadStop) System.out.println("get Api Thread stopped");
 
                     int time = 1000 * 60;
                     sleep(time);
@@ -427,7 +436,6 @@ public class Client {
     public class firstInitThread extends Thread{
         public void run(){
             while(true){
-                System.out.println("Client/firstInitThread/ : waiting...");
                 if(firstInit){
                     break;
                 }
@@ -463,11 +471,11 @@ public class Client {
     }
 
 
-    public void AllTypeInit(String tag, String type, String apiType){
+    public void AllTypeInit(String tag, String type, String apiType, Context context){
 
         resOffiData = new ArrayList<>();
 
-        officialApiThread = new getAllTypeApiThread(tag, type, apiType);
+        officialApiThread = new getAllTypeApiThread(tag, type, apiType, context);
         if(!officialApiThread.isAlive()) officialApiThread.start();
     }
 

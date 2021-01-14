@@ -11,7 +11,6 @@ public class GetUserData extends AppCompatActivity {
 
     public String ShowPlayerInformation(String dataFromServer){
 
-        System.out.println(dataFromServer);
 
         try{
 
@@ -34,7 +33,6 @@ public class GetUserData extends AppCompatActivity {
             }
         }
         catch(Exception e){
-            System.out.println("fail to get userdata");
             e.printStackTrace();
         }
         return res;

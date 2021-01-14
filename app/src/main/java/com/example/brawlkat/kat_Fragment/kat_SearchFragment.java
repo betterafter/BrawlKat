@@ -201,7 +201,7 @@ public class kat_SearchFragment extends Fragment {
 
                         kat_SearchThread kset = new kat_SearchThread(getActivity(),
                                 kat_Player_PlayerDetailActivity.class, dialog);
-                        kset.SearchStart(newTag, "players");
+                        kset.SearchStart(newTag, "players", getActivity().getApplicationContext());
 
                     }
                     return false;
@@ -222,7 +222,7 @@ public class kat_SearchFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent motionEvent){
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    Intent intent = new Intent(kat_player_mainActivity, kat_Player_RecentSearchActivity.class);
+                    Intent intent = new Intent(getActivity(), kat_Player_RecentSearchActivity.class);
                     intent.putExtra("type", "players");
                     kat_player_mainActivity.startActivity(intent);
                 }
