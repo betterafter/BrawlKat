@@ -11,7 +11,9 @@ import android.view.animation.Animation;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 
-public class kat_LoadingDialog {
+import java.io.Serializable;
+
+public class kat_LoadingDialog implements Serializable {
 
     private                 Context                 context;
     private                 Dialog                  dialog;

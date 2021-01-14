@@ -1,6 +1,5 @@
 package com.example.brawlkat;
 
-import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -17,9 +16,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.example.brawlkat.kat_Fragment.kat_SettingFragment;
 import com.example.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -41,7 +37,6 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     private final String BROADCAST_MASSAGE_SCREEN_OFF = "android.intent.action.SCREEN_OFF";
 
     public static NotificationCompat.Builder notification;
-    public static Notification notif;
     public static NotificationManager mNotificationManager;
 
 
@@ -91,25 +86,6 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         return START_STICKY;
     }
 
-    public String UrlForBigContentViewRecommendBrawler(){
-
-        ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
-
-        kat_BrawlerRecommendation brawlerRecommendation = new kat_BrawlerRecommendation();
-        brawlerRecommendation.init();
-        String id = brawlerRecommendation.recommend();
-        int index = -1;
-
-        for(int i = 0; i < BrawlersArrayList.size(); i++){
-            String brawlerId = Integer.toString((int)BrawlersArrayList.get(i).get("id"));
-            if(brawlerId.equals(id)){
-                System.out.println(BrawlersArrayList.get(i).get("name"));
-                index = i; break;
-            }
-        }
-        System.out.println(BrawlersArrayList.get(index).get("imageUrl").toString());
-        return BrawlersArrayList.get(index).get("imageUrl").toString();
-    }
 
     @Override
     public void onDestroy() {

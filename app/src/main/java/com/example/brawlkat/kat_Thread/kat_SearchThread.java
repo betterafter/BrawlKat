@@ -1,10 +1,12 @@
 package com.example.brawlkat.kat_Thread;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
 import com.example.brawlkat.Client;
+import com.example.brawlkat.kat_ExceptionActivity;
 import com.example.brawlkat.kat_LoadBeforeMainActivity;
 import com.example.brawlkat.kat_LoadingDialog;
 import com.example.brawlkat.kat_NotificationUpdater;
@@ -49,10 +51,12 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         String tag;
         String type;
         ArrayList<String> sendData;
+        Context context;
 
-        public SearchThread(String tag, String type){
+        public SearchThread(String tag, String type, Context context){
             this.tag = tag;
             this.type = type;
+            this.context = context;
         }
 
         public void run(){
@@ -61,36 +65,38 @@ public class kat_SearchThread extends kat_Player_MainActivity {
             sendData = new ArrayList<>();
 
             if(type.equals("players")){
-                client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
+                client.AllTypeInit(tag, type, kat_Player_MainActivity.official, context);
                 if(client.getAllTypeData().size() <= 0){
                     try {
                         Client.getAllTypeApiThread apiThread = client.apiThread();
                         apiThread.join();
+                        sendData.add(client.getAllTypeData().get(0));
+                        sendData.add(client.getAllTypeData().get(1));
+                        playerSearch(sendData);
+
                     } catch (Exception e) {
                         e.printStackTrace();
+                        if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
                     }
                 }
-                sendData.add(client.getAllTypeData().get(0));
-                sendData.add(client.getAllTypeData().get(1));
-                playerSearch(sendData);
-
             }
 
             else if(type.equals("clubs")){
 
-                client.AllTypeInit(tag, type, kat_Player_MainActivity.official);
+                client.AllTypeInit(tag, type, kat_Player_MainActivity.official, context);
                 if(client.getAllTypeData().size() <= 0){
                     try {
                         Client.getAllTypeApiThread apiThread = client.apiThread();
                         apiThread.join();
+                        sendData.add(client.getAllTypeData().get(0));
+                        sendData.add(client.getAllTypeData().get(1));
+                        clubSearch(sendData);
                     } catch (Exception e) {
                         e.printStackTrace();
+                        if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
                     }
 
                 }
-                sendData.add(client.getAllTypeData().get(0));
-                sendData.add(client.getAllTypeData().get(1));
-                clubSearch(sendData);
             }
         }
     }
@@ -100,10 +106,12 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
         // 제대로 가져오지 못했을 경우 알림
         if(sendData.get(0).equals("{none}")){
-//            Toast toast = Toast.makeText(fromActivity.getApplicationContext(),
-//                    "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
-//            toast.show();
-            System.out.println("something wrong....");
+
+            Intent errorIntent = new Intent(kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext(),
+                    kat_ExceptionActivity.class);
+            if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
+            kat_Player_MainActivity.kat_player_mainActivity.startActivity(errorIntent);
+
         }
         // 제대로 가져왔을 경우
         else{
@@ -165,9 +173,11 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
         // 제대로 가져오지 못했을 경우 알림
         if(sendData.get(0).equals("{none}")){
-//            Toast toast = Toast.makeText(getApplicationContext(), "잘못된 태그 형식 또는 존재하지 않는 태그입니다.", Toast.LENGTH_SHORT);
-//            toast.show();
-            System.out.println("something wrong on clubSearch...");
+
+            Intent errorIntent = new Intent(kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext(),
+                    kat_ExceptionActivity.class);
+            if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
+            kat_Player_MainActivity.kat_player_mainActivity.startActivity(errorIntent);
         }
         // 제대로 가져왔을 경우
         else{
@@ -201,8 +211,8 @@ public class kat_SearchThread extends kat_Player_MainActivity {
     }
 
 
-    public void SearchStart(String tag, String type){
-        SearchThread searchThread = new SearchThread(tag, type);
+    public void SearchStart(String tag, String type, Context context){
+        SearchThread searchThread = new SearchThread(tag, type, context);
         searchThread.start();
 
     }

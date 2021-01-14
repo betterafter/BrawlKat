@@ -106,9 +106,6 @@ public class kat_NotificationUpdater {
             recommendation.init();
             int rIndex = getRecommendationBrawlerIndex();
 
-             System.out.println(rIndex);
-             System.out.println(playerData.getBrawlerData().size());
-
             int current_trophy = playerData.getBrawlerData().get(rIndex).getTrophies();
             int next_trophy = recommendation.leftTrophyToNextLevel(current_trophy);
             int current_starPoint = recommendation.expectedStarPoint(current_trophy);
@@ -210,7 +207,6 @@ public class kat_NotificationUpdater {
         for(int i = 0; i < BrawlersArrayList.size(); i++){
             String brawlerId = Integer.toString((int)BrawlersArrayList.get(i).get("id"));
             if(brawlerId.equals(id)){
-                System.out.println(BrawlersArrayList.get(i).get("name"));
                 index = i; break;
             }
         }
@@ -218,8 +214,6 @@ public class kat_NotificationUpdater {
     }
 
     public int getRecommendationBrawlerIndex(){
-        ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
-
         kat_BrawlerRecommendation brawlerRecommendation = new kat_BrawlerRecommendation();
         brawlerRecommendation.init();
         String id = brawlerRecommendation.recommend();

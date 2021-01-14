@@ -42,8 +42,6 @@ public class kat_Player_RankingAdapter extends FragmentStateAdapter {
     @Override
     public Fragment createFragment(int position) {
 
-        System.out.println("pos : " + position);
-
         if(position == 0) {
             return new kat_Ranking_PlayerFragment();
         }

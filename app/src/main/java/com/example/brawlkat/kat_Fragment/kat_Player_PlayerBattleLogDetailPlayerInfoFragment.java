@@ -2,6 +2,7 @@ package com.example.brawlkat.kat_Fragment;
 
 import android.content.Context;
 import android.graphics.Typeface;
+import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -216,7 +217,6 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
             innerLayout.setPadding(15, 15, 15, 15);
             innerLayout.setLayoutParams(layoutParams);
 
-            System.out.println(battleData.getEventMode());
 
             if(battleData.getEventMode() != null && battleData.getEventMode().equals("soloShowdown"))
                 battleResultText_showDown(layoutParams, innerLayout, j);
@@ -245,7 +245,6 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         tv.setPadding(20,10,0,20);
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
 
-        System.out.println(battleData.getBattleResult());
 
         if(battleData.getBattleResult() == null){
             tv.setText("무승부");
@@ -339,13 +338,13 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         TextView brawler_level = v.findViewById(R.id.player_player_detail_battle_log_detail_player_profile_brawler_level);
         TextView player_trophy = v.findViewById(R.id.player_player_detail_battle_log_detail_player_profile_player_trophy);
         TextView player_tag = v.findViewById(R.id.player_player_detail_battle_log_detail_player_profile_player_tag);
+        ImageView player_star = v.findViewById(R.id.player_player_detail_battle_log_star);
 
         v.setLayoutParams(layoutParams);
 
         for(int k = 0; k < BrawlersArrayList.size(); k++){
 
             if(BrawlersArrayList.get(k).get("name").toString().toLowerCase().equals(playerInfo.getBrawler_name().toLowerCase())){
-                System.out.println(BrawlersArrayList.get(k).get("imageUrl").toString());
                 GlideImage(
                         BrawlersArrayList.get(k).get("imageUrl").toString(),
                         width / 10,
@@ -356,8 +355,28 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         }
         player_name.setText(playerInfo.getName());
         if(battleData.getBattleResult().equals("draw")) player_name.setTextColor(getResources().getColor(R.color.drawColor));
-        else if(i == 0) player_name.setTextColor(getResources().getColor(R.color.winColor));
-        else if(i == 1) player_name.setTextColor(getResources().getColor(R.color.loseColor));
+        else if(battleData.getBattleResult().equals("victory")){
+            if(i == 0) player_name.setTextColor(getResources().getColor(R.color.winColor));
+            else if(i == 1) player_name.setTextColor(getResources().getColor(R.color.loseColor));
+        }
+        else if(battleData.getBattleResult().equals("defeat")){
+            if(i == 0) player_name.setTextColor(getResources().getColor(R.color.loseColor));
+            else if(i == 1) player_name.setTextColor(getResources().getColor(R.color.winColor));
+        }
+        else{
+            if(i == 0) player_name.setTextColor(getResources().getColor(R.color.winColor));
+            else if(i == 1) player_name.setTextColor(getResources().getColor(R.color.loseColor));
+        }
+
+        System.out.println(playerInfo.getTag());
+        System.out.println(battleData.getStarPlayer());
+        if(battleData.getStarPlayer() != null) {
+            if (playerInfo.getTag().equals(battleData.getStarPlayer())) {
+                Drawable drawable = getActivity().getDrawable(R.drawable.round_star_24_yellow);
+                player_star.setImageDrawable(drawable);
+            }
+        }
+
         brawler_level.setText(playerInfo.getBrawler_power());
         player_trophy.setText(playerInfo.getBrawler_trophies());
         player_tag.setText(playerInfo.getTag());
@@ -372,7 +391,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
                 String realTag = playerInfo.getTag().substring(1);
 
                 kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class, dialog);
-                kset.SearchStart(realTag, "players");
+                kset.SearchStart(realTag, "players", getActivity().getApplicationContext());
             }
         });
 

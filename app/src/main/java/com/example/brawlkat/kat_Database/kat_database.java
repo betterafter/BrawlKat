@@ -112,21 +112,21 @@ public class kat_database extends SQLiteOpenHelper {
         }
 
     }
-
-
-    public void print(){
-
-        SQLiteDatabase database = getWritableDatabase();
-
-        Cursor cursor = database.rawQuery("SELECT * FROM katabase", null);
-        cursor.moveToLast();
-
-        if(cursor.getCount() > 0) {
-            do {
-                System.out.println(cursor.getString(1) + ", " + cursor.getString(2) + ", " + cursor.getString(3) + ", "
-                        + cursor.getString(4));
-            }
-            while (cursor.moveToPrevious());
-        }
-    }
+//
+//
+//    public void print(){
+//
+//        SQLiteDatabase database = getWritableDatabase();
+//
+//        Cursor cursor = database.rawQuery("SELECT * FROM katabase", null);
+//        cursor.moveToLast();
+//
+//        if(cursor.getCount() > 0) {
+//            do {
+//                System.out.println(cursor.getString(1) + ", " + cursor.getString(2) + ", " + cursor.getString(3) + ", "
+//                        + cursor.getString(4));
+//            }
+//            while (cursor.moveToPrevious());
+//        }
+//    }
 }

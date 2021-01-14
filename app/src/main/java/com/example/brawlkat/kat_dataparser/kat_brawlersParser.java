@@ -121,13 +121,13 @@ public class kat_brawlersParser implements Serializable{
         }
     }
 
-    public void testPrint(ArrayList<HashMap<String, Object>> arrayList){
-        for(HashMap<String, Object> arr : arrayList){
-
-            System.out.println(arr.get("id"));
-            System.out.println(arr.get("name"));
-            System.out.println(arr.get("imageUrl"));
-
-        }
-    }
+//    public void testPrint(ArrayList<HashMap<String, Object>> arrayList){
+//        for(HashMap<String, Object> arr : arrayList){
+//
+//            System.out.println(arr.get("id"));
+//            System.out.println(arr.get("name"));
+//            System.out.println(arr.get("imageUrl"));
+//
+//        }
+//    }
 }

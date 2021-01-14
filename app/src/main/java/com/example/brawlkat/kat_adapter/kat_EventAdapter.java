@@ -203,9 +203,6 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                                 for(int k = 0; k < playerBrawlersArrayList.size(); k++){
                                     String playerBrawler = playerBrawlersArrayList.get(k).toLowerCase();
 
-                                    System.out.println("brawl list : " + BrawlersArrayList.get(idx).get("name").toString());
-                                    System.out.println("player Bralwer : " + playerBrawler);
-
                                     if(playerBrawler.equals(BrawlersArrayList.get(idx).get("name").toString().toLowerCase())){
                                         BrawlerFoundInUserRecommend = true; break;
                                     }

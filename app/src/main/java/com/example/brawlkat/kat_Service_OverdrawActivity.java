@@ -9,7 +9,6 @@ import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
-import android.os.Binder;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
 import android.util.LongSparseArray;
@@ -53,8 +52,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     public      int                             ServiceButtonTouchedCase = 0;
     public      static String                   getPlayerTag;
 
-
-    public      final IBinder                   binder = new LocalBinder();
     public      boolean                         unbindCall = false;
 
     private     BrawlStarsPlayCheckThread       checkThread;
@@ -62,22 +59,15 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
     private NotificationManager mNotificationManager;
 
-
-    // 스레드와 메인 액티비티 연결을 위한 바인더 선언
-    public class LocalBinder extends Binder{
-        kat_Service_OverdrawActivity getService(){
-            return kat_Service_OverdrawActivity.this;
-        }
-    }
-
     @Override
     public IBinder onBind(Intent arg0){
-        return binder;
+        return null;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId )
     {
+
         if(!kat_LoadBeforeMainActivity.client.isGetApiThreadAlive())
             kat_LoadBeforeMainActivity.client.init();
 
@@ -117,7 +107,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
             mNotificationManager.notify(2, notification.build());
             startForeground(2, notification.build());
         }
-
         return START_NOT_STICKY;
     }
 
@@ -200,7 +189,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         kat_ActionBroadcastReceiver forGetPackageName = new kat_ActionBroadcastReceiver();
         if(!forGetPackageName.getTopPackageName(context).equals("com.example.brawlkat")){
-            System.out.println("overdraw deactivated - getApiThread stop");
             kat_LoadBeforeMainActivity.client.remove();
         }
 
@@ -303,7 +291,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                     if(stopLongClickAction){
                         stopCount = 0; continue;
                     }
-                    System.out.println(stopCount);
                     sleep(1000);
                 }
             }

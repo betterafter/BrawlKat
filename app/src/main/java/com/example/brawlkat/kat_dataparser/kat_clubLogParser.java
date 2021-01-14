@@ -16,8 +16,6 @@ public class kat_clubLogParser implements Serializable {
 
     public clubLogData DataParser() throws Exception {
 
-        System.out.println(data);
-
         if(data.equals("{none}")){
             clubLogData clubLogData = new clubLogData();
             clubLogData.setStatus("forbidden");

@@ -186,7 +186,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
                     kat_SearchThread kset = new kat_SearchThread(kat_Player_PlayerDetailActivity.this,
                             kat_Player_ClubDetailActivity.class, dialog);
-                    kset.SearchStart(newTag, "clubs");
+                    kset.SearchStart(newTag, "clubs", getApplicationContext());
                 }
             });
         }
@@ -505,6 +505,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             TextView battleLogEventName = view.findViewById(R.id.player_detail_battle_log_event_name);
             TextView battleLogTime = view.findViewById(R.id.player_detail_battle_log_time);
             ImageView battleLogDetail = view.findViewById(R.id.player_detail_battle_log_show_detail);
+            TextView battleLogStar = view.findViewById(R.id.player_detail_battle_log_list_star);
 
 
             String userBrawler = ""; boolean check = false; boolean userFind = false;
@@ -567,8 +568,13 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             // 1등 몇번 했는지 && 스타 플레이어 몇번 받았는지 확인
             if(battleData.getRank() != null && battleData.getRank().equals("1")) firstCount++;
             if(battleData.getStarPlayer() != null && battleData.getStarPlayer().toLowerCase()
-                    .equals(playerData.getTag().toLowerCase()))
+                    .equals(playerData.getTag().toLowerCase())) {
                 GetStarPlayerCount++;
+                battleLogStar.setText("STAR");
+            }
+            else{
+                battleLogStar.setBackgroundColor(getResources().getColor(R.color.transparent));
+            }
 
 
             // 왼쪽의 승패 여부를 표시하는 텍스트 디자인
@@ -698,7 +704,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
                         kat_SearchThread kset = new kat_SearchThread(kat_Player_PlayerDetailActivity.this,
                                 kat_Player_PlayerDetailActivity.class, dialog);
-                        kset.SearchStart(realTag, "players");
+                        kset.SearchStart(realTag, "players", getApplicationContext());
                     }
                 });
 
@@ -738,7 +744,6 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         }
 
         for(Fragment fragment : kat_player_mainActivity.getSupportFragmentManager().getFragments()){
-            System.out.println(fragment);
             if(fragment instanceof kat_FavoritesFragment){
                 ((kat_FavoritesFragment) fragment).refresh();
             }

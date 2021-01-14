@@ -74,7 +74,6 @@ public class kat_Player_PlayerBattleLogDetailMapFragment extends Fragment {
 
             if(iterator.next().equals(battleData.getEventId())){
 
-                System.out.println(battleData.getEventId());
                 kat_mapsParser.mapData data = mapData.get(battleData.getEventId());
 
                 GlideImage(data.getMapImageUrl(), width, height, mapImage);

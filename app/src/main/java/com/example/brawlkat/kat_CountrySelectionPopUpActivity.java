@@ -119,7 +119,6 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
 
     public void ChangeFinish(String changedCountryCode){
         Intent intent = new Intent();
-        System.out.println(changedCountryCode);
         intent.putExtra("changedCountryCode", changedCountryCode);
         setResult(1112, intent);
         finish();

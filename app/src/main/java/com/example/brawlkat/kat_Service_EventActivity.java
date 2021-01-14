@@ -142,10 +142,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 }
             }
             catch (Exception e){
-                if(e instanceof InterruptedException){
-                    System.out.println("Interrupt Exception");
-                }
-                else System.out.println("fail");
+                e.printStackTrace();
             }
         }
     }

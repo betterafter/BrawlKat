@@ -36,6 +36,8 @@
         <activity android:name=".kat_SearchAccountForSaveActivity" android:screenOrientation="portrait"></activity>
         <activity android:name=".kat_CountrySelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
         <activity android:name=".kat_BrawlerSelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
+        <activity android:name=".kat_ExceptionActivity"></activity>
+
 
         <service android:name=".kat_Service_OverdrawActivity"></service>
         <service android:name=".kat_Service_BrawlStarsNotifActivity"></service>
