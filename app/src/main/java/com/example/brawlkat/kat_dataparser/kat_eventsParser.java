@@ -37,62 +37,62 @@ public class kat_eventsParser {
     public ArrayList<pair> DataParser() throws Exception {
 
         JSONObject jsonObject = new JSONObject(data);
-        JSONArray active = (JSONArray) jsonObject.get("active");
+        if(!jsonObject.isNull("active")) {
+            JSONArray active = (JSONArray) jsonObject.get("active");
 
 
-        for(int i = 0; i < active.length(); i++){
+            for (int i = 0; i < active.length(); i++) {
 
-            HashMap<String, Object> map = new HashMap<>();
-            JSONObject element = (JSONObject) active.get(i);
-
-
-            // 게임 모드 유형
-            JSONObject name = (JSONObject) element.get("slot");
-            map.put("name", name.get("name"));
+                HashMap<String, Object> map = new HashMap<>();
+                JSONObject element = (JSONObject) active.get(i);
 
 
-            JSONObject mapName = (JSONObject) element.get("map");
-            map.put("mapName", mapName.get("name"));
+                // 게임 모드 유형
+                JSONObject name = (JSONObject) element.get("slot");
+                map.put("name", name.get("name"));
 
 
-            // 시작 시간 & 종료 시간
-            map.put("startTime", element.get("startTime"));
-            map.put("endTime", element.get("endTime"));
+                JSONObject mapName = (JSONObject) element.get("map");
+                map.put("mapName", mapName.get("name"));
 
 
+                // 시작 시간 & 종료 시간
+                map.put("startTime", element.get("startTime"));
+                map.put("endTime", element.get("endTime"));
 
-            // 맵 정보
-            JSONObject info = (JSONObject) element.get("map");
-            // 맵 정보 - 맵 타입
-            JSONObject mapTypeImageUrl = (JSONObject) info.get("environment");
-            map.put("mapTypeImageUrl", mapTypeImageUrl.get("imageUrl"));
-            // 맵 정보 - 게임 모드 타입
-            JSONObject gamemodeTypeImageUrl = (JSONObject) info.get("gameMode");
-            map.put("gamemodeTypeImageUrl", gamemodeTypeImageUrl.get("imageUrl"));
 
-            // 브롤러 별 승률
-            JSONArray stats = (JSONArray) info.get("stats");
-            ArrayList<HashMap<String, Object> > winsArrayList = new ArrayList<>();
+                // 맵 정보
+                JSONObject info = (JSONObject) element.get("map");
+                // 맵 정보 - 맵 타입
+                JSONObject mapTypeImageUrl = (JSONObject) info.get("environment");
+                map.put("mapTypeImageUrl", mapTypeImageUrl.get("imageUrl"));
+                // 맵 정보 - 게임 모드 타입
+                JSONObject gamemodeTypeImageUrl = (JSONObject) info.get("gameMode");
+                map.put("gamemodeTypeImageUrl", gamemodeTypeImageUrl.get("imageUrl"));
 
-            for(int j = 0; j < stats.length(); j++){
+                // 브롤러 별 승률
+                JSONArray stats = (JSONArray) info.get("stats");
+                ArrayList<HashMap<String, Object>> winsArrayList = new ArrayList<>();
 
-                JSONObject elem = (JSONObject) stats.get(j);
-                HashMap<String, Object> wins = new HashMap<>();
+                for (int j = 0; j < stats.length(); j++) {
 
-                // 브롤러
-                wins.put("brawler", elem.get("brawler"));
-                // 승률
-                wins.put("winRate", elem.get("winRate"));
-                // 픽률
-                wins.put("useRate", elem.get("useRate"));
+                    JSONObject elem = (JSONObject) stats.get(j);
+                    HashMap<String, Object> wins = new HashMap<>();
 
-                winsArrayList.add(wins);
+                    // 브롤러
+                    wins.put("brawler", elem.get("brawler"));
+                    // 승률
+                    wins.put("winRate", elem.get("winRate"));
+                    // 픽률
+                    wins.put("useRate", elem.get("useRate"));
+
+                    winsArrayList.add(wins);
+                }
+
+                pair p = new pair(map, winsArrayList);
+                slot.add(p);
             }
-
-            pair p = new pair(map, winsArrayList);
-            slot.add(p);
         }
-
         return slot;
     }
 

@@ -1,5 +1,6 @@
 package com.example.brawlkat;
 
+import android.app.ActivityManager;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.Service;
@@ -19,6 +20,8 @@ import com.example.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
+
+import java.util.List;
 
 public class kat_Service_BrawlStarsNotifActivity extends Service {
 
@@ -82,9 +85,9 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
             startForeground(1, notification.build());
         }
 
-
         return START_STICKY;
     }
+
 
 
     @Override

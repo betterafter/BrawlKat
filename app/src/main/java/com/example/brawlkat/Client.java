@@ -43,7 +43,7 @@ public class Client {
     public                  getAllTypeApiThread             officialApiThread;
 
     public                  boolean                         socketFail = false;
-    public                  boolean                         firstInit = false;
+    public                  static boolean                  firstInit = false;
 
     private                 firstInitThread                 firstInitThread;
     private                 getRankingApiThread             getRankingApiThread;
@@ -458,6 +458,11 @@ public class Client {
 
     public void remove(){
         isGetApiThreadStop = true;
+
+        firstInit = false;
+        firstInitThread = null;
+        firstInit = true;
+
         getThread = null;
     }
 

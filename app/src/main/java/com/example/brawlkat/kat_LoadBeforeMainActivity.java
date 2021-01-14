@@ -138,7 +138,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             getMapDataThread mdt = new getMapDataThread();
             if (!mdt.isAlive()) mdt.start();
 
-            //move();
         }
     }
 

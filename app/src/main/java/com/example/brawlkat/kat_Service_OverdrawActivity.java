@@ -72,6 +72,17 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     @Override
     public int onStartCommand(Intent intent, int flags, int startId )
     {
+        context = getApplicationContext();
+
+
+        init_Inflater();
+        init_windowManager();
+
+        // EventActivity 선언 및 뷰 생성
+        events = new kat_Service_EventActivity(context, this);
+        events.init_mapInflater();
+        events.getCurrentEventsInformation();
+
 
         if(!kat_LoadBeforeMainActivity.client.isGetApiThreadAlive())
             kat_LoadBeforeMainActivity.client.init();
@@ -81,8 +92,12 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         checkThread = new BrawlStarsPlayCheckThread(context);
         checkThread.start();
 
-        timeCountThread timeCountThread = new timeCountThread();
-        timeCountThread.start();
+        timeThread = new timeCountThread();
+        timeThread.start();
+
+        // 메인 버튼 클릭 스레드 실행
+        buttonThread = new buttonLongClickToExitThread();
+        buttonThread.start();
 
         isCheckThreadStart = true;
 
@@ -121,20 +136,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     @Override
     public void onCreate() {
         super.onCreate();
-
-        context = getApplicationContext();
-
-        init_Inflater();
-        init_windowManager();
-
-        // EventActivity 선언 및 뷰 생성
-        events = new kat_Service_EventActivity(context, this);
-        events.init_mapInflater();
-        events.getCurrentEventsInformation();
-
-        // 메인 버튼 클릭 스레드 실행
-        buttonThread = new buttonLongClickToExitThread();
-        buttonThread.start();
     }
 
 
@@ -202,10 +203,25 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
 
         isCheckThreadStart = false;
-        if(checkThread != null) checkThread = null;
-        if(timeThread != null) timeThread = null;
+        checkThread = null;
+        timeThread = null;
+        buttonThread = null;
+
+        if(events != null) {
+            if(events.client != null) {
+                events.client.remove();
+                events.client = null;
+            }
+
+            events.isEventThreadStart = false;
+            events.eventsThread = null;
+
+            events = null;
+        }
+        kat_LoadBeforeMainActivity.client.remove();
 
         super.onDestroy();
+        stopSelf();
     }
 
 
@@ -292,10 +308,10 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
             try{
                 stopCount = 0; stopLongClickAction = true;
 
-                while(true){
-
+                while(isCheckThreadStart){
                     if(stopCount >= 3){
-                        stopCount = 0; onDestroy();
+                        stopCount = 0;
+                        onDestroy();
                         stopSelf();
 
                         break;
