@@ -127,8 +127,6 @@ public class kat_NotificationUpdater {
             BigContentView.setTextViewText(R.id.big_next_trophy, next_trophy_text);
             BigContentView.setTextViewText(R.id.big_current_starpoint, current_starPoint_text);
             BigContentView.setTextViewText(R.id.big_next_starpoint, next_starPoint_text);
-
-
         }
 
         // 인텐트 등록
@@ -153,43 +151,48 @@ public class kat_NotificationUpdater {
 
     public void update(){
 
-        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1) {
-            RemoteViews scv = smallContentView();
+        try {
+            if (kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1) {
+                RemoteViews scv = smallContentView();
 
-            RemoteViews bcv = bigContentView();
+                RemoteViews bcv = bigContentView();
 
-            if (playerData != null) {
-                kat_Service_BrawlStarsNotifActivity.notification
-                        = new NotificationCompat.Builder(context, "channel")
-                        .setSmallIcon(R.drawable.kat_notification_icon)
-                        .setColor(context.getResources().getColor(R.color.semiBlack))
-                        .setColorized(true)
-                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                        .setCustomContentView(scv)
-                        .setCustomBigContentView(bcv)
-                        .setShowWhen(false);
-            } else {
-                kat_Service_BrawlStarsNotifActivity.notification
-                        = new NotificationCompat.Builder(context, "channel")
-                        .setSmallIcon(R.drawable.kat_notification_icon)
-                        .setColor(context.getResources().getColor(R.color.semiBlack))
-                        .setColorized(true)
-                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                        .setCustomContentView(scv)
-                        .setShowWhen(false);
+                if (playerData != null) {
+                    kat_Service_BrawlStarsNotifActivity.notification
+                            = new NotificationCompat.Builder(context, "channel")
+                            .setSmallIcon(R.drawable.kat_notification_icon)
+                            .setColor(context.getResources().getColor(R.color.semiBlack))
+                            .setColorized(true)
+                            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                            .setCustomContentView(scv)
+                            .setCustomBigContentView(bcv)
+                            .setShowWhen(false);
+                } else {
+                    kat_Service_BrawlStarsNotifActivity.notification
+                            = new NotificationCompat.Builder(context, "channel")
+                            .setSmallIcon(R.drawable.kat_notification_icon)
+                            .setColor(context.getResources().getColor(R.color.semiBlack))
+                            .setColorized(true)
+                            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                            .setCustomContentView(scv)
+                            .setShowWhen(false);
+                }
+
+                if (playerData != null) {
+                    if(UrlForBigContentViewRecommendBrawler().equals("")) return;
+                    GlideImageWithNotification(context,
+                            R.id.main_notification_big_img,
+                            bcv,
+                            kat_Service_BrawlStarsNotifActivity.notification.build(),
+                            1,
+                            UrlForBigContentViewRecommendBrawler());
+                }
+                updaterNotify();
             }
-
-
-            if (playerData != null) {
-                GlideImageWithNotification(context,
-                        R.id.main_notification_big_img,
-                        bcv,
-                        kat_Service_BrawlStarsNotifActivity.notification.build(),
-                        1,
-                        UrlForBigContentViewRecommendBrawler());
-            }
-
-            updaterNotify();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+            return;
         }
     }
 
@@ -214,6 +217,7 @@ public class kat_NotificationUpdater {
                 index = i; break;
             }
         }
+        if(index == -1) return "";
         return BrawlersArrayList.get(index).get("imageUrl").toString();
     }
 

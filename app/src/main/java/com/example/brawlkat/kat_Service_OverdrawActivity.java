@@ -267,9 +267,10 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
             case MotionEvent.ACTION_UP:
 
                 buttonThread.stopLongClickAction = true;
-                if(timeCount > 5){
+                if(timeCount > 30){
                     kat_SearchThread searchThread = new kat_SearchThread();
                     searchThread.SearchStart(getPlayerTag, "players", context);
+                    setNotification();
                     timeCount = 0;
                 }
                 if(ServiceButtonTouchedCase != 3){
@@ -285,8 +286,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                         events.Change();
                         events.addModeButton();
                         events.ChangeRecommendViewClick();
-
-                        setNotification();
                     }
                 }
 

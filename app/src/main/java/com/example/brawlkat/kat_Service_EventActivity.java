@@ -315,9 +315,15 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     public void onDestroy() {
 
         isEventThreadStart = false;
-        eventsThread = null;
-        client.remove();
-        client = null;
+
+        if(eventsThread != null) {
+            eventsThread = null;
+        }
+
+        if(client != null) {
+            client.remove();
+            client = null;
+        }
 
 
         if(overdrawActivity.mapWindowManager != null){
