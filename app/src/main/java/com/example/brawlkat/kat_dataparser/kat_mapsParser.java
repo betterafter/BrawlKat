@@ -18,28 +18,33 @@ public class kat_mapsParser implements Serializable {
     public HashMap<String, mapData> DataParser() throws Exception{
 
         JSONObject jsonObject = new JSONObject(data);
-        JSONArray lists = jsonObject.getJSONArray("list");
 
-        for(int i = 0; i < lists.length(); i++){
+        if(!jsonObject.isNull("list")) {
+            JSONArray lists = jsonObject.getJSONArray("list");
 
-            JSONObject elem = lists.getJSONObject(i);
+            for (int i = 0; i < lists.length(); i++) {
 
-            String id = elem.getString("id");
+                JSONObject elem = lists.getJSONObject(i);
 
-            mapData md = new mapData();
+                String id = elem.getString("id");
 
-            md.setMapImageUrl(elem.getString("imageUrl"));
-            md.setName(elem.getString("name"));
+                mapData md = new mapData();
 
-            JSONObject environment = elem.getJSONObject("environment");
-            md.setEventBannerUrl(environment.getString("imageUrl"));
+                md.setMapImageUrl(elem.getString("imageUrl"));
+                md.setName(elem.getString("name"));
 
-            JSONObject gameMode = elem.getJSONObject("gameMode");
-            md.setGameModeIconUrl(gameMode.getString("imageUrl"));
+                if (!elem.isNull("environment")) {
+                    JSONObject environment = elem.getJSONObject("environment");
+                    md.setEventBannerUrl(environment.getString("imageUrl"));
+                }
 
-            parsedData.put(id, md);
+                if (!elem.isNull("gameMode")) {
+                    JSONObject gameMode = elem.getJSONObject("gameMode");
+                    md.setGameModeIconUrl(gameMode.getString("imageUrl"));
+                }
+                parsedData.put(id, md);
+            }
         }
-
         return parsedData;
     }
 

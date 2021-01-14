@@ -50,7 +50,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     public          String                              playerTag;
 
     private         static long                         mLastClickTime = 0;
-    private         boolean                             isEventThreadStart = true;
+    public          boolean                             isEventThreadStart = true;
 
 
     public kat_Service_EventActivity(Context context, kat_Service_OverdrawActivity overdrawActivity){
@@ -314,10 +314,11 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     @Override
     public void onDestroy() {
 
-
         isEventThreadStart = false;
         eventsThread = null;
+        client.remove();
         client = null;
+
 
         if(overdrawActivity.mapWindowManager != null){
             if(overdrawActivity.mapRecommendView != null)

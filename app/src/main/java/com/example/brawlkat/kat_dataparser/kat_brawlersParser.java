@@ -20,46 +20,48 @@ public class kat_brawlersParser implements Serializable{
 
 
         JSONObject jsonObject = new JSONObject(data);
-        JSONArray list = (JSONArray) jsonObject.get("list");
+        if(!jsonObject.isNull("list")) {
+            JSONArray list = (JSONArray) jsonObject.get("list");
 
-        for(int i = 0; i < list.length(); i++){
+            for (int i = 0; i < list.length(); i++) {
 
-            HashMap<String, Object> map = new HashMap<>();
-            JSONObject element = (JSONObject) list.get(i);
+                HashMap<String, Object> map = new HashMap<>();
+                JSONObject element = (JSONObject) list.get(i);
 
-            map.put("id", element.get("id"));
-            map.put("name", element.get("name"));
-            map.put("imageUrl", element.get("imageUrl"));
+                map.put("id", element.get("id"));
+                map.put("name", element.get("name"));
+                map.put("imageUrl", element.get("imageUrl"));
 
-            if(!element.isNull("starPowers")){
-                JSONArray starPowers = element.getJSONArray("starPowers");
-                ArrayList<StarPowers> starPowersArrayList = new ArrayList<>();
-                for(int j = 0; j < starPowers.length(); j++){
-                    JSONObject elem = starPowers.getJSONObject(j);
-                    StarPowers sp = new StarPowers();
-                    sp.setId(elem.getString("id"));
-                    sp.setName(elem.getString("name"));
-                    sp.setImageUrl(elem.getString("imageUrl"));
-                    starPowersArrayList.add(sp);
+                if (!element.isNull("starPowers")) {
+                    JSONArray starPowers = element.getJSONArray("starPowers");
+                    ArrayList<StarPowers> starPowersArrayList = new ArrayList<>();
+                    for (int j = 0; j < starPowers.length(); j++) {
+                        JSONObject elem = starPowers.getJSONObject(j);
+                        StarPowers sp = new StarPowers();
+                        sp.setId(elem.getString("id"));
+                        sp.setName(elem.getString("name"));
+                        sp.setImageUrl(elem.getString("imageUrl"));
+                        starPowersArrayList.add(sp);
+                    }
+                    map.put("starPowers", starPowersArrayList);
                 }
-                map.put("starPowers", starPowersArrayList);
-            }
 
-            if(!element.isNull("gadgets")){
-                JSONArray gadgets = element.getJSONArray("gadgets");
-                ArrayList<Gadgets> gadgetsArrayList = new ArrayList<>();
-                for(int j = 0; j < gadgets.length(); j++){
-                    JSONObject elem = gadgets.getJSONObject(j);
-                    Gadgets gg = new Gadgets();
-                    gg.setId(elem.getString("id"));
-                    gg.setName(elem.getString("name"));
-                    gg.setImageUrl(elem.getString("imageUrl"));
-                    gadgetsArrayList.add(gg);
+                if (!element.isNull("gadgets")) {
+                    JSONArray gadgets = element.getJSONArray("gadgets");
+                    ArrayList<Gadgets> gadgetsArrayList = new ArrayList<>();
+                    for (int j = 0; j < gadgets.length(); j++) {
+                        JSONObject elem = gadgets.getJSONObject(j);
+                        Gadgets gg = new Gadgets();
+                        gg.setId(elem.getString("id"));
+                        gg.setName(elem.getString("name"));
+                        gg.setImageUrl(elem.getString("imageUrl"));
+                        gadgetsArrayList.add(gg);
+                    }
+                    map.put("gadgets", gadgetsArrayList);
                 }
-                map.put("gadgets", gadgetsArrayList);
-            }
 
-            parsedData.add(map);
+                parsedData.add(map);
+            }
         }
 
         return parsedData;

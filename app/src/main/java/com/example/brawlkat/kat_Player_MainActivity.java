@@ -116,6 +116,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             deviceWidth = dm.widthPixels;
             deviceHeight = dm.heightPixels;
 
+            // 포그라운드 서비스가 실행됐는지 확인하고 실행되지 않았다면 실행
             foregroundServiceIntent = new Intent(getApplicationContext(), kat_Service_BrawlStarsNotifActivity.class);
             if(kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1){
 
