@@ -110,7 +110,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
         if(this.getClass().getName().equals("com.example.brawlkat.kat_Player_MainActivity")) {
 
             interstitialAd = new InterstitialAd(this);
-            interstitialAd.setAdUnitId("ca-app-pub-3940256099942544/1033173712");
+            interstitialAd.setAdUnitId("ca-app-pub-5909086836185335/8059778643");
 
             DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
             deviceWidth = dm.widthPixels;

@@ -25,19 +25,8 @@
                     android:id="@+id/header"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:orientation="horizontal">
-
-                    <ImageButton
-                        android:id="@+id/imageButton3"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_weight="0"
-                        android:background="@color/background"
-                        android:paddingHorizontal="15dp"
-                        android:paddingVertical="20dp"
-                        android:src="@drawable/round_keyboard_arrow_left_24" />
-
-                </LinearLayout>
+                    android:layout_marginTop="50dp"
+                    android:orientation="horizontal"/>
 
                 <LinearLayout
                     android:id="@+id/linearLayout"

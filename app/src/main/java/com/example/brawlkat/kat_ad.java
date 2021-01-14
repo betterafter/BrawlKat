@@ -142,7 +142,7 @@ public class kat_ad {
         }
 
         builder = new AdLoader.Builder(
-                context, "ca-app-pub-3940256099942544/2247696110");
+                context, "ca-app-pub-5909086836185335/4388126945");
 
 
         final int decidedIConWidth = iconWidth; final int decideIconHeight = iconHeight;
