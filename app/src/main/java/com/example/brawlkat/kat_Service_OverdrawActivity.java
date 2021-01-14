@@ -220,6 +220,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         }
         kat_LoadBeforeMainActivity.client.remove();
 
+
         super.onDestroy();
         stopSelf();
     }
