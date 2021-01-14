@@ -113,6 +113,7 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
                     kat_Player_ClubDetailActivity.class, dialog);
             kset.SearchStart(player_detail_user_club_search.getText().toString(), type, getApplicationContext());
         }
+        player_detail_user_club_search.setText("");
     }
 
 

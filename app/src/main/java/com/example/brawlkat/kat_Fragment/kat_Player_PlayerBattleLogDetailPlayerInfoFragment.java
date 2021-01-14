@@ -368,8 +368,6 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
             else if(i == 1) player_name.setTextColor(getResources().getColor(R.color.loseColor));
         }
 
-        System.out.println(playerInfo.getTag());
-        System.out.println(battleData.getStarPlayer());
         if(battleData.getStarPlayer() != null) {
             if (playerInfo.getTag().equals(battleData.getStarPlayer())) {
                 Drawable drawable = getActivity().getDrawable(R.drawable.round_star_24_yellow);

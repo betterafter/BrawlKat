@@ -2,6 +2,7 @@ package com.example.brawlkat;
 
 import android.os.Bundle;
 import android.text.InputFilter;
+import android.view.KeyEvent;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
@@ -24,6 +25,18 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
 
         AccountInputEditText = findViewById(R.id.account_input_edit_text);
         AccountInputEditText.setFilters(new InputFilter[]{new InputFilter.AllCaps()});
+        AccountInputEditText.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if(i == KeyEvent.KEYCODE_ENTER && keyEvent.getAction() == KeyEvent.ACTION_UP){
+                    onSearchClick();
+                }
+                else if(i == KeyEvent.KEYCODE_BACK){
+                    onBackPressed();
+                }
+                return true;
+            }
+        });
 
         searchButton = findViewById(R.id.search_account_for_save_click);
         searchButton.setOnTouchListener(new View.OnTouchListener(){
@@ -45,5 +58,7 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
 
         kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class, dialog);
         kset.SearchStart(AccountInputEditText.getText().toString(), "players", getApplicationContext());
+
+        AccountInputEditText.setText("");
     }
 }
