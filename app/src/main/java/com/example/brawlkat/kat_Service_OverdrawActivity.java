@@ -202,8 +202,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
 
         isCheckThreadStart = false;
-        if(checkThread != null) checkThread = null;
-        if(timeThread != null) timeThread = null;
+        checkThread = null;
+        timeThread = null;
 
         super.onDestroy();
     }

@@ -50,6 +50,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     public          String                              playerTag;
 
     private         static long                         mLastClickTime = 0;
+    private         boolean                             isEventThreadStart = true;
 
 
     public kat_Service_EventActivity(Context context, kat_Service_OverdrawActivity overdrawActivity){
@@ -105,7 +106,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         client = new Client(overdrawActivity);
         client.init();
         eventsThread = new getEventsThread();
-
+        isEventThreadStart = true;
         if(!eventsThread.isAlive())
             eventsThread.start();
     }
@@ -128,7 +129,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         public void run(){
 
             try{
-                while (true){
+                while (isEventThreadStart){
                     if(!kat_Player_MainActivity.isServiceStart) break;
 
                     if(viewPager == null){
@@ -313,6 +314,9 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     @Override
     public void onDestroy() {
 
+
+        isEventThreadStart = false;
+        eventsThread = null;
         client = null;
 
         if(overdrawActivity.mapWindowManager != null){
