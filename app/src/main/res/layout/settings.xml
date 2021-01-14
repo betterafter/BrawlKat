@@ -135,7 +135,7 @@
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
             android:layout_marginRight="20dp"
-            android:text="위의 버튼을 터치 시 서비스가 시작되며 일정량의 데이터를 수집하여 특정 맵에 대해 각 브롤러의 승률을 높은 순서로 나타냅니다. 이 서비스는 버튼을 3초 이상 길게 누르고 있으면 종료됩니다."
+            android:text="위의 버튼을 터치 시 서비스가 시작되며 일정량의 데이터를 수집하여 특정 맵에 대해 각 브롤러의 승률을 높은 순서로 나타냅니다.\n또한 서비스 버튼을 터치하여 알림창의 추천 브롤러 정보를 업데이트할 수 있습니다. \n이 서비스는 버튼을 3초 이상 길게 누르고 있으면 종료됩니다."
             android:textColor="@color/colorWhite" />
 
 
