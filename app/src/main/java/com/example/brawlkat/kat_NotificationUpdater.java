@@ -218,8 +218,6 @@ public class kat_NotificationUpdater {
     }
 
     public int getRecommendationBrawlerIndex(){
-        ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
-
         kat_BrawlerRecommendation brawlerRecommendation = new kat_BrawlerRecommendation();
         brawlerRecommendation.init();
         String id = brawlerRecommendation.recommend();
