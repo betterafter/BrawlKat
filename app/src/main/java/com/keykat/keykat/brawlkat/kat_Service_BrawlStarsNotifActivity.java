@@ -73,7 +73,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
-                    NotificationManager.IMPORTANCE_LOW);
+                    NotificationManager.IMPORTANCE_HIGH);
 
             mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
             mNotificationManager.createNotificationChannel(channel);
