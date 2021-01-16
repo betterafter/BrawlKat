@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     android:background="@color/background">
 
     <androidx.core.widget.NestedScrollView
@@ -14,11 +14,11 @@
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical" >
+            android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -26,7 +26,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="50dp"
-                    android:orientation="horizontal"/>
+                    android:orientation="horizontal" />
 
                 <LinearLayout
                     android:id="@+id/linearLayout"
@@ -98,27 +98,11 @@
 
                         </LinearLayout>
 
-                        <TextView
-                            android:id="@+id/player_detail_tag"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/semi_round_button_inner_normal"
-                            android:paddingHorizontal="4dp"
-                            android:backgroundTint="@color/colorBlack"
-                            android:fontFamily="sans-serif"
-                            android:text="TextView"
-                            android:textAlignment="textStart"
-                            android:textColor="@color/cardview_light_background"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
-
                         <LinearLayout
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
-                            android:layout_marginTop="5dp"
                             android:layout_marginLeft="15dp"
+                            android:layout_marginTop="5dp"
                             android:gravity="center"
                             android:orientation="horizontal">
 
@@ -168,8 +152,23 @@
 
                         </LinearLayout>
 
-                    </LinearLayout>
+                        <TextView
+                            android:id="@+id/player_detail_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/semi_round_button_inner_normal"
+                            android:backgroundTint="@color/colorBlack"
+                            android:fontFamily="sans-serif"
+                            android:paddingHorizontal="4dp"
+                            android:text="TextView"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/cardview_light_background"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
 
+                    </LinearLayout>
 
                     <ImageView
                         android:id="@+id/player_detail_favorites"
@@ -178,17 +177,18 @@
                         android:onClick="onFavoritesClick"
                         android:src="@drawable/round_star_border_24" />
 
+
                 </LinearLayout>
 
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
+                android:layout_height="wrap_content"
                 android:layout_marginHorizontal="10dp"
                 android:layout_marginTop="5dp"
-                android:weightSum="2"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:weightSum="2">
 
                 <Button
                     android:id="@+id/player_detail_information_button"
@@ -237,8 +237,8 @@
                         android:id="@+id/player_player_detail_player_Ad"
                         android:layout_width="match_parent"
                         android:layout_height="80dp"
-                        android:layout_marginTop="5dp"
                         android:layout_marginHorizontal="12dp"
+                        android:layout_marginTop="5dp"
                         android:background="@drawable/card"
                         android:backgroundTint="@color/colorBlack"
                         android:orientation="horizontal" />
@@ -334,7 +334,7 @@
                                     android:layout_marginTop="10dp"
                                     android:fontFamily="@font/lilita_one"
                                     android:gravity="center"
-                                    android:text="20승 1무 0패 (100%)"
+                                    android:text="0승 0무 0패 (-%)"
                                     android:textColor="@color/Color1"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
@@ -363,7 +363,7 @@
                                     android:layout_marginTop="10dp"
                                     android:fontFamily="@font/lilita_one"
                                     android:gravity="center"
-                                    android:text="10번"
+                                    android:text="0번"
                                     android:textColor="@color/trophiesYellow"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
@@ -392,7 +392,7 @@
                                     android:layout_marginTop="10dp"
                                     android:fontFamily="@font/lilita_one"
                                     android:gravity="center"
-                                    android:text="3번"
+                                    android:text="0번"
                                     android:textColor="@color/Color8"
                                     android:textSize="14sp"
                                     android:textStyle="bold" />
@@ -409,9 +409,9 @@
                         android:layout_marginHorizontal="12dp"
                         android:layout_marginTop="5dp"
                         android:layout_marginBottom="10dp"
-                        android:paddingBottom="10dp"
                         android:background="@drawable/card"
-                        android:orientation="vertical">
+                        android:orientation="vertical"
+                        android:paddingBottom="10dp">
 
                         <TextView
                             android:id="@+id/textView27"
@@ -432,7 +432,6 @@
                             android:orientation="vertical"></LinearLayout>
 
                     </LinearLayout>
-
 
 
                     <LinearLayout
@@ -459,7 +458,8 @@
                             android:id="@+id/player_detail_battle_log_layout"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
-                            android:orientation="vertical"/>
+                            android:orientation="vertical" />
+
                     </LinearLayout>
 
                 </LinearLayout>
