@@ -163,14 +163,15 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         player_detail_trophies.setText(playerData.getTrophies() + " / " + playerData.getHighestTrophies());
         player_detail_level.setText(Integer.toString(playerData.getExpLevel()));
 
-        String nameColor = playerData.getNameColor().replace("0x", "#");
-        player_detail_name.setTextColor(Color.parseColor(nameColor));
-        player_detail_tag.getBackground().setTint(Color.parseColor(nameColor));
+        if(playerData.getNameColor() != null) {
+            String nameColor = playerData.getNameColor().replace("0x", "#");
+            player_detail_name.setTextColor(Color.parseColor(nameColor));
+            player_detail_tag.getBackground().setTint(Color.parseColor(nameColor));
 
-        if(nameColor.equals("#ffffffff")){
-            player_detail_tag.setTextColor(Color.parseColor("#000000"));
+            if (nameColor.equals("#ffffffff")) {
+                player_detail_tag.setTextColor(Color.parseColor("#000000"));
+            }
         }
-
         GlideImage(url_icon_trophies, width / 30, width / 30, player_detail_trophies_icon);
 
         if(playerData.getClub().getId() != null && playerData.getClub().getName() != null) {
@@ -341,6 +342,9 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
         ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
 
+        if(brawlerData == null) return;
+        if(BrawlersArrayList == null) return;
+
         TextView getBrawlerText = findViewById(R.id.player_detail_player_get_brawler_text);
         getBrawlerText.setText("  획득한 브롤러 " + "(" + brawlerData.size() + "/" + BrawlersArrayList.size() + ")");
 
@@ -459,7 +463,9 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
     private void playerBattleLogList(){
         if(client.getData().get(1).equals("{none}")
+                || playerBattleDataListStack.empty()
                 || (!playerBattleDataListStack.empty() && playerBattleDataListStack.peek() == null)) return;
+
         playerBattleDataList = playerBattleDataListStack.peek();
 
         LayoutInflater layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
@@ -719,7 +725,8 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
         super.onBackPressed();
 
         if(this.getClass().getName().equals("com.keykat.keykat.brawlkat.kat_Player_PlayerDetailActivity"))
-            playerBattleDataListStack.pop();
+            if(!playerBattleDataListStack.empty())
+                playerBattleDataListStack.pop();
     }
 
     public void onFavoritesClick(View view){

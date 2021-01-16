@@ -17,6 +17,7 @@ public class kat_official_playerBattleLogParser implements Serializable {
 
     public ArrayList<playerBattleData> DataParser() throws Exception{
 
+        System.out.println(data);
         JSONObject jsonObject = new JSONObject(data);
         JSONArray items = (JSONArray) jsonObject.get("items");
 

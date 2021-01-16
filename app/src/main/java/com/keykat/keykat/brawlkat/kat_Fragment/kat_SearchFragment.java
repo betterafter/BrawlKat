@@ -302,6 +302,7 @@ public class kat_SearchFragment extends Fragment {
         if(playerData == null) return;
         ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
         if(brawlerData.size() - 1 < i) return;
+        if(BrawlerArrayList == null) return;
         for(int j = 0; j <BrawlerArrayList.size(); j++){
 
             if(brawlerData.get(i).getId().equals(BrawlerArrayList.get(j).get("id").toString())){

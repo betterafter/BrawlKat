@@ -50,6 +50,7 @@ public class Client {
 
     public                  static boolean                  isGetApiThreadStop;
 
+    private                 String                          boundaryCode = "this_is_a_kat_data_boundary!";
 
     public Client(){
 
@@ -126,7 +127,6 @@ public class Client {
                     result = reader.readLine();
 
                     int startidx = 0; int split = 0;
-                    int UnterminatedName = 0;
 
                     // API 데이터 파싱
                     String splited;
@@ -134,19 +134,13 @@ public class Client {
 
                     while (split != -1) {
 
-                        split = result.indexOf("}{", startidx + UnterminatedName);
-                        int temp = result.indexOf("\"nameColor\":", split);
+                        split = result.indexOf(boundaryCode, startidx);
 
-                        if(temp > split && temp - split < 30) {
-                            UnterminatedName = split + 1; continue;
-                        }
+                        if(split == -1) break;
+                        splited = result.substring(startidx, split);
 
-                        if (split == -1) splited = result.substring(startidx);
-                        else splited = result.substring(startidx, split + 1);
-
-                        UnterminatedName = 0;
                         resOffiData.add(splited);
-                        startidx = split + 1;
+                        startidx = split + boundaryCode.length();
                     }
 
 
@@ -230,15 +224,16 @@ public class Client {
                     String splited;
                     resRankingData = new ArrayList<>();
 
+
                     while (split != -1) {
 
-                        split = result.indexOf("}{", startidx);
+                        split = result.indexOf(boundaryCode, startidx);
 
-                        if (split == -1) splited = result.substring(startidx);
-                        else splited = result.substring(startidx, split + 1);
+                        if(split == -1) break;
+                        splited = result.substring(startidx, split);
 
                         resRankingData.add(splited);
-                        startidx = split + 1;
+                        startidx = split + boundaryCode.length();
                     }
 
                     // 파싱 할 부분 ...................................................................
@@ -385,18 +380,19 @@ public class Client {
                     resData = new ArrayList<>();
                     while (split != -1) {
 
-                        split = result.indexOf("}{", startidx);
+                        split = result.indexOf(boundaryCode, startidx);
 
-                        if (split == -1) splited = result.substring(startidx);
-                        else splited = result.substring(startidx, split + 1);
+                        if(split == -1) break;
+                        splited = result.substring(startidx, split);
 
                         resData.add(splited);
-                        startidx = split + 1;
+                        startidx = split + boundaryCode.length();
                     }
 
                     kat_eventsParser eventsParser;
                     kat_brawlersParser brawlersParser;
                     kat_mapsParser mapsParser;
+
 
                     eventsParser = new kat_eventsParser(resData.get(0));
                     brawlersParser = new kat_brawlersParser(resData.get(1));
