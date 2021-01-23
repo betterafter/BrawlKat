@@ -134,10 +134,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                 kataCountryBase.insert("KR", countryName);
 
             kat_LoadBeforeMainActivity.client.RankingInit("global", "", "");
-
-            getMapDataThread mdt = new getMapDataThread();
-            if (!mdt.isAlive()) mdt.start();
-
         }
     }
 
@@ -176,27 +172,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     }
 
 
-    // 맵 데이터 받아오기
-    private class getMapDataThread extends Thread{
-        public void run(){
-            try{
-                while(true) {
-                    if(client.getData() == null || client.getData().size() <= 2) continue;
-                    if (client.getData().get(2) != null) {
 
-                        mapsParser = new kat_mapsParser(client.getData().get(2));
-                        mapData = mapsParser.DataParser();
-
-                        int time = 1000 * 60 * 30;
-                        sleep(time);
-                    }
-                }
-            }
-            catch (Exception e){
-                // e.printStackTrace();
-            }
-        }
-    }
 
     @Override
     public void onBackPressed() {

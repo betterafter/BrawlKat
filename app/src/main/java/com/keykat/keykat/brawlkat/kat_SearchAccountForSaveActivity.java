@@ -56,7 +56,8 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
         kat_LoadingDialog dialog = new kat_LoadingDialog(this);
         dialog.show();
 
-        kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class, dialog);
+        kat_SearchThread kset = new kat_SearchThread(kat_SearchAccountForSaveActivity.this,
+                kat_Player_MainActivity.class, dialog);
         kset.SearchStart(AccountInputEditText.getText().toString(), "players", getApplicationContext());
 
         AccountInputEditText.setText("");

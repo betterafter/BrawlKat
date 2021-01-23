@@ -1,8 +1,10 @@
 package com.keykat.keykat.brawlkat.kat_Fragment;
 
 import android.app.AppOpsManager;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.PorterDuff;
@@ -10,17 +12,23 @@ import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.os.Bundle;
 import android.provider.Settings;
+import android.text.util.Linkify;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CompoundButton;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity;
+import com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -49,7 +57,22 @@ public class kat_SettingFragment extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.settings, container, false);
 
-        // 세팅의 스위치 선언
+        TextView fan_content_policy_text = view.findViewById(R.id.fan_content_policy_text);
+        Linkify.TransformFilter transformFilter = new Linkify.TransformFilter() {
+            @Override
+            public String transformUrl(Matcher matcher, String s) {
+                return "";
+            }
+        };
+        Pattern pattern = Pattern.compile("Supercell’s Fan Content Policy.");
+        Linkify.addLinks(fan_content_policy_text,
+                pattern,
+                "https://supercell.com/en/fan-content-policy/",
+                null,
+                transformFilter);
+
+
+                // 세팅의 스위치 선언
         Switch foregroundServiceSwitch = view.findViewById(R.id.foregroundServiceSwitch);
         final Switch analyticsServiceSwitch = view.findViewById(R.id.analyticsServiceSwitch);
 
@@ -83,8 +106,10 @@ public class kat_SettingFragment extends Fragment {
                 setAnalyticsSwitch(b);
                 Intent intent = new Intent();
                 if(b){
+                    RegisterBroadcastReceiver();
                     intent.setAction("com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_START");
                 }else{
+                    UnregisterBroadcastReceiver();
                     intent.setAction("com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_END");
                 }
                 getActivity().sendBroadcast(intent);
@@ -173,5 +198,46 @@ public class kat_SettingFragment extends Fragment {
         }
 
         return granted;
+    }
+
+
+    private void RegisterBroadcastReceiver(){
+
+        BroadcastReceiver broadcastReceiver = kat_Service_BrawlStarsNotifActivity.broadcastReceiver;
+        String BROADCAST_MASSAGE_SCREEN_ON = "android.intent.action.SCREEN_ON";
+        String BROADCAST_MASSAGE_SCREEN_OFF = "android.intent.action.SCREEN_OFF";
+
+        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0) return;
+        if(broadcastReceiver != null) return;
+
+        final IntentFilter filter = new IntentFilter();
+        filter.addAction(BROADCAST_MASSAGE_SCREEN_ON);
+        filter.addAction(BROADCAST_MASSAGE_SCREEN_OFF);
+        filter.addAction("com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_START");
+        filter.addAction("com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_END");
+
+        broadcastReceiver = new kat_ActionBroadcastReceiver(kat_player_mainActivity);
+
+        getActivity().registerReceiver(broadcastReceiver, filter);
+
+        Intent ThreadCheckIntent = new Intent();
+        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0){
+            ThreadCheckIntent.setAction("com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_END");
+        }
+        else{
+            ThreadCheckIntent.setAction("com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_START");
+        }
+        getActivity().sendBroadcast(ThreadCheckIntent);
+    }
+
+
+    private void UnregisterBroadcastReceiver(){
+
+        BroadcastReceiver broadcastReceiver = kat_Service_BrawlStarsNotifActivity.broadcastReceiver;
+
+        if(broadcastReceiver != null){
+            getActivity().unregisterReceiver(broadcastReceiver);
+            broadcastReceiver = null;
+        }
     }
 }

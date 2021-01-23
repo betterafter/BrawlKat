@@ -29,12 +29,12 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     public                              static int                              width;
 
 
-    kat_Player_MainActivity kat_player_mainActivity;
+    private kat_Player_MainActivity kat_player_mainActivity;
 
-    private BroadcastReceiver broadcastReceiver;
+    public static BroadcastReceiver broadcastReceiver;
 
-    private final String BROADCAST_MASSAGE_SCREEN_ON = "android.intent.action.SCREEN_ON";
-    private final String BROADCAST_MASSAGE_SCREEN_OFF = "android.intent.action.SCREEN_OFF";
+    private static final String BROADCAST_MASSAGE_SCREEN_ON = "android.intent.action.SCREEN_ON";
+    private static final String BROADCAST_MASSAGE_SCREEN_OFF = "android.intent.action.SCREEN_OFF";
 
     public static NotificationCompat.Builder notification;
     public static NotificationManager mNotificationManager;
@@ -73,7 +73,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
-                    NotificationManager.IMPORTANCE_HIGH);
+                    NotificationManager.IMPORTANCE_LOW);
 
             mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
             mNotificationManager.createNotificationChannel(channel);
@@ -97,6 +97,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
     private void RegisterBroadcastReceiver(){
 
+        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0) return;
         if(broadcastReceiver != null) return;
 
         final IntentFilter filter = new IntentFilter();

@@ -20,7 +20,7 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
     private final String BROADCAST_MASSAGE_SCREEN_OFF = "android.intent.action.SCREEN_OFF";
     private final String BROADCAST_MASSAGE_ACTION = "";
 
-    private boolean isThreaStop;
+    private boolean isThreaStop = false;
 
     kat_Service_BrawlStarsNotifActivity kat_service_brawlStarsNotifActivity;
     kat_Player_MainActivity kat_player_mainActivity;
@@ -28,6 +28,12 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
     BrawlStarsPlayCheckThread checkThread;
 
     public kat_ActionBroadcastReceiver(){};
+
+    public kat_ActionBroadcastReceiver(kat_Player_MainActivity kat_player_mainActivity){
+        this.kat_player_mainActivity = kat_player_mainActivity;
+
+        isThreaStop = false;
+    }
 
     public kat_ActionBroadcastReceiver(kat_Service_BrawlStarsNotifActivity kat_service_brawlStarsNotifActivity,
                                        kat_Player_MainActivity kat_player_mainActivity){
@@ -79,13 +85,13 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
                 try {
                     // 브롤스타즈가 실행되고 서비스가 아직 실행되지 않았다면
                     if(getTopPackageName(context).toLowerCase().contains("brawlstar")
-                            && !kat_service_brawlStarsNotifActivity.alreadyStart){
+                            && !kat_Service_BrawlStarsNotifActivity.alreadyStart){
 
                         if (!kat_player_mainActivity.isServiceStart) {
                             kat_player_mainActivity.getPermission();
                             kat_player_mainActivity.isServiceStart = true;
                         }
-                        kat_service_brawlStarsNotifActivity.alreadyStart = true;
+                        kat_Service_BrawlStarsNotifActivity.alreadyStart = true;
                     }
                     // 브롤스타즈가 실행됐는데 서비스가 실행중이 아니라면 = 유저가 강제로 꺼버린 경우
                     if(getTopPackageName(context).toLowerCase().contains("brawlstar") &&
@@ -93,7 +99,7 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
                         continue;
                     }
                     // 브롤스타즈 실행 중이 아니면서 서비스가 꺼진 경우 -> 비로소 서비스 꺼진 것을 알려줌
-                    if(!kat_player_mainActivity.isServiceStart) kat_service_brawlStarsNotifActivity.alreadyStart = false;
+                    if(!kat_player_mainActivity.isServiceStart) kat_Service_BrawlStarsNotifActivity.alreadyStart = false;
 
                     sleep(3000);
                 } catch (InterruptedException e) {

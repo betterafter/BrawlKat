@@ -4,14 +4,11 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.app.usage.UsageEvents;
-import android.app.usage.UsageStatsManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.IBinder;
 import android.util.DisplayMetrics;
-import android.util.LongSparseArray;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,7 +21,6 @@ import com.keykat.keykat.brawlkat.kat_Thread.kat_SearchThread;
 import com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver;
 import com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_ButtonBroadcastReceiver;
 
-import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 
@@ -334,8 +330,15 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     // notification 업데이트
     private void setNotification(){
 
-        kat_NotificationUpdater updater = new kat_NotificationUpdater(context);
-        updater.update();
+        final kat_Player_MainActivity activity = kat_Player_MainActivity.kat_player_mainActivity;
+
+        activity.runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                kat_SearchThread searchThread = new kat_SearchThread();
+                searchThread.SearchStart(getPlayerTag, "players", activity);
+            }
+        });
     }
 
 
@@ -352,8 +355,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         }
     }
 
-
-
     private class BrawlStarsPlayCheckThread extends Thread{
 
         Context context;
@@ -368,53 +369,11 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 try {
                     setNotification();
 
-                    sleep(1000 * 60);
+                    sleep(1000 * 10);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }
         }
-    }
-
-
-    public static String getTopPackageName(@NonNull Context context) {
-
-        UsageStatsManager usageStatsManager = (UsageStatsManager) context.getSystemService(Context.USAGE_STATS_SERVICE);
-
-        long lastRunAppTimeStamp = 0L;
-
-        final long INTERVAL = 10000;
-        final long end = System.currentTimeMillis();
-        // 1 minute ago
-        final long begin = end - INTERVAL;
-
-        LongSparseArray packageNameMap = new LongSparseArray<>();
-        final UsageEvents usageEvents = usageStatsManager.queryEvents(begin, end);
-        while (usageEvents.hasNextEvent()) {
-            UsageEvents.Event event = new UsageEvents.Event();
-            usageEvents.getNextEvent(event);
-
-            if(isForeGroundEvent(event)) {
-                packageNameMap.put(event.getTimeStamp(), event.getPackageName());
-                if(event.getTimeStamp() > lastRunAppTimeStamp) {
-                    lastRunAppTimeStamp = event.getTimeStamp();
-                }
-            }
-        }
-
-        return packageNameMap.get(lastRunAppTimeStamp, "").toString();
-    }
-
-    public static boolean isForeGroundEvent(UsageEvents.Event event) {
-
-        if(event == null) {
-            return false;
-        }
-
-        if(BuildConfig.VERSION_CODE >= 29) {
-            return event.getEventType() == UsageEvents.Event.ACTIVITY_RESUMED;
-        }
-
-        return event.getEventType() == UsageEvents.Event.MOVE_TO_FOREGROUND;
     }
 }

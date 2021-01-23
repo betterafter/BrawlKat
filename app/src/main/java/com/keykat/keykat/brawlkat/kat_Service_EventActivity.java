@@ -320,12 +320,6 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
             eventsThread = null;
         }
 
-        if(client != null) {
-            client.remove();
-            client = null;
-        }
-
-
         if(overdrawActivity.mapWindowManager != null){
             if(overdrawActivity.mapRecommendView != null)
                 overdrawActivity.mapWindowManager.removeView(overdrawActivity.mapRecommendView);

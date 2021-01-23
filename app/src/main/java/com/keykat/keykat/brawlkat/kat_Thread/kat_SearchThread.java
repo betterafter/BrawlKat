@@ -150,19 +150,21 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 katabase.delete(type);
                 katabase.insert(type, Tag, name, isAccount);
 
-
                 if(fromActivity == null){
                     // 알림창 업데이트
-                    kat_LoadBeforeMainActivity.eventsPlayerData = playerData;
+
                     kat_NotificationUpdater updater
-                            = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext());
+                            = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext(), playerData);
                     updater.update();
                     return;
                 }
 
                 if(fromActivity.getClass().getName().equals("com.keykat.keykat.brawlkat.kat_SearchAccountForSaveActivity")){
-                    setMyAccount();
+                    kat_LoadBeforeMainActivity.eventsPlayerData = playerData;
+                    kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
+                    updater.update();
                 }
+
 
                 // 2020.10.26
                 // activity.startActivity(intent) 와
@@ -172,6 +174,14 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
                     client.getFirstInitThread().join();
                 }
+
+                if(kataMyAccountBase.size() < 1) {
+
+                    kataMyAccountBase.insert("player", playerData.getTag(), playerData.getName());
+                }
+                kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
+                updater.update();
+
 
                 Intent intent = new Intent(fromActivity, toClass);
                 intent.putExtra("playerData", playerData);
@@ -231,15 +241,5 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         SearchThread searchThread = new SearchThread(tag, type, context);
         searchThread.start();
 
-    }
-
-    public void setMyAccount(){
-        if(kataMyAccountBase.size() < 1) {
-
-            kataMyAccountBase.insert("player", playerData.getTag(), playerData.getName());
-
-            kat_NotificationUpdater updater = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext());
-            updater.update();
-        }
     }
 }

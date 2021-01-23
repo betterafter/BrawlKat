@@ -462,6 +462,9 @@ public class Client {
         getThread = null;
     }
 
+
+
+
     public boolean isGetApiThreadAlive(){
         if(getThread != null) return true;
         else return false;

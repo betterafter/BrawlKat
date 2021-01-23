@@ -48,7 +48,26 @@ public class kat_NotificationUpdater {
         width = metrics.widthPixels;
 
         playerData = kat_LoadBeforeMainActivity.eventsPlayerData;
-        this.context = kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext();
+        if(this.context == null)
+            this.context = kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext();
+    }
+
+    public kat_NotificationUpdater(Context context, kat_official_playerInfoParser.playerData playerData){
+        this.context = context;
+        this.playerData = playerData;
+
+        options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .centerCrop()
+                .priority(Priority.HIGH)
+                .format(DecodeFormat.PREFER_RGB_565);
+
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+        height = metrics.heightPixels;
+        width = metrics.widthPixels;
+
+        if(this.context == null)
+            this.context = kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext();
     }
 
     public RemoteViews smallContentView(){
@@ -105,9 +124,6 @@ public class kat_NotificationUpdater {
             kat_BrawlerRecommendation recommendation = new kat_BrawlerRecommendation();
             recommendation.init();
             int rIndex = getRecommendationBrawlerIndex();
-
-             System.out.println(rIndex);
-             System.out.println(playerData.getBrawlerData().size());
 
             int current_trophy = playerData.getBrawlerData().get(rIndex).getTrophies();
             int next_trophy = recommendation.leftTrophyToNextLevel(current_trophy);
@@ -197,8 +213,9 @@ public class kat_NotificationUpdater {
     }
 
     public void updaterNotify(){
-        kat_Service_BrawlStarsNotifActivity.mNotificationManager.notify(1,
-                kat_Service_BrawlStarsNotifActivity.notification.build());
+        if(kat_Service_BrawlStarsNotifActivity.mNotificationManager != null)
+            kat_Service_BrawlStarsNotifActivity.mNotificationManager.notify(1,
+                    kat_Service_BrawlStarsNotifActivity.notification.build());
     }
 
     public String UrlForBigContentViewRecommendBrawler(){
@@ -213,7 +230,6 @@ public class kat_NotificationUpdater {
         for(int i = 0; i < BrawlersArrayList.size(); i++){
             String brawlerId = Integer.toString((int)BrawlersArrayList.get(i).get("id"));
             if(brawlerId.equals(id)){
-                System.out.println(BrawlersArrayList.get(i).get("name"));
                 index = i; break;
             }
         }
