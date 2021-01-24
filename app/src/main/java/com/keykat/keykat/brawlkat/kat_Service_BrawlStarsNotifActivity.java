@@ -49,6 +49,10 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // 브로드캐스트 등록
+        RegisterBroadcastReceiver();
+
         kat_player_mainActivity = kat_Player_MainActivity.kat_player_mainActivity;
 
         options = new RequestOptions()
@@ -66,8 +70,6 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         alreadyStart = false;
-        // 브로드캐스트 등록
-        RegisterBroadcastReceiver();
 
         kat_NotificationUpdater updater = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext());
 

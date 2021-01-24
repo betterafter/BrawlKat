@@ -57,6 +57,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     private     boolean                         isCheckThreadStart;
     private     int                             timeCount = 0;
 
+    private     kat_SearchThread                searchThread;
+
 
     private NotificationManager mNotificationManager;
 
@@ -69,6 +71,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     public int onStartCommand(Intent intent, int flags, int startId )
     {
         context = getApplicationContext();
+        searchThread = new kat_SearchThread();
 
 
         init_Inflater();
@@ -204,11 +207,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         buttonThread = null;
 
         if(events != null) {
-            if(events.client != null) {
-                events.client.remove();
-                events.client = null;
-            }
-
             events.isEventThreadStart = false;
             events.eventsThread = null;
 
@@ -331,12 +329,11 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     private void setNotification(){
 
         final kat_Player_MainActivity activity = kat_Player_MainActivity.kat_player_mainActivity;
-
         activity.runOnUiThread(new Runnable() {
             @Override
             public void run() {
-                kat_SearchThread searchThread = new kat_SearchThread();
-                searchThread.SearchStart(getPlayerTag, "players", activity);
+                if(!kat_SearchThread.SearchDataOnOverdraw)
+                    searchThread.SearchStart(getPlayerTag, "players", activity);
             }
         });
     }
@@ -369,7 +366,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 try {
                     setNotification();
 
-                    sleep(1000 * 10);
+                    sleep(1000 * 5);
                 } catch (InterruptedException e) {
                     e.printStackTrace();
                 }

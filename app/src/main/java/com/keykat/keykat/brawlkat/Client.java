@@ -334,7 +334,6 @@ public class Client {
                 }
             }
         }
-
     }
 
     // 실시간 통신

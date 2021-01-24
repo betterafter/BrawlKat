@@ -18,9 +18,7 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.keykat.keykat.brawlkat.kat_adapter.kat_EventAdapter;
-import com.keykat.keykat.brawlkat.kat_dataparser.kat_brawlersParser;
 import com.keykat.keykat.brawlkat.kat_dataparser.kat_eventsParser;
-import com.keykat.keykat.brawlkat.kat_dataparser.kat_official_playerParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,20 +32,14 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     //access        type                                name                    init
     private         Context                             context;
     private         kat_Service_OverdrawActivity        overdrawActivity;
-    public          Client                              client;
     public          getEventsThread                     eventsThread;
-    private         kat_eventsParser                    eventsParser;
-    private         kat_brawlersParser                  brawlersParser;
-    private         kat_official_playerParser           official_playerParser;
 
     public          ArrayList<kat_eventsParser.pair>    EventArrayList;
     public          ArrayList<HashMap<String, Object>>  BrawlersArrayList;
 
-    public          ArrayList<String>                   offi_PlayerArrayList;
     private         ViewPager2                          viewPager               = null;
     public          kat_EventAdapter                    eventAdapter;
     public          boolean                             changeRecommendView = false;
-    public          String                              playerTag;
 
     private         static long                         mLastClickTime = 0;
     public          boolean                             isEventThreadStart = true;
@@ -103,8 +95,6 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         EventArrayList = kat_LoadBeforeMainActivity.EventArrayList;
         BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
 
-        client = new Client(overdrawActivity);
-        client.init();
         eventsThread = new getEventsThread();
         isEventThreadStart = true;
         if(!eventsThread.isAlive())

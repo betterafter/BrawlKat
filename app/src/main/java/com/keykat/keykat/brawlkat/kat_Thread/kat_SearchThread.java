@@ -27,7 +27,7 @@ public class kat_SearchThread extends kat_Player_MainActivity {
     kat_LoadingDialog kat_loadingDialog;
 
 
-    boolean setData = false;
+    public static boolean SearchDataOnOverdraw = false;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -63,6 +63,7 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
         public void run(){
 
+            SearchDataOnOverdraw = true;
             playerTag = tag;
             sendData = new ArrayList<>();
 
@@ -102,7 +103,6 @@ public class kat_SearchThread extends kat_Player_MainActivity {
             }
         }
     }
-
 
     public void playerSearch(ArrayList<String> sendData){
 
@@ -152,10 +152,10 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
                 if(fromActivity == null){
                     // 알림창 업데이트
-
                     kat_NotificationUpdater updater
                             = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext(), playerData);
                     updater.update();
+                    SearchDataOnOverdraw = false;
                     return;
                 }
 

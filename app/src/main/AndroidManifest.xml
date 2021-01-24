@@ -42,7 +42,8 @@
 
         <service android:name="com.keykat.keykat.brawlkat.kat_Service_OverdrawActivity"></service>
         <service android:name="com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity"></service>
-        <service android:name="com.keykat.keykat.brawlkat.kat_onTaskRemovedService"></service>
+        <service android:name="com.keykat.keykat.brawlkat.kat_onTaskRemovedService"
+            android:stopWithTask="false" ></service>
 
         <receiver android:name="com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_BroadcastReceiver">
             <intent-filter>
