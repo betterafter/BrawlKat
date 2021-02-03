@@ -45,13 +45,6 @@
         <service android:name="com.keykat.keykat.brawlkat.kat_onTaskRemovedService"
             android:stopWithTask="false" ></service>
 
-        <receiver android:name="com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_BroadcastReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-                <action android:name="android.intent.action.ACTION_SHUTDOWN"/>
-            </intent-filter>
-        </receiver>
-
         <receiver android:name="com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_ButtonBroadcastReceiver">
             <intent-filter android:priority="10000">
                 <action android:name="android.intent.action.MAIN" />

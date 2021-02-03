@@ -105,7 +105,7 @@ public class kat_FavoritesFragment extends Fragment {
     private class gridAdapter extends BaseAdapter{
 
         public  ArrayList<ArrayList<String> >   databaseItem;
-        private String                          url_icon_trophies = "https://www.starlist.pro/assets/icon/trophy.png";
+        private String                          url_icon_trophies = kat_LoadBeforeMainActivity.CdnRootUrl + "/assets/icon/trophy.png";
 
         public gridAdapter(ArrayList<ArrayList<String>> databaseItem){
             this.databaseItem = databaseItem;
@@ -166,7 +166,7 @@ public class kat_FavoritesFragment extends Fragment {
             final TextView player_tag = view.findViewById(R.id.player_favorites_tag);
             ImageView player_close = view.findViewById(R.id.player_favorites_close);
 
-            String url_profile = "https://www.starlist.pro/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
+            String url_profile = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
             GlideImageWithRoundCorner(url_profile, width / 8, height / 8, player_image);
             player_level.setText(databaseItem.get(i).get(7));
             player_name.setText(databaseItem.get(i).get(3));

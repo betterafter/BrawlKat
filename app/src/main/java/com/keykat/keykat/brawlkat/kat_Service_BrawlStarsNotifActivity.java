@@ -99,6 +99,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
     private void RegisterBroadcastReceiver(){
 
+        if(kat_LoadBeforeMainActivity.kataSettingBase == null) return;
         if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0) return;
         if(broadcastReceiver != null) return;
 

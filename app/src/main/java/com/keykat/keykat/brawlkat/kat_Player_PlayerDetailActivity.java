@@ -122,19 +122,19 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
         String url_profile = "";
         if(playerData.getIconId() != null)
-            url_profile = "https://www.starlist.pro/assets/profile/" + playerData.getIconId() + ".png?v=1";
+            url_profile = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile/" + playerData.getIconId() + ".png?v=1";
         else
-            url_profile = "https://www.starlist.pro/assets/profile/" + "28000000" + ".png?v=1";
-        String url_icon_trophies = "https://www.starlist.pro/assets/icon/trophy.png";
-        String url_icon_define_club = "https://cdn.starlist.pro/club/8000006.png?v=1";
+            url_profile = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile/" + "28000000" + ".png?v=1";
+        String url_icon_trophies = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/trophy.png";
+        String url_icon_define_club = kat_LoadBeforeMainActivity.CdnRootUrl +  "/club/8000006.png?v=1";
 
         String[] iconImage = new String[]{
-                "https://www.starlist.pro/assets/icon/Power-Play.png",
-                "https://www.starlist.pro/assets/icon/3v3.png",
-                "https://www.starlist.pro/assets/gamemode/Showdown.png?v=2",
-                "https://www.starlist.pro/assets/gamemode/Duo-Showdown.png?v=2",
-                "https://www.starlist.pro/assets/gamemode/Robo-Rumble.png?v=2",
-                "https://www.starlist.pro/assets/gamemode/Big-Game.png?v=2"
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/Power-Play.png",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/3v3.png",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/gamemode/Showdown.png?v=2",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/gamemode/Duo-Showdown.png?v=2",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/gamemode/Robo-Rumble.png?v=2",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/gamemode/Big-Game.png?v=2"
         };
 
         String[] modeType = new String[]{

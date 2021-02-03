@@ -258,9 +258,6 @@ public class kat_NotificationUpdater {
     private RemoteViews ctView(int contentViewId){
 
         final RemoteViews contentView = new RemoteViews(context.getPackageName(), contentViewId);
-
-
-
         return contentView;
     }
 

@@ -80,6 +80,10 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     public   static final int                                                                           TYPE_MOBILE = 2;
     public   static final int                                                                           TYPE_NOT_CONNECTED = 3;
 
+    public   static final String ApiRootUrl = "https://api.brawlify.com";
+    public   static final String CdnRootUrl = "https://cdn.brawlify.com";
+    public   static final String WebRootUrl = "https://brawlify.com";
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 

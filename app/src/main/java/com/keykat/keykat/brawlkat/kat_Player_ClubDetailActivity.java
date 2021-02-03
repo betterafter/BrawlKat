@@ -102,7 +102,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
     private void setData(){
 
-        String iconUrl = "https://www.starlist.pro/assets/club/" + clubData.getBadgeId() + ".png?v=1";
+        String iconUrl = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/club/" + clubData.getBadgeId() + ".png?v=1";
         GlideImageWithRoundCorner(iconUrl, width / 7, width / 7, player_club_icon);
         player_club_name.setText(clubData.getName());
         player_club_tag.setText(clubData.getTag());
@@ -116,11 +116,11 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
     private void setClubInformationList(){
 
         String[] informationIconUrl = new String[]{
-                "https://www.starlist.pro/assets/icon/trophy.png",
-                "https://www.starlist.pro/assets/icon/Ranking.png",
-                "https://www.starlist.pro/assets/icon/Battle-Log.png",
-                "https://www.starlist.pro/assets/icon/Battle-Log.png",
-                "https://www.starlist.pro/assets/icon/News.png"
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/trophy.png",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/Ranking.png",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/Battle-Log.png",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/Battle-Log.png",
+                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/News.png"
         };
 
         String[] informationName = new String[]{
@@ -227,7 +227,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             TextView club_member_trophy = view.findViewById(R.id.player_club_detail_members_trophy);
             TextView club_member_role = view.findViewById(R.id.player_club_detail_members_role);
 
-            String iconUrl = "https://www.starlist.pro/assets/profile-low/" +
+            String iconUrl = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile-low/" +
                     memberData.get(i).getIconId() + ".png?v=1";
             GlideImage(iconUrl, width / 10, width / 10, club_member_icon);
             club_member_rank.setText(Integer.toString(i + 1));
@@ -296,7 +296,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
             forbiddenText.setText("This club is not tracked. \n");
             forbiddenText2.setText(Html.fromHtml("You can toggle it by going to " +
-                    "<font color=\"#2a7de2\"><b>https://www.starlist.pro/stats/clublog/JJQP98G0</b></font>" +
+                    "<font color=\"#2a7de2\"><b>" + kat_LoadBeforeMainActivity.WebRootUrl + "/stats/clublog/JJQP98G0</b></font>" +
                     " and enabling tracking. <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>"));
 
             forbiddenText.setTextSize(24);

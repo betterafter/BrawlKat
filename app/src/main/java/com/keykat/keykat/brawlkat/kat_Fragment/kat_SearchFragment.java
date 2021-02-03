@@ -152,10 +152,10 @@ public class kat_SearchFragment extends Fragment {
             // 이미지 링크 선언
             String url_profile = "";
             if(kat_Player_MainActivity.MyPlayerData != null){
-                url_profile = "https://www.starlist.pro/assets/profile/" +
+                url_profile = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile/" +
                         kat_Player_MainActivity.MyPlayerData.getIconId() + ".png?v=1";
             }
-            String url_icon_trophies = "https://www.starlist.pro/assets/icon/trophy.png";
+            String url_icon_trophies = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/trophy.png";
 
             // 이미지 세팅
             GlideImageWithRoundCorner(url_profile, width / 5, width / 5, playerIcon);

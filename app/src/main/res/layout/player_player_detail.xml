@@ -126,6 +126,22 @@
 
                         </LinearLayout>
 
+                        <TextView
+                            android:id="@+id/player_detail_tag"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginLeft="15dp"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/semi_round_button_inner_normal"
+                            android:backgroundTint="@color/colorBlack"
+                            android:fontFamily="sans-serif"
+                            android:paddingHorizontal="4dp"
+                            android:text="TextView"
+                            android:textAlignment="textStart"
+                            android:textColor="@color/cardview_light_background"
+                            android:textSize="12sp"
+                            android:textStyle="bold" />
+
                         <LinearLayout
                             android:id="@+id/player_detail_clubname_layout"
                             android:layout_width="wrap_content"
@@ -151,22 +167,6 @@
                                 android:textStyle="bold" />
 
                         </LinearLayout>
-
-                        <TextView
-                            android:id="@+id/player_detail_tag"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginLeft="15dp"
-                            android:layout_marginTop="5dp"
-                            android:background="@drawable/semi_round_button_inner_normal"
-                            android:backgroundTint="@color/colorBlack"
-                            android:fontFamily="sans-serif"
-                            android:paddingHorizontal="4dp"
-                            android:text="TextView"
-                            android:textAlignment="textStart"
-                            android:textColor="@color/cardview_light_background"
-                            android:textSize="12sp"
-                            android:textStyle="bold" />
 
                     </LinearLayout>
 
