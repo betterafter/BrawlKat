@@ -52,6 +52,9 @@ public class Client {
 
     private                 String                          boundaryCode = "this_is_a_kat_data_boundary!";
 
+    private                 String                          GCPIPADDRESS = "35.237.9.225";
+    private                 String                          ORACLEIPADDRESS = "193.122.98.86";
+
     public Client(){
 
     }
@@ -98,7 +101,7 @@ public class Client {
                     }
 
                     if(tag == null) continue;
-                    Socket socket = new Socket("35.237.9.225", 9000);
+                    Socket socket = new Socket(ORACLEIPADDRESS, 9000);
 
                     byte[] bytes = null;
                     String result = null;
@@ -191,7 +194,7 @@ public class Client {
 
                 while(true){
 
-                    Socket socket = new Socket("35.237.9.225", 9000);
+                    Socket socket = new Socket(ORACLEIPADDRESS, 9000);
 
                     byte[] bytes = null;
                     String result = null;
@@ -351,7 +354,7 @@ public class Client {
                 while (!isGetApiThreadStop) {
 
 
-                    socket = new Socket("35.237.9.225", 9000);
+                    socket = new Socket(ORACLEIPADDRESS, 9000);
 
                     byte[] bytes = null;
                     String result = null;
@@ -479,7 +482,7 @@ public class Client {
         resOffiData = new ArrayList<>();
 
         officialApiThread = new getAllTypeApiThread(tag, type, apiType, context);
-        if(!officialApiThread.isAlive()) officialApiThread.start();
+        if(officialApiThread.getState() == Thread.State.NEW) officialApiThread.start();
     }
 
     public void RankingInit(String countryCode, String Id, String status, kat_LoadingDialog dialog){

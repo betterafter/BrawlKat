@@ -594,6 +594,16 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
                 Drawable drawable_right = battleLogDetail.getBackground();
                 drawable_right.setTint(ContextCompat.getColor(getApplicationContext(), R.color.winColor));
             }
+            else if(battleData.getBattleResult().equals("defeat") || (battleData.getBattleTrophyChange() != null
+                    && battleData.getBattleTrophyChange().contains("-"))) {
+                loseCount++;
+                battleLogResult.setText("패");
+                Drawable drawable = battleLogResult.getBackground();
+                drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.loseColor));
+
+                Drawable drawable_right = battleLogDetail.getBackground();
+                drawable_right.setTint(ContextCompat.getColor(getApplicationContext(), R.color.loseColor));
+            }
 
             else if(battleData.getBattleResult().equals("draw") || battleData.getBattleTrophyChange() == null){
                 drawCount++;
@@ -605,15 +615,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
                 drawable_right.setTint(ContextCompat.getColor(getApplicationContext(), R.color.drawColor));
             }
 
-            else{
-                loseCount++;
-                battleLogResult.setText("패");
-                Drawable drawable = battleLogResult.getBackground();
-                drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.loseColor));
 
-                Drawable drawable_right = battleLogDetail.getBackground();
-                drawable_right.setTint(ContextCompat.getColor(getApplicationContext(), R.color.loseColor));
-            }
 
 
             // starlist.pro에서 제공 받은 brawler 정보를 받아와 내가 플레이한 브롤러 이미지 표시하기

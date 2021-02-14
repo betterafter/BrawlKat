@@ -42,31 +42,44 @@ public class kat_official_playerBattleLogParser implements Serializable {
             JSONObject battle = (JSONObject) item.get("battle");
 
 
-            if(!battle.isNull("rank"))
+
+            if(!battle.isNull("result")){
+                pbd.setBattleResult(battle.getString("result"));
+            }
+            else if(!battle.isNull("rank")) {
+                pbd.setBattleResult(battle.getString("rank"));
                 pbd.setRank(battle.getString("rank"));
+            }
+            else {
+                pbd.setBattleResult("draw");
+            }
+
+            if(!battle.isNull("duration")){
+                pbd.setBattleDuration(battle.getString("duration"));
+            }
 
             // trophyChange 가 없는 경우 :
             // 1. 동점      2. 이벤트 모드
-            if(battle.isNull("trophyChange")){
-                // 동점일 경우
-                if(!battle.isNull("result"))
-                    pbd.setBattleResult(battle.getString("result"));
-                else if(!battle.isNull("rank"))
-                    pbd.setBattleResult(battle.getString("rank"));
-
-                // 그 외에 이벤트 모드일 경우 무승부로 처리
-                else
-                    pbd.setBattleResult("draw");
-            }
-            // 랭크가 없는 경우 : 3 vs 3 맵 또는 이벤트 맵인데 이벤트 맵은 위에서 걸러지므로 3 vs 3 맵만 판별하면 된다.
-            else if(battle.isNull("rank")) {
-                pbd.setBattleResult(battle.getString("result"));
-                pbd.setBattleDuration(battle.getString("duration"));
-            }
-            // 그 외의 경우 무승부로 처리해버린다.
-            else {
-                pbd.setBattleResult(battle.getString("rank"));
-            }
+//            if(battle.isNull("trophyChange")){
+//                // 동점일 경우
+//                if(!battle.isNull("result"))
+//                    pbd.setBattleResult(battle.getString("result"));
+//                else if(!battle.isNull("rank"))
+//                    pbd.setBattleResult(battle.getString("rank"));
+//
+//                // 그 외에 이벤트 모드일 경우 무승부로 처리
+//                else
+//                    pbd.setBattleResult("draw");
+//            }
+//            // 랭크가 없는 경우 : 3 vs 3 맵 또는 이벤트 맵인데 이벤트 맵은 위에서 걸러지므로 3 vs 3 맵만 판별하면 된다.
+//            else if(battle.isNull("rank")) {
+//                pbd.setBattleResult(battle.getString("result"));
+//                pbd.setBattleDuration(battle.getString("duration"));
+//            }
+//            // 그 외의 경우 무승부로 처리해버린다.
+//            else {
+//                pbd.setBattleResult(battle.getString("rank"));
+//            }
             // 트로피 변화가 있으면 트로피 변화를 세팅해준다.
             if(!battle.isNull("trophyChange"))
                 pbd.setBattleTrophyChange(Integer.toString(battle.getInt("trophyChange")));
