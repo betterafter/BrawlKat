@@ -21,10 +21,14 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     private                                     LinearLayout                                    player_detail_user_club_search_layout;
     private                                     String                                          type;
 
+    private                                     kat_LoadingDialog                               dialog;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_player_club_search);
+
+        dialog = new kat_LoadingDialog(this);
 
         type = getIntent().getStringExtra("type");
 
@@ -100,7 +104,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     // 전적 검색 클릭
     public void onUserClubSearchClick(View view){
 
-        kat_LoadingDialog dialog = new kat_LoadingDialog(this);
         dialog.show();
 
         if(type.equals("players")){
@@ -120,7 +123,6 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     // 리스트를 터치했을 때 발생 함수
     private void listClick(View view){
 
-        kat_LoadingDialog dialog = new kat_LoadingDialog(this);
         dialog.show();
 
         LinearLayout linearLayout = (LinearLayout) view.getParent();
@@ -137,5 +139,17 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
                     kat_Player_ClubDetailActivity.class, dialog);
             kset.SearchStart(newTag, type, getApplicationContext());
         }
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        dialog.dismiss();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+        dialog.dismiss();
     }
 }

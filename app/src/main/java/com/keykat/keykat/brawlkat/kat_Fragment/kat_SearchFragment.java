@@ -57,6 +57,8 @@ public class kat_SearchFragment extends Fragment {
     public              static int                                                              height;
     public              static int                                                              width;
 
+    private             kat_LoadingDialog                                                       dialog;
+
 
     public kat_SearchFragment(kat_Player_MainActivity kat_player_mainActivity){
         this.kat_player_mainActivity = kat_player_mainActivity;
@@ -67,6 +69,7 @@ public class kat_SearchFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
+        dialog = new kat_LoadingDialog(getActivity());
         client = kat_player_mainActivity.client;
 
         options = new RequestOptions()
@@ -193,7 +196,6 @@ public class kat_SearchFragment extends Fragment {
                 public boolean onTouch(View v, MotionEvent motionEvent){
                     if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
 
-                        kat_LoadingDialog dialog = new kat_LoadingDialog(getActivity());
                         dialog.show();
 
                         String RawTag = playerData.getTag();
@@ -318,6 +320,15 @@ public class kat_SearchFragment extends Fragment {
     }
 
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        dialog.dismiss();
+    }
 
-
+    @Override
+    public void onPause() {
+        super.onPause();
+        dialog.dismiss();
+    }
 }

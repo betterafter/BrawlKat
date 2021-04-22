@@ -1,6 +1,8 @@
 package com.keykat.keykat.brawlkat.kat_Thread;
 
 import android.app.Activity;
+import android.app.ActivityManager;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +19,7 @@ import com.keykat.keykat.brawlkat.kat_dataparser.kat_official_playerBattleLogPar
 import com.keykat.keykat.brawlkat.kat_dataparser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import androidx.annotation.Nullable;
 
@@ -131,7 +134,10 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 if(!kat_LoadBeforeMainActivity.kataMyAccountBase.getTag().equals("")){
                     if(kat_LoadBeforeMainActivity.kataMyAccountBase.getTag()
                             .equals(official_playerInfoParser.DataParser().getTag())) {
-                        kat_LoadBeforeMainActivity.eventsPlayerData = official_playerInfoParser.DataParser();
+
+                        // 알람창 강제 종료되는 것 방지
+                        if(sendData.get(0).length() > 50)
+                            kat_LoadBeforeMainActivity.eventsPlayerData = official_playerInfoParser.DataParser();
                     }
                 }
 
@@ -159,8 +165,10 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                     return;
                 }
 
+                // "자신의 계정 찾기"에서 넘어왔을 경우
                 if(fromActivity.getClass().getName().equals("com.keykat.keykat.brawlkat.kat_SearchAccountForSaveActivity")){
-                    kat_LoadBeforeMainActivity.eventsPlayerData = playerData;
+                    if(sendData.get(0).length() > 50)
+                        kat_LoadBeforeMainActivity.eventsPlayerData = playerData;
                     kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
                     updater.update();
                 }
@@ -182,6 +190,20 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
                 updater.update();
 
+                ActivityManager manager = (ActivityManager)fromActivity.getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
+                ComponentName componentName= info.get(0).topActivity;
+                String topActivityName = componentName.getShortClassName().substring(1);
+                System.out.println(topActivityName);
+                System.out.println(fromActivity.getClass().getName());
+
+                String com = topActivityName;
+                String to = fromActivity.getClass().getName();
+
+                if(fromActivity != null){
+                    if(!com.equals(to) && !com.contains(to) && !to.contains(com))
+                        return;
+                }
 
                 Intent intent = new Intent(fromActivity, toClass);
                 intent.putExtra("playerData", playerData);
@@ -221,6 +243,21 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
                 katabase.delete(type);
                 katabase.insert(type, tag, name, isAccount);
+
+                ActivityManager manager = (ActivityManager)fromActivity.getSystemService(Context.ACTIVITY_SERVICE);
+                List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
+                ComponentName componentName= info.get(0).topActivity;
+                String topActivityName = componentName.getShortClassName().substring(1);
+                System.out.println(topActivityName);
+                System.out.println(fromActivity.getClass().getName());
+
+                String com = topActivityName;
+                String to = fromActivity.getClass().getName();
+
+                if(fromActivity != null){
+                    if(!com.equals(to) && !com.contains(to) && !to.contains(com))
+                        return;
+                }
 
                 Intent intent = new Intent(fromActivity, toClass);
                 intent.putExtra("clubData", clubData);
