@@ -8,12 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.IBinder;
-import android.util.DisplayMetrics;
 
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.kat_Fragment.kat_SettingFragment;
 import com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver;
 
@@ -24,9 +19,6 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
     public                              static boolean                          alreadyStart = false;
 
-    private                             RequestOptions                          options;
-    public                              static int                              height;
-    public                              static int                              width;
 
 
     private kat_Player_MainActivity kat_player_mainActivity;
@@ -54,25 +46,13 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         RegisterBroadcastReceiver();
 
         kat_player_mainActivity = kat_Player_MainActivity.kat_player_mainActivity;
-
-        options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .centerCrop()
-                .priority(Priority.HIGH)
-                .format(DecodeFormat.PREFER_RGB_565);
-
-        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        height = metrics.heightPixels;
-        width = metrics.widthPixels;
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
 
         alreadyStart = false;
-
-        kat_NotificationUpdater updater = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext());
-
+        kat_NotificationUpdater updater = new kat_NotificationUpdater(this.getApplicationContext());
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
             NotificationChannel channel = new NotificationChannel("channel", "brawl stars play",
                     NotificationManager.IMPORTANCE_LOW);

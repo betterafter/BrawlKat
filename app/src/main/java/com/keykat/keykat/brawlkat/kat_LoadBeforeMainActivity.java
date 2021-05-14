@@ -6,7 +6,15 @@ import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.util.DisplayMetrics;
 
+import com.bumptech.glide.Priority;
+import com.bumptech.glide.load.DecodeFormat;
+import com.bumptech.glide.load.engine.DiskCacheStrategy;
+import com.bumptech.glide.request.RequestOptions;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.initialization.InitializationStatus;
+import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.keykat.keykat.brawlkat.kat_Database.kat_countryDatabase;
 import com.keykat.keykat.brawlkat.kat_Database.kat_database;
 import com.keykat.keykat.brawlkat.kat_Database.kat_favoritesDatabase;
@@ -23,9 +31,6 @@ import com.keykat.keykat.brawlkat.kat_dataparser.kat_official_PlayerRankingParse
 import com.keykat.keykat.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonParser;
 import com.keykat.keykat.brawlkat.kat_dataparser.kat_official_PowerPlaySeasonRankingParser;
 import com.keykat.keykat.brawlkat.kat_dataparser.kat_official_playerInfoParser;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -84,11 +89,33 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     public   static final String CdnRootUrl = "https://cdn.brawlify.com";
     public   static final String WebRootUrl = "https://brawlify.com";
 
+
+
+
+    public static RequestOptions options;
+    public static DisplayMetrics metrics;
+
+    public static int SCREEN_WIDTH;
+    public static int SCREEN_HEIGHT;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
+
+
+        options = new RequestOptions()
+                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                .centerCrop()
+                .priority(Priority.HIGH)
+                .format(DecodeFormat.PREFER_RGB_565);
+
+        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+        SCREEN_HEIGHT = metrics.heightPixels;
+        SCREEN_WIDTH = metrics.widthPixels;
+
+
 
         ConnectivityManager manager
                 = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
