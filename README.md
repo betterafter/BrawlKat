@@ -52,8 +52,10 @@ https://play.google.com/store/apps/details?id=com.keykat.keykat.brawlkat&hl=ko
 <br/><br/>
 ### 포그라운드 서비스를 이용한 맵 별 브롤러 승률 확인 및 추천 브롤러 확인
 
-<img src="https://user-images.githubusercontent.com/26290540/118202752-8934d580-b495-11eb-8742-f574d7266c7d.jpeg"  width="400" height="200">
 <img src="https://user-images.githubusercontent.com/26290540/118202762-8df98980-b495-11eb-8857-144b93267662.png"  width="200" height="400">
+<img src="https://user-images.githubusercontent.com/26290540/118202752-8934d580-b495-11eb-8742-f574d7266c7d.jpeg"  width="400" height="200">
+
+브롤스타즈를 즐기는 동시에 앱에서 제공하는 여러 정보를 활용해보세요.
 
 
 <br/><br/>
