@@ -404,6 +404,7 @@ public class Client {
                     kat_LoadBeforeMainActivity.BrawlersArrayList = brawlersParser.DataParser();
                     kat_LoadBeforeMainActivity.mapData = mapsParser.DataParser();
 
+
 //                    for(int i = 0; i < kat_LoadBeforeMainActivity.BrawlersArrayList.size(); i++){
 //                        System.out.println(kat_LoadBeforeMainActivity.BrawlersArrayList.get(i));
 //                    }

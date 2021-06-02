@@ -143,7 +143,11 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
 
                 playerData = official_playerInfoParser.DataParser();
-                if(!client.getAllTypeData().get(1).equals("{none}")) {
+                System.out.println(playerData.toString());
+                System.out.println(client.getAllTypeData().get(1));
+                if(!client.getAllTypeData().get(1).equals("{none}")
+                && client.getAllTypeData().get(1).length() > 30
+                && client.getAllTypeData().get(1) != null) {
                     playerBattleDataList = official_playerBattleLogParser.DataParser();
                     playerBattleDataListStack.add(official_playerBattleLogParser.DataParser());
                 }
@@ -172,11 +176,6 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                     kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
                     updater.update();
                 }
-
-
-                // 2020.10.26
-                // activity.startActivity(intent) 와
-                // startActivity(intent) 의 차이점은 뭘까?
 
                 if(fromActivity.getClass().getName().equals("com.keykat.keykat.brawlkat.kat_LoadBeforeMainActivity")){
 

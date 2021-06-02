@@ -132,7 +132,8 @@ public class kat_BrawlerRecommendation {
             ArrayList<HashMap<String, Object>> wins = EventArrayList.get(i).getWins();
             for(int j = 0; j < wins.size(); j++){
                 if(wins.get(j).get("brawler").toString().equals(brawler.toLowerCase())) {
-                    double currWinRate = (double) wins.get(j).get("winRate");
+                    double currWinRate;
+                    currWinRate = (Double) wins.get(j).get("winRate");
                     winRate += currWinRate;
                 }
             }

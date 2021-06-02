@@ -30,7 +30,7 @@ public class kat_NotificationUpdater {
         playerData = kat_LoadBeforeMainActivity.eventsPlayerData;
     }
 
-    public kat_NotificationUpdater(Context context, kat_official_playerInfoParser.playerData playerData){
+    public kat_NotificationUpdater(Context context, kat_official_playerInfoParser.playerData playerData) {
         this.context = context;
         this.playerData = playerData;
     }
@@ -79,7 +79,9 @@ public class kat_NotificationUpdater {
     }
 
     public RemoteViews bigContentView(){
+
         RemoteViews BigContentView = ctView(R.layout.main_notification_big);
+
         try {
             if (playerData != null) {
 
@@ -140,11 +142,12 @@ public class kat_NotificationUpdater {
         }
     }
 
-    public void update(){
+    public void update() {
+
+        RemoteViews scv = smallContentView();
+        RemoteViews bcv = bigContentView();
 
         try {
-            RemoteViews scv = smallContentView();
-            RemoteViews bcv = bigContentView();
 
             if (kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1) {
                 if (playerData != null) {
@@ -182,17 +185,27 @@ public class kat_NotificationUpdater {
         }
         catch (Exception e){
             e.printStackTrace();
+
+            kat_Service_BrawlStarsNotifActivity.notification
+                    = new NotificationCompat.Builder(context, "channel")
+                    .setSmallIcon(R.drawable.kat_notification_icon)
+                    .setColor(context.getResources().getColor(R.color.semiBlack))
+                    .setColorized(true)
+                    .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                    .setCustomContentView(scv)
+                    .setShowWhen(false);
+
             return;
         }
     }
 
-    public void updaterNotify(){
+    public void updaterNotify() {
         if(kat_Service_BrawlStarsNotifActivity.mNotificationManager != null)
             kat_Service_BrawlStarsNotifActivity.mNotificationManager.notify(1,
                     kat_Service_BrawlStarsNotifActivity.notification.build());
     }
 
-    public String UrlForBigContentViewRecommendBrawler(){
+    public String UrlForBigContentViewRecommendBrawler() {
 
         try {
             ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
@@ -218,7 +231,7 @@ public class kat_NotificationUpdater {
         }
     }
 
-    public int getRecommendationBrawlerIndex(){
+    public int getRecommendationBrawlerIndex() {
 
         try {
             kat_BrawlerRecommendation brawlerRecommendation = new kat_BrawlerRecommendation();
@@ -242,7 +255,7 @@ public class kat_NotificationUpdater {
     }
 
 
-    private RemoteViews ctView(int contentViewId){
+    private RemoteViews ctView(int contentViewId) {
 
         final RemoteViews contentView = new RemoteViews(context.getPackageName(), contentViewId);
         return contentView;
@@ -250,7 +263,7 @@ public class kat_NotificationUpdater {
 
 
     public void GlideImageWithNotification(Context context, final int ImageViewId, final RemoteViews contentView,
-                                            Notification notif, int notificationId, String url){
+                                            Notification notif, int notificationId, String url) throws Exception{
 
         NotificationTarget notificationTarget = new NotificationTarget(
                 context,

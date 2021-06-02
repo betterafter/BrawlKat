@@ -43,7 +43,12 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         super.onCreate();
 
         // 브로드캐스트 등록
-        RegisterBroadcastReceiver();
+        try {
+            RegisterBroadcastReceiver();
+        }
+        catch (Exception e){
+            e.printStackTrace();
+        }
 
         kat_player_mainActivity = kat_Player_MainActivity.kat_player_mainActivity;
     }
@@ -60,7 +65,10 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
             mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
             mNotificationManager.createNotificationChannel(channel);
 
+
             updater.update();
+
+            // 의심 1. notification = null 인건가?
             startForeground(1, notification.build());
         }
 
@@ -69,15 +77,22 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
 
 
+
+
+
     @Override
     public void onDestroy() {
         super.onDestroy();
-        kat_SettingFragment.serviceStarted = false;
 
-        UnregisterBroadcastReceiver();
+        kat_SettingFragment.serviceStarted = false;
+        try {
+            UnregisterBroadcastReceiver();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
-    private void RegisterBroadcastReceiver(){
+    private void RegisterBroadcastReceiver() {
 
         if(kat_LoadBeforeMainActivity.kataSettingBase == null) return;
         if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0) return;
@@ -103,7 +118,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         sendBroadcast(ThreadCheckIntent);
     }
 
-    private void UnregisterBroadcastReceiver(){
+    private void UnregisterBroadcastReceiver() {
 
         if(broadcastReceiver != null){
             unregisterReceiver(broadcastReceiver);

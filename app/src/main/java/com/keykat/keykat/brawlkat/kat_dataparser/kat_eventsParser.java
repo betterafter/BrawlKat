@@ -82,9 +82,9 @@ public class kat_eventsParser {
                     // 브롤러
                     wins.put("brawler", elem.get("brawler"));
                     // 승률
-                    wins.put("winRate", elem.get("winRate"));
+                    wins.put("winRate", elem.getDouble("winRate"));
                     // 픽률
-                    wins.put("useRate", elem.get("useRate"));
+                    wins.put("useRate", elem.getDouble("useRate"));
 
                     winsArrayList.add(wins);
                 }

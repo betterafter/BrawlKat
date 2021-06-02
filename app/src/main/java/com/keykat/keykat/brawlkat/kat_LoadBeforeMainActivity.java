@@ -165,8 +165,12 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                 kataCountryBase.insert("KR", countryName);
 
             kat_LoadBeforeMainActivity.client.RankingInit("global", "", "");
+
+
         }
     }
+
+
 
     @Override
     protected void onStart() {
