@@ -21,37 +21,37 @@
         android:roundIcon="@mipmap/main_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.keykat.keykat.brawlkat.kat_LoadBeforeMainActivity">
+        <activity android:name="com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_Player_MainActivity"
+        <activity android:name="com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity"
             android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_Player_RecentSearchActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_Player_PlayerDetailActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_Player_ClubDetailActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_Player_PlayerBattleLogDetailActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_SearchAccountForSaveActivity" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_CountrySelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_BrawlerSelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.kat_ExceptionActivity"></activity>
+        <activity android:name="com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".search.result.player.activity.kat_Player_PlayerDetailActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".search.result.club.activity.kat_Player_ClubDetailActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".search.result.player.activity.kat_Player_PlayerBattleLogDetailActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.keykat.keykat.brawlkat.home.ranking.activity.kat_CountrySelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.keykat.keykat.brawlkat.home.ranking.activity.kat_BrawlerSelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
+        <activity android:name="com.keykat.keykat.brawlkat.home.activity.kat_ExceptionActivity"></activity>
 
 
-        <service android:name="com.keykat.keykat.brawlkat.kat_Service_OverdrawActivity"></service>
-        <service android:name="com.keykat.keykat.brawlkat.kat_Service_BrawlStarsNotifActivity"></service>
-        <service android:name="com.keykat.keykat.brawlkat.kat_onTaskRemovedService"
+        <service android:name="com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity"></service>
+        <service android:name="com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity"></service>
+        <service android:name="com.keykat.keykat.brawlkat.service.util.kat_onTaskRemovedService"
             android:stopWithTask="false" ></service>
 
-        <receiver android:name="com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_ButtonBroadcastReceiver">
+        <receiver android:name="com.keykat.keykat.brawlkat.service.util.kat_ButtonBroadcastReceiver">
             <intent-filter android:priority="10000">
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </receiver>
 
-        <receiver android:name="com.keykat.keykat.brawlkat.kat_broadcast_receiver.kat_ActionBroadcastReceiver">
+        <receiver android:name="com.keykat.keykat.brawlkat.service.util.kat_ActionBroadcastReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.SCREEN_ON" />
                 <action android:name="android.intent.action.SCREEN_OFF" />
