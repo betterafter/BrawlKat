@@ -384,13 +384,13 @@ public class Client {
                     // API 데이터 파싱
                     String splited;
                     resData = new ArrayList<>();
+
                     while (split != -1) {
 
                         split = result.indexOf(boundaryCode, startidx);
 
                         if(split == -1) break;
                         splited = result.substring(startidx, split);
-
                         resData.add(splited);
                         startidx = split + boundaryCode.length();
                     }
@@ -407,12 +407,6 @@ public class Client {
                     kat_LoadBeforeMainActivity.EventArrayList = eventsParser.DataParser();
                     kat_LoadBeforeMainActivity.BrawlersArrayList = brawlersParser.DataParser();
                     kat_LoadBeforeMainActivity.mapData = mapsParser.DataParser();
-
-
-//                    for(int i = 0; i < kat_LoadBeforeMainActivity.BrawlersArrayList.size(); i++){
-//                        System.out.println(kat_LoadBeforeMainActivity.BrawlersArrayList.get(i));
-//                    }
-
 
                     firstInit = true;
                     reader.close();

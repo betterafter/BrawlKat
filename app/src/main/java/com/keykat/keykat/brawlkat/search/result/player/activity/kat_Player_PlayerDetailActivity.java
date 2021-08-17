@@ -102,7 +102,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     protected void onStart(){
         super.onStart();
 
-        if(this.getClass().getName().equals("com.keykat.keykat.brawlkat.search_result.player.activity.kat_Player_PlayerDetailActivity")) {
+        if(this.getClass().getName().equals("com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity")) {
             Intent intent = getIntent();
             playerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
             setData();
@@ -502,6 +502,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
 
         //..........................................................................................
 
+
         for(int i = 0; i < playerBattleDataList.size(); i++){
 
             final kat_official_playerBattleLogParser.playerBattleData battleData = playerBattleDataList.get(i);
@@ -660,6 +661,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
             String sec = time.substring(13, 15);
             battleLogTime.setText(year + "." + month + "." + day + "   " + hour + "시 " + min + "분 " + sec + "초");
 
+            System.out.println(mapData);
             if(!battleData.getEventId().equals("0") && mapData.get(battleData.getEventId()) != null)
                 battleLogEventName.setText(mapData.get(battleData.getEventId()).getName());
 
@@ -733,7 +735,7 @@ public class kat_Player_PlayerDetailActivity extends kat_Player_RecentSearchActi
     public void onBackPressed() {
         super.onBackPressed();
 
-        if(this.getClass().getName().equals("com.keykat.keykat.brawlkat.search_result.player.activity.kat_Player_PlayerDetailActivity"))
+        if(this.getClass().getName().equals("com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity"))
             if(!playerBattleDataListStack.empty())
                 playerBattleDataListStack.pop();
     }
