@@ -8,9 +8,9 @@ import android.content.Intent;
 import android.util.LongSparseArray;
 
 import com.keykat.keykat.brawlkat.BuildConfig;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 
 import androidx.annotation.NonNull;
 
@@ -48,7 +48,7 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
 
         if(intent.getAction().equals(BROADCAST_MASSAGE_SCREEN_ON)){
-            if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 1) {
+            if(kat_Data.kataSettingBase.getData("AnalyticsService") == 1) {
                 isThreaStop = false;
                 if (checkThread != null) checkThread = null;
                 checkThread = new BrawlStarsPlayCheckThread(context);

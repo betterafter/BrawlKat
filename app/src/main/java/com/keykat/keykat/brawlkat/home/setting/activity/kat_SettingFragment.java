@@ -22,10 +22,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
 import com.keykat.keykat.brawlkat.service.util.kat_ActionBroadcastReceiver;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -81,7 +81,7 @@ public class kat_SettingFragment extends Fragment {
         analyticsThumb.setColorFilter(Color.parseColor("#FF424242"), PorterDuff.Mode.MULTIPLY);
 
         // 초기화 : SettingFragment가 시작될 때 두 개의 서비스를 시작할지 여부 확인 (미리 체크해놓은 정보를 바탕으로)
-        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 0){
+        if(kat_Data.kataSettingBase.getData("ForegroundService") == 0){
             foregroundServiceSwitch.setChecked(false);
             setForegroundSwitch(false, analyticsServiceSwitch, analyticsThumb);
         }
@@ -90,7 +90,7 @@ public class kat_SettingFragment extends Fragment {
             setForegroundSwitch(true, analyticsServiceSwitch, analyticsThumb);
         }
 
-        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0){
+        if(kat_Data.kataSettingBase.getData("AnalyticsService") == 0){
             analyticsServiceSwitch.setChecked(false);
             setAnalyticsSwitch(false);
         }
@@ -147,7 +147,7 @@ public class kat_SettingFragment extends Fragment {
                 }
             }
             // 데이터베이스 업데이트 및 자식 스위치인 아날리틱스 스위치 모양 변경
-            kat_LoadBeforeMainActivity.kataSettingBase.update("ForegroundService", true);
+            kat_Data.kataSettingBase.update("ForegroundService", true);
             analyticsServiceSwitch.setTextColor(getResources().getColor(R.color.switchOn));
             analyticsServiceSwitch.setClickable(true);
             analyticsThumb.setColorFilter(Color.parseColor("#ffffff"), PorterDuff.Mode.MULTIPLY);
@@ -161,8 +161,8 @@ public class kat_SettingFragment extends Fragment {
             myToast.show();
 
             // 자식 스위치와 자신 세팅
-            kat_LoadBeforeMainActivity.kataSettingBase.update("ForegroundService", false);
-            kat_LoadBeforeMainActivity.kataSettingBase.update("AnalyticsService", false);
+            kat_Data.kataSettingBase.update("ForegroundService", false);
+            kat_Data.kataSettingBase.update("AnalyticsService", false);
             analyticsServiceSwitch.setTextColor(getResources().getColor(R.color.switchOff));
             analyticsServiceSwitch.setChecked(false);
             analyticsThumb.setColorFilter(Color.parseColor("#FF424242"), PorterDuff.Mode.MULTIPLY);
@@ -173,9 +173,9 @@ public class kat_SettingFragment extends Fragment {
     // 아날리틱스 스위치를 터치할 때 -> 어차피 이건 BrawlStarsNotifActivity의 스레드에서 알아서 돌리니까 boolean만 업데이트 해주면 됨.
     private void setAnalyticsSwitch(boolean b){
         if(b){
-            kat_LoadBeforeMainActivity.kataSettingBase.update("AnalyticsService", true);
+            kat_Data.kataSettingBase.update("AnalyticsService", true);
         }else{
-            kat_LoadBeforeMainActivity.kataSettingBase.update("AnalyticsService", false);
+            kat_Data.kataSettingBase.update("AnalyticsService", false);
         }
     }
 
@@ -207,7 +207,7 @@ public class kat_SettingFragment extends Fragment {
         String BROADCAST_MASSAGE_SCREEN_ON = "android.intent.action.SCREEN_ON";
         String BROADCAST_MASSAGE_SCREEN_OFF = "android.intent.action.SCREEN_OFF";
 
-        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0) return;
+        if(kat_Data.kataSettingBase.getData("AnalyticsService") == 0) return;
         if(broadcastReceiver != null) return;
 
         final IntentFilter filter = new IntentFilter();
@@ -221,7 +221,7 @@ public class kat_SettingFragment extends Fragment {
         getActivity().registerReceiver(broadcastReceiver, filter);
 
         Intent ThreadCheckIntent = new Intent();
-        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0){
+        if(kat_Data.kataSettingBase.getData("AnalyticsService") == 0){
             ThreadCheckIntent.setAction("com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity.CHECK_END");
         }
         else{

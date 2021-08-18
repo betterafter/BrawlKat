@@ -21,8 +21,8 @@ import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.util.kat_EventAdapter;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -96,8 +96,8 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     // 서버에서 가져온 api 데이터 불러오고 리스트에 넣기
     public void getCurrentEventsInformation(){
 
-        EventArrayList = kat_LoadBeforeMainActivity.EventArrayList;
-        BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+        EventArrayList = kat_Data.EventArrayList;
+        BrawlersArrayList = kat_Data.BrawlersArrayList;
 
         eventsThread = new getEventsThread();
         isEventThreadStart = true;
@@ -164,7 +164,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         btn.setBackgroundColor(context.getResources().getColor(R.color.semiBlack));
         btn.setText("my");
         btn.setAllCaps(false);
-        if(kat_LoadBeforeMainActivity.kataMyAccountBase.getTag().equals("")) {
+        if(kat_Data.kataMyAccountBase.getTag().equals("")) {
             btn.setTextColor(context.getResources().getColor(R.color.gray));
             btn.setEnabled(false);
         }

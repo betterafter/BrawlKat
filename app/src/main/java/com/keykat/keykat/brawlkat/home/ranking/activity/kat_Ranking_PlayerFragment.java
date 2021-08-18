@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PlayerRankingParser;
 
@@ -156,10 +156,10 @@ public class kat_Ranking_PlayerFragment extends Fragment {
 
                     ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList;
                     if(type.equals("global")){
-                        PlayerRankingArrayList = kat_LoadBeforeMainActivity.PlayerRankingArrayList;
+                        PlayerRankingArrayList = kat_Data.PlayerRankingArrayList;
                     }
                     else{
-                        PlayerRankingArrayList = kat_LoadBeforeMainActivity.MyPlayerRankingArrayList;
+                        PlayerRankingArrayList = kat_Data.MyPlayerRankingArrayList;
                     }
                     setView(player_ranking_player_layout, PlayerRankingArrayList, dialog);
                 }
@@ -171,10 +171,10 @@ public class kat_Ranking_PlayerFragment extends Fragment {
         @Override
         public void run(){
             while(true){
-                if(kat_LoadBeforeMainActivity.MyPlayerRankingArrayList != null &&
-                kat_LoadBeforeMainActivity.PlayerRankingArrayList != null) {
-                    if (kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.size() > 0 &&
-                            kat_LoadBeforeMainActivity.PlayerRankingArrayList.size() > 0) {
+                if(kat_Data.MyPlayerRankingArrayList != null &&
+                        kat_Data.PlayerRankingArrayList != null) {
+                    if (kat_Data.MyPlayerRankingArrayList.size() > 0 &&
+                            kat_Data.PlayerRankingArrayList.size() > 0) {
                         break;
                     }
                 }

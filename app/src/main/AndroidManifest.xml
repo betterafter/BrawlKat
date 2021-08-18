@@ -21,7 +21,7 @@
         android:roundIcon="@mipmap/main_icon_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name="com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity">
+        <activity android:name="com.keykat.keykat.brawlkat.load.activity.kat_LoadBeforeMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

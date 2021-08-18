@@ -11,14 +11,9 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -36,14 +31,11 @@ import androidx.fragment.app.Fragment;
 
 public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment {
 
-    private                 RequestOptions                                                          options;
     private                 kat_official_playerInfoParser.playerData                                playerData;
     private                 kat_official_playerBattleLogParser.playerBattleData                     battleData;
 
     private                 ArrayList<HashMap<String, Object>>                                      BrawlersArrayList;
 
-    private                 int                                                                     width;
-    private                 int                                                                     height;
     private                 int[]                                                                   colorArray;
     private                 int[]                                                                   colorArray2;
 
@@ -69,16 +61,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .centerCrop()
-                .priority(Priority.HIGH)
-                .format(DecodeFormat.PREFER_RGB_565);
-
-        width = kat_Player_PlayerDetailActivity.width;
-        height = kat_Player_PlayerDetailActivity.height;
-
-        BrawlersArrayList = kat_Player_MainActivity.BrawlersArrayList;
+        BrawlersArrayList = kat_Data.BrawlersArrayList;
         colorArray = new int[]{
                 R.color.winColor, R.color.loseColor, R.color.drawColor, 0,0,0,0,0,0,0
         };
@@ -343,10 +326,11 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
 
         for(int k = 0; k < BrawlersArrayList.size(); k++){
             if(BrawlersArrayList.get(k).get("name").toString().toLowerCase().equals(playerInfo.getBrawler_name().toLowerCase())){
-                GlideImage(
-                        BrawlersArrayList.get(k).get("imageUrl").toString(),
-                        width / 10,
-                        width / 10,
+                kat_Data.GlideImage(
+                        getActivity().getApplicationContext(),
+                        Objects.requireNonNull(BrawlersArrayList.get(k).get("imageUrl")).toString(),
+                        kat_Data.SCREEN_WIDTH.intValue() / 10,
+                        kat_Data.SCREEN_WIDTH.intValue() / 10,
                         brawler_image);
                 break;
             }
@@ -377,31 +361,20 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         player_trophy.setText(playerInfo.getBrawler_trophies());
         player_tag.setText(playerInfo.getTag());
 
-        v.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v){
+        v.setOnClickListener(v1 -> {
 
-                kat_LoadingDialog dialog = new kat_LoadingDialog(getActivity());
-                dialog.show();
+            kat_LoadingDialog dialog = new kat_LoadingDialog(getActivity());
+            dialog.show();
 
-                String realTag = playerInfo.getTag().substring(1);
+            String realTag = playerInfo.getTag().substring(1);
 
-                kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class, dialog);
-                kset.SearchStart(realTag, "players", getActivity().getApplicationContext());
-            }
+            kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class, dialog);
+            kset.SearchStart(realTag, "players", getActivity().getApplicationContext());
         });
 
         return v;
     }
 
-    public void GlideImage(String url, int width, int height, ImageView view){
-
-        Glide.with(this)
-                .applyDefaultRequestOptions(options)
-                .load(url)
-                .override(width, height)
-                .into(view);
-    }
 
     Comparator<kat_official_playerBattleLogParser.team> comparator = new Comparator<kat_official_playerBattleLogParser.team>() {
         @Override

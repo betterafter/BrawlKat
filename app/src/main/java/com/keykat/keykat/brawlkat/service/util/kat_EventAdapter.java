@@ -17,8 +17,8 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_EventActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
@@ -149,9 +149,9 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
             if(isUserRecommend){
                 playerBrawlersArrayList = new ArrayList<>();
-                if(kat_LoadBeforeMainActivity.eventsPlayerData != null) {
+                if(kat_Data.eventsPlayerData != null) {
                     ArrayList<kat_official_playerInfoParser.playerBrawlerData> data
-                            = kat_LoadBeforeMainActivity.eventsPlayerData.getBrawlerData();
+                            = kat_Data.eventsPlayerData.getBrawlerData();
 
                     for(int i = 0; i < data.size(); i++){
                         playerBrawlersArrayList.add(data.get(i).getName());

@@ -2,7 +2,7 @@ package com.keykat.keykat.brawlkat.util.parser;
 
 import android.content.res.AssetManager;
 
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
+import com.keykat.keykat.brawlkat.load.activity.kat_LoadBeforeMainActivity;
 
 import org.json.JSONArray;
 import org.json.JSONObject;

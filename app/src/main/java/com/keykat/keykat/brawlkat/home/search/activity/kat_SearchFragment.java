@@ -19,18 +19,18 @@ import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.keykat.keykat.brawlkat.util.network.Client;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
-import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
-import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity;
-import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
+import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
+import com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivity;
+import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
+import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
+import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
+import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.network.Client;
+import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
@@ -70,7 +70,7 @@ public class kat_SearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         dialog = new kat_LoadingDialog(getActivity());
-        client = kat_player_mainActivity.client;
+        client = kat_Data.client;
 
         options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -104,7 +104,7 @@ public class kat_SearchFragment extends Fragment {
 
 
         // 내 계정 뷰 보여주기......................................................................................................//
-        kat_myAccountDatabase kataMyAccountBase = kat_player_mainActivity.kataMyAccountBase;
+        kat_myAccountDatabase kataMyAccountBase = kat_Data.kataMyAccountBase;
         if(kataMyAccountBase.size() == 1){
 
             final View tempView = player_main_inputMyAccount.getChildAt(0);
@@ -140,7 +140,7 @@ public class kat_SearchFragment extends Fragment {
             }
             Collections.sort(brawlerData, new brawlerSort());
 
-            BrawlerArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+            BrawlerArrayList = kat_Data.BrawlersArrayList;
 
             FrameLayout brawler1 = accountView.findViewById(R.id.brawler1);
             FrameLayout brawler2 = accountView.findViewById(R.id.brawler2);
@@ -155,10 +155,10 @@ public class kat_SearchFragment extends Fragment {
             // 이미지 링크 선언
             String url_profile = "";
             if(kat_Player_MainActivity.MyPlayerData != null){
-                url_profile = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile/" +
+                url_profile = kat_Data.WebRootUrl + "/assets/profile/" +
                         kat_Player_MainActivity.MyPlayerData.getIconId() + ".png?v=1";
             }
-            String url_icon_trophies = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/trophy.png";
+            String url_icon_trophies = kat_Data.WebRootUrl + "/assets/icon/trophy.png";
 
             // 이미지 세팅
             GlideImageWithRoundCorner(url_profile, width / 5, width / 5, playerIcon);
@@ -180,8 +180,8 @@ public class kat_SearchFragment extends Fragment {
                     player_main_inputMyAccount.addView(tempView);
                     player_main_inputMyAccount.setBackground(tempDrawable);
 
-                    kat_player_mainActivity.kataMyAccountBase.delete(playerData.getTag());
-                    kat_LoadBeforeMainActivity.eventsPlayerData = null;
+                    kat_Data.kataMyAccountBase.delete(playerData.getTag());
+                    kat_Data.eventsPlayerData = null;
 
                     kat_NotificationUpdater updater = new kat_NotificationUpdater(getActivity().getApplicationContext());
                     updater.update();

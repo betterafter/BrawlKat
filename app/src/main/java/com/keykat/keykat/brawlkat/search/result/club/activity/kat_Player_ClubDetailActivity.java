@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.search.result.club.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
@@ -7,7 +8,6 @@ import android.graphics.Typeface;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.text.Html;
-import android.util.DisplayMetrics;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -16,31 +16,25 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.Priority;
-import com.bumptech.glide.load.DecodeFormat;
-import com.bumptech.glide.load.engine.DiskCacheStrategy;
-import com.bumptech.glide.request.RequestOptions;
-import com.keykat.keykat.brawlkat.util.network.Client;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivity;
-import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
+import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_clubLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_clubInfoParser;
-import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 
-public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivity {
+public class kat_Player_ClubDetailActivity extends AppCompatActivity {
 
 
     private                             ImageView                           player_club_icon;
@@ -48,14 +42,8 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
     private                             TextView                            player_club_tag;
     private                             TextView                            player_club_description;
 
-    private                             RequestOptions                      options;
-
-
-    private                             int                                 height;
-    private                             int                                 width;
-
     private                             int[]                               colorArray2;
-    private Client client = kat_Player_MainActivity.client;
+
 
 
 
@@ -76,23 +64,13 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         ad.load();
 
         Intent intent = getIntent();
-        clubData = (kat_official_clubInfoParser.clubData) intent.getSerializableExtra("clubData");
-        clubLogData = (kat_clubLogParser.clubLogData) intent.getSerializableExtra("clubLogData");
+        kat_Data.clubData = (kat_official_clubInfoParser.clubData) intent.getSerializableExtra("clubData");
+        kat_Data.clubLogData = (kat_clubLogParser.clubLogData) intent.getSerializableExtra("clubLogData");
 
         player_club_icon = findViewById(R.id.player_club_icon);
         player_club_name = findViewById(R.id.player_club_name);
         player_club_tag = findViewById(R.id.player_club_tag);
         player_club_description = findViewById(R.id.player_club_description);
-
-        options = new RequestOptions()
-                .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                .centerCrop()
-                .priority(Priority.HIGH)
-                .format(DecodeFormat.PREFER_RGB_565);
-
-        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        height = metrics.heightPixels;
-        width = metrics.widthPixels;
 
         colorArray2 = new int[]{
                 R.color.Color1,  R.color.Color3, R.color.Color4,
@@ -110,25 +88,33 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
     private void setData(){
 
-        String iconUrl = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/club/" + clubData.getBadgeId() + ".png?v=1";
-        GlideImageWithRoundCorner(iconUrl, width / 7, width / 7, player_club_icon);
-        player_club_name.setText(clubData.getName());
-        player_club_tag.setText(clubData.getTag());
-        player_club_description.setText(clubData.getDescription());
+        String iconUrl = kat_Data.WebRootUrl + "/assets/club/" + kat_Data.clubData.getBadgeId() + ".png?v=1";
+        kat_Data.GlideImageWithRoundCorner(
+                getApplicationContext(),
+                iconUrl,
+                kat_Data.SCREEN_WIDTH.intValue() / 7,
+                kat_Data.SCREEN_WIDTH.intValue() / 7,
+                player_club_icon
+        );
+
+        player_club_name.setText(kat_Data.clubData.getName());
+        player_club_tag.setText(kat_Data.clubData.getTag());
+        player_club_description.setText(kat_Data.clubData.getDescription());
 
 
         setClubInformationList();
         setClubMemberList();
     }
 
+    @SuppressLint("SetTextI18n")
     private void setClubInformationList(){
 
         String[] informationIconUrl = new String[]{
-                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/trophy.png",
-                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/Ranking.png",
-                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/Battle-Log.png",
-                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/Battle-Log.png",
-                kat_LoadBeforeMainActivity.WebRootUrl + "/assets/icon/News.png"
+                kat_Data.WebRootUrl + "/assets/icon/trophy.png",
+                kat_Data.WebRootUrl + "/assets/icon/Ranking.png",
+                kat_Data.WebRootUrl + "/assets/icon/Battle-Log.png",
+                kat_Data.WebRootUrl + "/assets/icon/Battle-Log.png",
+                kat_Data.WebRootUrl + "/assets/icon/News.png"
         };
 
         String[] informationName = new String[]{
@@ -136,11 +122,11 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         };
 
         String[] informationValue = new String[]{
-                Integer.toString(clubData.getTrophies()),
-                Integer.toString(clubData.getRequiredTrophies()),
-                clubData.getTrophyRange(),
-                Integer.toString(clubData.getAverageTrophy()),
-                clubData.getMemberDatas().size()  + " / " + "100"
+                Integer.toString(kat_Data.clubData.getTrophies()),
+                Integer.toString(kat_Data.clubData.getRequiredTrophies()),
+                kat_Data.clubData.getTrophyRange(),
+                Integer.toString(kat_Data.clubData.getAverageTrophy()),
+                kat_Data.clubData.getMemberDatas().size()  + " / " + "100"
         };
 
         LinearLayout linearLayout = findViewById(R.id.player_club_clubInformation);
@@ -151,7 +137,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         tv.setText("클럽 정보");
         tv.setBackgroundResource(R.drawable.card_bottom_line);
         tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
-        tv.setTextColor(getResources().getColor(R.color.colorWhite));
+        tv.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
         tv.setGravity(Gravity.CENTER_VERTICAL);
         tv.setPadding(30, 30, 30, 30);
 
@@ -164,12 +150,12 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
         String[] membersType = new String[4];
         int[] membersValue = new int[4];
-        HashMap<String, Integer> roles = clubData.getMembersRole();
+        HashMap<String, Integer> roles = kat_Data.clubData.getMembersRole();
         Iterator<String> iter = roles.keySet().iterator();
 
         int idx = 0;
         while(iter.hasNext()){
-            String key = (String) iter.next();
+            String key = iter.next();
             int value = roles.get(key);
 
             membersType[idx] = key;
@@ -182,7 +168,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         for(int i = 0; i < 5; i++){
 
             // 내부 레이아웃 아이템을 같은 간격으로 정렬
-            View view = layoutInflater.inflate(R.layout.club_detail_clubinformation, null);
+            @SuppressLint("InflateParams") View view = layoutInflater.inflate(R.layout.club_detail_clubinformation, null);
             LinearLayout.LayoutParams p = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -192,7 +178,13 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
             // 각 아이템 값 선언
             ImageView icon = view.findViewById(R.id.club_detail_game_info_icon);
-            GlideImageWithRoundCorner(informationIconUrl[i], width / 20, width / 20, icon);
+            kat_Data.GlideImageWithRoundCorner(
+                    getApplicationContext(),
+                    informationIconUrl[i],
+                    kat_Data.SCREEN_WIDTH.intValue() / 20,
+                    kat_Data.SCREEN_WIDTH.intValue() / 20,
+                    icon
+            );
 
             TextView name = view.findViewById(R.id.club_detail_game_info_modeType);
             name.setText(informationName[i]);
@@ -200,11 +192,12 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             TextView value = view.findViewById(R.id.club_detail_game_info_modeValue);
             value.setText(informationValue[i]);
             value.setTypeface(tv.getTypeface(), Typeface.BOLD);
-            value.setTextColor(getResources().getColor(colorArray2[i]));
+            value.setTextColor(ContextCompat.getColor(getApplicationContext(), colorArray2[i]));
 
             if(i == 4){
                 LinearLayout member_summary_layout = view.findViewById(R.id.member_summary);
                 for(int j = 0; j < 4; j++){
+                    @SuppressLint("InflateParams")
                     View v = layoutInflater.inflate(R.layout.player_club_member_information, null);
                     TextView club_member_type = v.findViewById(R.id.player_club_member_type);
                     TextView club_member_value = v.findViewById(R.id.player_club_member_value);
@@ -221,23 +214,31 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         }
     }
 
+    @SuppressLint("SetTextI18n")
     public void setClubMemberList(){
 
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = clubData.getMemberDatas();
+        final ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = kat_Data.clubData.getMemberDatas();
         for(int i = 0; i < memberData.size(); i++){
-            View view = inflater.inflate(R.layout.player_club_detail_members_item, null);
+            @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.player_club_detail_members_item, null);
             TextView club_member_rank = view.findViewById(R.id.player_club_detail_members_ranknum);
             ImageView club_member_icon = view.findViewById(R.id.player_club_detail_members_icon);
             TextView club_member_name = view.findViewById(R.id.player_club_detail_members_name);
             TextView club_member_trophy = view.findViewById(R.id.player_club_detail_members_trophy);
             TextView club_member_role = view.findViewById(R.id.player_club_detail_members_role);
 
-            String iconUrl = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile-low/" +
+            String iconUrl = kat_Data.WebRootUrl + "/assets/profile-low/" +
                     memberData.get(i).getIconId() + ".png?v=1";
-            GlideImage(iconUrl, width / 10, width / 10, club_member_icon);
+            kat_Data.GlideImage(
+                    getApplicationContext(),
+                    iconUrl,
+                    kat_Data.SCREEN_WIDTH.intValue() / 10,
+                    kat_Data.SCREEN_WIDTH.intValue() / 10,
+                    club_member_icon
+            );
+
             club_member_rank.setText(Integer.toString(i + 1));
             club_member_name.setText(memberData.get(i).getName());
             club_member_trophy.setText(Integer.toString(memberData.get(i).getTrophies()));
@@ -247,46 +248,46 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             nameColor = nameColor.replace("0x", "#");
             club_member_name.setTextColor(Color.parseColor(nameColor));
 
-            club_member_trophy.setTextColor(getResources().getColor(R.color.trophiesYellow));
-            if(memberData.get(i).getRole().equals("member")){
-                club_member_role.setTextColor(getResources().getColor(R.color.colorWhite));
-            }
-            else if(memberData.get(i).getRole().equals("senior")){
-                club_member_role.setTextColor(getResources().getColor(R.color.Color4));
-            }
-            else if(memberData.get(i).getRole().equals("vicePresident")){
-                club_member_role.setTextColor(getResources().getColor(R.color.Color3));
-            }
-            else if(memberData.get(i).getRole().equals("president")){
-                club_member_role.setTextColor(getResources().getColor(R.color.Color1));
+            club_member_trophy.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.trophiesYellow));
+            switch (memberData.get(i).getRole()) {
+                case "member":
+                    club_member_role.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
+                    break;
+                case "senior":
+                    club_member_role.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.Color4));
+                    break;
+                case "vicePresident":
+                    club_member_role.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.Color3));
+                    break;
+                case "president":
+                    club_member_role.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.Color1));
+                    break;
             }
 
             final int idx = i;
-            view.setOnClickListener(new View.OnClickListener(){
-                @Override
-                public void onClick(View v){
+            view.setOnClickListener(v -> {
 
-                    kat_LoadingDialog dialog = new kat_LoadingDialog(kat_Player_ClubDetailActivity.this);
-                    dialog.show();
+                kat_LoadingDialog dialog = new kat_LoadingDialog(kat_Player_ClubDetailActivity.this);
+                dialog.show();
 
-                    String realTag = memberData.get(idx).getTag().substring(1);
+                String realTag = memberData.get(idx).getTag().substring(1);
 
-                    kat_SearchThread kset = new kat_SearchThread(kat_Player_ClubDetailActivity.this,
-                            kat_Player_PlayerDetailActivity.class, dialog);
-                    kset.SearchStart(realTag, "players", getApplicationContext());
-                }
+                kat_SearchThread kset = new kat_SearchThread(kat_Player_ClubDetailActivity.this,
+                        kat_Player_PlayerDetailActivity.class, dialog);
+                kset.SearchStart(realTag, "players", getApplicationContext());
             });
             linearLayout.addView(view);
         }
     }
 
 
+    @SuppressLint("SetTextI18n")
     public void setClubLog(){
 
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
 
-        if(clubLogData.getStatus().equals("forbidden")){
+        if(kat_Data.clubLogData.getStatus().equals("forbidden")){
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -304,15 +305,16 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
 
             forbiddenText.setText("This club is not tracked. \n");
             forbiddenText2.setText(Html.fromHtml("You can toggle it by going to " +
-                    "<font color=\"#2a7de2\"><b>" + kat_LoadBeforeMainActivity.WebRootUrl + "/stats/clublog/JJQP98G0</b></font>" +
-                    " and enabling tracking. <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>"));
+                            "<font color=\"#2a7de2\"><b>" + kat_Data.WebRootUrl + "/stats/clublog/JJQP98G0</b></font>" +
+                            " and enabling tracking. <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>",
+                    Html.FROM_HTML_MODE_LEGACY));
 
             forbiddenText.setTextSize(24);
-            forbiddenText.setTextColor(getResources().getColor(R.color.colorWhite));
+            forbiddenText.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
             forbiddenText.setLayoutParams(params);
 
             forbiddenText2.setTextSize(18);
-            forbiddenText2.setTextColor(getResources().getColor(R.color.colorWhite));
+            forbiddenText2.setTextColor(ContextCompat.getColor(getApplicationContext(), R.color.colorWhite));
 
             linearLayout.addView(forbiddenText);
             linearLayout.addView(forbiddenText2);
@@ -320,25 +322,24 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         }
 
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ArrayList<Object> cld = clubLogData.getHistoryData();
+        ArrayList<Object> cld = kat_Data.clubLogData.getHistoryData();
         for(int i = 0; i < cld.size(); i++){
 
-            View view = inflater.inflate(R.layout.player_club_detail_club_log, null);
+            @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.player_club_detail_club_log, null);
             TextView type = view.findViewById(R.id.player_club_detail_club_log_type);
             TextView change = view.findViewById(R.id.player_club_detail_club_log_change);
-            TextView time = view.findViewById(R.id.player_club_detail_club_log_time);
 
             if(cld.get(i) instanceof kat_clubLogParser.joinData){
                 kat_clubLogParser.joinData data = (kat_clubLogParser.joinData) cld.get(i);
                 type.setText("Changing Club Member");
+
+                Drawable drawable = type.getBackground();
                 if(data.isJoin()) {
-                    Drawable drawable = type.getBackground();
-                    drawable.setTint(getResources().getColor(R.color.Color12));
+                    drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color12));
                     change.setText(data.getPlayerName() + " 님이 클럽에 가입했습니다.");
                 }
                 else {
-                    Drawable drawable = type.getBackground();
-                    drawable.setTint(getResources().getColor(R.color.Color11));
+                    drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color11));
                     change.setText(data.getPlayerName() + " 님이 클럽을 탈퇴했습니다.");
                 }
 
@@ -349,20 +350,22 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
                 kat_clubLogParser.settingData data = (kat_clubLogParser.settingData) cld.get(i);
                 type.setText("Changing Club Status");
                 Drawable drawable = type.getBackground();
-                if(data.getType().equals("requirement")){
-                    drawable.setTint(getResources().getColor(R.color.Color1));
-                    type.setText("Changing Club Status [Requirement]");
-                    change.setText(data.getOldType() + " 에서 " + data.getNewType() + " 으로 변경되었습니다.");
-                }
-                else if(data.getType().equals("status")){
-                    drawable.setTint(getResources().getColor(R.color.Color2));
-                    type.setText("Changing Club Status [Status]");
-                    change.setText(data.getOldType() + " 에서 " + data.getNewType() + " 으로 변경되었습니다.");
-                }
-                else if(data.getType().equals("description")){
-                    drawable.setTint(getResources().getColor(R.color.Color3));
-                    type.setText("Changing Club Status [Description]");
-                    change.setText("before : " + data.getOldType() + '\n' + "after : " + data.getNewType());
+                switch (data.getType()) {
+                    case "requirement":
+                        drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color1));
+                        type.setText("Changing Club Status [Requirement]");
+                        change.setText(data.getOldType() + " 에서 " + data.getNewType() + " 으로 변경되었습니다.");
+                        break;
+                    case "status":
+                        drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color2));
+                        type.setText("Changing Club Status [Status]");
+                        change.setText(data.getOldType() + " 에서 " + data.getNewType() + " 으로 변경되었습니다.");
+                        break;
+                    case "description":
+                        drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color3));
+                        type.setText("Changing Club Status [Description]");
+                        change.setText("before : " + data.getOldType() + '\n' + "after : " + data.getNewType());
+                        break;
                 }
                // time.setText(data.getTimeFormat());
             }
@@ -370,7 +373,7 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
             else if(cld.get(i) instanceof kat_clubLogParser.promoteData){
                 kat_clubLogParser.promoteData data = (kat_clubLogParser.promoteData) cld.get(i);
                 Drawable drawable = type.getBackground();
-                drawable.setTint(getResources().getColor(R.color.Color8));
+                drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color8));
                 type.setText("Changing Member's Role");
                 change.setText(data.getPlayerName() + " 님의 역할이 " + data.getOldRole() + " 에서 " + data.getNewRole() + " 로 변경되었습니다.");
 
@@ -389,21 +392,5 @@ public class kat_Player_ClubDetailActivity extends kat_Player_RecentSearchActivi
         setClubLog();
     }
 
-    private void GlideImage(String url, int width, int height, ImageView view){
 
-        Glide.with(getApplicationContext())
-                .applyDefaultRequestOptions(options)
-                .load(url)
-                .override(width, height)
-                .into(view);
-    }
-
-    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
-        Glide.with(getApplicationContext())
-                .applyDefaultRequestOptions(options)
-                .load(url)
-                .apply(new RequestOptions().circleCrop().circleCrop())
-                .override(width, height)
-                .into(view);
-    }
 }

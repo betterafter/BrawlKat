@@ -11,9 +11,9 @@ import android.os.IBinder;
 
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.setting.activity.kat_SettingFragment;
-import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
 import com.keykat.keykat.brawlkat.service.util.kat_ActionBroadcastReceiver;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
+import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -97,8 +97,8 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
 
     private void RegisterBroadcastReceiver() {
 
-        if(kat_LoadBeforeMainActivity.kataSettingBase == null) return;
-        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0) return;
+        if(kat_Data.kataSettingBase == null) return;
+        if(kat_Data.kataSettingBase.getData("AnalyticsService") == 0) return;
         if(broadcastReceiver != null) return;
 
         final IntentFilter filter = new IntentFilter();
@@ -112,7 +112,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         registerReceiver(broadcastReceiver, filter);
 
         Intent ThreadCheckIntent = new Intent();
-        if(kat_LoadBeforeMainActivity.kataSettingBase.getData("AnalyticsService") == 0){
+        if(kat_Data.kataSettingBase.getData("AnalyticsService") == 0){
             ThreadCheckIntent.setAction("com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity.CHECK_END");
         }
         else{

@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.home.favorite.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.drawable.Drawable;
@@ -14,21 +15,20 @@ import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
-import com.bumptech.glide.Glide;
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
-import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
+import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
+import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
+import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -36,7 +36,6 @@ import androidx.fragment.app.Fragment;
 
 public class kat_FavoritesFragment extends Fragment {
 
-    private kat_Player_MainActivity kat_player_mainActivity;
 
     private             RequestOptions                                                          options;
     public              static int                                                              height;
@@ -47,9 +46,6 @@ public class kat_FavoritesFragment extends Fragment {
 
     private             ArrayList<ArrayList<String>>                                            databaseItem;
 
-    public kat_FavoritesFragment(kat_Player_MainActivity kat_player_mainActivity){
-        this.kat_player_mainActivity = kat_player_mainActivity;
-    }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -85,7 +81,7 @@ public class kat_FavoritesFragment extends Fragment {
 
 
 
-        kat_favoritesDatabase database = kat_LoadBeforeMainActivity.kataFavoritesBase;
+        kat_favoritesDatabase database = kat_Data.kataFavoritesBase;
         databaseItem = database.getItem();
 
         gridView = view.findViewById(R.id.player_favorites_gridview);
@@ -105,7 +101,7 @@ public class kat_FavoritesFragment extends Fragment {
     private class gridAdapter extends BaseAdapter{
 
         public  ArrayList<ArrayList<String> >   databaseItem;
-        private String                          url_icon_trophies = kat_LoadBeforeMainActivity.CdnRootUrl + "/assets/icon/trophy.png";
+        private String                          url_icon_trophies = kat_Data.CdnRootUrl + "/assets/icon/trophy.png";
 
         public gridAdapter(ArrayList<ArrayList<String>> databaseItem){
             this.databaseItem = databaseItem;
@@ -128,10 +124,11 @@ public class kat_FavoritesFragment extends Fragment {
         }
 
         public void refreshData(){
-            databaseItem = kat_LoadBeforeMainActivity.kataFavoritesBase.getItem();
+            databaseItem = kat_Data.kataFavoritesBase.getItem();
         }
 
         // 아이템 뷰 디자인
+        @SuppressLint("SetTextI18n")
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
@@ -166,11 +163,25 @@ public class kat_FavoritesFragment extends Fragment {
             final TextView player_tag = view.findViewById(R.id.player_favorites_tag);
             ImageView player_close = view.findViewById(R.id.player_favorites_close);
 
-            String url_profile = kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
-            GlideImageWithRoundCorner(url_profile, width / 8, height / 8, player_image);
+            String url_profile = kat_Data.WebRootUrl + "/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
+            kat_Data.GlideImageWithRoundCorner(
+                    Objects.requireNonNull(getActivity()).getApplicationContext(),
+                    url_profile,
+                    kat_Data.SCREEN_WIDTH.intValue() / 8,
+                    kat_Data.SCREEN_WIDTH.intValue() / 8,
+                    player_image
+            );
+
             player_level.setText(databaseItem.get(i).get(7));
             player_name.setText(databaseItem.get(i).get(3));
-            GlideImageWithRoundCorner(url_icon_trophies, width / 30, height / 30, player_trophies_image);
+            kat_Data.GlideImageWithRoundCorner(
+                    getActivity().getApplicationContext(),
+                    url_icon_trophies,
+                    kat_Data.SCREEN_WIDTH.intValue() / 30,
+                    kat_Data.SCREEN_HEIGHT.intValue() / 30,
+                    player_trophies_image
+            );
+
             player_trophies.setText(databaseItem.get(i).get(4) + " / " + databaseItem.get(i).get(5));
             player_tag.setText(databaseItem.get(i).get(2));
 
@@ -185,34 +196,12 @@ public class kat_FavoritesFragment extends Fragment {
                 public void onClick(View view){
                     String tag = databaseItem.get(removeIdx).get(2);
                     databaseItem.remove(removeIdx);
-                    kat_LoadBeforeMainActivity.kataFavoritesBase.delete(tag);
+                    kat_Data.kataFavoritesBase.delete(tag);
                     gridAdapter.this.notifyDataSetChanged();
                 }
             });
 
             return view;
         }
-    }
-
-
-
-    public void GlideImage(String url, int width, int height, ImageView view){
-
-        Glide.with(getActivity().getApplicationContext())
-                .applyDefaultRequestOptions(options)
-                .load(url)
-                .override(width, height)
-                .into(view);
-    }
-
-    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
-        Glide.with(getActivity().getApplicationContext())
-                .applyDefaultRequestOptions(options)
-                .load(url)
-                .apply(new RequestOptions().circleCrop().circleCrop())
-                .override(width, height)
-                .into(view);
-
-
     }
 }

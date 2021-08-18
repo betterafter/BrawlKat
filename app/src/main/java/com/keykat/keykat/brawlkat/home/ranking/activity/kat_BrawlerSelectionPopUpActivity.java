@@ -17,7 +17,7 @@ import android.widget.LinearLayout;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -70,10 +70,10 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
         params2.setMargins(5,5,5,5);
 
 
-        if(kat_LoadBeforeMainActivity.BrawlersArrayList.size() > 0){
+        if(kat_Data.BrawlersArrayList.size() > 0){
 
             int idx = 0;
-            while(idx < kat_LoadBeforeMainActivity.BrawlersArrayList.size()){
+            while(idx < kat_Data.BrawlersArrayList.size()){
 
                 LinearLayout VerticalLayout = new LinearLayout(getApplicationContext());
 
@@ -81,11 +81,11 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
 
 
                 for(int i = 0; i < 3; i++, idx++){
-                    if(idx >= kat_LoadBeforeMainActivity.BrawlersArrayList.size()) break;
+                    if(idx >= kat_Data.BrawlersArrayList.size()) break;
 
-                    final String id = kat_LoadBeforeMainActivity.BrawlersArrayList.get(idx).get("id").toString();
-                    String imageUrl = kat_LoadBeforeMainActivity.BrawlersArrayList.get(idx).get("imageUrl").toString();
-                    final String name = kat_LoadBeforeMainActivity.BrawlersArrayList.get(idx).get("name").toString();
+                    final String id = kat_Data.BrawlersArrayList.get(idx).get("id").toString();
+                    String imageUrl = kat_Data.BrawlersArrayList.get(idx).get("imageUrl").toString();
+                    final String name = kat_Data.BrawlersArrayList.get(idx).get("name").toString();
 
                     ImageButton button = new ImageButton(getApplicationContext());
                     button.setBackgroundColor(getResources().getColor(R.color.semiBlack));
