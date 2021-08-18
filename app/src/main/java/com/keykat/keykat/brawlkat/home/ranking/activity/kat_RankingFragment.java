@@ -16,9 +16,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.ranking.util.kat_Player_RankingAdapter;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
+import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -51,7 +51,7 @@ public class kat_RankingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        kat_LoadBeforeMainActivity.client.RankingInit(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode(), "", "");
+        kat_Data.client.RankingInit(kat_Data.kataCountryBase.getCountryCode(), "", "");
 
         dialog  = new kat_LoadingDialog(getActivity());
 
@@ -94,7 +94,7 @@ public class kat_RankingFragment extends Fragment {
         tabLayout = view.findViewById(R.id.player_ranking_tablayout);
         countryChangeButton = view.findViewById(R.id.player_ranking_countrychange);
 
-        countryChangeButton.setText(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode());
+        countryChangeButton.setText(kat_Data.kataCountryBase.getCountryCode());
 
         fragmentStateAdapter = new kat_Player_RankingAdapter(this, dialog, mContext);
         viewPager2.setAdapter(fragmentStateAdapter);
@@ -116,9 +116,9 @@ public class kat_RankingFragment extends Fragment {
         @Override
         public void run(){
             while(true){
-                if(kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.size() > 0 &&
-                        kat_LoadBeforeMainActivity.MyClubRankingArrayList.size() > 0 &&
-                        kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.size() > 0
+                if(kat_Data.MyPlayerRankingArrayList.size() > 0 &&
+                        kat_Data.MyClubRankingArrayList.size() > 0 &&
+                        kat_Data.MyPowerPlaySeasonArrayList.size() > 0
                 ){
                     getActivity().runOnUiThread(new Runnable() {
                         @Override
@@ -146,12 +146,12 @@ public class kat_RankingFragment extends Fragment {
 
         public void run(){
 
-            kat_LoadBeforeMainActivity.MyPlayerRankingArrayList.clear();
-            kat_LoadBeforeMainActivity.MyClubRankingArrayList.clear();
-            kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList.clear();
-            checkCountryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
+            kat_Data.MyPlayerRankingArrayList.clear();
+            kat_Data.MyClubRankingArrayList.clear();
+            kat_Data.MyPowerPlaySeasonArrayList.clear();
+            checkCountryCode = kat_Data.kataCountryBase.getCountryCode();
 
-            kat_LoadBeforeMainActivity.client.RankingInit(checkCountryCode, "", "");
+            kat_Data.client.RankingInit(checkCountryCode, "", "");
 
             getActivity().runOnUiThread(new Runnable() {
                 @Override
@@ -179,10 +179,10 @@ public class kat_RankingFragment extends Fragment {
     }
 
     public static String PlayerImageUrl(String iconId){
-        return kat_LoadBeforeMainActivity.WebRootUrl + "/assets/profile/" + iconId + ".png?v=1";
+        return kat_Data.WebRootUrl + "/assets/profile/" + iconId + ".png?v=1";
     }
     public static String ClubImageUrl(String badgeId){
-        return kat_LoadBeforeMainActivity.CdnRootUrl + "/club/" + badgeId + ".png?v=1";
+        return kat_Data.CdnRootUrl + "/club/" + badgeId + ".png?v=1";
     }
 
 }

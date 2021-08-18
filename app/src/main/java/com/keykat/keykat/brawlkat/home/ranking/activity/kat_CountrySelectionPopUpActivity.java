@@ -9,10 +9,10 @@ import android.view.Display;
 import android.view.Window;
 import android.view.WindowManager;
 
+import com.google.android.material.textfield.TextInputEditText;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.util.kat_CountrySelectionAdapter;
-import com.google.android.material.textfield.TextInputEditText;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -72,11 +72,11 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
 
         ArrayList<Pair> resultData = new ArrayList<>();
 
-        Iterator<String> keys = kat_LoadBeforeMainActivity.countryCodeMap.keySet().iterator();
+        Iterator<String> keys = kat_Data.countryCodeMap.keySet().iterator();
         while(keys.hasNext()){
 
             String CountryCode = keys.next();
-            String CountryName = kat_LoadBeforeMainActivity.countryCodeMap.get(CountryCode);
+            String CountryName = kat_Data.countryCodeMap.get(CountryCode);
 
             CountryCode = CountryCode.toUpperCase();
             CountryName = CountryName.toLowerCase();

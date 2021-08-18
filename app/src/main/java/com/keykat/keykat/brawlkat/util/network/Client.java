@@ -7,6 +7,8 @@ import android.net.NetworkInfo;
 
 import com.keykat.keykat.brawlkat.home.activity.kat_ExceptionActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
+import com.keykat.keykat.brawlkat.util.GetTopPackageNameKt;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser;
@@ -15,16 +17,14 @@ import com.keykat.keykat.brawlkat.util.parser.kat_official_ClubRankingParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PlayerRankingParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PowerPlaySeasonParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PowerPlaySeasonRankingParser;
-import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
-import java.io.PrintWriter;
 import java.net.Socket;
 import java.net.SocketTimeoutException;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
 
@@ -33,48 +33,42 @@ public class Client {
     private                 Socket                          socket                  = null;
 
     private                 InputStream                     data;
-    private                 OutputStream                    tagdata;
 
     // data 배열 리스트 ...............................................................................
     public                  static ArrayList<String>        resData;
     public                  ArrayList<String>               resOffiData;
     public                  ArrayList<String>               resRankingData;
-    public                  ArrayList<String>               resPowerPlayOrBrawlerRankingData;
     // .............................................................................................
 
     public                  getApiThread                    getThread;
-    public kat_Service_OverdrawActivity kat_Service_overdrawActivity;
     public                  getAllTypeApiThread             officialApiThread;
 
     public                  boolean                         socketFail = false;
     public                  static boolean                  firstInit = false;
 
-    private                 firstInitThread                 firstInitThread;
-    private                 getRankingApiThread             getRankingApiThread;
-
     public                  static boolean                  isGetApiThreadStop;
 
-    private                 String                          boundaryCode = "this_is_a_kat_data_boundary!";
+    private                 final String                    boundaryCode = "this_is_a_kat_data_boundary!";
 
-    private                 String                          GCPIPADDRESS = "35.237.9.225";
-    private                 String                          ORACLEIPADDRESS = "193.122.98.86";
+    //private               String                          GCPIPADDRESS = "35.237.9.225";
+    private                 final String                    ORACLEIPADDRESS = "193.122.98.86";
 
-    public Client(){
+    public                  Context                         context;
 
+
+    public Client(Context context){
+        this.context = context;
     }
 
-    public Client(kat_Service_OverdrawActivity kat_Service_overdrawActivity){
-        this.kat_Service_overdrawActivity = kat_Service_overdrawActivity;
-    }
 
     // 플레이어 및 클럽 전적 검색 스레드
     // starlist.pro에서 가져옴
     // 한번만 통신
     public class getAllTypeApiThread extends Thread{
 
-        private String tag;
-        private String type;
-        private String apiType;
+        private final String tag;
+        private final String type;
+        private final String apiType;
         Context context;
 
         public getAllTypeApiThread(String tag, String type, String apiType, Context context){
@@ -107,7 +101,7 @@ public class Client {
                     if(tag == null) continue;
                     Socket socket = new Socket(ORACLEIPADDRESS, 9000);
 
-                    byte[] bytes = null;
+                    byte[] bytes;
                     String result = null;
 
                     // 데이터 보내기
@@ -119,7 +113,7 @@ public class Client {
                         result = tag;
                     result = type + "/" + result + "/" + apiType;
                     OutputStream os = socket.getOutputStream();
-                    bytes = result.getBytes("UTF-8");
+                    bytes = result.getBytes(StandardCharsets.UTF_8);
                     os.write(bytes);
                     os.flush();
 
@@ -133,13 +127,13 @@ public class Client {
                     BufferedReader reader = new BufferedReader(input);
                     result = reader.readLine();
 
-                    int startidx = 0; int split = 0;
+                    int startidx = 0; int split;
 
                     // API 데이터 파싱
                     String splited;
                     resOffiData = new ArrayList<>();
 
-                    while (split != -1) {
+                    while (true) {
 
                         split = result.indexOf(boundaryCode, startidx);
 
@@ -251,21 +245,21 @@ public class Client {
                         powerPlaySeasonRankingParser = new kat_official_PowerPlaySeasonRankingParser(resRankingData.get(0));
 
                         if(countryCode.equals("global")) {
-                            if (!kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList.containsKey(Id))
-                                kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList.put(Id, powerPlaySeasonRankingParser.DataParser());
+                            if (!kat_Data.PowerPlaySeasonRankingArrayList.containsKey(Id))
+                                kat_Data.PowerPlaySeasonRankingArrayList.put(Id, powerPlaySeasonRankingParser.DataParser());
                         }
                         else {
-                            if (kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode)) {
-                                if (!kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(Id)) {
-                                    kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList
+                            if (kat_Data.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode)) {
+                                if (!kat_Data.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(Id)) {
+                                    kat_Data.MyPowerPlaySeasonRankingArrayList
                                             .get(countryCode)
                                             .put(Id, powerPlaySeasonRankingParser.DataParser());
                                 }
                             }
                             else{
-                                kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.put(countryCode,
+                                kat_Data.MyPowerPlaySeasonRankingArrayList.put(countryCode,
                                         new HashMap<String, ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>>());
-                                kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList
+                                kat_Data.MyPowerPlaySeasonRankingArrayList
                                         .get(countryCode)
                                         .put(Id, powerPlaySeasonRankingParser.DataParser());
                             }
@@ -278,30 +272,26 @@ public class Client {
                         brawlerRankingParser = new kat_official_BrawlerRankingParser(resRankingData.get(0));
 
                         if(countryCode.equals("global")) {
-                            if (!kat_LoadBeforeMainActivity.BrawlerRankingArrayList.containsKey(Id))
-                                kat_LoadBeforeMainActivity.BrawlerRankingArrayList.put(Id, brawlerRankingParser.DataParser());
+                            if (!kat_Data.BrawlerRankingArrayList.containsKey(Id))
+                                kat_Data.BrawlerRankingArrayList.put(Id, brawlerRankingParser.DataParser());
                         }
                         else{
-                            if(kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode)){
-                                if(!kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.get(countryCode).containsKey(Id)) {
-                                    kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
+                            if(kat_Data.MyBrawlerRankingArrayList.containsKey(countryCode)){
+                                if(!kat_Data.MyBrawlerRankingArrayList.get(countryCode).containsKey(Id)) {
+                                    kat_Data.MyBrawlerRankingArrayList
                                             .get(countryCode)
                                             .put(Id, brawlerRankingParser.DataParser());
                                 }
                             }
                             else{
-                                kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.put(countryCode,
+                                kat_Data.MyBrawlerRankingArrayList.put(countryCode,
                                         new HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>());
 
-                                kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
+                                kat_Data.MyBrawlerRankingArrayList
                                         .get(countryCode)
                                         .put(Id, brawlerRankingParser.DataParser());
                             }
                         }
-
-                        //else
-                        //    if()
-                        // 이렇게 적으니까 else if로 되어버림...
                     }
 
                     else{
@@ -314,14 +304,14 @@ public class Client {
                         powerPlaySeasonParser = new kat_official_PowerPlaySeasonParser(resRankingData.get(2));
 
                         if(countryCode.equals("global")) {
-                            kat_LoadBeforeMainActivity.PlayerRankingArrayList = playerRankingParser.DataParser();
-                            kat_LoadBeforeMainActivity.ClubRankingArrayList = clubRankingParser.DataParser();
-                            kat_LoadBeforeMainActivity.PowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
+                            kat_Data.PlayerRankingArrayList = playerRankingParser.DataParser();
+                            kat_Data.ClubRankingArrayList = clubRankingParser.DataParser();
+                            kat_Data.PowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
                         }
                         else{
-                            kat_LoadBeforeMainActivity.MyPlayerRankingArrayList = playerRankingParser.DataParser();
-                            kat_LoadBeforeMainActivity.MyClubRankingArrayList = clubRankingParser.DataParser();
-                            kat_LoadBeforeMainActivity.MyPowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
+                            kat_Data.MyPlayerRankingArrayList = playerRankingParser.DataParser();
+                            kat_Data.MyClubRankingArrayList = clubRankingParser.DataParser();
+                            kat_Data.MyPowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
                         }
                     }
 
@@ -349,14 +339,21 @@ public class Client {
 
         public void run(){
 
-            OutputStream sendData = null;
-            PrintWriter bw = null;
             InputStreamReader input = null;
             BufferedReader reader = null;
 
+            int time = 1000 * 60;
             try {
                 while (!isGetApiThreadStop) {
 
+                    // usageEvent를 이용하여 현재 앱이 실행 중인지를 확인하고, 실행 중이 아니라면 데이터를 가져오는 것을
+                    // 못하게 막기
+                    // 이를 위해 앱에 액세스 기능을 허용해야 하는데, 앱 시작할 때 허용할 수 있게 만들 것.
+                    String currName = GetTopPackageNameKt.getTopPackageName(context);
+                    if(!currName.equals("") && !currName.toLowerCase().contains("brawlkat")){
+                        sleep(time);
+                        continue;
+                    }
 
                     socket = new Socket(ORACLEIPADDRESS, 9000);
 
@@ -369,7 +366,7 @@ public class Client {
                     result = "/" + "/" + "nofficial";
                     result += "\n";
                     OutputStream os = socket.getOutputStream();
-                    bytes = result.getBytes("UTF-8");
+                    bytes = result.getBytes(StandardCharsets.UTF_8);
                     os.write(bytes);
                     os.flush();
 
@@ -385,7 +382,7 @@ public class Client {
                     String splited;
                     resData = new ArrayList<>();
 
-                    while (split != -1) {
+                    while (true) {
 
                         split = result.indexOf(boundaryCode, startidx);
 
@@ -404,9 +401,9 @@ public class Client {
                     brawlersParser = new kat_brawlersParser(resData.get(1));
                     mapsParser = new kat_mapsParser(resData.get(2));
 
-                    kat_LoadBeforeMainActivity.EventArrayList = eventsParser.DataParser();
-                    kat_LoadBeforeMainActivity.BrawlersArrayList = brawlersParser.DataParser();
-                    kat_LoadBeforeMainActivity.mapData = mapsParser.DataParser();
+                    kat_Data.EventArrayList = eventsParser.DataParser();
+                    kat_Data.BrawlersArrayList = brawlersParser.DataParser();
+                    kat_Data.mapData = mapsParser.DataParser();
 
                     firstInit = true;
                     reader.close();
@@ -414,7 +411,6 @@ public class Client {
                     os.close();
                     socket.close();
 
-                    int time = 1000 * 60;
                     sleep(time);
                 }
             }
@@ -434,15 +430,6 @@ public class Client {
         }
     }
 
-    public class firstInitThread extends Thread{
-        public void run(){
-            while(true){
-                if(firstInit){
-                    break;
-                }
-            }
-        }
-    }
 
 
 
@@ -452,18 +439,10 @@ public class Client {
 
         getThread = new getApiThread();
         getThread.start();
-
-        firstInitThread = new firstInitThread();
-        firstInitThread.start();
     }
 
     public void remove(){
         isGetApiThreadStop = true;
-
-        firstInit = false;
-        firstInitThread = null;
-        firstInit = true;
-
         getThread = null;
     }
 
@@ -475,9 +454,6 @@ public class Client {
         else return false;
     }
 
-    public firstInitThread getFirstInitThread(){
-        return firstInitThread;
-    }
 
 
     public void AllTypeInit(String tag, String type, String apiType, Context context){
@@ -515,5 +491,4 @@ public class Client {
     public getAllTypeApiThread apiThread(){
         return officialApiThread;
     }
-    public getRankingApiThread getRankingApiThread() { return getRankingApiThread; }
 }

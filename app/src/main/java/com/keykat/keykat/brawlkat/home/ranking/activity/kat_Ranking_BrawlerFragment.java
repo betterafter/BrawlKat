@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_BrawlerRankingParser;
 
@@ -55,8 +55,8 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initId = kat_LoadBeforeMainActivity.BrawlersArrayList.get(0).get("id").toString();
-        initName = kat_LoadBeforeMainActivity.BrawlersArrayList.get(0).get("name").toString();
+        initId = kat_Data.BrawlersArrayList.get(0).get("id").toString();
+        initName = kat_Data.BrawlersArrayList.get(0).get("name").toString();
     }
 
     @Nullable
@@ -83,18 +83,14 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
         final Button globalButton = view.findViewById(R.id.player_ranking_brawler_global);
         final Button MyButton = view.findViewById(R.id.player_ranking_brawler_mycountry);
 
-        globalButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                dialog.show();
-                globalClick(player_ranking_brawler_layout, dialog);
-            }
+        globalButton.setOnClickListener(v -> {
+            dialog.show();
+            globalClick(player_ranking_brawler_layout, dialog);
         });
 
-        MyButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                dialog.show();
-                myCountryClick(player_ranking_brawler_layout, dialog);
-            }
+        MyButton.setOnClickListener(v -> {
+            dialog.show();
+            myCountryClick(player_ranking_brawler_layout, dialog);
         });
 
         return view;
@@ -120,8 +116,8 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     public void globalClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
 
-        if(!kat_LoadBeforeMainActivity.BrawlerRankingArrayList.containsKey(initId)){
-            kat_LoadBeforeMainActivity.client.RankingInit(
+        if(!kat_Data.BrawlerRankingArrayList.containsKey(initId)){
+            kat_Data.client.RankingInit(
                     "global", initId, "Brawler"
             );
         }
@@ -136,12 +132,12 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     public void myCountryClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog){
 
-        String countryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
+        String countryCode = kat_Data.kataCountryBase.getCountryCode();
 
-        if(!kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode) ||
-                (kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode) &&
-                !kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.get(countryCode).containsKey(initId))){
-            kat_LoadBeforeMainActivity.client.RankingInit(
+        if(!kat_Data.MyBrawlerRankingArrayList.containsKey(countryCode) ||
+                (kat_Data.MyBrawlerRankingArrayList.containsKey(countryCode) &&
+                !kat_Data.MyBrawlerRankingArrayList.get(countryCode).containsKey(initId))){
+            kat_Data.client.RankingInit(
                     countryCode, initId, "Brawler"
             );
         }
@@ -150,7 +146,7 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
         databaseChangeThread.start();
 
         setUiOnMainView setUiOnMainView = new setUiOnMainView(player_ranking_player_layout, dialog, databaseChangeThread,
-                kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode());
+                kat_Data.kataCountryBase.getCountryCode());
         setUiOnMainView.start();
 
     }
@@ -183,13 +179,13 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
                         databaseChangeThread.join();
 
                         if(type.equals("global")) {
-                            setView(player_ranking_player_layout, kat_LoadBeforeMainActivity.BrawlerRankingArrayList.get(initId), dialog);
+                            setView(player_ranking_player_layout, kat_Data.BrawlerRankingArrayList.get(initId), dialog);
                         }
 
                         else {
                             ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData> MyBrawlerRankingArrayList
-                                    = kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList
-                                    .get(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode())
+                                    = kat_Data.MyBrawlerRankingArrayList
+                                    .get(kat_Data.kataCountryBase.getCountryCode())
                                     .get(initId);
 
                             setView(player_ranking_player_layout, MyBrawlerRankingArrayList, dialog);
@@ -227,20 +223,20 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
         @Override
         public void run(){
 
-            String countryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
+            String countryCode = kat_Data.kataCountryBase.getCountryCode();
 
             while(true){
 
                 if(type.equals("global")){
-                    if(!kat_LoadBeforeMainActivity.BrawlerRankingArrayList.containsKey(initId)){
+                    if(!kat_Data.BrawlerRankingArrayList.containsKey(initId)){
                         continue;
                     }
                     else break;
                 }
                 else{
-                    if(!kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode) ||
-                            (kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.containsKey(countryCode) &&
-                                    !kat_LoadBeforeMainActivity.MyBrawlerRankingArrayList.get(countryCode).containsKey(initId))){
+                    if(!kat_Data.MyBrawlerRankingArrayList.containsKey(countryCode) ||
+                            (kat_Data.MyBrawlerRankingArrayList.containsKey(countryCode) &&
+                                    !kat_Data.MyBrawlerRankingArrayList.get(countryCode).containsKey(initId))){
                         continue;
                     }
                     else break;

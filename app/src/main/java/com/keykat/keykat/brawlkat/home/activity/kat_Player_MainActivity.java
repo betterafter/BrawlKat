@@ -17,23 +17,23 @@ import android.view.View;
 import android.widget.ImageButton;
 import android.widget.Toast;
 
+import com.google.android.gms.ads.AdListener;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.InterstitialAd;
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.favorite.activity.kat_FavoritesFragment;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.home.search.activity.kat_SearchFragment;
 import com.keykat.keykat.brawlkat.home.setting.activity.kat_SettingFragment;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.parser.kat_clubLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_clubInfoParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
-import com.google.android.gms.ads.AdListener;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.InterstitialAd;
-import com.google.android.material.bottomnavigation.BottomNavigationView;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,11 +41,12 @@ import java.util.Stack;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
-public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
+public class kat_Player_MainActivity extends AppCompatActivity {
 
     // 하단 네비게이션 바 관련
     private             BottomNavigationView                                                    bottomNavigationView;
@@ -123,7 +124,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
 
             // 포그라운드 서비스가 실행됐는지 확인하고 실행되지 않았다면 실행
             foregroundServiceIntent = new Intent(getApplicationContext(), kat_Service_BrawlStarsNotifActivity.class);
-            if(kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1){
+            if(kat_Data.kataSettingBase.getData("ForegroundService") == 1){
 
                 ActivityManager am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
                 List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(1000);
@@ -156,7 +157,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             kat_player_mainActivity = this;
 
             kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
-            kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
+            kat_favoritesFragment = new kat_FavoritesFragment();
             kat_rankingFragment = new kat_RankingFragment(dialog);
             kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
 
@@ -167,7 +168,7 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
 
                     kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
-                    kat_favoritesFragment = new kat_FavoritesFragment(kat_Player_MainActivity.this);
+                    kat_favoritesFragment = new kat_FavoritesFragment();
                     kat_rankingFragment = new kat_RankingFragment(dialog);
                     kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
 
@@ -273,8 +274,8 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
                 }
             }
 
-            if(kataMyAccountBase.size() > 0){
-                playerTag = kataMyAccountBase.getTag().substring(1);
+            if(kat_Data.kataMyAccountBase.size() > 0){
+                playerTag = kat_Data.kataMyAccountBase.getTag().substring(1);
             }
         }
     }
@@ -284,10 +285,10 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
     private class setBaseDataThread extends Thread{
         public void run(){
             while(true){
-                if(PlayerRankingArrayList != null && ClubRankingArrayList != null
-                        && PowerPlaySeasonArrayList != null) {
-                    if (PlayerRankingArrayList.size() > 0 && ClubRankingArrayList.size() > 0
-                            && PowerPlaySeasonArrayList.size() > 0) {
+                if(kat_Data.PlayerRankingArrayList != null && kat_Data.ClubRankingArrayList != null
+                        && kat_Data.PowerPlaySeasonArrayList != null) {
+                    if (kat_Data.PlayerRankingArrayList.size() > 0 && kat_Data.ClubRankingArrayList.size() > 0
+                            && kat_Data.PowerPlaySeasonArrayList.size() > 0) {
                         if(dialog != null) dialog.dismiss();
                         break;
                     }
@@ -388,15 +389,5 @@ public class kat_Player_MainActivity extends kat_LoadBeforeMainActivity {
             finishAffinity();
             finish();
         }
-    }
-
-    //앱종료
-    public void AppFinish(){
-
-        moveTaskToBack(true);						// 태스크를 백그라운드로 이동
-        //finishAndRemoveTask();						// 액티비티 종료 + 태스크 리스트에서 지우기
-        finish();
-        //android.os.Process.killProcess(android.os.Process.myPid());	// 앱 프로세스 종료
-        //System.exit(0);
     }
 }

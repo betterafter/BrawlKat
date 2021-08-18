@@ -5,7 +5,7 @@ import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
+import com.keykat.keykat.brawlkat.load.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;

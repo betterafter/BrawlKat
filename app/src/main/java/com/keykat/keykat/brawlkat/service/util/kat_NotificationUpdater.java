@@ -1,6 +1,5 @@
 package com.keykat.keykat.brawlkat.service.util;
 
-import android.app.Notification;
 import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
@@ -8,12 +7,10 @@ import android.text.Html;
 import android.text.Spanned;
 import android.widget.RemoteViews;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.target.NotificationTarget;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -29,7 +26,7 @@ public class kat_NotificationUpdater {
 
     public kat_NotificationUpdater(Context context){
         this.context = context;
-        playerData = kat_LoadBeforeMainActivity.eventsPlayerData;
+        playerData = kat_Data.eventsPlayerData;
     }
 
     public kat_NotificationUpdater(Context context, kat_official_playerInfoParser.playerData playerData) {
@@ -151,7 +148,7 @@ public class kat_NotificationUpdater {
 
         try {
 
-            if (kat_LoadBeforeMainActivity.kataSettingBase.getData("ForegroundService") == 1) {
+            if (kat_Data.kataSettingBase.getData("ForegroundService") == 1) {
                 if (playerData != null) {
                     kat_Service_BrawlStarsNotifActivity.notification
                             = new NotificationCompat.Builder(context, "channel")
@@ -175,7 +172,7 @@ public class kat_NotificationUpdater {
 
                 if (playerData != null) {
                     if(UrlForBigContentViewRecommendBrawler().equals("")) return;
-                    GlideImageWithNotification(context,
+                    kat_Data.GlideImageWithNotification(context,
                             R.id.main_notification_big_img,
                             bcv,
                             kat_Service_BrawlStarsNotifActivity.notification.build(),
@@ -210,7 +207,7 @@ public class kat_NotificationUpdater {
     public String UrlForBigContentViewRecommendBrawler() {
 
         try {
-            ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_LoadBeforeMainActivity.BrawlersArrayList;
+            ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_Data.BrawlersArrayList;
 
             kat_BrawlerRecommendation brawlerRecommendation = new kat_BrawlerRecommendation();
             brawlerRecommendation.init();
@@ -261,27 +258,5 @@ public class kat_NotificationUpdater {
 
         final RemoteViews contentView = new RemoteViews(context.getPackageName(), contentViewId);
         return contentView;
-    }
-
-
-    public void GlideImageWithNotification(Context context, final int ImageViewId, final RemoteViews contentView,
-                                            Notification notif, int notificationId, String url) throws Exception{
-
-        NotificationTarget notificationTarget = new NotificationTarget(
-                context,
-                ImageViewId,
-                contentView,
-                notif,
-                notificationId);
-
-        int setWidth = Math.min(kat_LoadBeforeMainActivity.SCREEN_WIDTH, kat_LoadBeforeMainActivity.SCREEN_HEIGHT);
-
-        Glide
-                .with(context)
-                .applyDefaultRequestOptions(kat_LoadBeforeMainActivity.options)
-                .asBitmap()
-                .load(url)
-                .override(setWidth / 4, setWidth / 4)
-                .into(notificationTarget);
     }
 }

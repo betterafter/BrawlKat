@@ -18,9 +18,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PowerPlaySeasonRankingParser;
 
@@ -86,9 +86,9 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 //        seasonDateTextView.setText(timeFormat(startTime) + " ~ " + timeFormat(endTime));
 
         try {
-            String[] spinnerItem = new String[kat_LoadBeforeMainActivity.PowerPlaySeasonArrayList.size()];
-            for (int i = 0; i < kat_LoadBeforeMainActivity.PowerPlaySeasonArrayList.size(); i++) {
-                spinnerItem[i] = "시즌 " + kat_LoadBeforeMainActivity.PowerPlaySeasonArrayList.get(i).getId();
+            String[] spinnerItem = new String[kat_Data.PowerPlaySeasonArrayList.size()];
+            for (int i = 0; i < kat_Data.PowerPlaySeasonArrayList.size(); i++) {
+                spinnerItem[i] = "시즌 " + kat_Data.PowerPlaySeasonArrayList.get(i).getId();
             }
 
             ArrayAdapter adapter = new ArrayAdapter(
@@ -117,8 +117,8 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
                     dialog.show();
                     SeasonId = Integer.toString(i + 56);
 
-                    String startTime = kat_LoadBeforeMainActivity.PowerPlaySeasonArrayList.get(i).getStartTime();
-                    String endTime = kat_LoadBeforeMainActivity.PowerPlaySeasonArrayList.get(i).getEndTime();
+                    String startTime = kat_Data.PowerPlaySeasonArrayList.get(i).getStartTime();
+                    String endTime = kat_Data.PowerPlaySeasonArrayList.get(i).getEndTime();
 
                     seasonIdTextView.setText("시즌 " + SeasonId);
                     seasonDateTextView.setText(timeFormat(startTime) + " ~ " + timeFormat(endTime));
@@ -140,22 +140,18 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
             e.printStackTrace();
         }
 
-        globalButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                dialog.show();
-                try {
-                    globalClick(player_ranking_powerplay_layout, dialog, SeasonId);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
+        globalButton.setOnClickListener(v -> {
+            dialog.show();
+            try {
+                globalClick(player_ranking_powerplay_layout, dialog, SeasonId);
+            } catch (Exception e) {
+                e.printStackTrace();
             }
         });
 
-        MyButton.setOnClickListener(new View.OnClickListener(){
-            public void onClick(View v){
-                dialog.show();
-                myCountryClick(player_ranking_powerplay_layout, dialog, SeasonId);
-            }
+        MyButton.setOnClickListener(v -> {
+            dialog.show();
+            myCountryClick(player_ranking_powerplay_layout, dialog, SeasonId);
         });
 
         return view;
@@ -166,7 +162,7 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
         super.onStart();
         dialog.show();
 
-        SeasonId = kat_LoadBeforeMainActivity.PowerPlaySeasonArrayList.get(0).getId();
+        SeasonId = kat_Data.PowerPlaySeasonArrayList.get(0).getId();
         try {
             globalClick(player_ranking_powerplay_layout, dialog, SeasonId);
         } catch (Exception e) {
@@ -177,8 +173,8 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 
     public void globalClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog, String id) throws Exception{
 
-        if(!kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList.containsKey(id)){
-            kat_LoadBeforeMainActivity.client.RankingInit("global", id, "PowerPlay");
+        if(!kat_Data.PowerPlaySeasonRankingArrayList.containsKey(id)){
+            kat_Data.client.RankingInit("global", id, "PowerPlay");
         }
 
         DatabaseChangeThread databaseChangeThread = new DatabaseChangeThread("global", id);
@@ -191,12 +187,12 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 
     public void myCountryClick(LinearLayout player_ranking_player_layout, kat_LoadingDialog dialog, String id){
 
-        String countryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
+        String countryCode = kat_Data.kataCountryBase.getCountryCode();
 
-        if(!kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) ||
-                (kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
-                        !kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(id))){
-            kat_LoadBeforeMainActivity.client.RankingInit(
+        if(!kat_Data.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) ||
+                (kat_Data.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
+                        !kat_Data.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(id))){
+            kat_Data.client.RankingInit(
                     countryCode, id, "PowerPlay"
             );
         }
@@ -241,13 +237,13 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 
                         if(type.equals("global")){
                             setView(player_ranking_player_layout,
-                                    kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList.get(id),
+                                    kat_Data.PowerPlaySeasonRankingArrayList.get(id),
                                     dialog);
                         }
                         else{
                             ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData> MyPowerPlayRankingArrayList
-                                    = kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList
-                                    .get(kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode())
+                                    = kat_Data.MyPowerPlaySeasonRankingArrayList
+                                    .get(kat_Data.kataCountryBase.getCountryCode())
                                     .get(id);
                             setView(player_ranking_player_layout, MyPowerPlayRankingArrayList, dialog);
                         }
@@ -286,20 +282,20 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
         @Override
         public void run(){
 
-            String countryCode = kat_LoadBeforeMainActivity.kataCountryBase.getCountryCode();
+            String countryCode = kat_Data.kataCountryBase.getCountryCode();
 
             while(true){
 
                 if(type.equals("global")){
-                    if(!kat_LoadBeforeMainActivity.PowerPlaySeasonRankingArrayList.containsKey(id)){
+                    if(!kat_Data.PowerPlaySeasonRankingArrayList.containsKey(id)){
                         continue;
                     }
                     else break;
                 }
                 else{
-                    if(!kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) ||
-                            (kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
-                                    !kat_LoadBeforeMainActivity.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(id))){
+                    if(!kat_Data.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) ||
+                            (kat_Data.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
+                                    !kat_Data.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(id))){
                         continue;
                     }
                     else break;

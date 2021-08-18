@@ -19,10 +19,10 @@ import android.widget.RemoteViews;
 
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
-import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.service.util.kat_ActionBroadcastReceiver;
 import com.keykat.keykat.brawlkat.service.util.kat_ButtonBroadcastReceiver;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
@@ -86,8 +86,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         events.getCurrentEventsInformation();
 
 
-        if(!kat_LoadBeforeMainActivity.client.isGetApiThreadAlive())
-            kat_LoadBeforeMainActivity.client.init();
+        if(!kat_Data.client.isGetApiThreadAlive())
+            kat_Data.client.init();
 
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.sub_notification);
 
@@ -200,7 +200,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         kat_ActionBroadcastReceiver forGetPackageName = new kat_ActionBroadcastReceiver();
         if(!forGetPackageName.getTopPackageName(context).equals("com.keykat.keykat.brawlkat")){
-            kat_LoadBeforeMainActivity.client.remove();
+            kat_Data.client.remove();
         }
 
 
@@ -215,7 +215,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
             events = null;
         }
-        kat_LoadBeforeMainActivity.client.remove();
+        kat_Data.client.remove();
 
 
         super.onDestroy();

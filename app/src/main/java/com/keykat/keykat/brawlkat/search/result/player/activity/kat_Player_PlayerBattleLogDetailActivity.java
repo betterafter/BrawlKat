@@ -2,9 +2,6 @@ package com.keykat.keykat.brawlkat.search.result.player.activity;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.widget.ImageView;
-import android.widget.LinearLayout;
-import android.widget.TextView;
 
 import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
@@ -15,18 +12,16 @@ import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
-public class kat_Player_PlayerBattleLogDetailActivity extends kat_Player_PlayerDetailActivity {
+public class kat_Player_PlayerBattleLogDetailActivity extends AppCompatActivity {
 
 
     public                  kat_official_playerInfoParser.playerData                    playerData;
     public                  kat_official_playerBattleLogParser.playerBattleData         battleData;
 
-    public                  TextView                                                    battle_log_detail_result;
-    public                  ImageView                                                   battle_log_detail_map_image;
-    public                  LinearLayout                                                battle_log_detail_players_or_teams;
 
     private ViewPager2 viewPager2;
     private FragmentStateAdapter adapter;
@@ -36,10 +31,6 @@ public class kat_Player_PlayerBattleLogDetailActivity extends kat_Player_PlayerD
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.player_player_detail_battle_log_detail);
-
-//        battle_log_detail_result = findViewById(R.id.player_player_detail_battle_log_detail_result);
-//        battle_log_detail_map_image = findViewById(R.id.player_player_detail_battle_log_detail_map_image);
-//        battle_log_detail_players_or_teams = findViewById(R.id.player_player_detail_battle_log_detail_players_or_teams);
 
         viewPager2 = findViewById(R.id.player_player_detail_battle_log_detail_viewPager);
     }

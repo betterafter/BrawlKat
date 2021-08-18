@@ -7,22 +7,23 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_ExceptionActivity;
+import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
+import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.parser.kat_clubLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_clubInfoParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
-import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class kat_SearchThread extends kat_Player_MainActivity {
+public class kat_SearchThread extends AppCompatActivity {
 
     Activity fromActivity;
     Class toClass;
@@ -66,17 +67,17 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         public void run(){
 
             SearchDataOnOverdraw = true;
-            playerTag = tag;
+            kat_Data.playerTag = tag;
             sendData = new ArrayList<>();
 
             if(type.equals("players")){
-                client.AllTypeInit(tag, type, kat_Player_MainActivity.official, context);
-                if(client.getAllTypeData().size() <= 0){
+                kat_Data.client.AllTypeInit(tag, type, kat_Player_MainActivity.official, context);
+                if(kat_Data.client.getAllTypeData().size() <= 0){
                     try {
-                        Client.getAllTypeApiThread apiThread = client.apiThread();
+                        Client.getAllTypeApiThread apiThread = kat_Data.client.apiThread();
                         apiThread.join();
-                        sendData.add(client.getAllTypeData().get(0));
-                        sendData.add(client.getAllTypeData().get(1));
+                        sendData.add(kat_Data.client.getAllTypeData().get(0));
+                        sendData.add(kat_Data.client.getAllTypeData().get(1));
                         playerSearch(sendData);
 
                     } catch (Exception e) {
@@ -88,13 +89,13 @@ public class kat_SearchThread extends kat_Player_MainActivity {
 
             else if(type.equals("clubs")){
 
-                client.AllTypeInit(tag, type, kat_Player_MainActivity.official, context);
-                if(client.getAllTypeData().size() <= 0){
+                kat_Data.client.AllTypeInit(tag, type, kat_Player_MainActivity.official, context);
+                if(kat_Data.client.getAllTypeData().size() <= 0){
                     try {
-                        Client.getAllTypeApiThread apiThread = client.apiThread();
+                        Client.getAllTypeApiThread apiThread = kat_Data.client.apiThread();
                         apiThread.join();
-                        sendData.add(client.getAllTypeData().get(0));
-                        sendData.add(client.getAllTypeData().get(1));
+                        sendData.add(kat_Data.client.getAllTypeData().get(0));
+                        sendData.add(kat_Data.client.getAllTypeData().get(1));
                         clubSearch(sendData);
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -111,10 +112,6 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         // 제대로 가져오지 못했을 경우 알림
         if(sendData.get(0).equals("{none}")){
 
-            if(fromActivity.getClass().getName().equals("com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity")){
-                return;
-            }
-
             Intent errorIntent = new Intent(kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext(),
                     kat_ExceptionActivity.class);
             if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
@@ -123,46 +120,46 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         }
         // 제대로 가져왔을 경우
         else{
-            official_playerInfoParser = new kat_official_playerInfoParser(sendData.get(0));
-            official_playerBattleLogParser = new kat_official_playerBattleLogParser(sendData.get(1));
+            kat_Data.official_playerInfoParser = new kat_official_playerInfoParser(sendData.get(0));
+            kat_Data.official_playerBattleLogParser = new kat_official_playerBattleLogParser(sendData.get(1));
 
 
             try {
                 // 자신의 플레이어 데이터를 따로 저장. (맵 승률 서비스를 위해 따로 저장하는 리스트)
                 // 이 때 notification의 내용도 바꿔준다.
-                if(!kat_LoadBeforeMainActivity.kataMyAccountBase.getTag().equals("")){
-                    if(kat_LoadBeforeMainActivity.kataMyAccountBase.getTag()
-                            .equals(official_playerInfoParser.DataParser().getTag())) {
+                if(!kat_Data.kataMyAccountBase.getTag().equals("")){
+                    if(kat_Data.kataMyAccountBase.getTag()
+                            .equals(kat_Data.official_playerInfoParser.DataParser().getTag())) {
 
                         // 알람창 강제 종료되는 것 방지
                         if(sendData.get(0).length() > 50)
-                            kat_LoadBeforeMainActivity.eventsPlayerData = official_playerInfoParser.DataParser();
+                            kat_Data.eventsPlayerData = kat_Data.official_playerInfoParser.DataParser();
                     }
                 }
 
 
-                playerData = official_playerInfoParser.DataParser();
-                System.out.println(playerData.toString());
-                System.out.println(client.getAllTypeData().get(1));
-                if(!client.getAllTypeData().get(1).equals("{none}")
-                && client.getAllTypeData().get(1).length() > 30
-                && client.getAllTypeData().get(1) != null) {
-                    playerBattleDataList = official_playerBattleLogParser.DataParser();
-                    playerBattleDataListStack.add(official_playerBattleLogParser.DataParser());
+                kat_Data.playerData = kat_Data.official_playerInfoParser.DataParser();
+                System.out.println(kat_Data.playerData.toString());
+                System.out.println(kat_Data.client.getAllTypeData().get(1));
+                if(!kat_Data.client.getAllTypeData().get(1).equals("{none}")
+                && kat_Data.client.getAllTypeData().get(1).length() > 30
+                && kat_Data.client.getAllTypeData().get(1) != null) {
+                    kat_Data.playerBattleDataList = kat_Data.official_playerBattleLogParser.DataParser();
+                    kat_Data.playerBattleDataListStack.add(kat_Data.official_playerBattleLogParser.DataParser());
                 }
 
                 String type = "players";
-                String Tag = playerData.getTag();
-                String name = playerData.getName();
+                String Tag = kat_Data.playerData.getTag();
+                String name = kat_Data.playerData.getName();
                 String isAccount = "NO";
 
-                katabase.delete(type);
-                katabase.insert(type, Tag, name, isAccount);
+                kat_Data.katabase.delete(type);
+                kat_Data.katabase.insert(type, Tag, name, isAccount);
 
                 if(fromActivity == null){
                     // 알림창 업데이트
                     kat_NotificationUpdater updater
-                            = new kat_NotificationUpdater(kat_player_mainActivity.getApplicationContext(), playerData);
+                            = new kat_NotificationUpdater(getApplicationContext(), kat_Data.playerData);
                     updater.update();
                     SearchDataOnOverdraw = false;
                     return;
@@ -171,19 +168,19 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 // "자신의 계정 찾기"에서 넘어왔을 경우
                 if(fromActivity.getClass().getName().equals("com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity")){
                     if(sendData.get(0).length() > 50)
-                        kat_LoadBeforeMainActivity.eventsPlayerData = playerData;
+                        kat_Data.eventsPlayerData = kat_Data.playerData;
                     kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
                     updater.update();
                 }
 
-                if(fromActivity.getClass().getName().equals("com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity")){
 
-                    client.getFirstInitThread().join();
-                }
+                if(kat_Data.kataMyAccountBase.size() < 1) {
 
-                if(kataMyAccountBase.size() < 1) {
-
-                    kataMyAccountBase.insert("player", playerData.getTag(), playerData.getName());
+                    kat_Data.kataMyAccountBase.insert(
+                            "player",
+                            kat_Data.playerData.getTag(),
+                            kat_Data.playerData.getName()
+                    );
                 }
                 kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
                 updater.update();
@@ -204,7 +201,7 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 }
 
                 Intent intent = new Intent(fromActivity, toClass);
-                intent.putExtra("playerData", playerData);
+                intent.putExtra("playerData", kat_Data.playerData);
                 fromActivity.startActivity(intent);
 
                 if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
@@ -227,20 +224,20 @@ public class kat_SearchThread extends kat_Player_MainActivity {
         }
         // 제대로 가져왔을 경우
         else{
-            official_clubInfoParser = new kat_official_clubInfoParser(sendData.get(0));
-            clubLogParser = new kat_clubLogParser(sendData.get(1));
+            kat_Data.official_clubInfoParser = new kat_official_clubInfoParser(sendData.get(0));
+            kat_Data.clubLogParser = new kat_clubLogParser(sendData.get(1));
 
             try {
-                clubData = official_clubInfoParser.DataParser();
-                clubLogData = clubLogParser.DataParser();
+                kat_Data.clubData = kat_Data.official_clubInfoParser.DataParser();
+                kat_Data.clubLogData = kat_Data.clubLogParser.DataParser();
 
                 String type = "clubs";
-                String tag = clubData.getTag();
-                String name = clubData.getName();
+                String tag = kat_Data.clubData.getTag();
+                String name = kat_Data.clubData.getName();
                 String isAccount = "no";
 
-                katabase.delete(type);
-                katabase.insert(type, tag, name, isAccount);
+                kat_Data.katabase.delete(type);
+                kat_Data.katabase.insert(type, tag, name, isAccount);
 
                 ActivityManager manager = (ActivityManager)fromActivity.getSystemService(Context.ACTIVITY_SERVICE);
                 List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
@@ -258,8 +255,8 @@ public class kat_SearchThread extends kat_Player_MainActivity {
                 }
 
                 Intent intent = new Intent(fromActivity, toClass);
-                intent.putExtra("clubData", clubData);
-                intent.putExtra("clubLogData", clubLogData);
+                intent.putExtra("clubData", kat_Data.clubData);
+                intent.putExtra("clubLogData", kat_Data.clubLogData);
 
                 fromActivity.startActivity(intent);
 

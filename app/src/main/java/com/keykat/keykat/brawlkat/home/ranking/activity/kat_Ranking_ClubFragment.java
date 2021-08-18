@@ -15,9 +15,9 @@ import android.widget.TextView;
 import com.bumptech.glide.Glide;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.splash.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.search.result.club.activity.kat_Player_ClubDetailActivity;
+import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_ClubRankingParser;
 
@@ -157,10 +157,10 @@ public class kat_Ranking_ClubFragment extends Fragment {
                     }
                     ArrayList<kat_official_ClubRankingParser.clubData> ClubRankingArrayList;
                     if(type.equals("global")){
-                        ClubRankingArrayList = kat_LoadBeforeMainActivity.ClubRankingArrayList;
+                        ClubRankingArrayList = kat_Data.ClubRankingArrayList;
                     }
                     else{
-                        ClubRankingArrayList = kat_LoadBeforeMainActivity.MyClubRankingArrayList;
+                        ClubRankingArrayList = kat_Data.MyClubRankingArrayList;
                     }
                     setView(player_ranking_player_layout, ClubRankingArrayList, dialog);
                 }
@@ -172,10 +172,10 @@ public class kat_Ranking_ClubFragment extends Fragment {
         @Override
         public void run(){
             while(true){
-                if(kat_LoadBeforeMainActivity.MyClubRankingArrayList != null &&
-                        kat_LoadBeforeMainActivity.ClubRankingArrayList != null) {
-                    if (kat_LoadBeforeMainActivity.MyClubRankingArrayList.size() > 0 &&
-                            kat_LoadBeforeMainActivity.ClubRankingArrayList.size() > 0) {
+                if(kat_Data.MyClubRankingArrayList != null &&
+                        kat_Data.ClubRankingArrayList != null) {
+                    if (kat_Data.MyClubRankingArrayList.size() > 0 &&
+                            kat_Data.ClubRankingArrayList.size() > 0) {
                         break;
                     }
                 }
