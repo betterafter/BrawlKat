@@ -1,22 +1,16 @@
 package com.keykat.keykat.brawlkat.load.activity;
 
-import android.content.Context;
 import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 
 import com.bumptech.glide.Priority;
 import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.activity.kat_ExceptionActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.service.util.kat_onTaskRemovedService;
 import com.keykat.keykat.brawlkat.util.database.kat_countryDatabase;
@@ -73,28 +67,16 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-
-
-
-        ConnectivityManager manager
-                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-        if(networkInfo == null){
-            Intent errorIntent = new Intent(this, kat_ExceptionActivity.class);
-            errorIntent.putExtra("which", "kat_LoadBeforeMainActivity");
-            errorIntent.putExtra("cause", "error.INTERNET");
-            startActivity(errorIntent);
-
-            finish();
-        }
-
         // client의 getApiThread를 앱이 종료 후에 같이 종료되어 데이터 손실을 막게 해줌
         startService(new Intent(this, kat_onTaskRemovedService.class));
-        // 초기화
-        MobileAds.initialize(this, new OnInitializationCompleteListener() {
-            @Override public void onInitializationComplete(InitializationStatus initializationStatus) {
-            }
-        });
+
+//        // 광고 초기화
+//        MobileAds.initialize(this, new OnInitializationCompleteListener() {
+//            @Override public void onInitializationComplete(InitializationStatus initializationStatus) {
+//            }
+//        });
+//
+//        kat_Data.adRequest = new AdRequest.Builder().build();
 
 
         // 데이터베이스 모두 초기화////////////////////////////////////////////////////////////////////////
@@ -117,12 +99,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         String countryName = kat_Data.countryCodeMap.get("KR");
         if(kat_Data.kataCountryBase.size() == 0)
             kat_Data.kataCountryBase.insert("KR", countryName);
-
-        kat_Data.client.RankingInit("global", "", "");
         ////////////////////////////////////////////////////////////////////////////////////////////
-
-        kat_Data.adRequest = new AdRequest.Builder().build();
-
     }
 
 
@@ -136,13 +113,14 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        checkThread thread = new checkThread();
-        thread.start();
+        kat_Data.currentActivity = this;
 
         try{
             kat_Data.client.init();
-            thread.join();
-            move();
+            kat_Data.client.RankingInit("global", "", "");
+
+            checkThread thread = new checkThread();
+            thread.start();
 
         }catch (Exception e){
             e.printStackTrace();
@@ -152,7 +130,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     private void move(){
 
         try {
-
             if (kat_Data.kataMyAccountBase.size() == 1) {
                 kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
                 String tag = kat_Data.kataMyAccountBase.getTag();
@@ -173,6 +150,9 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             while(true){
                 if(kat_Data.EventArrayList != null && kat_Data.BrawlersArrayList != null
                 && kat_Data.mapData != null) {
+
+                    Handler mHandler = new Handler(Looper.getMainLooper());
+                    mHandler.postDelayed(kat_LoadBeforeMainActivity.this::move, 0);
                     break;
                 }
             }

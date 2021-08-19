@@ -84,13 +84,11 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
         else player_detail_favorites.setBackground(ContextCompat.getDrawable(getApplicationContext(), R.drawable.round_star_24));
     }
 
-
-
-
-
-
-
-
+    @Override
+    protected void onResume() {
+        super.onResume();
+        kat_Data.currentActivity = this;
+    }
 
     // player_player_detail 레이아웃에 데이터 바인드
     @SuppressLint("SetTextI18n")

@@ -1,8 +1,11 @@
 package com.keykat.keykat.brawlkat.util
 
 import android.annotation.SuppressLint
+import android.app.Activity
 import android.app.Notification
 import android.content.Context
+import android.os.Handler
+import android.os.Looper
 import android.util.DisplayMetrics
 import android.widget.ImageView
 import android.widget.RemoteViews
@@ -11,6 +14,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.NotificationTarget
 import com.google.android.gms.ads.AdRequest
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog
+import com.keykat.keykat.brawlkat.load.activity.ServerConstructionDialog
+import com.keykat.keykat.brawlkat.load.activity.ServerConstructionDialog.Companion.init
 import com.keykat.keykat.brawlkat.load.activity.kat_LoadBeforeMainActivity
 import com.keykat.keykat.brawlkat.util.database.*
 import com.keykat.keykat.brawlkat.util.network.Client
@@ -28,6 +33,7 @@ class kat_Data {
 
     companion object{
 
+        // 데이터를 위한 여러 변수들.
         lateinit var clubLogData: kat_clubLogParser.clubLogData
         lateinit var clubData: kat_official_clubInfoParser.clubData
         lateinit var official_clubInfoParser: kat_official_clubInfoParser
@@ -35,26 +41,26 @@ class kat_Data {
         lateinit var eventsPlayerData: kat_official_playerInfoParser.playerData
         lateinit var official_playerBattleLogParser: kat_official_playerBattleLogParser
         lateinit var official_playerInfoParser: kat_official_playerInfoParser
-
-
-
-
         lateinit var playerTag: String
         lateinit var playerBattleDataList: ArrayList<kat_official_playerBattleLogParser.playerBattleData>
         lateinit var playerBattleDataListStack: Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>>
-
         lateinit var playerData: kat_official_playerInfoParser.playerData
+
+
+        // 화면 크기
+        lateinit var metrics: DisplayMetrics
         lateinit var SCREEN_HEIGHT: Number
         lateinit var SCREEN_WIDTH: Number
 
+
+        // Glide를 위한 옵션 설정
         lateinit var options: RequestOptions
 
         @SuppressLint("StaticFieldLeak")
         lateinit var client: Client
 
-        lateinit var metrics: DisplayMetrics
 
-        // database .....................................................................................................//
+        // database ................................................................................
         lateinit var katabase: kat_database
         lateinit var kataFavoritesBase: kat_favoritesDatabase
         lateinit var kataMyAccountBase: kat_myAccountDatabase
@@ -63,9 +69,9 @@ class kat_Data {
 
         lateinit var countryCodeMap: HashMap<String, String>
 
-        // ..............................................................................................................//
+        // .........................................................................................
 
-        // ..............................................................................................................//
+        // .........................................................................................
 
         // brawlify에서 가져오는 기본 데이터들 (map, event, brawler)///////////////////////////////////////
         lateinit var mapData: HashMap<String, mapData>
@@ -77,6 +83,7 @@ class kat_Data {
         var brawlersParser: kat_brawlersParser? = null
 
 
+        // 데이터 업데이트를 위한 여러 리스트들
         lateinit var PlayerRankingArrayList: ArrayList<kat_official_PlayerRankingParser.playerData>
         lateinit var ClubRankingArrayList: ArrayList<kat_official_ClubRankingParser.clubData>
         lateinit var PowerPlaySeasonArrayList: ArrayList<powerPlaySeasonsData>
@@ -92,9 +99,9 @@ class kat_Data {
         lateinit var MyPowerPlaySeasonRankingArrayList: HashMap<String, HashMap<String, ArrayList<powerPlaySeasonRankingData>>>
 
         private val dialog: kat_LoadingDialog? = null
-        // ..............................................................................................................//
+        // .........................................................................................
 
-        // ..............................................................................................................//
+        // .........................................................................................
         const val TYPE_WIFI = 1
         const val TYPE_MOBILE = 2
         const val TYPE_NOT_CONNECTED = 3
@@ -104,6 +111,22 @@ class kat_Data {
         const val WebRootUrl = "https://brawlify.com"
 
         lateinit var adRequest: AdRequest
+
+
+
+        // 클라이언트에서 다이얼로그를 띄우기 위해 현재 액티비티를 가져와야 함. 그 밖에도 필요한 경우에 사용할 것.
+        @SuppressLint("StaticFieldLeak")
+        lateinit var currentActivity: Activity
+
+
+        // 소켓 연결이 정상적으로 되지 않을 경우 서버 문제 다이얼로그가 발생함.
+        // 단, 임시로 저장한 데이터들이 존재한다면 일단 그걸로 써도 되니까 실시간 통신 상황에선 굳이 다이얼로그를 안 띄워도 됨.
+        @JvmStatic
+        fun ServerProblemDialog() {
+            val mHandler = Handler(Looper.getMainLooper())
+            mHandler.postDelayed({ init(currentActivity) }, 0)
+        }
+
 
 
         @JvmStatic
@@ -148,4 +171,5 @@ class kat_Data {
                 .into(notificationTarget)
         }
     }
+
 }

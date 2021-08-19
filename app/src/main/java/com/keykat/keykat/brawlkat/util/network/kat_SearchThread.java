@@ -7,7 +7,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 
-import com.keykat.keykat.brawlkat.home.activity.kat_ExceptionActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
@@ -110,14 +109,12 @@ public class kat_SearchThread extends AppCompatActivity {
     public void playerSearch(ArrayList<String> sendData){
 
         // 제대로 가져오지 못했을 경우 알림
-        if(sendData.get(0).equals("{none}")){
-
-            Intent errorIntent = new Intent(kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext(),
-                    kat_ExceptionActivity.class);
-            if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
-            kat_Player_MainActivity.kat_player_mainActivity.startActivity(errorIntent);
-
+        if(sendData.get(0).equals("{none}")) {
+            if (kat_loadingDialog != null) kat_loadingDialog.dismiss();
+            kat_Data.ServerProblemDialog();
         }
+
+
         // 제대로 가져왔을 경우
         else{
             kat_Data.official_playerInfoParser = new kat_official_playerInfoParser(sendData.get(0));
@@ -215,13 +212,11 @@ public class kat_SearchThread extends AppCompatActivity {
     public void clubSearch(ArrayList<String> sendData){
 
         // 제대로 가져오지 못했을 경우 알림
-        if(sendData.get(0).equals("{none}")){
-
-            Intent errorIntent = new Intent(kat_Player_MainActivity.kat_player_mainActivity.getApplicationContext(),
-                    kat_ExceptionActivity.class);
-            if(kat_loadingDialog != null) kat_loadingDialog.dismiss();
-            kat_Player_MainActivity.kat_player_mainActivity.startActivity(errorIntent);
+        if(sendData.get(0).equals("{none}")) {
+            if (kat_loadingDialog != null) kat_loadingDialog.dismiss();
+            kat_Data.ServerProblemDialog();
         }
+
         // 제대로 가져왔을 경우
         else{
             kat_Data.official_clubInfoParser = new kat_official_clubInfoParser(sendData.get(0));

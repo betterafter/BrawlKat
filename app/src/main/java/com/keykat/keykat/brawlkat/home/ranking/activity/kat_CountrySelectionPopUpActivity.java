@@ -1,13 +1,10 @@
 package com.keykat.keykat.brawlkat.home.ranking.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
-import android.view.Display;
 import android.view.Window;
-import android.view.WindowManager;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.keykat.keykat.brawlkat.R;
@@ -31,21 +28,22 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
         // 2020.11.20 둘이 무슨 차이?
         //requestWindowFeature(Window.FEATURE_NO_TITLE);
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
-
-
         setContentView(R.layout.country_select_popup);
 
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-
-        int width = (int) (display.getWidth() * 0.9); //Display 사이즈의 70%
-        int height = (int) (display.getHeight() * 0.7);  //Display 사이즈의 90%
+        int width = (int) (kat_Data.SCREEN_WIDTH.intValue() * 0.9); //Display 사이즈의 70%
+        int height = (int) (kat_Data.SCREEN_HEIGHT.intValue() * 0.7);  //Display 사이즈의 90%
 
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
 
         ArrayList<Pair> data = MapToString();
-
         setView(data);
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        kat_Data.currentActivity = this;
     }
 
     public class Pair{

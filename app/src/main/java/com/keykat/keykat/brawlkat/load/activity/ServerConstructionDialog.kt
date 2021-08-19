@@ -1,14 +1,12 @@
 package com.keykat.keykat.brawlkat.load.activity
-
-import android.app.Activity
 import android.app.Dialog
-import android.content.Context
+import android.app.Activity
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
-import android.view.View
 import android.view.Window
 import android.widget.Button
 import com.keykat.keykat.brawlkat.R
+
 
 class ServerConstructionDialog {
 
@@ -18,6 +16,7 @@ class ServerConstructionDialog {
 
             val dialog = Dialog(activity)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+            dialog.setCancelable(false)
             dialog.setContentView(R.layout.load_server_construction_dialog)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
@@ -28,5 +27,6 @@ class ServerConstructionDialog {
             dialog.show()
         }
     }
+
 
 }

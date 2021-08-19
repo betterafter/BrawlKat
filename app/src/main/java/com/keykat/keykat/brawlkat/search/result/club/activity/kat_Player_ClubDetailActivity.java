@@ -86,6 +86,12 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         setData();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        kat_Data.currentActivity = this;
+    }
+
     private void setData(){
 
         String iconUrl = kat_Data.WebRootUrl + "/assets/club/" + kat_Data.clubData.getBadgeId() + ".png?v=1";

@@ -1,21 +1,14 @@
 package com.keykat.keykat.brawlkat.home.ranking.activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.DisplayMetrics;
-import android.view.Display;
 import android.view.Gravity;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
 
-import com.bumptech.glide.Glide;
-import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.util.kat_Data;
 
@@ -24,8 +17,6 @@ import androidx.appcompat.app.AppCompatActivity;
 
 public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
 
-    public                          int                                  ScreenHeight;
-    public                          int                                  ScreenWidth;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -33,18 +24,11 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.brawler_select_popup);
 
-
-        Display display = ((WindowManager) getSystemService(Context.WINDOW_SERVICE)).getDefaultDisplay();
-
-        int width = (int) (display.getWidth() * 0.9); //Display 사이즈의 70%
-        int height = (int) (display.getHeight() * 0.7);  //Display 사이즈의 90%
+        int width = (int) (kat_Data.SCREEN_WIDTH.intValue() * 0.9); //Display 사이즈의 70%
+        int height = (int) (kat_Data.SCREEN_HEIGHT.intValue() * 0.7);  //Display 사이즈의 90%
 
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
-
-        DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        ScreenHeight = metrics.heightPixels;
-        ScreenWidth = metrics.widthPixels;
     }
 
     @Override
@@ -52,6 +36,12 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
         super.onStart();
 
         setView();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        kat_Data.currentActivity = this;
     }
 
     public void setView(){
@@ -91,7 +81,13 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
                     button.setBackgroundColor(getResources().getColor(R.color.semiBlack));
                     button.setLayoutParams(params2);
 
-                    GlideImage(imageUrl, ScreenWidth / 5, ScreenWidth / 5, button);
+                    kat_Data.GlideImage(
+                            getApplicationContext(),
+                            imageUrl,
+                            kat_Data.SCREEN_WIDTH.intValue() / 5,
+                            kat_Data.SCREEN_WIDTH.intValue() / 5,
+                            button
+                    );
 
                     button.setOnClickListener(new View.OnClickListener(){
                         public void onClick(View view){
@@ -114,25 +110,4 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
         setResult(1113, intent);
         finish();
     }
-
-    public void GlideImage(String url, int width, int height, ImageView view){
-
-        Glide.with(getApplicationContext())
-                .applyDefaultRequestOptions(kat_RankingFragment.options)
-                .load(url)
-                .override(width, height)
-                .into(view);
-    }
-
-    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
-        Glide.with(getApplicationContext())
-                .applyDefaultRequestOptions(kat_RankingFragment.options)
-                .load(url)
-                .apply(new RequestOptions().circleCrop().circleCrop())
-                .override(width, height)
-                .into(view);
-
-
-    }
-
 }
