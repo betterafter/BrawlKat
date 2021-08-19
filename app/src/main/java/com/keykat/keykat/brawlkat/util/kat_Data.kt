@@ -25,6 +25,8 @@ import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser.mapData
 import com.keykat.keykat.brawlkat.util.parser.kat_official_BrawlerRankingParser.brawlerRankingData
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PowerPlaySeasonParser.powerPlaySeasonsData
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
 import kotlin.properties.Delegates
@@ -84,21 +86,33 @@ class kat_Data {
 
 
         // 데이터 업데이트를 위한 여러 리스트들
-        lateinit var PlayerRankingArrayList: ArrayList<kat_official_PlayerRankingParser.playerData>
-        lateinit var ClubRankingArrayList: ArrayList<kat_official_ClubRankingParser.clubData>
-        lateinit var PowerPlaySeasonArrayList: ArrayList<powerPlaySeasonsData>
-
         // 랭킹 관련 리스트 --- kat_LoadBeforeMainActivity에서 할당
-        lateinit var BrawlerRankingArrayList: HashMap<String, ArrayList<brawlerRankingData>>
-        lateinit var PowerPlaySeasonRankingArrayList: HashMap<String, ArrayList<powerPlaySeasonRankingData>>
-
+        lateinit var PlayerRankingArrayList: ArrayList<kat_official_PlayerRankingParser.playerData>
         lateinit var MyPlayerRankingArrayList: ArrayList<kat_official_PlayerRankingParser.playerData>
+
+        lateinit var ClubRankingArrayList: ArrayList<kat_official_ClubRankingParser.clubData>
         lateinit var MyClubRankingArrayList: ArrayList<kat_official_ClubRankingParser.clubData>
+
+        lateinit var BrawlerRankingArrayList: HashMap<String, ArrayList<brawlerRankingData>>
         lateinit var MyBrawlerRankingArrayList: HashMap<String, HashMap<String, ArrayList<brawlerRankingData>>>
+
+        lateinit var PowerPlaySeasonArrayList: ArrayList<powerPlaySeasonsData>
         lateinit var MyPowerPlaySeasonArrayList: ArrayList<powerPlaySeasonsData>
+
+        lateinit var PowerPlaySeasonRankingArrayList: HashMap<String, ArrayList<powerPlaySeasonRankingData>>
         lateinit var MyPowerPlaySeasonRankingArrayList: HashMap<String, HashMap<String, ArrayList<powerPlaySeasonRankingData>>>
 
-        private val dialog: kat_LoadingDialog? = null
+
+
+
+
+
+
+
+
+
+        @SuppressLint("StaticFieldLeak")
+        lateinit var dialog: kat_LoadingDialog
         // .........................................................................................
 
         // .........................................................................................
@@ -113,10 +127,11 @@ class kat_Data {
         lateinit var adRequest: AdRequest
 
 
-
         // 클라이언트에서 다이얼로그를 띄우기 위해 현재 액티비티를 가져와야 함. 그 밖에도 필요한 경우에 사용할 것.
         @SuppressLint("StaticFieldLeak")
         lateinit var currentActivity: Activity
+
+
 
 
         // 소켓 연결이 정상적으로 되지 않을 경우 서버 문제 다이얼로그가 발생함.

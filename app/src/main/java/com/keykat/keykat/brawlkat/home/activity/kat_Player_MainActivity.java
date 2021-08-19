@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.home.activity;
 
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.ActivityManager;
 import android.content.Context;
@@ -9,9 +10,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.SystemClock;
 import android.provider.Settings;
-import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
-import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageButton;
@@ -30,16 +29,11 @@ import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
 import com.keykat.keykat.brawlkat.util.kat_Data;
-import com.keykat.keykat.brawlkat.util.parser.kat_clubLogParser;
-import com.keykat.keykat.brawlkat.util.parser.kat_official_clubInfoParser;
-import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
+import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Stack;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
@@ -47,11 +41,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 public class kat_Player_MainActivity extends AppCompatActivity {
-
-    // 하단 네비게이션 바 관련
-    private             BottomNavigationView                                                    bottomNavigationView;
-    private             FragmentManager                                                         fragmentManager;
-    private             FragmentTransaction                                                     fragmentTransaction;
 
     public              kat_SearchFragment                                                      kat_searchFragment;
     public              kat_FavoritesFragment                                                   kat_favoritesFragment;
@@ -67,45 +56,23 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     public              static Intent                                                           foregroundServiceIntent;
     private             static long                                                             mLastClickTime = 0;
     //.................................................................................................................//
-
-
     public              static String                                                           official = "official";
-    public              static String                                                           nofficial = "nofficial";
-
     public              static String                                                           playerTag;
-
-    public              kat_official_playerInfoParser                                           official_playerInfoParser;
-    public              kat_official_playerBattleLogParser                                      official_playerBattleLogParser;
-    public              kat_official_clubInfoParser                                             official_clubInfoParser;
-    public              kat_clubLogParser                                                       clubLogParser;
-
-
     public              static kat_official_playerInfoParser.playerData                         MyPlayerData;
     public              kat_official_playerInfoParser.playerData                                playerData;
-    public              kat_official_clubInfoParser.clubData                                    clubData;
-    public              kat_clubLogParser.clubLogData                                           clubLogData;
-    public              static ArrayList<kat_official_playerBattleLogParser.playerBattleData>   playerBattleDataList = new ArrayList<>();
 
     private             static final int                                                        ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE = 1;
 
 
     public              LayoutInflater                                                          layoutInflater;
 
-    public              static Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>> playerBattleDataListStack = new Stack<>();
-
-
     private             boolean                                                                 firstStart = true;
 
     public              static kat_Player_MainActivity                                          kat_player_mainActivity;
 
-    public kat_LoadingDialog dialog;
-
-
-    public              static int                                                              deviceWidth;
-    public              static int                                                              deviceHeight;
-
     private             InterstitialAd                                                          interstitialAd;
 
+    @SuppressLint({"ClickableViewAccessibility", "NonConstantResourceId"})
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -113,147 +80,128 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
         layoutInflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
-        if(this.getClass().getName().equals("com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity")) {
+        interstitialAd = new InterstitialAd(this);
+        interstitialAd.setAdUnitId("ca-app-pub-5909086836185335/8059778643");
 
-            interstitialAd = new InterstitialAd(this);
-            interstitialAd.setAdUnitId("ca-app-pub-5909086836185335/8059778643");
+        // 포그라운드 서비스가 실행됐는지 확인하고 실행되지 않았다면 실행
+        foregroundServiceIntent = new Intent(getApplicationContext(), kat_Service_BrawlStarsNotifActivity.class);
+        if(kat_Data.kataSettingBase.getData("ForegroundService") == 1){
 
-            DisplayMetrics dm = getApplicationContext().getResources().getDisplayMetrics();
-            deviceWidth = dm.widthPixels;
-            deviceHeight = dm.heightPixels;
+            ActivityManager am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
+            List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(1000);
 
-            // 포그라운드 서비스가 실행됐는지 확인하고 실행되지 않았다면 실행
-            foregroundServiceIntent = new Intent(getApplicationContext(), kat_Service_BrawlStarsNotifActivity.class);
-            if(kat_Data.kataSettingBase.getData("ForegroundService") == 1){
-
-                ActivityManager am = (ActivityManager)getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-                List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(1000);
-
-                boolean isMainServiceExist = false;
-                for(ActivityManager.RunningServiceInfo info : rs) {
-                    String className = info.service.getClassName();
-                    String packageName = info.service.getPackageName();
-                    if(className.equals("com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity")){
-                        isForegroundServiceAlreadyStarted = true;
-                        isMainServiceExist = true;
-                        break;
-                    }
-                }
-                if(!isMainServiceExist){
+            boolean isMainServiceExist = false;
+            for(ActivityManager.RunningServiceInfo info : rs) {
+                String className = info.service.getClassName();
+                if(className.equals("com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity")){
                     isForegroundServiceAlreadyStarted = true;
-                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                        startForegroundService(foregroundServiceIntent);
-                    }
-                    else{
-                        startService(foregroundServiceIntent);
-                    }
+                    isMainServiceExist = true;
+                    break;
                 }
             }
+            if(!isMainServiceExist){
+                isForegroundServiceAlreadyStarted = true;
+                startForegroundService(foregroundServiceIntent);
+            }
+        }
 
 
-            serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
-            dialog = new kat_LoadingDialog(this);
+        serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
+        kat_Data.dialog = new kat_LoadingDialog(this);
 
-            kat_player_mainActivity = this;
+        kat_player_mainActivity = this;
+
+        kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
+        kat_favoritesFragment = new kat_FavoritesFragment();
+        kat_rankingFragment = new kat_RankingFragment();
+        kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
+
+
+
+        // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
+        BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavi);
+        bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
 
             kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
             kat_favoritesFragment = new kat_FavoritesFragment();
-            kat_rankingFragment = new kat_RankingFragment(dialog);
+            kat_rankingFragment = new kat_RankingFragment();
             kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
 
-            // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
-            bottomNavigationView = findViewById(R.id.bottomNavi);
-            bottomNavigationView.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
-                @Override
-                public boolean onNavigationItemSelected(@NonNull MenuItem menuItem) {
+            switch (menuItem.getItemId()) {
+                case R.id.action_search:
+                    setFrag(0);
+                    break;
+                case R.id.action_favorites:
+                    setFrag(1);
+                    break;
+                case R.id.action_ranking:
+                    setFrag(2);
+                    break;
+                case R.id.action_setting:
+                    setFrag(3);
+                    break;
+            }
+            return true;
+        });
+        ///////////////////////////////////////////////////////////////////////////////////////////
 
-                    kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
-                    kat_favoritesFragment = new kat_FavoritesFragment();
-                    kat_rankingFragment = new kat_RankingFragment(dialog);
-                    kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
 
-                    switch (menuItem.getItemId()) {
-                        case R.id.action_search:
-                            setFrag(0);
-                            break;
-                        case R.id.action_favorites:
-                            setFrag(1);
-                            break;
-                        case R.id.action_ranking:
-                            setFrag(2);
-                            break;
-                        case R.id.action_setting:
-                            setFrag(3);
-                            break;
+
+        serviceButton = findViewById(R.id.main_serviceButton);
+        serviceButton.setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
+
+                    if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
+                        Toast toast = Toast.makeText(getApplicationContext(),
+                                "너무 빨리 눌렀습니다. 천천히 눌러주세요.",
+                                Toast.LENGTH_SHORT);
+
+                        toast.show();
+                        return false;
                     }
-                    return true;
-                }
-            });
 
+                    else {
+                        if (isServiceStart) {
+                            stopService(serviceIntent);
+                            isServiceStart = false;
+                        } else {
+                            kat_Data.dialog.show();
+                            interstitialAd.loadAd(new AdRequest.Builder().build());
+                            interstitialAd.setAdListener(new AdListener(){
+                                @Override
+                                public void onAdClosed() {
+                                    super.onAdClosed();
+                                    getPermission();
+                                    isServiceStart = true;
+                                    kat_Data.dialog.dismiss();
+                                }
 
-            // ...........................................................................................................
+                                @Override
+                                public void onAdFailedToLoad(int errorCode) {
+                                    super.onAdFailedToLoad(errorCode);
+                                    getPermission();
+                                    isServiceStart = true;
+                                    kat_Data.dialog.dismiss();
+                                }
 
-            serviceButton = (ImageButton) findViewById(R.id.main_serviceButton);
-            serviceButton.setOnTouchListener(new View.OnTouchListener() {
-                @Override
-                public boolean onTouch(View v, MotionEvent motionEvent) {
-                    if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
-
-                        if (SystemClock.elapsedRealtime() - mLastClickTime < 1000){
-                            Toast toast = Toast.makeText(getApplicationContext(),
-                                    "너무 빨리 눌렀습니다. 천천히 눌러주세요.",
-                                    Toast.LENGTH_SHORT);
-
-                            toast.show();
-                            return false;
+                                @Override
+                                public void onAdLoaded() {
+                                    super.onAdLoaded();
+                                    if (interstitialAd.isLoaded()) {
+                                        interstitialAd.show();
+                                    }
+                                }
+                            });
                         }
-
-                        else {
-                            if (isServiceStart) {
-                                stopService(serviceIntent);
-                                isServiceStart = false;
-                            } else {
-                                dialog.show();
-                                interstitialAd.loadAd(new AdRequest.Builder().build());
-                                interstitialAd.setAdListener(new AdListener(){
-                                    @Override
-                                    public void onAdClosed() {
-                                        super.onAdClosed();
-                                        getPermission();
-                                        isServiceStart = true;
-                                        dialog.dismiss();
-                                    }
-
-                                    @Override
-                                    public void onAdFailedToLoad(int errorCode) {
-                                        super.onAdFailedToLoad(errorCode);
-                                        getPermission();
-                                        isServiceStart = true;
-                                        dialog.dismiss();
-                                    }
-
-                                    @Override
-                                    public void onAdLoaded() {
-                                        super.onAdLoaded();
-                                        if (interstitialAd.isLoaded()) {
-                                            interstitialAd.show();
-                                        }
-                                    }
-                                });
-                            }
-                        }
-
-                        mLastClickTime = SystemClock.elapsedRealtime();
                     }
-                    return false;
-                }
-            });
 
-            // setFrag(0)를 할 때 Recent_Search로 넘어가지 않는 오류가 있었는데, Recent_Search에서 fragment 를 담을 Main_Frame이 없다고 한다.
-            // 생각해보니 Recent_Search는 MainActivity를 상속 받기 때문에 MainActivity의 onCreate나 onStart도 상속을 받아서
-            // setFrag 메소드를 실행해버린다. 그래서 recent_Search에 자꾸 fragment 화면을 띄우려고 한 것.
-            // setFrag를 MainActivity에서만 실행하게 해준다.
-        }
+                    mLastClickTime = SystemClock.elapsedRealtime();
+                }
+                return false;
+            }
+        });
     }
 
 
@@ -263,20 +211,14 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
         super.onStart();
 
-        if(this.getClass().getName().equals("com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity")) {
+        Intent intent = getIntent();
+        if (intent != null) {
+            MyPlayerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
+            if(firstStart) { firstStart = false;setFrag(0); }
+        }
 
-            Intent intent = getIntent();
-            if (intent != null) {
-                MyPlayerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
-                if(firstStart) {
-                    firstStart = false;
-                    setFrag(0);
-                }
-            }
-
-            if(kat_Data.kataMyAccountBase.size() > 0){
-                playerTag = kat_Data.kataMyAccountBase.getTag().substring(1);
-            }
+        if(kat_Data.kataMyAccountBase.size() > 0){
+            playerTag = kat_Data.kataMyAccountBase.getTag().substring(1);
         }
     }
 
@@ -285,29 +227,15 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
         kat_Data.currentActivity = this;
-    }
-
-    private class setBaseDataThread extends Thread{
-        public void run(){
-            while(true){
-                if(kat_Data.PlayerRankingArrayList != null && kat_Data.ClubRankingArrayList != null
-                        && kat_Data.PowerPlaySeasonArrayList != null) {
-                    if (kat_Data.PlayerRankingArrayList.size() > 0 && kat_Data.ClubRankingArrayList.size() > 0
-                            && kat_Data.PowerPlaySeasonArrayList.size() > 0) {
-                        if(dialog != null) dialog.dismiss();
-                        break;
-                    }
-                }
-            }
-        }
+        AsyncCoroutine.Companion.setFinished(true);
     }
 
 
     // 프레그먼트 교체
     public void setFrag(int n)
     {
-        fragmentManager = getSupportFragmentManager();
-        fragmentTransaction = fragmentManager.beginTransaction();
+        FragmentManager fragmentManager = getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
         switch (n)
         {
             case 0:
@@ -321,22 +249,18 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                 break;
 
             case 2:
-                dialog.show();
-                setBaseDataThread baseDataThread = new setBaseDataThread();
-                baseDataThread.start();
-
-                try {
-                    baseDataThread.join();
-                } catch (InterruptedException e) {
-                    e.printStackTrace();
-                }
-                fragmentTransaction.replace(R.id.Main_Frame, kat_rankingFragment);
-                fragmentTransaction.commit();
+               // kat_Data.dialog.show();
+                AsyncCoroutine.Companion.accessRankingFragment(
+                        fragmentTransaction,
+                        R.id.Main_Frame,
+                        kat_rankingFragment
+                );
                 break;
 
             case 3:
                 fragmentTransaction.replace(R.id.Main_Frame, kat_settingFragment);
                 fragmentTransaction.commit();
+                break;
         }
     }
 

@@ -38,6 +38,17 @@
             android:textSize="14sp"
             android:textStyle="bold" />
 
+        <TextView
+            android:id="@+id/load_text"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginHorizontal="50dp"
+            android:layout_marginBottom="150dp"
+            android:fontFamily="@font/actor"
+            android:text="TextView"
+            android:gravity="bottom|center"
+            android:textColor="@color/colorWhite" />
+
 
     </LinearLayout>
 
