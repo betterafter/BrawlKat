@@ -59,6 +59,12 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
         recentSearchUpdate();
     }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        kat_Data.currentActivity = this;
+    }
+
     // 최근 전적 검색 기록 업데이트
     public void recentSearchUpdate(){
 

@@ -22,7 +22,7 @@
         android:layout_marginHorizontal="20dp"
         android:layout_marginBottom="10dp"
         android:fontFamily="@font/actor"
-        android:text='"서버에 문제가 생겼어요"'
+        android:text='"서버가 말을 안 들어요."'
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textSize="24sp"
@@ -47,7 +47,7 @@
         android:fontFamily="@font/actor"
         android:layout_margin="20dp"
         android:padding="20dp"
-        android:text="앱을 종료 후에 다시 시도해주세요. 문제가 지속될 경우 Google Play Store의 개발자 이메일을 통해 문의해주세요."
+        android:text="인터넷 연결 상태를 체크하거나 앱을 종료 후에 다시 시도해주세요. 문제가 지속될 경우 Google Play Store의 개발자 이메일을 통해 문의해주세요."
         android:textAlignment="center"
         android:textColor="@color/colorWhite"
         android:textStyle="bold" />

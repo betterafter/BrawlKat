@@ -1,11 +1,7 @@
 package com.keykat.keykat.brawlkat.util.network;
 
 import android.content.Context;
-import android.content.Intent;
-import android.net.ConnectivityManager;
-import android.net.NetworkInfo;
 
-import com.keykat.keykat.brawlkat.home.activity.kat_ExceptionActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.util.GetTopPackageNameKt;
 import com.keykat.keykat.brawlkat.util.kat_Data;
@@ -31,8 +27,6 @@ import java.util.HashMap;
 
 public class Client {
 
-    private                 Socket                          socket                  = null;
-
     private                 InputStream                     data;
 
     // data 배열 리스트 ...............................................................................
@@ -53,9 +47,9 @@ public class Client {
 
     //private               String                          GCPIPADDRESS = "35.237.9.225";
     private                 final String                    ORACLEIPADDRESS = "193.122.98.86";
+    private                 int                             TimeOut = 10000;
 
-    public                  Context                         context;
-    private                 int                             timeout = 10000;
+    private                 final Context                   context;
 
 
     public Client(Context context){
@@ -63,9 +57,8 @@ public class Client {
     }
 
 
-    // 플레이어 및 클럽 전적 검색 스레드
-    // starlist.pro에서 가져옴
-    // 한번만 통신
+    // 플레이어 및 클럽을 검색할 때 작동하는 스레드. 앱을 실행할 때 저장한 유저 정보가 있다면 불러오고 그렇지 않으면 굳이 불러올 필요가 없음.
+    // 이후 필요할 때마다 발동시키면 됨.
     public class getAllTypeApiThread extends Thread{
 
         private final String tag;
@@ -85,20 +78,6 @@ public class Client {
             try{
 
                 while(true){
-
-                    ConnectivityManager manager
-                            = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
-
-                    NetworkInfo networkInfo = manager.getActiveNetworkInfo();
-                    if(networkInfo == null){
-                        Intent errorIntent = new Intent(context, kat_ExceptionActivity.class);
-                        errorIntent.putExtra("which", "kat_LoadBeforeMainActivity");
-                        errorIntent.putExtra("cause", "error.INTERNET");
-                        errorIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
-                        context.startActivity(errorIntent);
-
-                        break;
-                    }
 
                     if(tag == null) continue;
                     SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
@@ -157,14 +136,15 @@ public class Client {
             }
 
             catch (Exception e){
+                kat_Data.ServerProblemDialog();
                 e.printStackTrace();
             }
         }
     }
 
-    // 랭킹 검색 스레드
-    // starlist.pro에서 가져옴
-    // 한번 통신
+
+    // brawlify에서 가져오는 랭킹 데이터로 매번 업데이트할 필요가 없음. 어차피 랭킹이 그렇게 자주 바뀌는 시스템이 아니기 때문.
+    // 앱을 실행할 때 맨 처음에 한번만 불러오거나 필요할 때만 불러오게 하면 됨.
     public class getRankingApiThread extends Thread{
 
         String countryCode;
@@ -327,13 +307,13 @@ public class Client {
             }
 
             catch (Exception e){
+                kat_Data.ServerProblemDialog();
                 e.printStackTrace();
             }
         }
     }
 
-    // 실시간 통신
-    // 복합 데이터
+    // brawlify에서 가져오는 브롤러, 이벤트, 맵에 대한 데이터로 10분마다 업데이트함.
     public class getApiThread extends Thread{
 
         public void run(){
@@ -341,7 +321,7 @@ public class Client {
             InputStreamReader input;
             BufferedReader reader;
 
-            int time = 1000 * 60;
+            int time = 1000 * 60 * 10;
             try {
                 while (!isGetApiThreadStop) {
 
@@ -416,13 +396,17 @@ public class Client {
                 }
             }
             catch (Exception e){
+                // 이 스레드는 소켓 연결이 안될 때마다 불러올 필요는 없고 해당 정보가 없을 때만 다이얼로그를 띄우도록 함.
+                // 어차피 해당 정보가 있긴 있으면 급한대로 업데이트 전 정보를 가져다 쓰면 되니까.
+                if(kat_Data.EventArrayList == null || kat_Data.BrawlersArrayList == null || kat_Data.mapData == null)
+                    kat_Data.ServerProblemDialog();
+
                 e.printStackTrace();
             }
             finally {
                 try {
                     // 소켓 종료.
                     if(data != null) data.close();
-                    if (socket != null) socket.close() ;
                 }
                 catch (Exception e){
                     // TODO : process exceptions.
@@ -448,9 +432,6 @@ public class Client {
         isGetApiThreadStop = true;
         getThread = null;
     }
-
-
-
 
     public boolean isGetApiThreadAlive(){
         if(getThread != null) return true;

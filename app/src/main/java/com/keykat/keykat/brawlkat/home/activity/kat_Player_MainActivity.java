@@ -281,6 +281,11 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+        kat_Data.currentActivity = this;
+    }
 
     private class setBaseDataThread extends Thread{
         public void run(){

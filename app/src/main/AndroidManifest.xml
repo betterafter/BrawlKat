@@ -37,7 +37,6 @@
         <activity android:name="com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity" android:screenOrientation="portrait"></activity>
         <activity android:name="com.keykat.keykat.brawlkat.home.ranking.activity.kat_CountrySelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
         <activity android:name="com.keykat.keykat.brawlkat.home.ranking.activity.kat_BrawlerSelectionPopUpActivity" android:theme="@style/Theme.AppCompat.Dialog" android:screenOrientation="portrait"></activity>
-        <activity android:name="com.keykat.keykat.brawlkat.home.activity.kat_ExceptionActivity"></activity>
 
 
         <service android:name="com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity"></service>
