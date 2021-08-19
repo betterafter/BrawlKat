@@ -22,8 +22,9 @@ import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.OutputStream;
+import java.net.InetSocketAddress;
 import java.net.Socket;
-import java.net.SocketTimeoutException;
+import java.net.SocketAddress;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -54,6 +55,7 @@ public class Client {
     private                 final String                    ORACLEIPADDRESS = "193.122.98.86";
 
     public                  Context                         context;
+    private                 int                             timeout = 10000;
 
 
     public Client(Context context){
@@ -99,13 +101,14 @@ public class Client {
                     }
 
                     if(tag == null) continue;
-                    Socket socket = new Socket(ORACLEIPADDRESS, 9000);
+                    SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
+                    Socket socket = new Socket();
+                    socket.connect(socketAddress);
 
                     byte[] bytes;
                     String result = null;
 
                     // 데이터 보내기
-
                     // playerTag를 먼저 보냄.
                     if(apiType.equals("official"))
                         result = "%23" + tag;
@@ -155,9 +158,6 @@ public class Client {
 
             catch (Exception e){
                 e.printStackTrace();
-                if(e instanceof SocketTimeoutException){
-                    socketFail = true;
-                }
             }
         }
     }
@@ -192,10 +192,12 @@ public class Client {
 
                 while(true){
 
-                    Socket socket = new Socket(ORACLEIPADDRESS, 9000);
+                    SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
+                    Socket socket = new Socket();
+                    socket.connect(socketAddress);
 
-                    byte[] bytes = null;
-                    String result = null;
+                    byte[] bytes;
+                    String result;
 
                     // 데이터 보내기
                     if(status.equals("PowerPlay"))
@@ -205,7 +207,7 @@ public class Client {
                     else
                         result = "rankings" + "/" + countryCode + "/" + "official";
                     OutputStream os = socket.getOutputStream();
-                    bytes = result.getBytes("UTF-8");
+                    bytes = result.getBytes(StandardCharsets.UTF_8);
                     os.write(bytes);
                     os.flush();
 
@@ -326,9 +328,6 @@ public class Client {
 
             catch (Exception e){
                 e.printStackTrace();
-                if(e instanceof SocketTimeoutException){
-                    socketFail = true;
-                }
             }
         }
     }
@@ -339,8 +338,8 @@ public class Client {
 
         public void run(){
 
-            InputStreamReader input = null;
-            BufferedReader reader = null;
+            InputStreamReader input;
+            BufferedReader reader;
 
             int time = 1000 * 60;
             try {
@@ -355,10 +354,12 @@ public class Client {
                         continue;
                     }
 
-                    socket = new Socket(ORACLEIPADDRESS, 9000);
+                    SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
+                    Socket socket = new Socket();
+                    socket.connect(socketAddress);
 
-                    byte[] bytes = null;
-                    String result = null;
+                    byte[] bytes;
+                    String result;
 
                     // 데이터 보내기
 
@@ -433,6 +434,8 @@ public class Client {
 
 
 
+
+
     public void init(){
 
         isGetApiThreadStop = false;
@@ -453,6 +456,7 @@ public class Client {
         if(getThread != null) return true;
         else return false;
     }
+
 
 
 

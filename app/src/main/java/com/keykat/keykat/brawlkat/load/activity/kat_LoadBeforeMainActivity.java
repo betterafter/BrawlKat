@@ -5,7 +5,6 @@ import android.content.Intent;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Bundle;
-import android.os.Handler;
 import android.util.DisplayMetrics;
 
 import com.bumptech.glide.Priority;
@@ -115,8 +114,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             e.printStackTrace();
         }
 
-        kat_Data.client.init();
-
         String countryName = kat_Data.countryCodeMap.get("KR");
         if(kat_Data.kataCountryBase.size() == 0)
             kat_Data.kataCountryBase.insert("KR", countryName);
@@ -138,28 +135,50 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        move();
+
+        checkThread thread = new checkThread();
+        thread.start();
+
+        try{
+            kat_Data.client.init();
+            thread.join();
+            move();
+
+        }catch (Exception e){
+            e.printStackTrace();
+        }
     }
 
     private void move(){
 
-        if(kat_Data.kataMyAccountBase.size() == 1) {
-            kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
-            String tag = kat_Data.kataMyAccountBase.getTag();
-            String realTag = tag.substring(1);
-            kset.SearchStart(realTag, "players", getApplicationContext());
-        }
-        else{
+        try {
 
-            new Handler().postDelayed(new Runnable() {
-                @Override
-                public void run() {
-                    Intent intent = new Intent(kat_LoadBeforeMainActivity.this, kat_Player_MainActivity.class);
-                    startActivity(intent);
-                }
-            }, 3000);
+            if (kat_Data.kataMyAccountBase.size() == 1) {
+                kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
+                String tag = kat_Data.kataMyAccountBase.getTag();
+                String realTag = tag.substring(1);
+                kset.SearchStart(realTag, "players", getApplicationContext());
+            } else {
+                Intent intent = new Intent(kat_LoadBeforeMainActivity.this, kat_Player_MainActivity.class);
+                startActivity(intent);
+            }
+        } catch (Exception e){
+            e.printStackTrace();
         }
     }
+
+    // 필수 데이터를 가져오기 전까지 체크 스레드를 계속 돌린다. 여기서 load 화면의 텍스트를 계속 바꿔준다.
+    private class checkThread extends Thread{
+        public void run(){
+            while(true){
+                if(kat_Data.EventArrayList != null && kat_Data.BrawlersArrayList != null
+                && kat_Data.mapData != null) {
+                    break;
+                }
+            }
+        }
+    }
+
 
 
 
