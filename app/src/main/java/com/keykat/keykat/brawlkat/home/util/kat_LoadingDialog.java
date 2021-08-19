@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.home.util;
 
+import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
@@ -22,7 +23,6 @@ public class kat_LoadingDialog implements Serializable {
 
     public kat_LoadingDialog(Context context){
         this.context = context;
-
         SetDialog();
     }
 
@@ -31,6 +31,7 @@ public class kat_LoadingDialog implements Serializable {
         LayoutInflater layoutInflater
                 = (LayoutInflater) context.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
+        @SuppressLint("InflateParams")
         View dialogView = layoutInflater.inflate(R.layout.loading_dialog, null);
         ImageView loadIcon = dialogView.findViewById(R.id.load_icon);
 
@@ -43,12 +44,14 @@ public class kat_LoadingDialog implements Serializable {
         dialog.setContentView(dialogView);
         dialog.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
         dialog.setCancelable(false);
-
-
     }
 
     public void show(){
         dialog.show();
+    }
+
+    public void cancel(){
+        dialog.cancel();
     }
 
     public void dismiss(){
