@@ -83,7 +83,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         kat_Data.playerBattleDataListStack = new Stack<>();
         ////////////////////////////////////////////////////////////////////////////////////////////
 
-        //test
 
         // 처음 앱 실행할 때 광고를 초기화하기 위해선 인터넷 연결상태를 체크할 필요가 있음.
         ConnectivityManager manager
