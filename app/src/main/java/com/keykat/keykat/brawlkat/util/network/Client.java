@@ -59,6 +59,8 @@ public class Client {
     private                 String                          GCPIPADDRESS = "35.237.9.225";
     private                 String                          ORACLEIPADDRESS = "193.122.98.86";
 
+    // 잔디 테스트
+
     public Client(){
 
     }
