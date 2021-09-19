@@ -3,17 +3,22 @@
     <string name="title_activity_settings">SettingsActivity</string>
 
     <!-- Preference Titles -->
-    <string name="messages_header">Messages</string>
-    <string name="sync_header">Sync</string>
+    <string name="notify_header">알림</string>
+    <string name="info_header">정보</string>
 
     <!-- Messages Preferences -->
-    <string name="signature_title">Your signature</string>
-    <string name="reply_title">Default reply action</string>
+    <string name="notify">알림창에 브롤러 정보 표시하기</string>
+    <string name="auto_start">앱 자동 실행 서비스</string>
+    <string name="app_info">서비스 설명</string>
+    <string name="official_policy_info">정책</string>
+    <string name="developer_info">개발자 정보</string>
 
     <!-- Sync Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
-    <string name="attachment_summary_on">Automatically download attachments for incoming emails
-    </string>
-    <string name="attachment_summary_off">Only download attachments when manually requested</string>
+    <string name="notify_summary_on">디바이스의 알림창에 브롤러 정보가 표시됩니다.</string>
+    <string name="notify_summary_off">디바이스의 알림창에 브롤러 정보가 표시됩니다.</string>
+    <string name="auto_summary_on">브롤 스타즈를 실행할 때 브롤러 승률 서비스가 자동으로 실행됩니다. (많은 배터리 소모가 발생할 수 있습니다.)</string>
+    <string name="auto_summary_off">브롤 스타즈를 실행할 때 브롤러 승률 서비스가 자동으로 실행됩니다. (많은 배터리 소모가 발생할 수 있습니다.)</string>
 </resources>
+
