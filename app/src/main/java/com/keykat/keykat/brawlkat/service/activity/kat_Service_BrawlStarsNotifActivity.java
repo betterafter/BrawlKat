@@ -10,7 +10,6 @@ import android.content.IntentFilter;
 import android.os.IBinder;
 
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
-import com.keykat.keykat.brawlkat.home.setting.activity.kat_SettingFragment;
 import com.keykat.keykat.brawlkat.service.util.kat_ActionBroadcastReceiver;
 import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
 import com.keykat.keykat.brawlkat.util.kat_Data;
@@ -87,7 +86,7 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     public void onDestroy() {
         super.onDestroy();
 
-        kat_SettingFragment.serviceStarted = false;
+        //kat_SettingFragment.serviceStarted = false;
         try {
             UnregisterBroadcastReceiver();
         } catch (Exception e) {

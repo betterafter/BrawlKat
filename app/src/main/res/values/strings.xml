@@ -6,6 +6,14 @@
     <string name="notify_header">알림</string>
     <string name="info_header">정보</string>
 
+    <!-- Preference Key -->
+    <string name="notify_service">notify_service</string>
+    <string name="auto_service">auto_service</string>
+    <string name="service">service</string>
+    <string name="policy">policy</string>
+    <string name="developer">developer</string>
+
+
     <!-- Messages Preferences -->
     <string name="notify">알림창에 브롤러 정보 표시하기</string>
     <string name="auto_start">앱 자동 실행 서비스</string>

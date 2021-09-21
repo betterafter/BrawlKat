@@ -9,7 +9,6 @@ import android.os.Bundle;
 
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
 import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.parser.kat_clubLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_clubInfoParser;
@@ -136,8 +135,6 @@ public class kat_SearchThread extends AppCompatActivity {
 
 
                 kat_Data.playerData = kat_Data.official_playerInfoParser.DataParser();
-                System.out.println(kat_Data.playerData.toString());
-                System.out.println(kat_Data.client.getAllTypeData().get(1));
                 if(!kat_Data.client.getAllTypeData().get(1).equals("{none}")
                 && kat_Data.client.getAllTypeData().get(1).length() > 30
                 && kat_Data.client.getAllTypeData().get(1) != null) {
@@ -155,9 +152,9 @@ public class kat_SearchThread extends AppCompatActivity {
 
                 if(fromActivity == null){
                     // 알림창 업데이트
-                    kat_NotificationUpdater updater
-                            = new kat_NotificationUpdater(getApplicationContext(), kat_Data.playerData);
-                    updater.update();
+//                    kat_NotificationUpdater updater
+//                            = new kat_NotificationUpdater(getApplicationContext(), kat_Data.playerData);
+//                    updater.update();
                     SearchDataOnOverdraw = false;
                     return;
                 }
@@ -166,8 +163,8 @@ public class kat_SearchThread extends AppCompatActivity {
                 if(fromActivity.getClass().getName().equals("com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity")){
                     if(sendData.get(0).length() > 50)
                         kat_Data.eventsPlayerData = kat_Data.playerData;
-                    kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
-                    updater.update();
+                    //kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
+                    //updater.update();
                 }
 
 
@@ -179,15 +176,13 @@ public class kat_SearchThread extends AppCompatActivity {
                             kat_Data.playerData.getName()
                     );
                 }
-                kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
-                updater.update();
+                //kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
+                //updater.update();
 
                 ActivityManager manager = (ActivityManager)fromActivity.getSystemService(Context.ACTIVITY_SERVICE);
                 List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
                 ComponentName componentName= info.get(0).topActivity;
                 String topActivityName = componentName.getShortClassName().substring(1);
-                System.out.println(topActivityName);
-                System.out.println(fromActivity.getClass().getName());
 
                 String com = topActivityName;
                 String to = fromActivity.getClass().getName();
@@ -238,8 +233,6 @@ public class kat_SearchThread extends AppCompatActivity {
                 List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
                 ComponentName componentName= info.get(0).topActivity;
                 String topActivityName = componentName.getShortClassName().substring(1);
-                System.out.println(topActivityName);
-                System.out.println(fromActivity.getClass().getName());
 
                 String com = topActivityName;
                 String to = fromActivity.getClass().getName();
