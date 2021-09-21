@@ -19,19 +19,16 @@
     <PreferenceCategory app:title="@string/info_header">
 
         <EditTextPreference
-            app:title="@string/app_info">
-
-        </EditTextPreference>
-
-        <EditTextPreference
-            app:title="@string/official_policy_info">
-
-        </EditTextPreference>
+            app:key="service"
+            app:title="@string/app_info"/>
 
         <EditTextPreference
-            app:title="@string/developer_info">
+            app:key="policy"
+            app:title="@string/official_policy_info"/>
 
-        </EditTextPreference>
+        <EditTextPreference
+            app:key="developer"
+            app:title="@string/developer_info"/>
 
     </PreferenceCategory>
 

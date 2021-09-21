@@ -26,7 +26,6 @@ import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivity;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
 import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
 import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.network.Client;
@@ -183,8 +182,8 @@ public class kat_SearchFragment extends Fragment {
                     kat_Data.kataMyAccountBase.delete(playerData.getTag());
                     kat_Data.eventsPlayerData = null;
 
-                    kat_NotificationUpdater updater = new kat_NotificationUpdater(getActivity().getApplicationContext());
-                    updater.update();
+                    //kat_NotificationUpdater updater = new kat_NotificationUpdater(getActivity().getApplicationContext());
+                    //updater.update();
 
                     return true;
                 }

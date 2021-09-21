@@ -147,40 +147,37 @@ public class kat_NotificationUpdater {
         RemoteViews bcv = bigContentView();
 
         try {
-
-            if (kat_Data.kataSettingBase.getData("ForegroundService") == 1) {
-                if (playerData != null) {
-                    kat_Service_BrawlStarsNotifActivity.notification
-                            = new NotificationCompat.Builder(context, "channel")
-                            .setSmallIcon(R.drawable.kat_notification_icon)
-                            .setColor(context.getResources().getColor(R.color.semiBlack))
-                            .setColorized(true)
-                            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                            .setCustomContentView(scv)
-                            .setCustomBigContentView(bcv)
-                            .setShowWhen(false);
-                } else {
-                    kat_Service_BrawlStarsNotifActivity.notification
-                            = new NotificationCompat.Builder(context, "channel")
-                            .setSmallIcon(R.drawable.kat_notification_icon)
-                            .setColor(context.getResources().getColor(R.color.semiBlack))
-                            .setColorized(true)
-                            .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                            .setCustomContentView(scv)
-                            .setShowWhen(false);
-                }
-
-                if (playerData != null) {
-                    if(UrlForBigContentViewRecommendBrawler().equals("")) return;
-                    kat_Data.GlideImageWithNotification(context,
-                            R.id.main_notification_big_img,
-                            bcv,
-                            kat_Service_BrawlStarsNotifActivity.notification.build(),
-                            1,
-                            UrlForBigContentViewRecommendBrawler());
-                }
-                updaterNotify();
+            if (playerData != null) {
+                kat_Service_BrawlStarsNotifActivity.notification
+                        = new NotificationCompat.Builder(context, "channel")
+                        .setSmallIcon(R.drawable.kat_notification_icon)
+                        .setColor(context.getResources().getColor(R.color.semiBlack))
+                        .setColorized(true)
+                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                        .setCustomContentView(scv)
+                        .setCustomBigContentView(bcv)
+                        .setShowWhen(false);
+            } else {
+                kat_Service_BrawlStarsNotifActivity.notification
+                        = new NotificationCompat.Builder(context, "channel")
+                        .setSmallIcon(R.drawable.kat_notification_icon)
+                        .setColor(context.getResources().getColor(R.color.semiBlack))
+                        .setColorized(true)
+                        .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                        .setCustomContentView(scv)
+                        .setShowWhen(false);
             }
+
+            if (playerData != null) {
+                if(UrlForBigContentViewRecommendBrawler().equals("")) return;
+                kat_Data.GlideImageWithNotification(context,
+                        R.id.main_notification_big_img,
+                        bcv,
+                        kat_Service_BrawlStarsNotifActivity.notification.build(),
+                        1,
+                        UrlForBigContentViewRecommendBrawler());
+            }
+            updaterNotify();
         }
         catch (Exception e){
             e.printStackTrace();

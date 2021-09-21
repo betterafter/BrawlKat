@@ -683,7 +683,6 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
             String sec = time.substring(13, 15);
             battleLogTime.setText(year + "." + month + "." + day + "   " + hour + "시 " + min + "분 " + sec + "초");
 
-            System.out.println(kat_Data.mapData);
             if(!battleData.getEventId().equals("0") && kat_Data.mapData.get(battleData.getEventId()) != null)
                 battleLogEventName.setText(Objects.requireNonNull(kat_Data.mapData.get(battleData.getEventId())).getName());
 
