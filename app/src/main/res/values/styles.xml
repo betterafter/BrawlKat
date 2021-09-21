@@ -50,4 +50,12 @@
         <item name="android:textAppearance">@style/TextAppearance.AppCompat</item>
     </style>
 
+    <style name="PreferenceScreen" parent="Theme.AppCompat.DayNight.NoActionBar">
+        <item name="android:textColor">@color/colorWhite</item>
+        <item name="colorPrimary">@color/Color1</item>
+        <item name="colorAccent">@color/Color1</item>
+        <item name="android:textColorPrimary">@color/Color1</item>
+        <item name="android:textColorSecondary">@color/whiteGray</item>
+    </style>
+
 </resources>

@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.home.ranking.activity
+package com.keykat.keykat.brawlkat.home.setting.activity
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity

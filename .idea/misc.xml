@@ -6,6 +6,7 @@
         <entry key="app/src/main/res/drawable/card_background.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/drawable/card_dialog_background.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/drawable/round_build_24.xml" value="0.184375" />
+        <entry key="app/src/main/res/layout/activity_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/exception_activity.xml" value="0.161231884057971" />
         <entry key="app/src/main/res/layout/kat_ad_unified_banner_layout.xml" value="0.151268115942029" />
         <entry key="app/src/main/res/layout/load_server_construction_dialog.xml" value="0.25" />

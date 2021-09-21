@@ -22,6 +22,7 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.favorite.activity.kat_FavoritesFragment;
+import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.home.search.activity.kat_SearchFragment;
 import com.keykat.keykat.brawlkat.home.setting.activity.kat_SettingFragment;
@@ -138,7 +139,9 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                     setFrag(2);
                     break;
                 case R.id.action_setting:
-                    setFrag(3);
+                    //setFrag(3);
+                    Intent intent = new Intent(this, SettingsActivity.class);
+                    startActivity(intent);
                     break;
             }
             return true;
