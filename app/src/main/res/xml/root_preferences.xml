@@ -3,15 +3,13 @@
     <PreferenceCategory app:title="@string/notify_header">
 
         <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="foreground_service"
+            app:key="notify_service"
             app:summaryOff="@string/notify_summary_off"
             app:summaryOn="@string/notify_summary_on"
             app:title="@string/notify" />
 
         <SwitchPreferenceCompat
-            app:dependency="sync"
-            app:key="foreground_service"
+            app:key="auto_service"
             app:summaryOff="@string/auto_summary_off"
             app:summaryOn="@string/auto_summary_on"
             app:title="@string/auto_start" />

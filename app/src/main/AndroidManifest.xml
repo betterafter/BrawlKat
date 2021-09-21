@@ -11,9 +11,11 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".home.ranking.activity.SettingsActivity"
+            android:name=".home.setting.activity.SettingsActivity"
             android:exported="true"
-            android:label="@string/title_activity_settings" />
+            android:label="@string/title_activity_settings"
+            android:theme="@style/PreferenceScreen"
+            android:screenOrientation="portrait"/>
         <activity android:name=".load.activity.kat_LoadBeforeMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
