@@ -9,10 +9,7 @@ import android.os.Bundle
 import android.os.Process
 import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
-import androidx.preference.EditTextPreference
-import androidx.preference.PreferenceFragmentCompat
-import androidx.preference.SwitchPreference
-import androidx.preference.SwitchPreferenceCompat
+import androidx.preference.*
 import com.keykat.keykat.brawlkat.R
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity.kat_player_mainActivity
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity.serviceIntent
@@ -58,12 +55,25 @@ class SettingsActivity : AppCompatActivity() {
             policyEditTextPreference = findPreference(getString(R.string.policy))
             developerInfoEditTextPreference = findPreference(getString(R.string.developer))
 
+
+            // 브롤러 추천 서비스 알림창을 on 했을 때
+            backgroundServicePreference?.isEnabled =
+                foregroundServicePreferences?.sharedPreferences?.getBoolean(
+                    getString(R.string.notify_service),
+                    false
+                ) == true
+
             foregroundServicePreferences?.setOnPreferenceChangeListener { _, newValue ->
                 if (!checkPermission())
                     startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
 
-                if(newValue.equals(true)) requireActivity().startForegroundService(serviceIntent)
-                else requireActivity().stopService(serviceIntent)
+                if (newValue.equals(true)) {
+                    requireActivity().startForegroundService(serviceIntent)
+                    backgroundServicePreference?.isEnabled = true
+                } else {
+                    requireActivity().stopService(serviceIntent)
+                    backgroundServicePreference?.isEnabled = false
+                }
 
                 true
             }
