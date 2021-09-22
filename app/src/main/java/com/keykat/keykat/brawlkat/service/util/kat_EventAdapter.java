@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.service.util;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.graphics.Typeface;
@@ -24,6 +25,7 @@ import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
@@ -32,15 +34,17 @@ import androidx.recyclerview.widget.RecyclerView;
 public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.viewHolder> {
 
 
-    private                 Context                                             context;
-    private                 ArrayList<kat_eventsParser.pair>                    EventArrayList;
-    private                 ArrayList<HashMap<String, Object>>                  BrawlersArrayList;
-    private                 kat_Service_EventActivity                           eventActivity;
-    private                 ArrayList<String>                                   playerBrawlersArrayList;
+    private final Context context;
+    private final ArrayList<kat_eventsParser.pair> EventArrayList;
+    private final ArrayList<HashMap<String, Object>> BrawlersArrayList;
+    private final kat_Service_EventActivity eventActivity;
+    private ArrayList<String> playerBrawlersArrayList;
 
 
     public kat_EventAdapter(Context context, ArrayList<kat_eventsParser.pair> EventArrayList,
-                            ArrayList<HashMap<String, Object>> BrawlersArrayList, kat_Service_EventActivity eventActivity){
+                            ArrayList<HashMap<String, Object>> BrawlersArrayList,
+                            kat_Service_EventActivity eventActivity
+    ) {
         this.context = context;
         this.EventArrayList = EventArrayList;
         this.BrawlersArrayList = BrawlersArrayList;
@@ -50,8 +54,9 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     @NonNull
     @Override
     public viewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        LayoutInflater inflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) ;
-        View view = inflater.inflate(R.layout.service_map_event_item, parent, false) ;
+        LayoutInflater inflater
+                = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        View view = inflater.inflate(R.layout.service_map_event_item, parent, false);
         return new viewHolder(view, EventArrayList, BrawlersArrayList);
     }
 
@@ -61,10 +66,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
         holder.fastImageLoad();
         holder.onBind(position);
 
-        if(!eventActivity.changeRecommendView)
-            holder.onBrawlerRecommendsBind(position, false);
-        else
-            holder.onBrawlerRecommendsBind(position, true);
+        holder.onBrawlerRecommendsBind(position, eventActivity.changeRecommendView);
     }
 
     @Override
@@ -72,45 +74,39 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
         return EventArrayList.size();
     }
 
-    public void refresh(){
+    @SuppressLint("NotifyDataSetChanged")
+    public void refresh() {
         this.notifyDataSetChanged();
     }
 
 
+    public class viewHolder extends RecyclerView.ViewHolder {
 
-    public class viewHolder extends RecyclerView.ViewHolder{
-
-        private View view;
-
-        private ImageView background;
-        private ImageView modeType;
-        private TextView MapName_Time;
-        private TextView MapType;
-        private LinearLayout RecommendsLayout;
-        private LinearLayout UserRecommendsLayout;
+        private final ImageView background;
+        private final ImageView modeType;
+        private final TextView MapName_Time;
+        private final TextView MapType;
+        private final LinearLayout RecommendsLayout;
         private RequestOptions options;
 
-        private ArrayList<kat_eventsParser.pair> EventArrayList;
-        private ArrayList<HashMap<String, Object>> BrawlersArrayList;
+        private final ArrayList<kat_eventsParser.pair> EventArrayList;
+        private final ArrayList<HashMap<String, Object>> BrawlersArrayList;
 
         public viewHolder(@NonNull View itemView, ArrayList<kat_eventsParser.pair> EventArrayList,
                           ArrayList<HashMap<String, Object>> BrawlersArrayList) {
             super(itemView);
 
-            view = itemView;
-            background = (ImageView) itemView.findViewById(R.id.item_background);
-            modeType = (ImageView) itemView.findViewById(R.id.item_modeType);
-            MapName_Time = (TextView) itemView.findViewById(R.id.item_mapNameAndTime);
-            MapType = (TextView) itemView.findViewById(R.id.item_mapType);
-            RecommendsLayout = (LinearLayout) itemView.findViewById(R.id.item_RecommendsLayout);
-            UserRecommendsLayout = (LinearLayout) itemView.findViewById(R.id.item_UserRecommendsLayout);
+            background = itemView.findViewById(R.id.item_background);
+            modeType = itemView.findViewById(R.id.item_modeType);
+            MapName_Time = itemView.findViewById(R.id.item_mapNameAndTime);
+            MapType = itemView.findViewById(R.id.item_mapType);
+            RecommendsLayout = itemView.findViewById(R.id.item_RecommendsLayout);
             this.EventArrayList = EventArrayList;
             this.BrawlersArrayList = BrawlersArrayList;
         }
 
 
-
-        public void fastImageLoad(){
+        public void fastImageLoad() {
             options = new RequestOptions()
                     .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .centerCrop()
@@ -119,14 +115,16 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
         }
 
         // 기본 이미지 세팅
-        public void onBind(int position){
+        public void onBind(int position) {
 
             DisplayMetrics metrics = context.getResources().getDisplayMetrics();
             int height = Math.min(metrics.heightPixels, metrics.widthPixels);
             int width = Math.max(metrics.heightPixels, metrics.widthPixels);
 
-            String backgroundUrl = (String) EventArrayList.get(position).getInfo().get("mapTypeImageUrl");
-            String gameModeTypeUrl = (String) EventArrayList.get(position).getInfo().get("gamemodeTypeImageUrl");
+            String backgroundUrl
+                    = (String) EventArrayList.get(position).getInfo().get("mapTypeImageUrl");
+            String gameModeTypeUrl
+                    = (String) EventArrayList.get(position).getInfo().get("gamemodeTypeImageUrl");
             String mapName = (String) EventArrayList.get(position).getInfo().get("mapName");
             String name = (String) EventArrayList.get(position).getInfo().get("name");
 
@@ -134,43 +132,45 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
             MapType.setText(name);
 
             Glide.with(context)
-                    .load(backgroundUrl).override(width / 2,height / 5)
+                    .load(backgroundUrl).override(width / 2, height / 5)
                     .into(background);
 
             Glide.with(context)
                     .load(gameModeTypeUrl)
-                    .override((width / 3) / 10,(width / 3) / 10)
+                    .override((width / 3) / 10, (width / 3) / 10)
                     .into(modeType);
         }
+
         // 전체 브롤러 추천 뷰
-        public void onBrawlerRecommendsBind(int position, boolean isUserRecommend){
+        @SuppressLint("SetTextI18n")
+        public void onBrawlerRecommendsBind(int position, boolean isUserRecommend) {
 
             RecommendsLayout.removeAllViews();
 
-            if(isUserRecommend){
+            if (isUserRecommend) {
                 playerBrawlersArrayList = new ArrayList<>();
-                if(KatData.eventsPlayerData != null) {
+                if (KatData.eventsPlayerData != null) {
                     ArrayList<kat_official_playerInfoParser.playerBrawlerData> data
                             = KatData.eventsPlayerData.getBrawlerData();
 
-                    for(int i = 0; i < data.size(); i++){
+                    for (int i = 0; i < data.size(); i++) {
                         playerBrawlersArrayList.add(data.get(i).getName());
                     }
                 }
             }
 
             DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-            int height = Math.min(metrics.heightPixels, metrics.widthPixels);
             int width = Math.max(metrics.heightPixels, metrics.widthPixels);
             // 전체 추천 보여주기
-            LayoutInflater layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            LayoutInflater layoutInflater
+                    = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             int i = 0;
 
-            if(EventArrayList.get(position).getWins().size() <= 0){
+            if (EventArrayList.get(position).getWins().size() <= 0) {
 
                 TextView loadingText = new TextView(context);
-                loadingText.setText("something wrong with datas or maybe lack of data!" + '\n' + "we are sorry for the inconveniences.");
+                loadingText.setText(context.getString(R.string.overdrawErrorMessage));
 
                 // ResourcesCompat.getFont 를 이용하여 폰트 불러오기.
                 Typeface face = ResourcesCompat.getFont(context, R.font.lilita_one);
@@ -181,45 +181,63 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                 RecommendsLayout.addView(loadingText);
             }
 
-            while(i < EventArrayList.get(position).getWins().size()){
+            while (i < EventArrayList.get(position).getWins().size()) {
 
                 LinearLayout VerticalLayout = new LinearLayout(context);
 
-                for(int j = 0; j < 5; j++){
+                for (int j = 0; j < 5; j++) {
 
                     //if(EventArrayList.get(position).getWins().size() == i) return;
-                    if(EventArrayList.get(position).getWins().size() <= i) break;
+                    if (EventArrayList.get(position).getWins().size() <= i) break;
 
 
-                    View brawlerView = layoutInflater.inflate(R.layout.service_map_event_item_brawler, null);
-                    String brawlerID = EventArrayList.get(position).getWins().get(i).get("brawler").toString();
+                    @SuppressLint("InflateParams")
+                    View brawlerView
+                            = layoutInflater.inflate(
+                            R.layout.service_map_event_item_brawler, null
+                    );
+                    String brawlerID = Objects.requireNonNull(
+                            EventArrayList.get(position).getWins().get(i).get("brawler")
+                    ).toString();
 
                     int idx = 0;
                     boolean BrawlerFoundInUserRecommend = false;
-                    while(true){
+                    while (true) {
                         // brawlersArrayList 에서 현재 순위의 브롤러를 찾았을 때
-                        if(BrawlersArrayList.get(idx).get("id").toString().equals(brawlerID)){
-                            if(isUserRecommend){
-                                for(int k = 0; k < playerBrawlersArrayList.size(); k++){
-                                    String playerBrawler = playerBrawlersArrayList.get(k).toLowerCase();
+                        if (Objects.requireNonNull(
+                                BrawlersArrayList.get(idx).get("id")).toString().equals(brawlerID)
+                        ) {
+                            if (isUserRecommend) {
+                                for (int k = 0; k < playerBrawlersArrayList.size(); k++) {
+                                    String playerBrawler
+                                            = playerBrawlersArrayList.get(k).toLowerCase();
 
-                                    if(playerBrawler.equals(BrawlersArrayList.get(idx).get("name").toString().toLowerCase())){
-                                        BrawlerFoundInUserRecommend = true; break;
+                                    if (playerBrawler.equals(
+                                            Objects.requireNonNull(
+                                                    BrawlersArrayList.get(idx).get("name")
+                                            ).toString().toLowerCase())
+                                    ) {
+                                        BrawlerFoundInUserRecommend = true;
+                                        break;
                                     }
                                 }
-                            }
-                            else BrawlerFoundInUserRecommend = true;
+                            } else BrawlerFoundInUserRecommend = true;
                             break;
                         }
                         idx++;
                     }
-                    if(!BrawlerFoundInUserRecommend) {
-                        j = j - 1; i++; continue;
+                    if (!BrawlerFoundInUserRecommend) {
+                        j = j - 1;
+                        i++;
+                        continue;
                     }
 
-                    ImageView brawlerImage = brawlerView.findViewById(R.id.map_event_item_brawler_img);
-                    TextView brawlerName = brawlerView.findViewById(R.id.map_event_item_brawler_name);
-                    TextView brawlerWinRate = brawlerView.findViewById(R.id.map_event_item_brawler_winRate);
+                    ImageView brawlerImage
+                            = brawlerView.findViewById(R.id.map_event_item_brawler_img);
+                    TextView brawlerName
+                            = brawlerView.findViewById(R.id.map_event_item_brawler_name);
+                    TextView brawlerWinRate
+                            = brawlerView.findViewById(R.id.map_event_item_brawler_winRate);
 
                     String brawlersImageUrl = (String) BrawlersArrayList.get(idx).get("imageUrl");
                     String brawlersName = (String) BrawlersArrayList.get(idx).get("name");
@@ -227,13 +245,17 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
                     Glide.with(context)
                             .applyDefaultRequestOptions(options)
                             .load(brawlersImageUrl)
-                            .override((width / 3) / 7,(width / 3) / 7)
+                            .override((width / 3) / 7, (width / 3) / 7)
                             .into(brawlerImage);
 
                     brawlerName.setText(brawlersName);
-                    double winRate = Double.parseDouble(EventArrayList.get(position).getWins().get(i).get("winRate").toString());
+                    double winRate = Double.parseDouble(
+                            Objects.requireNonNull(
+                                    EventArrayList.get(position).getWins().get(i).get("winRate")
+                            ).toString());
                     double round_winRate = Math.round(winRate * 100) / 100.0;
-                    if(round_winRate * 100 % 10 == 0)
+
+                    if (round_winRate * 100 % 10 == 0)
                         brawlerWinRate.setText("" + round_winRate + "0%");
                     else
                         brawlerWinRate.setText("" + round_winRate + "%");

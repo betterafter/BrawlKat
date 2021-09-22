@@ -45,8 +45,12 @@ class KatData {
         lateinit var official_playerBattleLogParser: kat_official_playerBattleLogParser
         lateinit var official_playerInfoParser: kat_official_playerInfoParser
         lateinit var playerTag: String
-        lateinit var playerBattleDataList: ArrayList<kat_official_playerBattleLogParser.playerBattleData>
-        lateinit var playerBattleDataListStack: Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>>
+        lateinit var playerBattleDataList:
+                ArrayList<kat_official_playerBattleLogParser.playerBattleData>
+
+        lateinit var playerBattleDataListStack:
+                Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>>
+
         lateinit var playerData: kat_official_playerInfoParser.playerData
 
         // background service를 위한 데이터
@@ -92,19 +96,24 @@ class KatData {
         // 데이터 업데이트를 위한 여러 리스트들
         // 랭킹 관련 리스트 --- kat_LoadBeforeMainActivity에서 할당
         lateinit var PlayerRankingArrayList: ArrayList<kat_official_PlayerRankingParser.playerData>
-        lateinit var MyPlayerRankingArrayList: ArrayList<kat_official_PlayerRankingParser.playerData>
+        lateinit var MyPlayerRankingArrayList:
+                ArrayList<kat_official_PlayerRankingParser.playerData>
 
         lateinit var ClubRankingArrayList: ArrayList<kat_official_ClubRankingParser.clubData>
         lateinit var MyClubRankingArrayList: ArrayList<kat_official_ClubRankingParser.clubData>
 
         lateinit var BrawlerRankingArrayList: HashMap<String, ArrayList<brawlerRankingData>>
-        lateinit var MyBrawlerRankingArrayList: HashMap<String, HashMap<String, ArrayList<brawlerRankingData>>>
+        lateinit var MyBrawlerRankingArrayList:
+                HashMap<String, HashMap<String, ArrayList<brawlerRankingData>>>
 
         lateinit var PowerPlaySeasonArrayList: ArrayList<powerPlaySeasonsData>
         lateinit var MyPowerPlaySeasonArrayList: ArrayList<powerPlaySeasonsData>
 
-        lateinit var PowerPlaySeasonRankingArrayList: HashMap<String, ArrayList<powerPlaySeasonRankingData>>
-        lateinit var MyPowerPlaySeasonRankingArrayList: HashMap<String, HashMap<String, ArrayList<powerPlaySeasonRankingData>>>
+        lateinit var PowerPlaySeasonRankingArrayList:
+                HashMap<String, ArrayList<powerPlaySeasonRankingData>>
+
+        lateinit var MyPowerPlaySeasonRankingArrayList:
+                HashMap<String, HashMap<String, ArrayList<powerPlaySeasonRankingData>>>
 
 
         @SuppressLint("StaticFieldLeak")
