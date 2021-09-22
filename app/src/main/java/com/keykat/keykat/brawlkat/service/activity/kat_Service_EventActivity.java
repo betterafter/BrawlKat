@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.service.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
@@ -18,7 +19,6 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.util.kat_EventAdapter;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
@@ -32,9 +32,8 @@ import androidx.viewpager2.widget.ViewPager2;
 
 public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
-    //access        type                                name                    init
-    private Context context;
-    private kat_Service_OverdrawActivity overdrawActivity;
+    private final Context context;
+    private final kat_Service_OverdrawActivity overdrawActivity;
     public getEventsThread eventsThread;
 
     public ArrayList<kat_eventsParser.pair> EventArrayList;
@@ -48,7 +47,10 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     public boolean isEventThreadStart = true;
 
 
-    public kat_Service_EventActivity(Context context, kat_Service_OverdrawActivity overdrawActivity) {
+    public kat_Service_EventActivity(
+            Context context,
+            kat_Service_OverdrawActivity overdrawActivity
+    ) {
         super();
         this.context = context;
         this.overdrawActivity = overdrawActivity;
@@ -56,9 +58,14 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     }
 
     // map inflater 초기화
+    @SuppressLint("InflateParams")
     public void init_mapInflater() {
-        layoutInflater = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        overdrawActivity.mapRecommendView = layoutInflater.inflate(R.layout.service_map_recommend, null);
+        layoutInflater
+                = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+
+        overdrawActivity.mapRecommendView
+                = layoutInflater.inflate(R.layout.service_map_recommend, null);
+
         overdrawActivity.mapRecommendView.setOnTouchListener(this);
     }
 
@@ -83,12 +90,15 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
             overdrawActivity.mapWindowManager.getDefaultDisplay().getMetrics(metrics);
 
             int fixedWidth = Math.max(metrics.heightPixels, metrics.widthPixels);
-            int fixedHeight = Math.min(metrics.heightPixels, metrics.widthPixels);
 
-            overdrawActivity.mapRecommend.height = fixedHeight;
+            overdrawActivity.mapRecommend.height
+                    = Math.min(metrics.heightPixels, metrics.widthPixels);
             overdrawActivity.mapRecommend.width = fixedWidth / 2;
 
-            overdrawActivity.mapWindowManager.addView(overdrawActivity.mapRecommendView, overdrawActivity.mapRecommend);
+            overdrawActivity.mapWindowManager.addView(
+                    overdrawActivity.mapRecommendView,
+                    overdrawActivity.mapRecommend
+            );
         }
     }
 
@@ -105,6 +115,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     }
 
 
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
 
@@ -126,9 +137,14 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     if (!KatData.Companion.isForegroundServiceStart()) break;
 
                     if (viewPager == null) {
-                        viewPager = (ViewPager2) overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
-                        eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList,
-                                kat_Service_EventActivity.this);
+                        viewPager
+                                = overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
+                        eventAdapter = new kat_EventAdapter(
+                                context,
+                                EventArrayList,
+                                BrawlersArrayList,
+                                kat_Service_EventActivity.this
+                        );
                     }
 
                     int time = 1000 * 60;
@@ -144,12 +160,13 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         viewPager.setAdapter(eventAdapter);
     }
 
+    @SuppressLint("SetTextI18n")
     public void ChangeRecommendViewClick() {
 
-        final kat_LoadingDialog kat_loadingDialog = new kat_LoadingDialog(context);
 
         final Button btn = new Button(context);
-        LinearLayout buttonGroup = (LinearLayout) overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
+        LinearLayout buttonGroup
+                = overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -175,39 +192,37 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         buttonGroup.addView(btn);
 
 
-        btn.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
+        btn.setOnClickListener(view -> {
 
 
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1500) {
-                    return;
-                }
-
-                if (overdrawActivity.getPlayerTag == null) {
-                    mLastClickTime = SystemClock.elapsedRealtime();
-                    return;
-                }
-
-                Player_NonPlayer_ViewChangeThread viewChangeThread = new Player_NonPlayer_ViewChangeThread(btn);
-                viewChangeThread.start();
-
-                int length = ((ViewGroup) btn.getParent()).getWidth();
-
-                // 이미지 버튼 스타일링
-                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                        length - 10,
-                        length - 10
-                );
-                params.setMargins(5, 5, 5, 5);
-                btn.setLayoutParams(params);
-
-                Drawable drawable = context.getResources().getDrawable(R.drawable.round_rotate_right_24_small);
-                btn.setBackground(drawable);
-                btn.setText("");
-
-                mLastClickTime = SystemClock.elapsedRealtime();
+            if (SystemClock.elapsedRealtime() - mLastClickTime < 1500) {
+                return;
             }
+
+            if (getPlayerTag == null) {
+                mLastClickTime = SystemClock.elapsedRealtime();
+                return;
+            }
+
+            Player_NonPlayer_ViewChangeThread viewChangeThread = new Player_NonPlayer_ViewChangeThread(btn);
+            viewChangeThread.start();
+
+            int length = ((ViewGroup) btn.getParent()).getWidth();
+
+            // 이미지 버튼 스타일링
+            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                    length - 10,
+                    length - 10
+            );
+            params1.setMargins(5, 5, 5, 5);
+            btn.setLayoutParams(params1);
+
+            Drawable drawable
+                    = context.getResources().getDrawable(R.drawable.round_rotate_right_24_small);
+            btn.setBackground(drawable);
+            btn.setText("");
+
+            mLastClickTime = SystemClock.elapsedRealtime();
         });
     }
 
@@ -222,6 +237,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
         public void run() {
             Runnable runnable = new Runnable() {
+                @SuppressLint("SetTextI18n")
                 @Override
                 public void run() {
                     try {
@@ -255,7 +271,8 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
         int setWidth = Math.max(width, height);
-        LinearLayout buttonGroup = (LinearLayout) overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
+        LinearLayout buttonGroup
+                = overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
         buttonGroup.removeAllViews();
 
         for (int i = 0; i < EventArrayList.size(); i++) {
@@ -270,7 +287,8 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
             params.setMargins(5, 5, 5, 5);
             btn.setLayoutParams(params);
 
-            String gameModeTypeUrl = (String) EventArrayList.get(i).getInfo().get("gamemodeTypeImageUrl");
+            String gameModeTypeUrl
+                    = (String) EventArrayList.get(i).getInfo().get("gamemodeTypeImageUrl");
             String mapType = (String) EventArrayList.get(i).getInfo().get("name");
 
             Glide.with(context)
