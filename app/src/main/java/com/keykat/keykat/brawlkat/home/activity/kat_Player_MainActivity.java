@@ -84,6 +84,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         interstitialAd = new InterstitialAd(this);
         interstitialAd.setAdUnitId("ca-app-pub-5909086836185335/8059778643");
 
+        // 브롤러 추천 서비스 알림창을 on 했을 때
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getApplicationContext());
         if (sharedPreferences.getBoolean(getString(R.string.notify_service), false)) {
             foregroundServiceIntent = new Intent(
@@ -94,28 +95,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             startForegroundService(foregroundServiceIntent);
         }
 
-        // 포그라운드 서비스가 실행됐는지 확인하고 실행되지 않았다면 실행
-//        foregroundServiceIntent = new Intent(getApplicationContext(), kat_Service_BrawlStarsNotifActivity.class);
-//        if (kat_Data.kataSettingBase.getData("ForegroundService") == 1) {
-//
-//            ActivityManager am = (ActivityManager) getApplicationContext().getSystemService(Context.ACTIVITY_SERVICE);
-//            List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(1000);
-//
-//            boolean isMainServiceExist = false;
-//            for (ActivityManager.RunningServiceInfo info : rs) {
-//                String className = info.service.getClassName();
-//                if (className.equals("com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity")) {
-//                    isForegroundServiceAlreadyStarted = true;
-//                    isMainServiceExist = true;
-//                    break;
-//                }
-//            }
-//            if (!isMainServiceExist) {
-//                isForegroundServiceAlreadyStarted = true;
-//                startForegroundService(foregroundServiceIntent);
-//            }
-//        }
-
 
         serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
         kat_Data.dialog = new kat_LoadingDialog(this);
@@ -125,8 +104,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
         kat_favoritesFragment = new kat_FavoritesFragment();
         kat_rankingFragment = new kat_RankingFragment();
-        //kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
-
 
         // 하단 네비게이션바 세팅 //////////////////////////////////////////////////////////////////////////////////////////////////
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavi);
@@ -135,7 +112,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
             kat_favoritesFragment = new kat_FavoritesFragment();
             kat_rankingFragment = new kat_RankingFragment();
-            //kat_settingFragment = new kat_SettingFragment(kat_Player_MainActivity.this);
 
             switch (menuItem.getItemId()) {
                 case R.id.action_search:

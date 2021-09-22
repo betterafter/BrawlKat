@@ -109,9 +109,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         kat_Data.kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);
         kat_Data.kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
         kat_Data.kataCountryBase = new kat_countryDatabase(getApplicationContext(), "katcountry", null, 1);
-        //kat_Data.kataSettingBase = new kat_settingDatabase(getApplicationContext(), "kataSetting", null, 2);
-
-        //kat_Data.kataSettingBase.init();
 
         kat_countryCodeParser countryCodeParser = new kat_countryCodeParser(this);
         try {
