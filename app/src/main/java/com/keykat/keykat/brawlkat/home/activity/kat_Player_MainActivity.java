@@ -28,6 +28,7 @@ import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
+import com.keykat.keykat.brawlkat.util.BroadcastUtilKt;
 import com.keykat.keykat.brawlkat.util.kat_Data;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -91,10 +92,9 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                     getApplicationContext(),
                     kat_Service_BrawlStarsNotifActivity.class
             );
-
             startForegroundService(foregroundServiceIntent);
+            BroadcastUtilKt.sendCheckStartBroadcast(this);
         }
-
 
         serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
         kat_Data.dialog = new kat_LoadingDialog(this);
@@ -284,10 +284,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             }
         }
     }
-
-
-    //..............................................................................................
-
 
     @Override
     public void onBackPressed() {
