@@ -3,7 +3,6 @@ package com.keykat.keykat.brawlkat.home.setting.activity
 import android.Manifest
 import android.app.AppOpsManager
 import android.content.Intent
-import android.content.IntentFilter
 import android.content.pm.PackageManager
 import android.os.Bundle
 import android.os.Process
@@ -11,9 +10,11 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import com.keykat.keykat.brawlkat.R
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity.kat_player_mainActivity
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity
-import com.keykat.keykat.brawlkat.service.util.kat_ActionBroadcastReceiver
+import com.keykat.keykat.brawlkat.util.registerBroadcastReceiver
+import com.keykat.keykat.brawlkat.util.sendCheckEndBroadcast
+import com.keykat.keykat.brawlkat.util.sendCheckStartBroadcast
+import com.keykat.keykat.brawlkat.util.unregisterBroadcastReceiver
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -80,8 +81,10 @@ class SettingsActivity : AppCompatActivity() {
                 if (!checkPermission())
                     startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
 
-                if(newValue.equals(true)) registerBroadcastReceiver()
-                else unregisterBroadcastReceiver()
+                context?.let {
+                    if (newValue.equals(true)) sendCheckStartBroadcast(it)
+                    else sendCheckEndBroadcast(it)
+                }
 
                 true
             }
@@ -104,47 +107,6 @@ class SettingsActivity : AppCompatActivity() {
                 mode == AppOpsManager.MODE_ALLOWED
             }
             return granted
-        }
-
-        private fun registerBroadcastReceiver() {
-
-            var broadcastReceiver = kat_Service_BrawlStarsNotifActivity.broadcastReceiver
-            val screenOnCode = getString(R.string.screen_on)
-            val screenOffCode = getString(R.string.screen_off)
-            val checkStartCode = getString(R.string.check_start)
-            val checkEndCode = getString(R.string.check_end)
-
-            val preference = PreferenceManager.getDefaultSharedPreferences(context)
-
-            if(!preference.getBoolean(getString(R.string.notify_service), false)) return
-            if (broadcastReceiver != null) return
-
-            val filter = IntentFilter()
-            filter.addAction(screenOnCode)
-            filter.addAction(screenOffCode)
-            filter.addAction(checkStartCode)
-            filter.addAction(checkEndCode)
-
-            broadcastReceiver = kat_ActionBroadcastReceiver(kat_player_mainActivity)
-            requireActivity().registerReceiver(broadcastReceiver, filter)
-
-            val threadCheckIntent = Intent()
-            threadCheckIntent.action = checkStartCode
-            requireActivity().sendBroadcast(threadCheckIntent)
-        }
-
-
-        private fun unregisterBroadcastReceiver() {
-
-            val threadCheckIntent = Intent()
-            threadCheckIntent.action = getString(R.string.check_end)
-            requireActivity().sendBroadcast(threadCheckIntent)
-
-            val broadcastReceiver = kat_Service_BrawlStarsNotifActivity.broadcastReceiver
-            if (broadcastReceiver != null) {
-                requireActivity().unregisterReceiver(broadcastReceiver)
-                kat_Service_BrawlStarsNotifActivity.broadcastReceiver = null
-            }
         }
     }
 }

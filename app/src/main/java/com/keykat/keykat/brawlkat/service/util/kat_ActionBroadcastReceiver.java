@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.util.LongSparseArray;
 
 import com.keykat.keykat.brawlkat.BuildConfig;
+import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
 import com.keykat.keykat.brawlkat.util.kat_Data;
@@ -27,16 +28,19 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
 
     BrawlStarsPlayCheckThread checkThread;
 
-    public kat_ActionBroadcastReceiver(){};
+    public kat_ActionBroadcastReceiver() {
+    }
 
-    public kat_ActionBroadcastReceiver(kat_Player_MainActivity kat_player_mainActivity){
+    ;
+
+    public kat_ActionBroadcastReceiver(kat_Player_MainActivity kat_player_mainActivity) {
         this.kat_player_mainActivity = kat_player_mainActivity;
 
         isThreaStop = false;
     }
 
     public kat_ActionBroadcastReceiver(kat_Service_BrawlStarsNotifActivity kat_service_brawlStarsNotifActivity,
-                                       kat_Player_MainActivity kat_player_mainActivity){
+                                       kat_Player_MainActivity kat_player_mainActivity) {
         this.kat_service_brawlStarsNotifActivity = kat_service_brawlStarsNotifActivity;
         this.kat_player_mainActivity = kat_player_mainActivity;
 
@@ -47,47 +51,44 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
     @Override
     public void onReceive(Context context, Intent intent) {
 
-        if(intent.getAction().equals(BROADCAST_MASSAGE_SCREEN_ON)){
-            if(kat_Data.kataSettingBase.getData("AnalyticsService") == 1) {
+        System.out.println(intent.getAction());
+
+        if (intent.getAction().equals(BROADCAST_MASSAGE_SCREEN_ON)) {
+            if (kat_Data.kataSettingBase.getData("AnalyticsService") == 1) {
                 isThreaStop = false;
                 if (checkThread != null) checkThread = null;
                 checkThread = new BrawlStarsPlayCheckThread(context);
                 checkThread.start();
             }
-        }
-        else if(intent.getAction().equals(BROADCAST_MASSAGE_SCREEN_OFF)){
+        } else if (intent.getAction().equals(BROADCAST_MASSAGE_SCREEN_OFF)) {
             isThreaStop = true;
-        }
-        else if(intent.getAction().equals("com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity.CHECK_START")){
+        } else if (intent.getAction().equals(context.getString(R.string.check_start))) {
             isThreaStop = false;
-            if(checkThread != null) checkThread = null;
+            if (checkThread != null) checkThread = null;
             checkThread = new BrawlStarsPlayCheckThread(context);
             checkThread.start();
-        }
-        else if(intent.getAction().equals("com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity.CHECK_END")){
+        } else if (intent.getAction().equals(context.getString(R.string.check_end))) {
             isThreaStop = true;
         }
     }
 
 
-
-
-
-    private class BrawlStarsPlayCheckThread extends Thread{
+    private class BrawlStarsPlayCheckThread extends Thread {
 
         Context context;
 
-        public BrawlStarsPlayCheckThread(Context context){
+        public BrawlStarsPlayCheckThread(Context context) {
             this.context = context;
         }
 
-        public void run(){
-            while(!isThreaStop){
+        public void run() {
+            while (!isThreaStop) {
 
                 try {
+                    System.out.println("sdfsdfsa");
                     // 브롤스타즈가 실행되고 서비스가 아직 실행되지 않았다면
-                    if(getTopPackageName(context).toLowerCase().contains("brawlstar")
-                            && !kat_Service_BrawlStarsNotifActivity.alreadyStart){
+                    if (getTopPackageName(context).toLowerCase().contains("brawlstar")
+                            && !kat_Service_BrawlStarsNotifActivity.alreadyStart) {
 
                         if (!kat_player_mainActivity.isServiceStart) {
                             kat_player_mainActivity.getPermission();
@@ -96,12 +97,13 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
                         kat_Service_BrawlStarsNotifActivity.alreadyStart = true;
                     }
                     // 브롤스타즈가 실행됐는데 서비스가 실행중이 아니라면 = 유저가 강제로 꺼버린 경우
-                    if(getTopPackageName(context).toLowerCase().contains("brawlstar") &&
-                            !kat_player_mainActivity.isServiceStart){
+                    if (getTopPackageName(context).toLowerCase().contains("brawlstar") &&
+                            !kat_player_mainActivity.isServiceStart) {
                         continue;
                     }
                     // 브롤스타즈 실행 중이 아니면서 서비스가 꺼진 경우 -> 비로소 서비스 꺼진 것을 알려줌
-                    if(!kat_player_mainActivity.isServiceStart) kat_Service_BrawlStarsNotifActivity.alreadyStart = false;
+                    if (!kat_player_mainActivity.isServiceStart)
+                        kat_Service_BrawlStarsNotifActivity.alreadyStart = false;
 
                     sleep(3000);
                 } catch (InterruptedException e) {
@@ -129,9 +131,9 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
             UsageEvents.Event event = new UsageEvents.Event();
             usageEvents.getNextEvent(event);
 
-            if(isForeGroundEvent(event)) {
+            if (isForeGroundEvent(event)) {
                 packageNameMap.put(event.getTimeStamp(), event.getPackageName());
-                if(event.getTimeStamp() > lastRunAppTimeStamp) {
+                if (event.getTimeStamp() > lastRunAppTimeStamp) {
                     lastRunAppTimeStamp = event.getTimeStamp();
                 }
             }
@@ -142,11 +144,11 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
 
     public static boolean isForeGroundEvent(UsageEvents.Event event) {
 
-        if(event == null) {
+        if (event == null) {
             return false;
         }
 
-        if(BuildConfig.VERSION_CODE >= 29) {
+        if (BuildConfig.VERSION_CODE >= 29) {
             return event.getEventType() == UsageEvents.Event.ACTIVITY_RESUMED;
         }
 
