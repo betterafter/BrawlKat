@@ -27,7 +27,7 @@ import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivity;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
 import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.Client;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -69,7 +69,7 @@ public class kat_SearchFragment extends Fragment {
         super.onCreate(savedInstanceState);
 
         dialog = new kat_LoadingDialog(getActivity());
-        client = kat_Data.client;
+        client = KatData.client;
 
         options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -103,7 +103,7 @@ public class kat_SearchFragment extends Fragment {
 
 
         // 내 계정 뷰 보여주기......................................................................................................//
-        kat_myAccountDatabase kataMyAccountBase = kat_Data.kataMyAccountBase;
+        kat_myAccountDatabase kataMyAccountBase = KatData.kataMyAccountBase;
         if(kataMyAccountBase.size() == 1){
 
             final View tempView = player_main_inputMyAccount.getChildAt(0);
@@ -139,7 +139,7 @@ public class kat_SearchFragment extends Fragment {
             }
             Collections.sort(brawlerData, new brawlerSort());
 
-            BrawlerArrayList = kat_Data.BrawlersArrayList;
+            BrawlerArrayList = KatData.BrawlersArrayList;
 
             FrameLayout brawler1 = accountView.findViewById(R.id.brawler1);
             FrameLayout brawler2 = accountView.findViewById(R.id.brawler2);
@@ -154,10 +154,10 @@ public class kat_SearchFragment extends Fragment {
             // 이미지 링크 선언
             String url_profile = "";
             if(kat_Player_MainActivity.MyPlayerData != null){
-                url_profile = kat_Data.WebRootUrl + "/assets/profile/" +
+                url_profile = KatData.WebRootUrl + "/assets/profile/" +
                         kat_Player_MainActivity.MyPlayerData.getIconId() + ".png?v=1";
             }
-            String url_icon_trophies = kat_Data.WebRootUrl + "/assets/icon/trophy.png";
+            String url_icon_trophies = KatData.WebRootUrl + "/assets/icon/trophy.png";
 
             // 이미지 세팅
             GlideImageWithRoundCorner(url_profile, width / 5, width / 5, playerIcon);
@@ -179,8 +179,8 @@ public class kat_SearchFragment extends Fragment {
                     player_main_inputMyAccount.addView(tempView);
                     player_main_inputMyAccount.setBackground(tempDrawable);
 
-                    kat_Data.kataMyAccountBase.delete(playerData.getTag());
-                    kat_Data.eventsPlayerData = null;
+                    KatData.kataMyAccountBase.delete(playerData.getTag());
+                    KatData.eventsPlayerData = null;
 
                     //kat_NotificationUpdater updater = new kat_NotificationUpdater(getActivity().getApplicationContext());
                     //updater.update();

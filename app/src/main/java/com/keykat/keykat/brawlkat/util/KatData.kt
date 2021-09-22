@@ -9,6 +9,7 @@ import android.os.Looper
 import android.util.DisplayMetrics
 import android.widget.ImageView
 import android.widget.RemoteViews
+import androidx.lifecycle.MutableLiveData
 import com.bumptech.glide.Glide
 import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.target.NotificationTarget
@@ -31,9 +32,9 @@ import java.lang.Exception
 import java.util.*
 import kotlin.properties.Delegates
 
-class kat_Data {
+class KatData {
 
-    companion object{
+    companion object {
 
         // 데이터를 위한 여러 변수들.
         lateinit var clubLogData: kat_clubLogParser.clubLogData
@@ -47,6 +48,9 @@ class kat_Data {
         lateinit var playerBattleDataList: ArrayList<kat_official_playerBattleLogParser.playerBattleData>
         lateinit var playerBattleDataListStack: Stack<ArrayList<kat_official_playerBattleLogParser.playerBattleData>>
         lateinit var playerData: kat_official_playerInfoParser.playerData
+
+        // background service를 위한 데이터
+        var isBackgroundServiceStart = false
 
 
         // 화면 크기
@@ -103,14 +107,6 @@ class kat_Data {
         lateinit var MyPowerPlaySeasonRankingArrayList: HashMap<String, HashMap<String, ArrayList<powerPlaySeasonRankingData>>>
 
 
-
-
-
-
-
-
-
-
         @SuppressLint("StaticFieldLeak")
         lateinit var dialog: kat_LoadingDialog
         // .........................................................................................
@@ -132,8 +128,6 @@ class kat_Data {
         lateinit var currentActivity: Activity
 
 
-
-
         // 소켓 연결이 정상적으로 되지 않을 경우 서버 문제 다이얼로그가 발생함.
         // 단, 임시로 저장한 데이터들이 존재한다면 일단 그걸로 써도 되니까 실시간 통신 상황에선 굳이 다이얼로그를 안 띄워도 됨.
         @JvmStatic
@@ -141,7 +135,6 @@ class kat_Data {
             val mHandler = Handler(Looper.getMainLooper())
             mHandler.postDelayed({ init(currentActivity) }, 0)
         }
-
 
 
         @JvmStatic
@@ -154,7 +147,13 @@ class kat_Data {
         }
 
         @JvmStatic
-        fun GlideImageWithRoundCorner(context: Context, url: String?, width: Int, height: Int, view: ImageView) {
+        fun GlideImageWithRoundCorner(
+            context: Context,
+            url: String?,
+            width: Int,
+            height: Int,
+            view: ImageView
+        ) {
             Glide.with(context)
                 .applyDefaultRequestOptions(options)
                 .load(url)
@@ -168,7 +167,8 @@ class kat_Data {
         @Throws(Exception::class)
         fun GlideImageWithNotification(
             context: Context?, ImageViewId: Int, contentView: RemoteViews?,
-            notif: Notification?, notificationId: Int, url: String?) {
+            notif: Notification?, notificationId: Int, url: String?
+        ) {
             val notificationTarget = NotificationTarget(
                 context,
                 ImageViewId,

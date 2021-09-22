@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_CountrySelectionPopUpActivity;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 
 import java.util.ArrayList;
 import java.util.Locale;
@@ -66,7 +66,7 @@ public class kat_CountrySelectionAdapter extends RecyclerView.Adapter<kat_Countr
                 @Override
                 public boolean onTouch(View view, MotionEvent motionEvent) {
                     if(motionEvent.getAction() == MotionEvent.ACTION_UP){
-                        kat_Data.kataCountryBase.insert(k, v);
+                        KatData.kataCountryBase.insert(k, v);
                         onFinishClick(k);
                     }
                     return true;

@@ -9,7 +9,7 @@ import android.widget.RemoteViews;
 
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
@@ -26,7 +26,7 @@ public class kat_NotificationUpdater {
 
     public kat_NotificationUpdater(Context context){
         this.context = context;
-        playerData = kat_Data.eventsPlayerData;
+        playerData = KatData.eventsPlayerData;
     }
 
     public kat_NotificationUpdater(Context context, kat_official_playerInfoParser.playerData playerData) {
@@ -170,7 +170,7 @@ public class kat_NotificationUpdater {
 
             if (playerData != null) {
                 if(UrlForBigContentViewRecommendBrawler().equals("")) return;
-                kat_Data.GlideImageWithNotification(context,
+                KatData.GlideImageWithNotification(context,
                         R.id.main_notification_big_img,
                         bcv,
                         kat_Service_BrawlStarsNotifActivity.notification.build(),
@@ -204,7 +204,7 @@ public class kat_NotificationUpdater {
     public String UrlForBigContentViewRecommendBrawler() {
 
         try {
-            ArrayList<HashMap<String, Object>> BrawlersArrayList = kat_Data.BrawlersArrayList;
+            ArrayList<HashMap<String, Object>> BrawlersArrayList = KatData.BrawlersArrayList;
 
             kat_BrawlerRecommendation brawlerRecommendation = new kat_BrawlerRecommendation();
             brawlerRecommendation.init();

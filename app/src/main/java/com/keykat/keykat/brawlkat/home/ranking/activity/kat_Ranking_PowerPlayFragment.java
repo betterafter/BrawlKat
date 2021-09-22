@@ -14,7 +14,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 
 import java.lang.reflect.Field;
@@ -64,9 +64,9 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
         seasonIdTextView = view.findViewById(R.id.powerplay_seasonid);
 
         try {
-            String[] spinnerItem = new String[kat_Data.PowerPlaySeasonArrayList.size()];
-            for (int i = 0; i < kat_Data.PowerPlaySeasonArrayList.size(); i++) {
-                spinnerItem[i] = "시즌 " + kat_Data.PowerPlaySeasonArrayList.get(i).getId();
+            String[] spinnerItem = new String[KatData.PowerPlaySeasonArrayList.size()];
+            for (int i = 0; i < KatData.PowerPlaySeasonArrayList.size(); i++) {
+                spinnerItem[i] = "시즌 " + KatData.PowerPlaySeasonArrayList.get(i).getId();
             }
 
             ArrayAdapter adapter = new ArrayAdapter(
@@ -94,8 +94,8 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
                 public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
                     SeasonId = Integer.toString(i + 56);
 
-                    String startTime = kat_Data.PowerPlaySeasonArrayList.get(i).getStartTime();
-                    String endTime = kat_Data.PowerPlaySeasonArrayList.get(i).getEndTime();
+                    String startTime = KatData.PowerPlaySeasonArrayList.get(i).getStartTime();
+                    String endTime = KatData.PowerPlaySeasonArrayList.get(i).getEndTime();
 
                     seasonIdTextView.setText("시즌 " + SeasonId);
                     seasonDateTextView.setText(timeFormat(startTime) + " ~ " + timeFormat(endTime));
@@ -136,7 +136,7 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
     public void onStart() {
         super.onStart();
 
-        SeasonId = kat_Data.PowerPlaySeasonArrayList.get(0).getId();
+        SeasonId = KatData.PowerPlaySeasonArrayList.get(0).getId();
         try {
             globalClick(player_ranking_powerplay_layout, SeasonId);
         } catch (Exception e) {
@@ -147,9 +147,9 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 
     public void globalClick(LinearLayout player_ranking_powerplay_layout, String id){
 
-        kat_Data.dialog.show();
-        if(!kat_Data.PowerPlaySeasonRankingArrayList.containsKey(id)){
-            kat_Data.client.RankingInit("global", id, "PowerPlay");
+        KatData.dialog.show();
+        if(!KatData.PowerPlaySeasonRankingArrayList.containsKey(id)){
+            KatData.client.RankingInit("global", id, "PowerPlay");
         }
 
         AsyncCoroutine.Companion.powerplay_global_DatabaseChanged(
@@ -161,15 +161,15 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 
     public void myCountryClick(LinearLayout player_ranking_powerplay_layout, String id){
 
-        String countryCode = kat_Data.kataCountryBase.getCountryCode();
-        if(!kat_Data.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) ||
-                (kat_Data.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
-                        !kat_Data.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(id))){
+        String countryCode = KatData.kataCountryBase.getCountryCode();
+        if(!KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) ||
+                (KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
+                        !KatData.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(id))){
 
-            kat_Data.client.RankingInit(countryCode, id, "PowerPlay");
+            KatData.client.RankingInit(countryCode, id, "PowerPlay");
         }
 
-        kat_Data.dialog.show();
+        KatData.dialog.show();
         AsyncCoroutine.Companion.powerplay_DatabaseChanged(
                 Objects.requireNonNull(getActivity()),
                 player_ranking_powerplay_layout,

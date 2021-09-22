@@ -15,7 +15,7 @@ import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.search.result.club.activity.kat_Player_ClubDetailActivity;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 
 import java.util.ArrayList;
@@ -62,7 +62,7 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        kat_Data.currentActivity = this;
+        KatData.currentActivity = this;
     }
 
     // 최근 전적 검색 기록 업데이트
@@ -70,8 +70,8 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
 
         LinearLayout linearLayout = findViewById(R.id.player_detail_recent_search_layout);
         linearLayout.removeAllViews();
-        if(kat_Data.katabase != null) {
-            ArrayList<ArrayList<String>> resultList = kat_Data.katabase.get(type);
+        if(KatData.katabase != null) {
+            ArrayList<ArrayList<String>> resultList = KatData.katabase.get(type);
 
             for (int i = 0; i < 9; i++) {
 

@@ -9,7 +9,7 @@ import android.view.Window;
 import com.google.android.material.textfield.TextInputEditText;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.util.kat_CountrySelectionAdapter;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -30,8 +30,8 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.country_select_popup);
 
-        int width = (int) (kat_Data.SCREEN_WIDTH.intValue() * 0.9); //Display 사이즈의 70%
-        int height = (int) (kat_Data.SCREEN_HEIGHT.intValue() * 0.7);  //Display 사이즈의 90%
+        int width = (int) (KatData.SCREEN_WIDTH.intValue() * 0.9); //Display 사이즈의 70%
+        int height = (int) (KatData.SCREEN_HEIGHT.intValue() * 0.7);  //Display 사이즈의 90%
 
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
@@ -43,7 +43,7 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        kat_Data.currentActivity = this;
+        KatData.currentActivity = this;
     }
 
     public class Pair{
@@ -70,11 +70,11 @@ public class kat_CountrySelectionPopUpActivity extends AppCompatActivity {
 
         ArrayList<Pair> resultData = new ArrayList<>();
 
-        Iterator<String> keys = kat_Data.countryCodeMap.keySet().iterator();
+        Iterator<String> keys = KatData.countryCodeMap.keySet().iterator();
         while(keys.hasNext()){
 
             String CountryCode = keys.next();
-            String CountryName = kat_Data.countryCodeMap.get(CountryCode);
+            String CountryName = KatData.countryCodeMap.get(CountryCode);
 
             CountryCode = CountryCode.toUpperCase();
             CountryName = CountryName.toLowerCase();

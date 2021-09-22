@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 
 import java.util.Objects;
@@ -40,8 +40,8 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        initId = Objects.requireNonNull(kat_Data.BrawlersArrayList.get(0).get("id")).toString();
-        initName = Objects.requireNonNull(kat_Data.BrawlersArrayList.get(0).get("name")).toString();
+        initId = Objects.requireNonNull(KatData.BrawlersArrayList.get(0).get("id")).toString();
+        initName = Objects.requireNonNull(KatData.BrawlersArrayList.get(0).get("name")).toString();
     }
 
     @Nullable
@@ -89,13 +89,13 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     public void globalClick(LinearLayout player_ranking_brawler_layout){
 
-        kat_Data.dialog.show();
-        if(!kat_Data.BrawlerRankingArrayList.containsKey(initId)){
-            kat_Data.client.RankingInit("global", initId, "Brawler");
+        KatData.dialog.show();
+        if(!KatData.BrawlerRankingArrayList.containsKey(initId)){
+            KatData.client.RankingInit("global", initId, "Brawler");
         }
 
         AsyncCoroutine.Companion.brawler_global_DatabaseChanged(
-                Objects.requireNonNull(getActivity()),
+                requireActivity(),
                 player_ranking_brawler_layout,
                 initId
         );
@@ -103,17 +103,17 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
 
     public void myCountryClick(LinearLayout player_ranking_brawler_layout){
 
-        String countryCode = kat_Data.kataCountryBase.getCountryCode();
-        if(!kat_Data.MyBrawlerRankingArrayList.containsKey(countryCode) ||
-                (kat_Data.MyBrawlerRankingArrayList.containsKey(countryCode) &&
-                        !kat_Data.MyBrawlerRankingArrayList.get(countryCode).containsKey(initId))){
+        String countryCode = KatData.kataCountryBase.getCountryCode();
+        if(!KatData.MyBrawlerRankingArrayList.containsKey(countryCode) ||
+                (KatData.MyBrawlerRankingArrayList.containsKey(countryCode) &&
+                        !KatData.MyBrawlerRankingArrayList.get(countryCode).containsKey(initId))){
 
-            kat_Data.client.RankingInit(countryCode, initId, "Brawler");
+            KatData.client.RankingInit(countryCode, initId, "Brawler");
         }
 
-        kat_Data.dialog.show();
+        KatData.dialog.show();
         AsyncCoroutine.Companion.brawler_DatabaseChanged(
-                Objects.requireNonNull(getActivity()),
+                requireActivity(),
                 player_ranking_brawler_layout,
                 initId
         );

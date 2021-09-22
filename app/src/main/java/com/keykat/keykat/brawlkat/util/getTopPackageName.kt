@@ -4,7 +4,6 @@ import android.app.usage.UsageEvents
 import android.app.usage.UsageStatsManager
 import android.content.Context
 import android.util.LongSparseArray
-import com.keykat.keykat.brawlkat.service.util.kat_ActionBroadcastReceiver
 
 fun getTopPackageName(context: Context): String? {
 

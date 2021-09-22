@@ -24,7 +24,7 @@ import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
 import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 
 import java.util.ArrayList;
@@ -81,7 +81,7 @@ public class kat_FavoritesFragment extends Fragment {
 
 
 
-        kat_favoritesDatabase database = kat_Data.kataFavoritesBase;
+        kat_favoritesDatabase database = KatData.kataFavoritesBase;
         databaseItem = database.getItem();
 
         gridView = view.findViewById(R.id.player_favorites_gridview);
@@ -101,7 +101,7 @@ public class kat_FavoritesFragment extends Fragment {
     private class gridAdapter extends BaseAdapter{
 
         public  ArrayList<ArrayList<String> >   databaseItem;
-        private String                          url_icon_trophies = kat_Data.CdnRootUrl + "/assets/icon/trophy.png";
+        private String                          url_icon_trophies = KatData.CdnRootUrl + "/assets/icon/trophy.png";
 
         public gridAdapter(ArrayList<ArrayList<String>> databaseItem){
             this.databaseItem = databaseItem;
@@ -124,7 +124,7 @@ public class kat_FavoritesFragment extends Fragment {
         }
 
         public void refreshData(){
-            databaseItem = kat_Data.kataFavoritesBase.getItem();
+            databaseItem = KatData.kataFavoritesBase.getItem();
         }
 
         // 아이템 뷰 디자인
@@ -163,22 +163,22 @@ public class kat_FavoritesFragment extends Fragment {
             final TextView player_tag = view.findViewById(R.id.player_favorites_tag);
             ImageView player_close = view.findViewById(R.id.player_favorites_close);
 
-            String url_profile = kat_Data.WebRootUrl + "/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
-            kat_Data.GlideImageWithRoundCorner(
+            String url_profile = KatData.WebRootUrl + "/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
+            KatData.GlideImageWithRoundCorner(
                     Objects.requireNonNull(getActivity()).getApplicationContext(),
                     url_profile,
-                    kat_Data.SCREEN_WIDTH.intValue() / 8,
-                    kat_Data.SCREEN_WIDTH.intValue() / 8,
+                    KatData.SCREEN_WIDTH.intValue() / 8,
+                    KatData.SCREEN_WIDTH.intValue() / 8,
                     player_image
             );
 
             player_level.setText(databaseItem.get(i).get(7));
             player_name.setText(databaseItem.get(i).get(3));
-            kat_Data.GlideImageWithRoundCorner(
+            KatData.GlideImageWithRoundCorner(
                     getActivity().getApplicationContext(),
                     url_icon_trophies,
-                    kat_Data.SCREEN_WIDTH.intValue() / 30,
-                    kat_Data.SCREEN_HEIGHT.intValue() / 30,
+                    KatData.SCREEN_WIDTH.intValue() / 30,
+                    KatData.SCREEN_HEIGHT.intValue() / 30,
                     player_trophies_image
             );
 
@@ -196,7 +196,7 @@ public class kat_FavoritesFragment extends Fragment {
                 public void onClick(View view){
                     String tag = databaseItem.get(removeIdx).get(2);
                     databaseItem.remove(removeIdx);
-                    kat_Data.kataFavoritesBase.delete(tag);
+                    KatData.kataFavoritesBase.delete(tag);
                     gridAdapter.this.notifyDataSetChanged();
                 }
             });

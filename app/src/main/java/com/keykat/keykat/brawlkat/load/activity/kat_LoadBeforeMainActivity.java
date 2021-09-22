@@ -24,7 +24,7 @@ import com.keykat.keykat.brawlkat.util.database.kat_countryDatabase;
 import com.keykat.keykat.brawlkat.util.database.kat_database;
 import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
 import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.network.Client;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
@@ -46,40 +46,40 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.loading);
 
-        kat_Data.client = new Client(getApplicationContext());
-        kat_Data.currentActivity = this;
+        KatData.client = new Client(getApplicationContext());
+        KatData.currentActivity = this;
 
-        kat_Data.options = new RequestOptions()
+        KatData.options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                 .centerCrop()
                 .priority(Priority.HIGH)
                 .format(DecodeFormat.PREFER_RGB_565);
 
         DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-        kat_Data.SCREEN_HEIGHT = metrics.heightPixels;
-        kat_Data.SCREEN_WIDTH = metrics.widthPixels;
+        KatData.SCREEN_HEIGHT = metrics.heightPixels;
+        KatData.SCREEN_WIDTH = metrics.widthPixels;
 
 
 
         // 초기 할당이 필요한 리스트들은 여기서 할당해준다./////////////////////////////////////////////////////
 
-        kat_Data.PlayerRankingArrayList = new ArrayList<>();
-        kat_Data.MyPlayerRankingArrayList = new ArrayList<>();
+        KatData.PlayerRankingArrayList = new ArrayList<>();
+        KatData.MyPlayerRankingArrayList = new ArrayList<>();
 
-        kat_Data.ClubRankingArrayList = new ArrayList<>();
-        kat_Data.MyClubRankingArrayList = new ArrayList<>();
+        KatData.ClubRankingArrayList = new ArrayList<>();
+        KatData.MyClubRankingArrayList = new ArrayList<>();
 
-        kat_Data.BrawlerRankingArrayList = new HashMap<>();
-        kat_Data.MyBrawlerRankingArrayList = new HashMap<>();
+        KatData.BrawlerRankingArrayList = new HashMap<>();
+        KatData.MyBrawlerRankingArrayList = new HashMap<>();
 
-        kat_Data.PowerPlaySeasonArrayList = new ArrayList<>();
-        kat_Data.MyPowerPlaySeasonArrayList = new ArrayList<>();
+        KatData.PowerPlaySeasonArrayList = new ArrayList<>();
+        KatData.MyPowerPlaySeasonArrayList = new ArrayList<>();
 
-        kat_Data.PowerPlaySeasonRankingArrayList = new HashMap<>();
-        kat_Data.MyPowerPlaySeasonRankingArrayList = new HashMap<>();
+        KatData.PowerPlaySeasonRankingArrayList = new HashMap<>();
+        KatData.MyPowerPlaySeasonRankingArrayList = new HashMap<>();
 
-        kat_Data.playerBattleDataList = new ArrayList<>();
-        kat_Data.playerBattleDataListStack = new Stack<>();
+        KatData.playerBattleDataList = new ArrayList<>();
+        KatData.playerBattleDataListStack = new Stack<>();
         ////////////////////////////////////////////////////////////////////////////////////////////
 
 
@@ -88,14 +88,14 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                 = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         // 인터넷에 연결되지 않았다면 경고 다이얼로그 표시
-        if(networkInfo == null){ kat_Data.ServerProblemDialog(); }
+        if(networkInfo == null){ KatData.ServerProblemDialog(); }
         // 인터넷에 연결되었다면 광고 초기화
         else{
             // 광고 초기화
             MobileAds.initialize(this, new OnInitializationCompleteListener() {
                 @Override public void onInitializationComplete(InitializationStatus initializationStatus) { }
             });
-            kat_Data.adRequest = new AdRequest.Builder().build();
+            KatData.adRequest = new AdRequest.Builder().build();
         }
 
         // client의 getApiThread를 앱이 종료 후에 같이 종료되어 데이터 손실을 막게 해줌
@@ -105,22 +105,22 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
 
         // 데이터베이스 모두 초기화////////////////////////////////////////////////////////////////////////
-        kat_Data.katabase = new kat_database(getApplicationContext(), "kat", null, 2);
-        kat_Data.kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);
-        kat_Data.kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
-        kat_Data.kataCountryBase = new kat_countryDatabase(getApplicationContext(), "katcountry", null, 1);
+        KatData.katabase = new kat_database(getApplicationContext(), "kat", null, 2);
+        KatData.kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);
+        KatData.kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
+        KatData.kataCountryBase = new kat_countryDatabase(getApplicationContext(), "katcountry", null, 1);
 
         kat_countryCodeParser countryCodeParser = new kat_countryCodeParser(this);
         try {
-            kat_Data.countryCodeMap = countryCodeParser.DataParser();
+            KatData.countryCodeMap = countryCodeParser.DataParser();
         }
         catch (Exception e){
             e.printStackTrace();
         }
 
-        String countryName = kat_Data.countryCodeMap.get("KR");
-        if(kat_Data.kataCountryBase.size() == 0)
-            kat_Data.kataCountryBase.insert("KR", countryName);
+        String countryName = KatData.countryCodeMap.get("KR");
+        if(KatData.kataCountryBase.size() == 0)
+            KatData.kataCountryBase.insert("KR", countryName);
         ////////////////////////////////////////////////////////////////////////////////////////////
     }
 
@@ -135,11 +135,11 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     protected void onResume() {
         super.onResume();
 
-        kat_Data.currentActivity = this;
+        KatData.currentActivity = this;
 
         try{
-            kat_Data.client.init();
-            kat_Data.client.RankingInit("global", "", "");
+            KatData.client.init();
+            KatData.client.RankingInit("global", "", "");
 
             checkThread thread = new checkThread();
             thread.setPriority(10);
@@ -156,9 +156,9 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     private void move(){
 
         try {
-            if (kat_Data.kataMyAccountBase.size() == 1) {
+            if (KatData.kataMyAccountBase.size() == 1) {
                 kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
-                String tag = kat_Data.kataMyAccountBase.getTag();
+                String tag = KatData.kataMyAccountBase.getTag();
                 String realTag = tag.substring(1);
                 kset.SearchStart(realTag, "players", getApplicationContext());
             } else {
@@ -176,8 +176,8 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         public void run(){
 
             while(true){
-                if(kat_Data.EventArrayList != null && kat_Data.BrawlersArrayList != null
-                && kat_Data.mapData != null) {
+                if(KatData.EventArrayList != null && KatData.BrawlersArrayList != null
+                && KatData.mapData != null) {
 
                     Handler mHandler = new Handler(Looper.getMainLooper());
                     mHandler.postDelayed(kat_LoadBeforeMainActivity.this::move, 0);

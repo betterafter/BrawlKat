@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -47,7 +47,7 @@ public class kat_Player_PlayerBattleLogDetailMapFragment extends Fragment {
         View view = inflater.inflate(R.layout.player_player_detail_battle_log_detail_map, container, false);
         ImageView mapImage = view.findViewById(R.id.player_player_detail_battle_log_detail_map_image);
 
-        HashMap<String, kat_mapsParser.mapData> mapData = kat_Data.mapData;
+        HashMap<String, kat_mapsParser.mapData> mapData = KatData.mapData;
 
         Iterator<String> iterator = mapData.keySet().iterator();
         while(iterator.hasNext()){
@@ -56,11 +56,11 @@ public class kat_Player_PlayerBattleLogDetailMapFragment extends Fragment {
 
                 kat_mapsParser.mapData data = mapData.get(battleData.getEventId());
 
-                kat_Data.GlideImage(
-                        Objects.requireNonNull(getActivity()).getApplicationContext(),
+                KatData.GlideImage(
+                        requireActivity().getApplicationContext(),
                         data.getMapImageUrl(),
-                        kat_Data.SCREEN_WIDTH.intValue(),
-                        kat_Data.SCREEN_HEIGHT.intValue(),
+                        KatData.SCREEN_WIDTH.intValue(),
+                        KatData.SCREEN_HEIGHT.intValue(),
                         mapImage
                 );
 
