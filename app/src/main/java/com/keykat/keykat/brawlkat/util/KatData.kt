@@ -50,7 +50,7 @@ class KatData {
         lateinit var playerData: kat_official_playerInfoParser.playerData
 
         // background service를 위한 데이터
-        var isBackgroundServiceStart = false
+        var isForegroundServiceStart: Boolean = false
 
 
         // 화면 크기

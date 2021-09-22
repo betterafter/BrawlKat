@@ -60,7 +60,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         KatData.SCREEN_WIDTH = metrics.widthPixels;
 
 
-
         // 초기 할당이 필요한 리스트들은 여기서 할당해준다./////////////////////////////////////////////////////
 
         KatData.PlayerRankingArrayList = new ArrayList<>();
@@ -88,20 +87,22 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                 = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         // 인터넷에 연결되지 않았다면 경고 다이얼로그 표시
-        if(networkInfo == null){ KatData.ServerProblemDialog(); }
+        if (networkInfo == null) {
+            KatData.ServerProblemDialog();
+        }
         // 인터넷에 연결되었다면 광고 초기화
-        else{
+        else {
             // 광고 초기화
             MobileAds.initialize(this, new OnInitializationCompleteListener() {
-                @Override public void onInitializationComplete(InitializationStatus initializationStatus) { }
+                @Override
+                public void onInitializationComplete(InitializationStatus initializationStatus) {
+                }
             });
             KatData.adRequest = new AdRequest.Builder().build();
         }
 
         // client의 getApiThread를 앱이 종료 후에 같이 종료되어 데이터 손실을 막게 해줌
         startService(new Intent(this, kat_onTaskRemovedService.class));
-
-
 
 
         // 데이터베이스 모두 초기화////////////////////////////////////////////////////////////////////////
@@ -113,17 +114,15 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         kat_countryCodeParser countryCodeParser = new kat_countryCodeParser(this);
         try {
             KatData.countryCodeMap = countryCodeParser.DataParser();
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
         String countryName = KatData.countryCodeMap.get("KR");
-        if(KatData.kataCountryBase.size() == 0)
+        if (KatData.kataCountryBase.size() == 0)
             KatData.kataCountryBase.insert("KR", countryName);
         ////////////////////////////////////////////////////////////////////////////////////////////
     }
-
 
 
     @Override
@@ -137,7 +136,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
         KatData.currentActivity = this;
 
-        try{
+        try {
             KatData.client.init();
             KatData.client.RankingInit("global", "", "");
 
@@ -148,12 +147,12 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             // 로딩 텍스트 바꾸는 코루틴
             AsyncCoroutine.Companion.change_loadingText(findViewById(R.id.load_text));
 
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
-    private void move(){
+    private void move() {
 
         try {
             if (KatData.kataMyAccountBase.size() == 1) {
@@ -162,22 +161,30 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                 String realTag = tag.substring(1);
                 kset.SearchStart(realTag, "players", getApplicationContext());
             } else {
-                Intent intent = new Intent(kat_LoadBeforeMainActivity.this, kat_Player_MainActivity.class);
+                Intent intent = new Intent(
+                        kat_LoadBeforeMainActivity.this,
+                        kat_Player_MainActivity.class
+                );
                 startActivity(intent);
             }
-        } catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     // 필수 데이터를 가져오기 전까지 체크 스레드를 계속 돌린다. 여기서 load 화면의 텍스트를 계속 바꿔준다.
-    private class checkThread extends Thread{
+    private class checkThread extends Thread {
 
-        public void run(){
+        public void run() {
 
-            while(true){
-                if(KatData.EventArrayList != null && KatData.BrawlersArrayList != null
-                && KatData.mapData != null) {
+            while (true) {
+
+                System.out.println(KatData.EventArrayList);
+                System.out.println(KatData.BrawlersArrayList);
+                System.out.println(KatData.mapData);
+
+                if (KatData.EventArrayList != null && KatData.BrawlersArrayList != null
+                        && KatData.mapData != null) {
 
                     Handler mHandler = new Handler(Looper.getMainLooper());
                     mHandler.postDelayed(kat_LoadBeforeMainActivity.this::move, 0);
@@ -186,12 +193,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             }
         }
     }
-
-
-
-
-
-
 
     @Override
     public void onBackPressed() {
