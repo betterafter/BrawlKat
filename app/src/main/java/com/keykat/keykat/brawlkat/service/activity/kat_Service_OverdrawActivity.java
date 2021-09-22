@@ -111,26 +111,24 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         contentView.setOnClickPendingIntent(R.id.service_exit, btPendingIntent);
 
 
-        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            NotificationChannel channel = new NotificationChannel("subChannel", "brawl stars analytics play",
-                    NotificationManager.IMPORTANCE_LOW);
+        NotificationChannel channel = new NotificationChannel("subChannel", "brawl stars analytics play",
+                NotificationManager.IMPORTANCE_LOW);
 
 
-            mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
-            mNotificationManager.createNotificationChannel(channel);
+        mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+        mNotificationManager.createNotificationChannel(channel);
 
-            NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "subChannel")
-                    .setSmallIcon(R.drawable.kat_notification_icon)
-                    .setColor(getResources().getColor(R.color.semiBlack))
-                    .setColorized(true)
-                    .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
-                    .setCustomBigContentView(contentView)
-                    .setShowWhen(false);
+        NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "subChannel")
+                .setSmallIcon(R.drawable.kat_notification_icon)
+                .setColor(getResources().getColor(R.color.semiBlack))
+                .setColorized(true)
+                .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
+                .setCustomBigContentView(contentView)
+                .setShowWhen(false);
 
-            // id 값은 0보다 큰 양수가 들어가야 한다.
-            mNotificationManager.notify(2, notification.build());
-            startForeground(2, notification.build());
-        }
+        // id 값은 0보다 큰 양수가 들어가야 한다.
+        mNotificationManager.notify(2, notification.build());
+        startForeground(2, notification.build());
         return START_NOT_STICKY;
     }
 
@@ -194,7 +192,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         }
 
         unbindCall = true;
-        kat_Player_MainActivity.isServiceStart = false;
+        KatData.Companion.setForegroundServiceStart(false);
         setNotification();
 
 //        kat_ActionBroadcastReceiver forGetPackageName = new kat_ActionBroadcastReceiver();

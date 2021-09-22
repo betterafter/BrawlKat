@@ -48,8 +48,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
     //.........................................service.................................................................//
     public ImageButton serviceButton;
-    public static boolean isForegroundServiceAlreadyStarted = false;
-    public static boolean isServiceStart = false;
     public static Intent serviceIntent;
     public static Intent foregroundServiceIntent;
     private static long mLastClickTime = 0;
@@ -146,9 +144,9 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                         toast.show();
                         return false;
                     } else {
-                        if (isServiceStart) {
+                        if (KatData.Companion.isForegroundServiceStart()) {
                             stopService(serviceIntent);
-                            isServiceStart = false;
+                            KatData.Companion.setForegroundServiceStart(false);
                         } else {
                             KatData.dialog.show();
                             interstitialAd.loadAd(new AdRequest.Builder().build());
@@ -157,7 +155,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                                 public void onAdClosed() {
                                     super.onAdClosed();
                                     getPermission();
-                                    isServiceStart = true;
+                                    KatData.Companion.setForegroundServiceStart(true);
                                     KatData.dialog.dismiss();
                                 }
 
@@ -165,7 +163,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                                 public void onAdFailedToLoad(int errorCode) {
                                     super.onAdFailedToLoad(errorCode);
                                     getPermission();
-                                    isServiceStart = true;
+                                    KatData.Companion.setForegroundServiceStart(true);
                                     KatData.dialog.dismiss();
                                 }
 
@@ -252,6 +250,8 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
 
     public void getPermission() {
+
+        if(KatData.Companion.isForegroundServiceStart()) return;
         // 마시멜로우 이상일 경우
         if (!Settings.canDrawOverlays(this)) {// 체크
 
@@ -261,6 +261,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         } else {
             kat_Service_OverdrawActivity.getPlayerTag = playerTag;
             startService(serviceIntent);
+            KatData.Companion.setForegroundServiceStart(true);
         }
     }
 

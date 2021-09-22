@@ -18,7 +18,6 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.util.kat_EventAdapter;
 import com.keykat.keykat.brawlkat.util.KatData;
@@ -34,22 +33,22 @@ import androidx.viewpager2.widget.ViewPager2;
 public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
     //access        type                                name                    init
-    private         Context                             context;
-    private         kat_Service_OverdrawActivity        overdrawActivity;
-    public          getEventsThread                     eventsThread;
+    private Context context;
+    private kat_Service_OverdrawActivity overdrawActivity;
+    public getEventsThread eventsThread;
 
-    public          ArrayList<kat_eventsParser.pair>    EventArrayList;
-    public          ArrayList<HashMap<String, Object>>  BrawlersArrayList;
+    public ArrayList<kat_eventsParser.pair> EventArrayList;
+    public ArrayList<HashMap<String, Object>> BrawlersArrayList;
 
-    private         ViewPager2                          viewPager               = null;
-    public          kat_EventAdapter                    eventAdapter;
-    public          boolean                             changeRecommendView = false;
+    private ViewPager2 viewPager = null;
+    public kat_EventAdapter eventAdapter;
+    public boolean changeRecommendView = false;
 
-    private         static long                         mLastClickTime = 0;
-    public          boolean                             isEventThreadStart = true;
+    private static long mLastClickTime = 0;
+    public boolean isEventThreadStart = true;
 
 
-    public kat_Service_EventActivity(Context context, kat_Service_OverdrawActivity overdrawActivity){
+    public kat_Service_EventActivity(Context context, kat_Service_OverdrawActivity overdrawActivity) {
         super();
         this.context = context;
         this.overdrawActivity = overdrawActivity;
@@ -64,7 +63,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     }
 
     // 서비스 실행 시에 보여지는 화면
-    public void ShowEventsInformation(){
+    public void ShowEventsInformation() {
 
         overdrawActivity.mapRecommend = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
@@ -75,10 +74,10 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 PixelFormat.TRANSLUCENT
         );
 
-        if(overdrawActivity.mapWindowManager == null)
+        if (overdrawActivity.mapWindowManager == null)
             overdrawActivity.mapWindowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
 
-        if(overdrawActivity.mapRecommendView.getWindowToken() == null) {
+        if (overdrawActivity.mapRecommendView.getWindowToken() == null) {
 
             DisplayMetrics metrics = new DisplayMetrics();
             overdrawActivity.mapWindowManager.getDefaultDisplay().getMetrics(metrics);
@@ -94,39 +93,39 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     }
 
     // 서버에서 가져온 api 데이터 불러오고 리스트에 넣기
-    public void getCurrentEventsInformation(){
+    public void getCurrentEventsInformation() {
 
         EventArrayList = KatData.EventArrayList;
         BrawlersArrayList = KatData.BrawlersArrayList;
 
         eventsThread = new getEventsThread();
         isEventThreadStart = true;
-        if(!eventsThread.isAlive())
+        if (!eventsThread.isAlive())
             eventsThread.start();
     }
-
 
 
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
 
-        if(ev.getAction() == MotionEvent.ACTION_OUTSIDE){
-            onDestroy(); return true;
+        if (ev.getAction() == MotionEvent.ACTION_OUTSIDE) {
+            onDestroy();
+            return true;
         }
 
         return true;
     }
 
     // starlist.pro api 데이터 받고 저장
-    public class getEventsThread extends Thread{
+    public class getEventsThread extends Thread {
 
-        public void run(){
+        public void run() {
 
-            try{
-                while (isEventThreadStart){
-                    if(!kat_Player_MainActivity.isServiceStart) break;
+            try {
+                while (isEventThreadStart) {
+                    if (!KatData.Companion.isForegroundServiceStart()) break;
 
-                    if(viewPager == null){
+                    if (viewPager == null) {
                         viewPager = (ViewPager2) overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
                         eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList,
                                 kat_Service_EventActivity.this);
@@ -135,18 +134,17 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     int time = 1000 * 60;
                     sleep(time);
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
     }
 
-    public void Change(){
+    public void Change() {
         viewPager.setAdapter(eventAdapter);
     }
 
-    public void ChangeRecommendViewClick(){
+    public void ChangeRecommendViewClick() {
 
         final kat_LoadingDialog kat_loadingDialog = new kat_LoadingDialog(context);
 
@@ -157,18 +155,17 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.MATCH_PARENT
         );
-        params.setMargins(5, 5,5,5);
+        params.setMargins(5, 5, 5, 5);
 
         btn.setLayoutParams(params);
 
         btn.setBackgroundColor(context.getResources().getColor(R.color.semiBlack));
         btn.setText("my");
         btn.setAllCaps(false);
-        if(KatData.kataMyAccountBase.getTag().equals("")) {
+        if (KatData.kataMyAccountBase.getTag().equals("")) {
             btn.setTextColor(context.getResources().getColor(R.color.gray));
             btn.setEnabled(false);
-        }
-        else {
+        } else {
             btn.setTextColor(context.getResources().getColor(R.color.Color1));
             btn.setEnabled(true);
         }
@@ -183,11 +180,11 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
             public void onClick(View view) {
 
 
-                if (SystemClock.elapsedRealtime() - mLastClickTime < 1500){
+                if (SystemClock.elapsedRealtime() - mLastClickTime < 1500) {
                     return;
                 }
 
-                if(overdrawActivity.getPlayerTag == null){
+                if (overdrawActivity.getPlayerTag == null) {
                     mLastClickTime = SystemClock.elapsedRealtime();
                     return;
                 }
@@ -195,15 +192,15 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 Player_NonPlayer_ViewChangeThread viewChangeThread = new Player_NonPlayer_ViewChangeThread(btn);
                 viewChangeThread.start();
 
-                int length = ((ViewGroup)btn.getParent()).getWidth();
+                int length = ((ViewGroup) btn.getParent()).getWidth();
 
-                    // 이미지 버튼 스타일링
-                    LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                            length - 10,
-                            length - 10
-                    );
-                    params.setMargins(5, 5,5,5);
-                    btn.setLayoutParams(params);
+                // 이미지 버튼 스타일링
+                LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                        length - 10,
+                        length - 10
+                );
+                params.setMargins(5, 5, 5, 5);
+                btn.setLayoutParams(params);
 
                 Drawable drawable = context.getResources().getDrawable(R.drawable.round_rotate_right_24_small);
                 btn.setBackground(drawable);
@@ -214,37 +211,35 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         });
     }
 
-    private class Player_NonPlayer_ViewChangeThread extends Thread{
+    private class Player_NonPlayer_ViewChangeThread extends Thread {
 
         Handler viewChangeHandler = new Handler();
         Button btn;
 
-        public Player_NonPlayer_ViewChangeThread(Button btn){
+        public Player_NonPlayer_ViewChangeThread(Button btn) {
             this.btn = btn;
         }
 
-        public void run(){
+        public void run() {
             Runnable runnable = new Runnable() {
                 @Override
                 public void run() {
                     try {
 
                         // 버튼 클릭 시 유저 추천 뷰 <-> 전체 추천 뷰 전환
-                        if(changeRecommendView) {
+                        if (changeRecommendView) {
                             changeRecommendView = false;
                             btn.setText("My");
                             btn.setTextSize(12);
                             btn.setBackground(null);
-                        }
-                        else {
+                        } else {
                             changeRecommendView = true;
                             btn.setText("All");
                             btn.setTextSize(10);
                             btn.setBackground(null);
                         }
                         eventAdapter.refresh();
-                    }
-                    catch (Exception e){
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -254,7 +249,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     }
 
     // 뷰페이저 옆의 이벤트 선택 버튼
-    public void addModeButton(){
+    public void addModeButton() {
 
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
@@ -263,7 +258,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         LinearLayout buttonGroup = (LinearLayout) overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
         buttonGroup.removeAllViews();
 
-        for(int i = 0; i < EventArrayList.size(); i++) {
+        for (int i = 0; i < EventArrayList.size(); i++) {
 
             ImageButton btn = new ImageButton(context);
 
@@ -272,7 +267,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
-            params.setMargins(5, 5,5,5);
+            params.setMargins(5, 5, 5, 5);
             btn.setLayoutParams(params);
 
             String gameModeTypeUrl = (String) EventArrayList.get(i).getInfo().get("gamemodeTypeImageUrl");
@@ -284,13 +279,11 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
             // setBackground는 default 스타일이 따로 정해져있어서 커스텀 스타일을 default 스타일이 덮어씌우는 느낌이 된다.
             //btn.setBackgroundColor(Color.BLACK);
-            if(mapType.contains("Championship")) {
+            if (mapType.contains("Championship")) {
                 btn.setBackgroundResource(R.drawable.championshipbutton);
-            }
-            else{
+            } else {
                 btn.setBackgroundResource(R.drawable.normalbutton);
             }
-
 
 
             final int idx = i;
@@ -310,12 +303,12 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
         isEventThreadStart = false;
 
-        if(eventsThread != null) {
+        if (eventsThread != null) {
             eventsThread = null;
         }
 
-        if(overdrawActivity.mapWindowManager != null){
-            if(overdrawActivity.mapRecommendView != null)
+        if (overdrawActivity.mapWindowManager != null) {
+            if (overdrawActivity.mapRecommendView != null)
                 overdrawActivity.mapWindowManager.removeView(overdrawActivity.mapRecommendView);
         }
     }
