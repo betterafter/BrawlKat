@@ -71,6 +71,8 @@ public class kat_ActionBroadcastReceiver extends BroadcastReceiver {
 
 
 
+
+
     private class BrawlStarsPlayCheckThread extends Thread{
 
         Context context;
