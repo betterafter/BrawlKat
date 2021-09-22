@@ -20,7 +20,7 @@ import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_clubLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_clubInfoParser;
@@ -64,8 +64,8 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         ad.load();
 
         Intent intent = getIntent();
-        kat_Data.clubData = (kat_official_clubInfoParser.clubData) intent.getSerializableExtra("clubData");
-        kat_Data.clubLogData = (kat_clubLogParser.clubLogData) intent.getSerializableExtra("clubLogData");
+        KatData.clubData = (kat_official_clubInfoParser.clubData) intent.getSerializableExtra("clubData");
+        KatData.clubLogData = (kat_clubLogParser.clubLogData) intent.getSerializableExtra("clubLogData");
 
         player_club_icon = findViewById(R.id.player_club_icon);
         player_club_name = findViewById(R.id.player_club_name);
@@ -89,23 +89,23 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        kat_Data.currentActivity = this;
+        KatData.currentActivity = this;
     }
 
     private void setData(){
 
-        String iconUrl = kat_Data.WebRootUrl + "/assets/club/" + kat_Data.clubData.getBadgeId() + ".png?v=1";
-        kat_Data.GlideImageWithRoundCorner(
+        String iconUrl = KatData.WebRootUrl + "/assets/club/" + KatData.clubData.getBadgeId() + ".png?v=1";
+        KatData.GlideImageWithRoundCorner(
                 getApplicationContext(),
                 iconUrl,
-                kat_Data.SCREEN_WIDTH.intValue() / 7,
-                kat_Data.SCREEN_WIDTH.intValue() / 7,
+                KatData.SCREEN_WIDTH.intValue() / 7,
+                KatData.SCREEN_WIDTH.intValue() / 7,
                 player_club_icon
         );
 
-        player_club_name.setText(kat_Data.clubData.getName());
-        player_club_tag.setText(kat_Data.clubData.getTag());
-        player_club_description.setText(kat_Data.clubData.getDescription());
+        player_club_name.setText(KatData.clubData.getName());
+        player_club_tag.setText(KatData.clubData.getTag());
+        player_club_description.setText(KatData.clubData.getDescription());
 
 
         setClubInformationList();
@@ -116,11 +116,11 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
     private void setClubInformationList(){
 
         String[] informationIconUrl = new String[]{
-                kat_Data.WebRootUrl + "/assets/icon/trophy.png",
-                kat_Data.WebRootUrl + "/assets/icon/Ranking.png",
-                kat_Data.WebRootUrl + "/assets/icon/Battle-Log.png",
-                kat_Data.WebRootUrl + "/assets/icon/Battle-Log.png",
-                kat_Data.WebRootUrl + "/assets/icon/News.png"
+                KatData.WebRootUrl + "/assets/icon/trophy.png",
+                KatData.WebRootUrl + "/assets/icon/Ranking.png",
+                KatData.WebRootUrl + "/assets/icon/Battle-Log.png",
+                KatData.WebRootUrl + "/assets/icon/Battle-Log.png",
+                KatData.WebRootUrl + "/assets/icon/News.png"
         };
 
         String[] informationName = new String[]{
@@ -128,11 +128,11 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         };
 
         String[] informationValue = new String[]{
-                Integer.toString(kat_Data.clubData.getTrophies()),
-                Integer.toString(kat_Data.clubData.getRequiredTrophies()),
-                kat_Data.clubData.getTrophyRange(),
-                Integer.toString(kat_Data.clubData.getAverageTrophy()),
-                kat_Data.clubData.getMemberDatas().size()  + " / " + "100"
+                Integer.toString(KatData.clubData.getTrophies()),
+                Integer.toString(KatData.clubData.getRequiredTrophies()),
+                KatData.clubData.getTrophyRange(),
+                Integer.toString(KatData.clubData.getAverageTrophy()),
+                KatData.clubData.getMemberDatas().size()  + " / " + "100"
         };
 
         LinearLayout linearLayout = findViewById(R.id.player_club_clubInformation);
@@ -156,7 +156,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
 
         String[] membersType = new String[4];
         int[] membersValue = new int[4];
-        HashMap<String, Integer> roles = kat_Data.clubData.getMembersRole();
+        HashMap<String, Integer> roles = KatData.clubData.getMembersRole();
         Iterator<String> iter = roles.keySet().iterator();
 
         int idx = 0;
@@ -184,11 +184,11 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
 
             // 각 아이템 값 선언
             ImageView icon = view.findViewById(R.id.club_detail_game_info_icon);
-            kat_Data.GlideImageWithRoundCorner(
+            KatData.GlideImageWithRoundCorner(
                     getApplicationContext(),
                     informationIconUrl[i],
-                    kat_Data.SCREEN_WIDTH.intValue() / 20,
-                    kat_Data.SCREEN_WIDTH.intValue() / 20,
+                    KatData.SCREEN_WIDTH.intValue() / 20,
+                    KatData.SCREEN_WIDTH.intValue() / 20,
                     icon
             );
 
@@ -226,7 +226,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        final ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = kat_Data.clubData.getMemberDatas();
+        final ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = KatData.clubData.getMemberDatas();
         for(int i = 0; i < memberData.size(); i++){
             @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.player_club_detail_members_item, null);
             TextView club_member_rank = view.findViewById(R.id.player_club_detail_members_ranknum);
@@ -235,13 +235,13 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
             TextView club_member_trophy = view.findViewById(R.id.player_club_detail_members_trophy);
             TextView club_member_role = view.findViewById(R.id.player_club_detail_members_role);
 
-            String iconUrl = kat_Data.WebRootUrl + "/assets/profile-low/" +
+            String iconUrl = KatData.WebRootUrl + "/assets/profile-low/" +
                     memberData.get(i).getIconId() + ".png?v=1";
-            kat_Data.GlideImage(
+            KatData.GlideImage(
                     getApplicationContext(),
                     iconUrl,
-                    kat_Data.SCREEN_WIDTH.intValue() / 10,
-                    kat_Data.SCREEN_WIDTH.intValue() / 10,
+                    KatData.SCREEN_WIDTH.intValue() / 10,
+                    KatData.SCREEN_WIDTH.intValue() / 10,
                     club_member_icon
             );
 
@@ -293,7 +293,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
 
-        if(kat_Data.clubLogData.getStatus().equals("forbidden")){
+        if(KatData.clubLogData.getStatus().equals("forbidden")){
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -311,7 +311,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
 
             forbiddenText.setText("This club is not tracked. \n");
             forbiddenText2.setText(Html.fromHtml("You can toggle it by going to " +
-                            "<font color=\"#2a7de2\"><b>" + kat_Data.WebRootUrl + "/stats/clublog/JJQP98G0</b></font>" +
+                            "<font color=\"#2a7de2\"><b>" + KatData.WebRootUrl + "/stats/clublog/JJQP98G0</b></font>" +
                             " and enabling tracking. <br/><br/><br/><br/><br/><br/><br/><br/><br/><br/>",
                     Html.FROM_HTML_MODE_LEGACY));
 
@@ -328,7 +328,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         }
 
         LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        ArrayList<Object> cld = kat_Data.clubLogData.getHistoryData();
+        ArrayList<Object> cld = KatData.clubLogData.getHistoryData();
         for(int i = 0; i < cld.size(); i++){
 
             @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.player_club_detail_club_log, null);

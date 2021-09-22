@@ -12,7 +12,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.util.kat_Player_RankingAdapter;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 
 import java.util.Objects;
 
@@ -35,7 +35,7 @@ public class kat_RankingFragment extends Fragment {
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        kat_Data.client.RankingInit(kat_Data.kataCountryBase.getCountryCode(), "", "");
+        KatData.client.RankingInit(KatData.kataCountryBase.getCountryCode(), "", "");
     }
 
 
@@ -43,7 +43,7 @@ public class kat_RankingFragment extends Fragment {
     public void onStart() {
         super.onStart();
         countryChangeButton.setOnClickListener(view -> {
-            Intent intent = new Intent(Objects.requireNonNull(getActivity()).getApplicationContext(),
+            Intent intent = new Intent(requireActivity().getApplicationContext(),
                     kat_CountrySelectionPopUpActivity.class);
             startActivityForResult(intent, 1111);
         });
@@ -64,7 +64,7 @@ public class kat_RankingFragment extends Fragment {
         TabLayout tabLayout = view.findViewById(R.id.player_ranking_tablayout);
         countryChangeButton = view.findViewById(R.id.player_ranking_countrychange);
 
-        countryChangeButton.setText(kat_Data.kataCountryBase.getCountryCode());
+        countryChangeButton.setText(KatData.kataCountryBase.getCountryCode());
 
         fragmentStateAdapter = new kat_Player_RankingAdapter(this);
         viewPager2.setAdapter(fragmentStateAdapter);
@@ -90,15 +90,15 @@ public class kat_RankingFragment extends Fragment {
 
         public void run(){
 
-            kat_Data.MyPlayerRankingArrayList.clear();
-            kat_Data.MyClubRankingArrayList.clear();
-            kat_Data.MyPowerPlaySeasonArrayList.clear();
-            checkCountryCode = kat_Data.kataCountryBase.getCountryCode();
+            KatData.MyPlayerRankingArrayList.clear();
+            KatData.MyClubRankingArrayList.clear();
+            KatData.MyPowerPlaySeasonArrayList.clear();
+            checkCountryCode = KatData.kataCountryBase.getCountryCode();
 
-            kat_Data.client.RankingInit(checkCountryCode, "", "");
+            KatData.client.RankingInit(checkCountryCode, "", "");
 
             getActivity().runOnUiThread(() -> {
-                kat_Data.dialog.show();
+                KatData.dialog.show();
                 countryChangeButton.setText(checkCountryCode);
                 MyCountryDatabaseChangeThread myCountryDatabaseChangeThread = new MyCountryDatabaseChangeThread();
                 myCountryDatabaseChangeThread.start();
@@ -111,15 +111,15 @@ public class kat_RankingFragment extends Fragment {
         @Override
         public void run(){
             while(true){
-                if(kat_Data.MyPlayerRankingArrayList.size() > 0 &&
-                        kat_Data.MyClubRankingArrayList.size() > 0 &&
-                        kat_Data.MyPowerPlaySeasonArrayList.size() > 0
+                if(KatData.MyPlayerRankingArrayList.size() > 0 &&
+                        KatData.MyClubRankingArrayList.size() > 0 &&
+                        KatData.MyPowerPlaySeasonArrayList.size() > 0
                 ){
-                    Objects.requireNonNull(getActivity()).runOnUiThread(() -> {
+                    requireActivity().runOnUiThread(() -> {
                         fragmentStateAdapter.notifyDataSetChanged();
                         viewPager2.setAdapter(fragmentStateAdapter);
                     });
-                    kat_Data.dialog.cancel();
+                    KatData.dialog.cancel();
                     break;
                 }
             }
@@ -142,10 +142,10 @@ public class kat_RankingFragment extends Fragment {
     }
 
     public static String PlayerImageUrl(String iconId){
-        return kat_Data.WebRootUrl + "/assets/profile/" + iconId + ".png?v=1";
+        return KatData.WebRootUrl + "/assets/profile/" + iconId + ".png?v=1";
     }
     public static String ClubImageUrl(String badgeId){
-        return kat_Data.CdnRootUrl + "/club/" + badgeId + ".png?v=1";
+        return KatData.CdnRootUrl + "/club/" + badgeId + ".png?v=1";
     }
 
 }

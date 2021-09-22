@@ -9,9 +9,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
-import com.keykat.keykat.brawlkat.util.BroadcastUtilKt;
 
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
@@ -19,10 +17,6 @@ import androidx.core.app.NotificationCompat;
 public class kat_Service_BrawlStarsNotifActivity extends Service {
 
     public static boolean alreadyStart = false;
-
-
-    private kat_Player_MainActivity kat_player_mainActivity;
-
     public static BroadcastReceiver broadcastReceiver;
 
     @SuppressLint("StaticFieldLeak")
@@ -39,8 +33,6 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
     @Override
     public void onCreate() {
         super.onCreate();
-        BroadcastUtilKt.registerBroadcastReceiver(this);
-        kat_player_mainActivity = kat_Player_MainActivity.kat_player_mainActivity;
     }
 
     @Override
@@ -61,10 +53,8 @@ public class kat_Service_BrawlStarsNotifActivity extends Service {
         return START_STICKY;
     }
 
-
     @Override
     public void onDestroy() {
         super.onDestroy();
-        BroadcastUtilKt.unregisterBroadcastReceiver(this);
     }
 }

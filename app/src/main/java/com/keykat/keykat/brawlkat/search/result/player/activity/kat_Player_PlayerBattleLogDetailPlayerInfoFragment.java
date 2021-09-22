@@ -13,7 +13,7 @@ import android.widget.TextView;
 
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -61,7 +61,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        BrawlersArrayList = kat_Data.BrawlersArrayList;
+        BrawlersArrayList = KatData.BrawlersArrayList;
         colorArray = new int[]{
                 R.color.winColor, R.color.loseColor, R.color.drawColor, 0,0,0,0,0,0,0
         };
@@ -326,11 +326,11 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
 
         for(int k = 0; k < BrawlersArrayList.size(); k++){
             if(BrawlersArrayList.get(k).get("name").toString().toLowerCase().equals(playerInfo.getBrawler_name().toLowerCase())){
-                kat_Data.GlideImage(
+                KatData.GlideImage(
                         getActivity().getApplicationContext(),
                         Objects.requireNonNull(BrawlersArrayList.get(k).get("imageUrl")).toString(),
-                        kat_Data.SCREEN_WIDTH.intValue() / 10,
-                        kat_Data.SCREEN_WIDTH.intValue() / 10,
+                        KatData.SCREEN_WIDTH.intValue() / 10,
+                        KatData.SCREEN_WIDTH.intValue() / 10,
                         brawler_image);
                 break;
             }

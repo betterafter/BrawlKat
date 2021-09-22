@@ -1,6 +1,6 @@
 package com.keykat.keykat.brawlkat.service.util;
 
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
@@ -32,8 +32,8 @@ public class kat_BrawlerRecommendation {
 
 
     public void init(){
-        playerData = kat_Data.eventsPlayerData;
-        EventArrayList = kat_Data.EventArrayList;
+        playerData = KatData.eventsPlayerData;
+        EventArrayList = KatData.EventArrayList;
     }
 
     public int expectedStarPoint(int current){

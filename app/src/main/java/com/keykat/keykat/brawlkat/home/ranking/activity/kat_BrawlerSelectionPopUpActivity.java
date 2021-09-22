@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -24,8 +24,8 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
         supportRequestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.brawler_select_popup);
 
-        int width = (int) (kat_Data.SCREEN_WIDTH.intValue() * 0.9); //Display 사이즈의 70%
-        int height = (int) (kat_Data.SCREEN_HEIGHT.intValue() * 0.7);  //Display 사이즈의 90%
+        int width = (int) (KatData.SCREEN_WIDTH.intValue() * 0.9); //Display 사이즈의 70%
+        int height = (int) (KatData.SCREEN_HEIGHT.intValue() * 0.7);  //Display 사이즈의 90%
 
         getWindow().getAttributes().width = width;
         getWindow().getAttributes().height = height;
@@ -41,7 +41,7 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        kat_Data.currentActivity = this;
+        KatData.currentActivity = this;
     }
 
     public void setView(){
@@ -60,10 +60,10 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
         params2.setMargins(5,5,5,5);
 
 
-        if(kat_Data.BrawlersArrayList.size() > 0){
+        if(KatData.BrawlersArrayList.size() > 0){
 
             int idx = 0;
-            while(idx < kat_Data.BrawlersArrayList.size()){
+            while(idx < KatData.BrawlersArrayList.size()){
 
                 LinearLayout VerticalLayout = new LinearLayout(getApplicationContext());
 
@@ -71,21 +71,21 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
 
 
                 for(int i = 0; i < 3; i++, idx++){
-                    if(idx >= kat_Data.BrawlersArrayList.size()) break;
+                    if(idx >= KatData.BrawlersArrayList.size()) break;
 
-                    final String id = kat_Data.BrawlersArrayList.get(idx).get("id").toString();
-                    String imageUrl = kat_Data.BrawlersArrayList.get(idx).get("imageUrl").toString();
-                    final String name = kat_Data.BrawlersArrayList.get(idx).get("name").toString();
+                    final String id = KatData.BrawlersArrayList.get(idx).get("id").toString();
+                    String imageUrl = KatData.BrawlersArrayList.get(idx).get("imageUrl").toString();
+                    final String name = KatData.BrawlersArrayList.get(idx).get("name").toString();
 
                     ImageButton button = new ImageButton(getApplicationContext());
                     button.setBackgroundColor(getResources().getColor(R.color.semiBlack));
                     button.setLayoutParams(params2);
 
-                    kat_Data.GlideImage(
+                    KatData.GlideImage(
                             getApplicationContext(),
                             imageUrl,
-                            kat_Data.SCREEN_WIDTH.intValue() / 5,
-                            kat_Data.SCREEN_WIDTH.intValue() / 5,
+                            KatData.SCREEN_WIDTH.intValue() / 5,
+                            KatData.SCREEN_WIDTH.intValue() / 5,
                             button
                     );
 

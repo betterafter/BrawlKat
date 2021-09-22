@@ -10,7 +10,7 @@ import android.widget.Button;
 import com.google.android.material.textfield.TextInputEditText;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 
 import androidx.annotation.Nullable;
@@ -56,7 +56,7 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        kat_Data.currentActivity = this;
+        KatData.currentActivity = this;
     }
 
     public void onSearchClick(){

@@ -4,7 +4,7 @@ import android.content.Context;
 
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.util.GetTopPackageNameKt;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser;
@@ -136,7 +136,7 @@ public class Client {
             }
 
             catch (Exception e){
-                kat_Data.ServerProblemDialog();
+                KatData.ServerProblemDialog();
                 e.printStackTrace();
             }
         }
@@ -227,21 +227,21 @@ public class Client {
                         powerPlaySeasonRankingParser = new kat_official_PowerPlaySeasonRankingParser(resRankingData.get(0));
 
                         if(countryCode.equals("global")) {
-                            if (!kat_Data.PowerPlaySeasonRankingArrayList.containsKey(Id))
-                                kat_Data.PowerPlaySeasonRankingArrayList.put(Id, powerPlaySeasonRankingParser.DataParser());
+                            if (!KatData.PowerPlaySeasonRankingArrayList.containsKey(Id))
+                                KatData.PowerPlaySeasonRankingArrayList.put(Id, powerPlaySeasonRankingParser.DataParser());
                         }
                         else {
-                            if (kat_Data.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode)) {
-                                if (!kat_Data.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(Id)) {
-                                    kat_Data.MyPowerPlaySeasonRankingArrayList
+                            if (KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode)) {
+                                if (!KatData.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(Id)) {
+                                    KatData.MyPowerPlaySeasonRankingArrayList
                                             .get(countryCode)
                                             .put(Id, powerPlaySeasonRankingParser.DataParser());
                                 }
                             }
                             else{
-                                kat_Data.MyPowerPlaySeasonRankingArrayList.put(countryCode,
+                                KatData.MyPowerPlaySeasonRankingArrayList.put(countryCode,
                                         new HashMap<String, ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>>());
-                                kat_Data.MyPowerPlaySeasonRankingArrayList
+                                KatData.MyPowerPlaySeasonRankingArrayList
                                         .get(countryCode)
                                         .put(Id, powerPlaySeasonRankingParser.DataParser());
                             }
@@ -254,22 +254,22 @@ public class Client {
                         brawlerRankingParser = new kat_official_BrawlerRankingParser(resRankingData.get(0));
 
                         if(countryCode.equals("global")) {
-                            if (!kat_Data.BrawlerRankingArrayList.containsKey(Id))
-                                kat_Data.BrawlerRankingArrayList.put(Id, brawlerRankingParser.DataParser());
+                            if (!KatData.BrawlerRankingArrayList.containsKey(Id))
+                                KatData.BrawlerRankingArrayList.put(Id, brawlerRankingParser.DataParser());
                         }
                         else{
-                            if(kat_Data.MyBrawlerRankingArrayList.containsKey(countryCode)){
-                                if(!kat_Data.MyBrawlerRankingArrayList.get(countryCode).containsKey(Id)) {
-                                    kat_Data.MyBrawlerRankingArrayList
+                            if(KatData.MyBrawlerRankingArrayList.containsKey(countryCode)){
+                                if(!KatData.MyBrawlerRankingArrayList.get(countryCode).containsKey(Id)) {
+                                    KatData.MyBrawlerRankingArrayList
                                             .get(countryCode)
                                             .put(Id, brawlerRankingParser.DataParser());
                                 }
                             }
                             else{
-                                kat_Data.MyBrawlerRankingArrayList.put(countryCode,
+                                KatData.MyBrawlerRankingArrayList.put(countryCode,
                                         new HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>());
 
-                                kat_Data.MyBrawlerRankingArrayList
+                                KatData.MyBrawlerRankingArrayList
                                         .get(countryCode)
                                         .put(Id, brawlerRankingParser.DataParser());
                             }
@@ -286,14 +286,14 @@ public class Client {
                         powerPlaySeasonParser = new kat_official_PowerPlaySeasonParser(resRankingData.get(2));
 
                         if(countryCode.equals("global")) {
-                            kat_Data.PlayerRankingArrayList = playerRankingParser.DataParser();
-                            kat_Data.ClubRankingArrayList = clubRankingParser.DataParser();
-                            kat_Data.PowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
+                            KatData.PlayerRankingArrayList = playerRankingParser.DataParser();
+                            KatData.ClubRankingArrayList = clubRankingParser.DataParser();
+                            KatData.PowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
                         }
                         else{
-                            kat_Data.MyPlayerRankingArrayList = playerRankingParser.DataParser();
-                            kat_Data.MyClubRankingArrayList = clubRankingParser.DataParser();
-                            kat_Data.MyPowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
+                            KatData.MyPlayerRankingArrayList = playerRankingParser.DataParser();
+                            KatData.MyClubRankingArrayList = clubRankingParser.DataParser();
+                            KatData.MyPowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
                         }
                     }
 
@@ -307,7 +307,7 @@ public class Client {
             }
 
             catch (Exception e){
-                kat_Data.ServerProblemDialog();
+                KatData.ServerProblemDialog();
                 e.printStackTrace();
             }
         }
@@ -382,9 +382,9 @@ public class Client {
                     brawlersParser = new kat_brawlersParser(resData.get(1));
                     mapsParser = new kat_mapsParser(resData.get(2));
 
-                    kat_Data.EventArrayList = eventsParser.DataParser();
-                    kat_Data.BrawlersArrayList = brawlersParser.DataParser();
-                    kat_Data.mapData = mapsParser.DataParser();
+                    KatData.EventArrayList = eventsParser.DataParser();
+                    KatData.BrawlersArrayList = brawlersParser.DataParser();
+                    KatData.mapData = mapsParser.DataParser();
 
                     firstInit = true;
                     reader.close();
@@ -398,8 +398,8 @@ public class Client {
             catch (Exception e){
                 // 이 스레드는 소켓 연결이 안될 때마다 불러올 필요는 없고 해당 정보가 없을 때만 다이얼로그를 띄우도록 함.
                 // 어차피 해당 정보가 있긴 있으면 급한대로 업데이트 전 정보를 가져다 쓰면 되니까.
-                if(kat_Data.EventArrayList == null || kat_Data.BrawlersArrayList == null || kat_Data.mapData == null)
-                    kat_Data.ServerProblemDialog();
+                if(KatData.EventArrayList == null || KatData.BrawlersArrayList == null || KatData.mapData == null)
+                    KatData.ServerProblemDialog();
 
                 e.printStackTrace();
             }

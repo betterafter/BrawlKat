@@ -28,8 +28,7 @@ import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
-import com.keykat.keykat.brawlkat.util.BroadcastUtilKt;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
@@ -93,11 +92,10 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                     kat_Service_BrawlStarsNotifActivity.class
             );
             startForegroundService(foregroundServiceIntent);
-            BroadcastUtilKt.sendCheckStartBroadcast(this);
         }
 
         serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
-        kat_Data.dialog = new kat_LoadingDialog(this);
+        KatData.dialog = new kat_LoadingDialog(this);
 
         kat_player_mainActivity = this;
 
@@ -152,7 +150,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                             stopService(serviceIntent);
                             isServiceStart = false;
                         } else {
-                            kat_Data.dialog.show();
+                            KatData.dialog.show();
                             interstitialAd.loadAd(new AdRequest.Builder().build());
                             interstitialAd.setAdListener(new AdListener() {
                                 @Override
@@ -160,7 +158,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                                     super.onAdClosed();
                                     getPermission();
                                     isServiceStart = true;
-                                    kat_Data.dialog.dismiss();
+                                    KatData.dialog.dismiss();
                                 }
 
                                 @Override
@@ -168,7 +166,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                                     super.onAdFailedToLoad(errorCode);
                                     getPermission();
                                     isServiceStart = true;
-                                    kat_Data.dialog.dismiss();
+                                    KatData.dialog.dismiss();
                                 }
 
                                 @Override
@@ -204,8 +202,8 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             }
         }
 
-        if (kat_Data.kataMyAccountBase.size() > 0) {
-            playerTag = kat_Data.kataMyAccountBase.getTag().substring(1);
+        if (KatData.kataMyAccountBase.size() > 0) {
+            playerTag = KatData.kataMyAccountBase.getTag().substring(1);
         }
     }
 
@@ -213,7 +211,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-        kat_Data.currentActivity = this;
+        KatData.currentActivity = this;
         AsyncCoroutine.Companion.setFinished(true);
     }
 
@@ -254,16 +252,12 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
 
     public void getPermission() {
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {   // 마시멜로우 이상일 경우
-            if (!Settings.canDrawOverlays(this)) {// 체크
+        // 마시멜로우 이상일 경우
+        if (!Settings.canDrawOverlays(this)) {// 체크
 
-                Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
-                        Uri.parse("package:" + getPackageName()));
-                startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
-            } else {
-                kat_Service_OverdrawActivity.getPlayerTag = playerTag;
-                startService(serviceIntent);
-            }
+            Intent intent = new Intent(Settings.ACTION_MANAGE_OVERLAY_PERMISSION,
+                    Uri.parse("package:" + getPackageName()));
+            startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
         } else {
             kat_Service_OverdrawActivity.getPlayerTag = playerTag;
             startService(serviceIntent);

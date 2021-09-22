@@ -14,7 +14,7 @@ import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.search.result.club.activity.kat_Player_ClubDetailActivity;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_BrawlerRankingParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_ClubRankingParser;
@@ -48,11 +48,11 @@ public class setRankingView {
             TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
             TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
 
-            kat_Data.GlideImage(
+            KatData.GlideImage(
                     activity.getApplicationContext(),
                     kat_RankingFragment.PlayerImageUrl(playerData.getIconId()),
-                    kat_Data.SCREEN_HEIGHT.intValue() / 15,
-                    kat_Data.SCREEN_HEIGHT.intValue() / 15,
+                    KatData.SCREEN_HEIGHT.intValue() / 15,
+                    KatData.SCREEN_HEIGHT.intValue() / 15,
                     player_ranking_player_image);
 
             player_ranking_player_name.setText(playerData.getName());
@@ -118,11 +118,11 @@ public class setRankingView {
             player_ranking_player_trophies.setLayoutParams(params2);
 
 
-            kat_Data.GlideImage(
+            KatData.GlideImage(
                     activity.getApplicationContext(),
                     kat_RankingFragment.ClubImageUrl(clubData.getBadgeId()),
-                    kat_Data.SCREEN_HEIGHT.intValue() / 15,
-                    kat_Data.SCREEN_HEIGHT.intValue() / 15,
+                    KatData.SCREEN_HEIGHT.intValue() / 15,
+                    KatData.SCREEN_HEIGHT.intValue() / 15,
                     player_ranking_player_image);
 
             player_ranking_player_name.setText(clubData.getName());
@@ -166,11 +166,11 @@ public class setRankingView {
             TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
             TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
 
-            kat_Data.GlideImage(
+            KatData.GlideImage(
                     activity.getApplicationContext(),
                     kat_RankingFragment.PlayerImageUrl(brawlerRankingData.getIconId()),
-                    kat_Data.SCREEN_HEIGHT.intValue() / 15,
-                    kat_Data.SCREEN_HEIGHT.intValue() / 15,
+                    KatData.SCREEN_HEIGHT.intValue() / 15,
+                    KatData.SCREEN_HEIGHT.intValue() / 15,
                     player_ranking_player_image);
 
             player_ranking_player_name.setText(brawlerRankingData.getName());
@@ -223,11 +223,11 @@ public class setRankingView {
             TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
             TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
 
-            kat_Data.GlideImage(
+            KatData.GlideImage(
                     activity.getApplicationContext(),
                     kat_RankingFragment.PlayerImageUrl(powerPlaySeasonRankingData.getIconId()),
-                    kat_Data.SCREEN_HEIGHT.intValue() / 15,
-                    kat_Data.SCREEN_HEIGHT.intValue() / 15,
+                    KatData.SCREEN_HEIGHT.intValue() / 15,
+                    KatData.SCREEN_HEIGHT.intValue() / 15,
                     player_ranking_player_image);
 
             player_ranking_player_name.setText(powerPlaySeasonRankingData.getName());

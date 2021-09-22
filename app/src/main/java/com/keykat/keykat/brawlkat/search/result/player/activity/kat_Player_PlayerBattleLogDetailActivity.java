@@ -7,7 +7,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.search.result.player.util.kat_Player_PlayerBattleLogDetailAdapter;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
@@ -62,6 +62,6 @@ public class kat_Player_PlayerBattleLogDetailActivity extends AppCompatActivity 
     @Override
     protected void onResume() {
         super.onResume();
-        kat_Data.currentActivity = this;
+        KatData.currentActivity = this;
     }
 }

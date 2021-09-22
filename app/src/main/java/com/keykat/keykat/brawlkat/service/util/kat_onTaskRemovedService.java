@@ -4,7 +4,7 @@ import android.app.Service;
 import android.content.Intent;
 import android.os.IBinder;
 
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 
 import androidx.annotation.Nullable;
 
@@ -18,7 +18,7 @@ public class kat_onTaskRemovedService extends Service {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) { //핸들링 하는 부분
-        kat_Data.client.remove();
+        KatData.client.remove();
         stopSelf(); //서비스도 같이 종료
     }
 }

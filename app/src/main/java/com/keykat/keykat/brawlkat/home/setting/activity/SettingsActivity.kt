@@ -11,10 +11,6 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import com.keykat.keykat.brawlkat.R
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity
-import com.keykat.keykat.brawlkat.util.registerBroadcastReceiver
-import com.keykat.keykat.brawlkat.util.sendCheckEndBroadcast
-import com.keykat.keykat.brawlkat.util.sendCheckStartBroadcast
-import com.keykat.keykat.brawlkat.util.unregisterBroadcastReceiver
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -33,7 +29,6 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
 
         private var foregroundServicePreferences: SwitchPreferenceCompat? = null
-        private var backgroundServicePreference: SwitchPreferenceCompat? = null
         private var serviceEditTextPreference: EditTextPreference? = null
         private var policyEditTextPreference: EditTextPreference? = null
         private var developerInfoEditTextPreference: EditTextPreference? = null
@@ -49,18 +44,9 @@ class SettingsActivity : AppCompatActivity() {
             )
 
             foregroundServicePreferences = findPreference(getString(R.string.notify_service))
-            backgroundServicePreference = findPreference(getString(R.string.auto_service))
             serviceEditTextPreference = findPreference(getString(R.string.service))
             policyEditTextPreference = findPreference(getString(R.string.policy))
             developerInfoEditTextPreference = findPreference(getString(R.string.developer))
-
-
-            // 브롤러 추천 서비스 알림창을 on 했을 때
-            backgroundServicePreference?.isEnabled =
-                foregroundServicePreferences?.sharedPreferences?.getBoolean(
-                    getString(R.string.notify_service),
-                    false
-                ) == true
 
             foregroundServicePreferences?.setOnPreferenceChangeListener { _, newValue ->
                 if (!checkPermission())
@@ -68,22 +54,8 @@ class SettingsActivity : AppCompatActivity() {
 
                 if (newValue.equals(true)) {
                     requireActivity().startForegroundService(serviceIntent)
-                    backgroundServicePreference?.isEnabled = true
                 } else {
                     requireActivity().stopService(serviceIntent)
-                    backgroundServicePreference?.isEnabled = false
-                }
-
-                true
-            }
-
-            backgroundServicePreference?.setOnPreferenceChangeListener { _, newValue ->
-                if (!checkPermission())
-                    startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
-
-                context?.let {
-                    if (newValue.equals(true)) sendCheckStartBroadcast(it)
-                    else sendCheckEndBroadcast(it)
                 }
 
                 true

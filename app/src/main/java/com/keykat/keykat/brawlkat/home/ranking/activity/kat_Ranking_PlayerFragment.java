@@ -10,7 +10,7 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.kat_Data;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 
 import java.util.Objects;
@@ -67,20 +67,20 @@ public class kat_Ranking_PlayerFragment extends Fragment {
     }
 
     public void globalClick(LinearLayout player_ranking_player_layout){
-        kat_Data.dialog.show();
+        KatData.dialog.show();
         AsyncCoroutine.Companion.player_DatabaseChanged(
-                Objects.requireNonNull(getActivity()),
+                requireActivity(),
                 player_ranking_player_layout,
-                kat_Data.PlayerRankingArrayList
+                KatData.PlayerRankingArrayList
         );
     }
 
     public void myCountryClick(LinearLayout player_ranking_player_layout){
-        kat_Data.dialog.show();
+        KatData.dialog.show();
         AsyncCoroutine.Companion.player_DatabaseChanged(
-                Objects.requireNonNull(getActivity()),
+                requireActivity(),
                 player_ranking_player_layout,
-                kat_Data.MyPlayerRankingArrayList
+                KatData.MyPlayerRankingArrayList
         );
     }
 }
