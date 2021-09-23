@@ -30,17 +30,26 @@
     <string name="policy">policy</string>
     <string name="developer">developer</string>
 
-
     <!-- Messages Preferences -->
     <string name="notify">알림창에 브롤러 정보 표시하기</string>
     <string name="app_info">서비스 설명</string>
     <string name="official_policy_info">정책</string>
     <string name="developer_info">개발자 정보</string>
 
-    <!-- Sync Preferences -->
+    <!-- Message Preferences -->
     <string name="sync_title">Sync email periodically</string>
     <string name="attachment_title">Download incoming attachments</string>
-    <string name="notify_summary_on">디바이스의 알림창에 브롤러 정보가 표시됩니다.</string>
-    <string name="notify_summary_off">디바이스의 알림창에 브롤러 정보가 표시됩니다.</string>
+    <string name="notify_summary_on">
+        디바이스의 알림창에 브롤러 정보가 표시됩니다. 아래에서 자세한 설명을 확인할 수 있습니다.
+    </string>
+    <string name="notify_summary_off">
+        디바이스의 알림창에 브롤러 정보가 표시됩니다.  아래에서 자세한 설명을 확인할 수 있습니다.
+    </string>
+    <string name="service_summary">"알림창에 브롤러 정보 표시하기"에 대한 설명입니다.</string>
+    <string name="policy_summary">브롤스타즈 개발사 supercell의 정책과 그 외의 정책에 대한 설명입니다.</string>
+    <string name="developer_summary">개발자의 이메일 등에 대한 정보입니다.</string>
+    <string name="service_summary_fragment1">내 정보를 간단하게 확인할 수 있어요!</string>
+    <string name="service_summary_fragment2">어떤 브롤러로 플레이할지 고민이 된다면 펼쳐보세요!</string>
+    <string name="service_summary_fragment3">알림창의 통계 버튼을 눌러 어떤 맵에서 어떤 브롤러가 좋은지 확인하세요!</string>
 </resources>
 
