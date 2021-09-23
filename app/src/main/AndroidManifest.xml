@@ -14,8 +14,8 @@
             android:name=".home.setting.activity.SettingsActivity"
             android:exported="true"
             android:label="@string/title_activity_settings"
-            android:theme="@style/PreferenceScreen"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait"
+            android:theme="@style/PreferenceScreen" />
         <activity android:name=".load.activity.kat_LoadBeforeMainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +51,10 @@
             android:theme="@style/Theme.AppCompat.Dialog" />
         <activity
             android:name=".home.setting.activity.ServiceSummaryActivity"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
+        <activity
+            android:name=".home.setting.activity.PolicySummaryActivity"
+            android:screenOrientation="portrait" />
 
         <meta-data
             android:name="preloaded_fonts"
@@ -59,20 +62,21 @@
         <meta-data
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5909086836185335~3154086269" />
+
         <receiver android:name=".service.util.kat_ButtonBroadcastReceiver">
             <intent-filter android:priority="10000">
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
         </receiver>
 
-<!--        <receiver android:name=".service.util.kat_ActionBroadcastReceiver">-->
-<!--            <intent-filter>-->
-<!--                <action android:name="android.intent.action.SCREEN_ON" />-->
-<!--                <action android:name="android.intent.action.SCREEN_OFF" />-->
-<!--                <action android:name="com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_START" />-->
-<!--                <action android:name="com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_END" />-->
-<!--            </intent-filter>-->
-<!--        </receiver>-->
+        <!--        <receiver android:name=".service.util.kat_ActionBroadcastReceiver">-->
+        <!--            <intent-filter>-->
+        <!--                <action android:name="android.intent.action.SCREEN_ON" />-->
+        <!--                <action android:name="android.intent.action.SCREEN_OFF" />-->
+        <!--                <action android:name="com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_START" />-->
+        <!--                <action android:name="com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_END" />-->
+        <!--            </intent-filter>-->
+        <!--        </receiver>-->
         <service android:name=".service.activity.kat_Service_OverdrawActivity" />
 
         <service android:name=".service.activity.kat_Service_BrawlStarsNotifActivity" /> <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
@@ -80,6 +84,7 @@
             android:name=".service.util.kat_onTaskRemovedService"
             android:stopWithTask="false" />
     </application>
+
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />

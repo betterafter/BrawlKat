@@ -69,7 +69,8 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             policyPreference?.setOnPreferenceClickListener {
-
+                var intent = Intent(activity, PolicySummaryActivity::class.java)
+                startActivity(intent)
                 true
             }
 
