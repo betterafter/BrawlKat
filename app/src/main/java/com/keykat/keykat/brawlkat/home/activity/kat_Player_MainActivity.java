@@ -105,7 +105,9 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavi);
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
 
-            kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
+            kat_searchFragment = new kat_SearchFragment(
+                    kat_Player_MainActivity.this
+            );
             kat_favoritesFragment = new kat_FavoritesFragment();
             kat_rankingFragment = new kat_RankingFragment();
 
@@ -120,7 +122,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                     setFrag(2);
                     break;
                 case R.id.action_setting:
-                    //setFrag(3);
                     Intent intent = new Intent(this, SettingsActivity.class);
                     startActivity(intent);
                     break;
@@ -230,17 +231,11 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                 break;
 
             case 2:
-                // kat_Data.dialog.show();
                 AsyncCoroutine.Companion.accessRankingFragment(
                         fragmentTransaction,
                         R.id.Main_Frame,
                         kat_rankingFragment
                 );
-                break;
-
-            case 3:
-                //fragmentTransaction.replace(R.id.Main_Frame, kat_settingFragment);
-                //fragmentTransaction.commit();
                 break;
         }
     }
@@ -251,7 +246,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
     public void getPermission() {
 
-        if(KatData.Companion.isForegroundServiceStart()) return;
+        if (KatData.Companion.isForegroundServiceStart()) return;
         // 마시멜로우 이상일 경우
         if (!Settings.canDrawOverlays(this)) {// 체크
 
