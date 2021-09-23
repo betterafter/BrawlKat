@@ -11,7 +11,6 @@ import android.widget.TextView;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.search.result.club.activity.kat_Player_ClubDetailActivity;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
@@ -22,8 +21,9 @@ import java.util.ArrayList;
 import java.util.Objects;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AppCompatActivity;
 
-public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
+public class kat_Player_RecentSearchActivity extends AppCompatActivity {
 
     private                                     TextInputEditText                               player_detail_user_club_search;
     private                                     String                                          type;
@@ -76,7 +76,7 @@ public class kat_Player_RecentSearchActivity extends kat_Player_MainActivity {
             for (int i = 0; i < 9; i++) {
 
                 if (i >= resultList.size()) break;
-                recentSearchResultList(linearLayout, layoutInflater, resultList.get(i));
+                recentSearchResultList(linearLayout, getLayoutInflater(), resultList.get(i));
             }
         }
     }

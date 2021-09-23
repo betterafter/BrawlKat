@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.home.search.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -97,10 +98,10 @@ public class kat_SearchFragment extends Fragment {
 
 
 
-        LinearLayout player_user_search_layout = (LinearLayout) view.findViewById(R.id.player_user_searchInput_layout);
-        LinearLayout player_club_search_layout = (LinearLayout) view.findViewById(R.id.player_club_searchInput_layout);
+        LinearLayout player_user_search_layout = view.findViewById(R.id.player_user_searchInput_layout);
+        LinearLayout player_club_search_layout = view.findViewById(R.id.player_club_searchInput_layout);
 
-        final LinearLayout player_main_inputMyAccount = (LinearLayout) view.findViewById(R.id.player_main_inputMyAccount);
+        final LinearLayout player_main_inputMyAccount = view.findViewById(R.id.player_main_inputMyAccount);
 
 
         // 내 계정 뷰 보여주기......................................................................................................//
@@ -173,6 +174,7 @@ public class kat_SearchFragment extends Fragment {
             player_main_inputMyAccount.addView(accountView);
 
             player_my_account_close.setOnTouchListener(new View.OnTouchListener(){
+                @SuppressLint("ClickableViewAccessibility")
                 @Override
                 public boolean onTouch(View v, MotionEvent motionEvent){
 
@@ -226,7 +228,7 @@ public class kat_SearchFragment extends Fragment {
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     Intent intent = new Intent(getActivity(), kat_Player_RecentSearchActivity.class);
                     intent.putExtra("type", "players");
-                    kat_player_mainActivity.startActivity(intent);
+                    getActivity().startActivity(intent);
                 }
 
                 return false;
@@ -237,9 +239,9 @@ public class kat_SearchFragment extends Fragment {
             @Override
             public boolean onTouch(View v, MotionEvent motionEvent){
                 if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
-                    Intent intent = new Intent(kat_player_mainActivity, kat_Player_RecentSearchActivity.class);
+                    Intent intent = new Intent(getActivity(), kat_Player_RecentSearchActivity.class);
                     intent.putExtra("type", "clubs");
-                    kat_player_mainActivity.startActivity(intent);
+                    getActivity().startActivity(intent);
                 }
                 return false;
             }
