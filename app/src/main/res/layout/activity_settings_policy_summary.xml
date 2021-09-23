@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <LinearLayout
+        android:id="@+id/linearLayout4"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/textView39"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/lilita_one"
+            android:text="@string/supercell_policy_title"
+            android:textColor="@color/colorWhite"
+            android:textSize="34sp" />
+
+        <TextView
+            android:id="@+id/textView40"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:fontFamily="@font/lilita_one"
+            android:text="@string/supercell_policy_subtitle"
+            android:textColor="@color/Color1"
+            android:textSize="16sp" />
+
+        <TextView
+            android:id="@+id/fan_content_policy_text"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/lilita_one"
+            android:text="@string/supercell_policy_content"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
+        app:layout_constraintVertical_bias="0.0">
+
+        <TextView
+            android:id="@+id/textView41"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:layout_marginTop="50dp"
+            android:layout_marginBottom="30dp"
+            android:fontFamily="@font/actor"
+            android:text="@string/supercell_policy_title_korean"
+            android:textColor="@color/colorWhite"
+            android:textSize="34sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/textView42"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="10dp"
+            android:fontFamily="@font/actor"
+            android:text="@string/supercell_policy_subtitle_korean"
+            android:textColor="@color/Color1"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:id="@+id/fan_content_policy_text_korean"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="10dp"
+            android:fontFamily="@font/actor"
+            android:text="@string/supercell_policy_content_korean"
+            android:textColor="@color/colorWhite"
+            android:textSize="16sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
