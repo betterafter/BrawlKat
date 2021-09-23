@@ -1,6 +1,5 @@
 package com.keykat.keykat.brawlkat.home.ranking.activity;
 
-import android.app.Activity;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -19,13 +18,10 @@ import androidx.fragment.app.Fragment;
 
 public class kat_Ranking_ClubFragment extends Fragment {
 
-    private                         LinearLayout                                player_ranking_player_layout;
+    private LinearLayout player_ranking_player_layout;
 
-    private                         Context                                     mContext;
-    private                         Activity                                    activity;
-
-    public kat_Ranking_ClubFragment(){}
-
+    public kat_Ranking_ClubFragment() {
+    }
 
 
     @Override
@@ -37,13 +33,15 @@ public class kat_Ranking_ClubFragment extends Fragment {
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        activity = getActivity();
-        mContext = context;
     }
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
 
         View view = inflater.inflate(R.layout.player_ranking_club, container, false);
         player_ranking_player_layout = view.findViewById(R.id.player_ranking_club_layout);
@@ -52,12 +50,10 @@ public class kat_Ranking_ClubFragment extends Fragment {
         final Button MyButton = view.findViewById(R.id.player_ranking_club_mycountry);
 
         globalButton.setOnClickListener(v -> globalClick(player_ranking_player_layout));
-
         MyButton.setOnClickListener(v -> myCountryClick(player_ranking_player_layout));
 
         return view;
     }
-
 
 
     @Override
@@ -67,21 +63,21 @@ public class kat_Ranking_ClubFragment extends Fragment {
         globalClick(player_ranking_player_layout);
     }
 
-    private void globalClick(LinearLayout player_ranking_player_layout){
+    private void globalClick(LinearLayout player_ranking_player_layout) {
 
         KatData.dialog.show();
-        AsyncCoroutine.Companion.club_DatabaseChanged(
-                getActivity(),
+        AsyncCoroutine.Companion.clubDatabaseChanged(
+                requireActivity(),
                 player_ranking_player_layout,
                 KatData.ClubRankingArrayList
         );
     }
 
-    private void myCountryClick(LinearLayout player_ranking_player_layout){
+    private void myCountryClick(LinearLayout player_ranking_player_layout) {
 
         KatData.dialog.show();
-        AsyncCoroutine.Companion.club_DatabaseChanged(
-                getActivity(),
+        AsyncCoroutine.Companion.clubDatabaseChanged(
+                requireActivity(),
                 player_ranking_player_layout,
                 KatData.MyClubRankingArrayList
         );

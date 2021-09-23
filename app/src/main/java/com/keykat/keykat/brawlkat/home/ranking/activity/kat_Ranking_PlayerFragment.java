@@ -66,7 +66,7 @@ public class kat_Ranking_PlayerFragment extends Fragment {
 
     public void globalClick(LinearLayout player_ranking_player_layout){
         KatData.dialog.show();
-        AsyncCoroutine.Companion.player_DatabaseChanged(
+        AsyncCoroutine.Companion.playerDatabaseChanged(
                 requireActivity(),
                 player_ranking_player_layout,
                 KatData.PlayerRankingArrayList
@@ -75,7 +75,7 @@ public class kat_Ranking_PlayerFragment extends Fragment {
 
     public void myCountryClick(LinearLayout player_ranking_player_layout){
         KatData.dialog.show();
-        AsyncCoroutine.Companion.player_DatabaseChanged(
+        AsyncCoroutine.Companion.playerDatabaseChanged(
                 requireActivity(),
                 player_ranking_player_layout,
                 KatData.MyPlayerRankingArrayList

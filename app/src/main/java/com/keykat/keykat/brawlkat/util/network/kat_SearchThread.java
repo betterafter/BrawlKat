@@ -211,7 +211,7 @@ public class kat_SearchThread extends AppCompatActivity {
                 intent.putExtra("playerData", KatData.playerData);
                 fromActivity.startActivity(intent);
 
-                if (kat_loadingDialog != null) kat_loadingDialog.dismiss();
+                if (KatData.dialog != null) KatData.dialog.cancel();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -262,7 +262,7 @@ public class kat_SearchThread extends AppCompatActivity {
 
                 fromActivity.startActivity(intent);
 
-                if (kat_loadingDialog != null) kat_loadingDialog.dismiss();
+                if (KatData.dialog != null) KatData.dialog.cancel();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -273,6 +273,5 @@ public class kat_SearchThread extends AppCompatActivity {
     public void SearchStart(String tag, String type, Context context) {
         SearchThread searchThread = new SearchThread(tag, type, context);
         searchThread.start();
-
     }
 }

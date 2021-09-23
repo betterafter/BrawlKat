@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.home.ranking.util;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Color;
@@ -25,28 +26,41 @@ import java.util.ArrayList;
 
 public class setRankingView {
 
+    private LayoutInflater layoutInflater;
+
+    public setRankingView(Activity activity) {
+        layoutInflater = (LayoutInflater) activity.getApplicationContext().getSystemService(
+                Context.LAYOUT_INFLATER_SERVICE
+        );
+    }
+
     // 플레이어 랭킹 뷰
     public void playerSetView(
             Activity activity,
             LinearLayout player_ranking_player_layout,
-            ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList){
-
-        LayoutInflater layoutInflater =
-                (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ArrayList<kat_official_PlayerRankingParser.playerData> PlayerRankingArrayList) {
 
         player_ranking_player_layout.removeAllViews();
 
-        for(int i = 0; i < PlayerRankingArrayList.size(); i++){
+        for (int i = 0; i < PlayerRankingArrayList.size(); i++) {
 
+            @SuppressLint("InflateParams")
             View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
-            final kat_official_PlayerRankingParser.playerData playerData = PlayerRankingArrayList.get(i);
+            final kat_official_PlayerRankingParser.playerData playerData
+                    = PlayerRankingArrayList.get(i);
 
-            ImageView player_ranking_player_image = itemView.findViewById(R.id.player_ranking_image);
-            TextView player_ranking_player_name = itemView.findViewById(R.id.player_ranking_name);
-            TextView player_ranking_player_tag = itemView.findViewById(R.id.player_ranking_tag);
-            TextView player_ranking_player_club = itemView.findViewById(R.id.player_ranking_club);
-            TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
-            TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
+            ImageView player_ranking_player_image
+                    = itemView.findViewById(R.id.player_ranking_image);
+            TextView player_ranking_player_name
+                    = itemView.findViewById(R.id.player_ranking_name);
+            TextView player_ranking_player_tag
+                    = itemView.findViewById(R.id.player_ranking_tag);
+            TextView player_ranking_player_club
+                    = itemView.findViewById(R.id.player_ranking_club);
+            TextView player_ranking_player_trophies
+                    = itemView.findViewById(R.id.player_ranking_trophies);
+            TextView player_ranking_player_rank
+                    = itemView.findViewById(R.id.player_Ranking_rank);
 
             KatData.GlideImage(
                     activity.getApplicationContext(),
@@ -62,18 +76,22 @@ public class setRankingView {
             player_ranking_player_rank.setText(playerData.getRank());
 
             String nameColor = "#ffffff";
-            if(playerData.getNameColor() != null)
+            if (playerData.getNameColor() != null)
                 nameColor = "#" + playerData.getNameColor().substring(2);
             player_ranking_player_name.setTextColor(Color.parseColor(nameColor));
 
-            itemView.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View v){
+            itemView.setOnClickListener(v -> {
 
-                    String realTag = playerData.getTag().substring(1);
+                KatData.dialog.show();
+                String realTag = playerData.getTag().substring(1);
 
-                    kat_SearchThread kset = new kat_SearchThread(activity, kat_Player_PlayerDetailActivity.class);
-                    kset.SearchStart(realTag, "players", activity.getApplicationContext());
-                }
+                kat_SearchThread kat_searchThread
+                        = new kat_SearchThread(activity, kat_Player_PlayerDetailActivity.class);
+                kat_searchThread.SearchStart(
+                        realTag,
+                        "players",
+                        activity.getApplicationContext()
+                );
             });
 
             player_ranking_player_layout.addView(itemView);
@@ -85,34 +103,44 @@ public class setRankingView {
     public void clubSetView(
             Activity activity,
             LinearLayout player_ranking_player_layout,
-            ArrayList<kat_official_ClubRankingParser.clubData> ClubRankingArrayList){
-
-        LayoutInflater layoutInflater =
-                (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ArrayList<kat_official_ClubRankingParser.clubData> ClubRankingArrayList) {
 
         player_ranking_player_layout.removeAllViews();
 
-        for(int i = 0; i < ClubRankingArrayList.size(); i++){
+        for (int i = 0; i < ClubRankingArrayList.size(); i++) {
 
             View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
             final kat_official_ClubRankingParser.clubData clubData = ClubRankingArrayList.get(i);
 
-            ImageView player_ranking_player_image = itemView.findViewById(R.id.player_ranking_image);
-            TextView player_ranking_player_name = itemView.findViewById(R.id.player_ranking_name);
-            TextView player_ranking_player_tag = itemView.findViewById(R.id.player_ranking_tag);
-            TextView player_ranking_player_memberCount = itemView.findViewById(R.id.player_ranking_club);
-            TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
-            TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
+            ImageView player_ranking_player_image
+                    = itemView.findViewById(R.id.player_ranking_image);
+            TextView player_ranking_player_name
+                    = itemView.findViewById(R.id.player_ranking_name);
+            TextView player_ranking_player_tag
+                    = itemView.findViewById(R.id.player_ranking_tag);
+            TextView player_ranking_player_memberCount
+                    = itemView.findViewById(R.id.player_ranking_club);
+            TextView player_ranking_player_trophies
+                    = itemView.findViewById(R.id.player_ranking_trophies);
+            TextView player_ranking_player_rank
+                    = itemView.findViewById(R.id.player_Ranking_rank);
 
             LinearLayout.LayoutParams params
-                    = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    = new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
+
             params.weight = 1f;
             params.gravity = Gravity.CENTER;
             player_ranking_player_memberCount.setLayoutParams(params);
             player_ranking_player_memberCount.setTextSize(10);
 
             LinearLayout.LayoutParams params2
-                    = new LinearLayout.LayoutParams(0, LinearLayout.LayoutParams.WRAP_CONTENT);
+                    = new LinearLayout.LayoutParams(
+                    0,
+                    LinearLayout.LayoutParams.WRAP_CONTENT
+            );
             params2.weight = 2f;
             params2.gravity = Gravity.CENTER;
             player_ranking_player_trophies.setLayoutParams(params2);
@@ -133,9 +161,13 @@ public class setRankingView {
 
             itemView.setOnClickListener(v -> {
 
+                KatData.dialog.show();
                 String realTag = clubData.getTag().substring(1);
 
-                kat_SearchThread kset = new kat_SearchThread(activity, kat_Player_ClubDetailActivity.class);
+                kat_SearchThread kset = new kat_SearchThread(
+                        activity,
+                        kat_Player_ClubDetailActivity.class
+                );
                 kset.SearchStart(realTag, "clubs", activity.getApplicationContext());
             });
 
@@ -147,24 +179,29 @@ public class setRankingView {
     public void brawlerSetView(
             Activity activity,
             LinearLayout player_ranking_player_layout,
-            ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData> BrawlerRankingArrayList){
-
-        LayoutInflater layoutInflater =
-                (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData> BrawlerRankingArrayList
+    ) {
 
         player_ranking_player_layout.removeAllViews();
 
-        for(int i = 0; i < BrawlerRankingArrayList.size(); i++){
+        for (int i = 0; i < BrawlerRankingArrayList.size(); i++) {
 
             View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
-            final kat_official_BrawlerRankingParser.brawlerRankingData brawlerRankingData = BrawlerRankingArrayList.get(i);
+            final kat_official_BrawlerRankingParser.brawlerRankingData brawlerRankingData
+                    = BrawlerRankingArrayList.get(i);
 
-            ImageView player_ranking_player_image = itemView.findViewById(R.id.player_ranking_image);
-            TextView player_ranking_player_name = itemView.findViewById(R.id.player_ranking_name);
-            TextView player_ranking_player_tag = itemView.findViewById(R.id.player_ranking_tag);
-            TextView player_ranking_player_club = itemView.findViewById(R.id.player_ranking_club);
-            TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
-            TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
+            ImageView player_ranking_player_image
+                    = itemView.findViewById(R.id.player_ranking_image);
+            TextView player_ranking_player_name
+                    = itemView.findViewById(R.id.player_ranking_name);
+            TextView player_ranking_player_tag
+                    = itemView.findViewById(R.id.player_ranking_tag);
+            TextView player_ranking_player_club
+                    = itemView.findViewById(R.id.player_ranking_club);
+            TextView player_ranking_player_trophies
+                    = itemView.findViewById(R.id.player_ranking_trophies);
+            TextView player_ranking_player_rank
+                    = itemView.findViewById(R.id.player_Ranking_rank);
 
             KatData.GlideImage(
                     activity.getApplicationContext(),
@@ -180,18 +217,22 @@ public class setRankingView {
             player_ranking_player_rank.setText(brawlerRankingData.getRank());
 
             String nameColor = "#ffffff";
-            if(brawlerRankingData.getNameColor() != null)
+            if (brawlerRankingData.getNameColor() != null)
                 nameColor = "#" + brawlerRankingData.getNameColor().substring(2);
             player_ranking_player_name.setTextColor(Color.parseColor(nameColor));
 
-            itemView.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View v){
+            itemView.setOnClickListener(v -> {
 
-                    String realTag = brawlerRankingData.getTag().substring(1);
+                KatData.dialog.show();
+                String realTag = brawlerRankingData.getTag().substring(1);
 
-                    kat_SearchThread kset = new kat_SearchThread(activity, kat_Player_PlayerDetailActivity.class);
-                    kset.SearchStart(realTag, "players", activity.getApplicationContext());
-                }
+                kat_SearchThread kat_searchThread
+                        = new kat_SearchThread(activity, kat_Player_PlayerDetailActivity.class);
+                kat_searchThread.SearchStart(
+                        realTag,
+                        "players",
+                        activity.getApplicationContext()
+                );
             });
 
             player_ranking_player_layout.addView(itemView);
@@ -203,25 +244,30 @@ public class setRankingView {
     public void powerPlaySetView(
             Activity activity,
             LinearLayout player_ranking_player_layout,
-            ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData> PowerPlayRankingArrayList){
-
-        LayoutInflater layoutInflater =
-                (LayoutInflater) activity.getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+            ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>
+                    PowerPlayRankingArrayList
+    ) {
 
         player_ranking_player_layout.removeAllViews();
 
-        for(int i = 0; i < PowerPlayRankingArrayList.size(); i++){
+        for (int i = 0; i < PowerPlayRankingArrayList.size(); i++) {
 
             View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
-            final kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData powerPlaySeasonRankingData
-                    = PowerPlayRankingArrayList.get(i);
+            final kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData
+                    powerPlaySeasonRankingData = PowerPlayRankingArrayList.get(i);
 
-            ImageView player_ranking_player_image = itemView.findViewById(R.id.player_ranking_image);
-            TextView player_ranking_player_name = itemView.findViewById(R.id.player_ranking_name);
-            TextView player_ranking_player_tag = itemView.findViewById(R.id.player_ranking_tag);
-            TextView player_ranking_player_club = itemView.findViewById(R.id.player_ranking_club);
-            TextView player_ranking_player_trophies = itemView.findViewById(R.id.player_ranking_trophies);
-            TextView player_ranking_player_rank = itemView.findViewById(R.id.player_Ranking_rank);
+            ImageView player_ranking_player_image
+                    = itemView.findViewById(R.id.player_ranking_image);
+            TextView player_ranking_player_name
+                    = itemView.findViewById(R.id.player_ranking_name);
+            TextView player_ranking_player_tag
+                    = itemView.findViewById(R.id.player_ranking_tag);
+            TextView player_ranking_player_club
+                    = itemView.findViewById(R.id.player_ranking_club);
+            TextView player_ranking_player_trophies
+                    = itemView.findViewById(R.id.player_ranking_trophies);
+            TextView player_ranking_player_rank
+                    = itemView.findViewById(R.id.player_Ranking_rank);
 
             KatData.GlideImage(
                     activity.getApplicationContext(),
@@ -237,15 +283,19 @@ public class setRankingView {
             player_ranking_player_rank.setText(powerPlaySeasonRankingData.getRank());
 
             String nameColor = "#ffffff";
-            if(powerPlaySeasonRankingData.getNameColor() != null)
+            if (powerPlaySeasonRankingData.getNameColor() != null)
                 nameColor = "#" + powerPlaySeasonRankingData.getNameColor().substring(2);
             player_ranking_player_name.setTextColor(Color.parseColor(nameColor));
 
             itemView.setOnClickListener(v -> {
 
+                KatData.dialog.show();
                 String realTag = powerPlaySeasonRankingData.getTag().substring(1);
 
-                kat_SearchThread kset = new kat_SearchThread(activity, kat_Player_PlayerDetailActivity.class);
+                kat_SearchThread kset = new kat_SearchThread(
+                        activity,
+                        kat_Player_PlayerDetailActivity.class
+                );
                 kset.SearchStart(realTag, "players", activity.getApplicationContext());
             });
 

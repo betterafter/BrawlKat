@@ -18,7 +18,6 @@ import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 
 import java.lang.reflect.Field;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -26,22 +25,19 @@ import androidx.fragment.app.Fragment;
 
 public class kat_Ranking_PowerPlayFragment extends Fragment {
 
-    private                         LinearLayout                                player_ranking_powerplay_layout;
-    private                         TextView                                    seasonIdTextView;
-    private                         TextView                                    seasonDateTextView;
-    private                         Spinner                                     SeasonsSpinner;
-    private                         String                                      SeasonId;
+    private LinearLayout player_ranking_powerplay_layout;
+    private TextView seasonIdTextView;
+    private TextView seasonDateTextView;
+    private Spinner SeasonsSpinner;
+    private String SeasonId;
 
-    private                         Context                                     mContext;
-
-    public kat_Ranking_PowerPlayFragment(){}
-
+    public kat_Ranking_PowerPlayFragment() {
+    }
 
 
     @Override
     public void onAttach(@NonNull Context context) {
         super.onAttach(context);
-        mContext = context;
     }
 
     @Override
@@ -52,9 +48,14 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 
     @Nullable
     @Override
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
 
-        View view = inflater.inflate(R.layout.player_ranking_powerplay, container, false);
+        View view
+                = inflater.inflate(R.layout.player_ranking_powerplay, container, false);
         player_ranking_powerplay_layout = view.findViewById(R.id.player_ranking_powerplay_layout);
 
         final Button globalButton = view.findViewById(R.id.player_ranking_powerplay_global);
@@ -76,14 +77,13 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
             adapter.setDropDownViewResource(R.layout.spin_dropdown);
             SeasonsSpinner = view.findViewById(R.id.player_ranking_powerplay_select);
 
-            try{
+            try {
                 Field popup = Spinner.class.getDeclaredField("mPopup");
                 popup.setAccessible(true);
 
-                ListPopupWindow window = (ListPopupWindow)popup.get(SeasonsSpinner);
+                ListPopupWindow window = (ListPopupWindow) popup.get(SeasonsSpinner);
                 window.setHeight(70); //pixel
-            }
-            catch (Exception e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
 
@@ -112,8 +112,7 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 
                 }
             });
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -145,40 +144,40 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
 
     }
 
-    public void globalClick(LinearLayout player_ranking_powerplay_layout, String id){
+    public void globalClick(LinearLayout player_ranking_powerplay_layout, String id) {
 
         KatData.dialog.show();
-        if(!KatData.PowerPlaySeasonRankingArrayList.containsKey(id)){
+        if (!KatData.PowerPlaySeasonRankingArrayList.containsKey(id)) {
             KatData.client.RankingInit("global", id, "PowerPlay");
         }
 
-        AsyncCoroutine.Companion.powerplay_global_DatabaseChanged(
-                Objects.requireNonNull(getActivity()),
+        AsyncCoroutine.Companion.powerPlayGlobalDatabaseChanged(
+                requireActivity(),
                 player_ranking_powerplay_layout,
                 id
         );
     }
 
-    public void myCountryClick(LinearLayout player_ranking_powerplay_layout, String id){
+    public void myCountryClick(LinearLayout player_ranking_powerplay_layout, String id) {
 
         String countryCode = KatData.kataCountryBase.getCountryCode();
-        if(!KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) ||
+        if (!KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) ||
                 (KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
-                        !KatData.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(id))){
+                        !KatData.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(id))) {
 
             KatData.client.RankingInit(countryCode, id, "PowerPlay");
         }
 
         KatData.dialog.show();
-        AsyncCoroutine.Companion.powerplay_DatabaseChanged(
-                Objects.requireNonNull(getActivity()),
+        AsyncCoroutine.Companion.powerPlayDatabaseChanged(
+                requireActivity(),
                 player_ranking_powerplay_layout,
                 id
         );
     }
 
 
-    private String timeFormat(String time){
+    private String timeFormat(String time) {
         String year = time.substring(0, 4);
         String month = time.substring(4, 6);
         String day = time.substring(6, 8);

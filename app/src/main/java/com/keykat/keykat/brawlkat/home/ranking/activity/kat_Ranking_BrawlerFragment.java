@@ -94,7 +94,7 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
             KatData.client.RankingInit("global", initId, "Brawler");
         }
 
-        AsyncCoroutine.Companion.brawler_global_DatabaseChanged(
+        AsyncCoroutine.Companion.brawlerGlobalDatabaseChanged(
                 requireActivity(),
                 player_ranking_brawler_layout,
                 initId
@@ -112,7 +112,7 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
         }
 
         KatData.dialog.show();
-        AsyncCoroutine.Companion.brawler_DatabaseChanged(
+        AsyncCoroutine.Companion.brawlerDatabaseChanged(
                 requireActivity(),
                 player_ranking_brawler_layout,
                 initId
