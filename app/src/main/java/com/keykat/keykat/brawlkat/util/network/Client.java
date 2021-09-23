@@ -314,14 +314,19 @@ public class Client {
                     // 못하게 막기
                     // 이를 위해 앱에 액세스 기능을 허용해야 하는데, 앱 시작할 때 허용할 수 있게 만들 것.
                     String currName = GetTopPackageNameKt.getTopPackageName(context);
+                    System.out.println(currName);
                     if (!currName.equals("") && !currName.toLowerCase().contains("brawlkat")) {
                         sleep(time);
                         continue;
                     }
 
+                    System.out.println("app name done");
+
                     SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
                     Socket socket = new Socket();
                     socket.connect(socketAddress);
+
+                    System.out.println("connect done");
 
                     byte[] bytes;
                     String result;
@@ -340,6 +345,8 @@ public class Client {
                     input = new InputStreamReader(data);
                     reader = new BufferedReader(input);
 
+                    System.out.println("get data");
+
                     result = reader.readLine();
 
                     int startidx = 0;
@@ -350,7 +357,7 @@ public class Client {
                     resData = new ArrayList<>();
 
                     while (true) {
-
+                        System.out.println("data parsing...");
                         split = result.indexOf(boundaryCode, startidx);
 
                         if (split == -1) break;

@@ -17,7 +17,6 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
-import com.keykat.keykat.brawlkat.service.util.kat_onTaskRemovedService;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.database.kat_countryDatabase;
 import com.keykat.keykat.brawlkat.util.database.kat_database;
@@ -99,7 +98,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         }
 
         // client의 getApiThread를 앱이 종료 후에 같이 종료되어 데이터 손실을 막게 해줌
-        startService(new Intent(this, kat_onTaskRemovedService.class));
+        //startService(new Intent(this, kat_onTaskRemovedService.class));
 
 
         // 데이터베이스 모두 초기화////////////////////////////////////////////////////////////////////////
@@ -170,7 +169,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
             thread.start();
 
             // 로딩 텍스트 바꾸는 코루틴
-            AsyncCoroutine.Companion.change_loadingText(findViewById(R.id.load_text));
+            AsyncCoroutine.Companion.changeLoadingText(findViewById(R.id.load_text));
 
         } catch (Exception e) {
             e.printStackTrace();

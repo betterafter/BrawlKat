@@ -15,37 +15,41 @@ import kotlinx.coroutines.launch
 
 class AsyncCoroutine {
 
-    companion object{
+    companion object {
 
-        val loading_texts = arrayOf(
-        "데이터를 불러오는 중입니다.", "데이터를 불러오는 중입니다..", "데이터를 불러오는 중입니다...",
-        "데이터를 불러오는 중입니다.", "데이터를 불러오는 중입니다..", "데이터를 불러오는 중입니다...",
-        "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다.", "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다..",
-        "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다...",
-        "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다.", "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다..",
-        "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다...",
-        "조금만 기다려주세요.", "조금만 기다려주세요..", "조금만 기다려주세요...",
-        "조금만 기다려주세요.", "조금만 기다려주세요..", "조금만 기다려주세요..."
+        private val loadingTexts = arrayOf(
+            "데이터를 불러오는 중입니다.", "데이터를 불러오는 중입니다..", "데이터를 불러오는 중입니다...",
+            "데이터를 불러오는 중입니다.", "데이터를 불러오는 중입니다..", "데이터를 불러오는 중입니다...",
+            "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다.", "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다..",
+            "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다...",
+            "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다.", "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다..",
+            "맨 처음 실행할 때는 조금 오래걸릴 수 있습니다...",
+            "조금만 기다려주세요.", "조금만 기다려주세요..", "조금만 기다려주세요...",
+            "조금만 기다려주세요.", "조금만 기다려주세요..", "조금만 기다려주세요..."
         )
 
         var finished: Boolean = false
 
-        fun change_loadingText(textView: TextView){
+        fun changeLoadingText(textView: TextView) {
 
             GlobalScope.launch {
-            var index = 0
-                while(true) {
-                    textView.text = loading_texts[index]
+                var index = 0
+                while (true) {
+                    textView.text = loadingTexts[index]
                     index++
-                    if(index >= loading_texts.size) index = 0
-                    if(finished) break
+                    if (index >= loadingTexts.size) index = 0
+                    if (finished) break
                     delay(500)
                 }
             }
         }
 
 
-        fun accessRankingFragment(fragmentTransaction: FragmentTransaction, id: Int, fragment: kat_RankingFragment){
+        fun accessRankingFragment(
+            fragmentTransaction: FragmentTransaction,
+            id: Int,
+            fragment: kat_RankingFragment
+        ) {
 
             GlobalScope.launch {
                 while (true) {
@@ -63,16 +67,19 @@ class AsyncCoroutine {
         }
 
 
-
-        fun player_DatabaseChanged(activity: Activity,
-                                   linearLayout: LinearLayout,
-                                   list: ArrayList<kat_official_PlayerRankingParser.playerData>){
+        fun playerDatabaseChanged(
+            activity: Activity,
+            linearLayout: LinearLayout,
+            list: ArrayList<kat_official_PlayerRankingParser.playerData>
+        ) {
 
             GlobalScope.launch {
                 while (true) {
-                    if (KatData.MyPlayerRankingArrayList.size > 0 && KatData.PlayerRankingArrayList.size > 0) {
+                    if (KatData.MyPlayerRankingArrayList.size > 0
+                        && KatData.PlayerRankingArrayList.size > 0
+                    ) {
                         activity.runOnUiThread {
-                            val rankingView = setRankingView()
+                            val rankingView = setRankingView(activity)
                             rankingView.playerSetView(activity, linearLayout, list)
                         }
                         KatData.dialog.cancel()
@@ -83,15 +90,19 @@ class AsyncCoroutine {
         }
 
 
-
-        fun club_DatabaseChanged(activity: Activity,
-                                 linearLayout: LinearLayout,
-                                 list: ArrayList<kat_official_ClubRankingParser.clubData>){
+        fun clubDatabaseChanged(
+            activity: Activity,
+            linearLayout: LinearLayout,
+            list: ArrayList<kat_official_ClubRankingParser.clubData>
+        ) {
             GlobalScope.launch {
                 while (true) {
-                    if (KatData.MyClubRankingArrayList.size > 0 && KatData.ClubRankingArrayList.size > 0) {
+                    if (
+                        KatData.MyClubRankingArrayList.size > 0
+                        && KatData.ClubRankingArrayList.size > 0
+                    ) {
                         activity.runOnUiThread {
-                            val rankingView = setRankingView()
+                            val rankingView = setRankingView(activity)
                             rankingView.clubSetView(activity, linearLayout, list)
                         }
                         KatData.dialog.cancel()
@@ -102,15 +113,17 @@ class AsyncCoroutine {
         }
 
 
-        fun brawler_global_DatabaseChanged(activity: Activity,
-                                 linearLayout: LinearLayout,
-                                           initId: String){
+        fun brawlerGlobalDatabaseChanged(
+            activity: Activity,
+            linearLayout: LinearLayout,
+            initId: String
+        ) {
 
             GlobalScope.launch {
                 while (true) {
                     if (KatData.BrawlerRankingArrayList.containsKey(initId)) {
                         activity.runOnUiThread {
-                            val rankingView = setRankingView()
+                            val rankingView = setRankingView(activity)
                             rankingView.brawlerSetView(
                                 activity, linearLayout,
                                 KatData.BrawlerRankingArrayList[initId]
@@ -124,39 +137,46 @@ class AsyncCoroutine {
         }
 
 
-        fun brawler_DatabaseChanged(activity: Activity,
-                                           linearLayout: LinearLayout,
-                                    initId: String){
+        fun brawlerDatabaseChanged(
+            activity: Activity,
+            linearLayout: LinearLayout,
+            initId: String
+        ) {
 
             GlobalScope.launch {
                 val countryCode = KatData.kataCountryBase.countryCode
 
-                while (true) {
-                    if (KatData.MyBrawlerRankingArrayList.containsKey(countryCode) &&
-                        KatData.MyBrawlerRankingArrayList[countryCode]!!.containsKey(initId)) {
-                        activity.runOnUiThread {
-                            val rankingView = setRankingView()
-                            rankingView.brawlerSetView(
-                                activity, linearLayout,
-                                KatData.MyBrawlerRankingArrayList[countryCode]!![initId]
-                            )
+                KatData.MyBrawlerRankingArrayList[countryCode]?.let { it ->
+                    while(true) {
+                        if (KatData.MyBrawlerRankingArrayList.containsKey(countryCode) &&
+                            it.containsKey(initId)
+                        ) {
+                            activity.runOnUiThread {
+                                val rankingView = setRankingView(activity)
+                                rankingView.brawlerSetView(
+                                    activity, linearLayout,
+                                    KatData.MyBrawlerRankingArrayList[countryCode]!![initId]
+                                )
+                            }
+                            KatData.dialog.cancel()
+                            break
                         }
-                        KatData.dialog.cancel()
-                        break
                     }
                 }
             }
         }
 
 
-        fun powerplay_global_DatabaseChanged(activity: Activity,
-                                           linearLayout: LinearLayout,
-                                             seasonId: String){
+        fun powerPlayGlobalDatabaseChanged(
+            activity: Activity,
+            linearLayout: LinearLayout,
+            seasonId: String
+        ) {
             GlobalScope.launch {
                 while (true) {
                     if (KatData.PowerPlaySeasonRankingArrayList.containsKey(seasonId)) {
                         activity.runOnUiThread {
-                            val rankingView = setRankingView()
+                            val rankingView = setRankingView(activity)
                             rankingView.powerPlaySetView(
                                 activity, linearLayout,
                                 KatData.PowerPlaySeasonRankingArrayList[seasonId]
@@ -170,25 +190,32 @@ class AsyncCoroutine {
         }
 
 
-        fun powerplay_DatabaseChanged(activity: Activity,
-                                    linearLayout: LinearLayout,
-                                    seasonId: String) {
+        fun powerPlayDatabaseChanged(
+            activity: Activity,
+            linearLayout: LinearLayout,
+            seasonId: String
+        ) {
 
             GlobalScope.launch {
                 val countryCode = KatData.kataCountryBase.countryCode
 
-                while (true) {
-                    if (KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
-                        KatData.MyPowerPlaySeasonRankingArrayList[countryCode]!!.containsKey(seasonId)) {
-                        activity.runOnUiThread {
-                            val rankingView = setRankingView()
-                            rankingView.powerPlaySetView(
-                                activity, linearLayout,
-                                KatData.MyPowerPlaySeasonRankingArrayList[countryCode]!![seasonId]
+                KatData.MyPowerPlaySeasonRankingArrayList[countryCode]?.let { it ->
+                    while (true) {
+                        if (KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode) &&
+                            it.containsKey(
+                                seasonId
                             )
+                        ) {
+                            activity.runOnUiThread {
+                                val rankingView = setRankingView(activity)
+                                rankingView.powerPlaySetView(
+                                    activity, linearLayout,
+                                    it[seasonId]
+                                )
+                            }
+                            KatData.dialog.cancel()
+                            break
                         }
-                        KatData.dialog.cancel()
-                        break
                     }
                 }
             }
