@@ -75,7 +75,8 @@ class SettingsActivity : AppCompatActivity() {
             }
 
             developerPreference?.setOnPreferenceClickListener {
-
+                var intent = Intent(activity, DeveloperSummaryActivity::class.java)
+                startActivity(intent)
                 true
             }
         }

@@ -71,5 +71,15 @@
     </string>
     <string name="policy_link_pattern_korean">팬 콘텐츠 정책</string>
     <string name="policy_link_korean">https://supercell.com/en/fan-content-policy/ko</string>
+
+
+    <!-- developer information -->
+    <string name="dev_title">개발자 정보</string>
+    <string name="dev_name_title">개발자 Developer</string>
+    <string name="dev_name">keykat</string>
+    <string name="dev_email_title">개발자 이메일 Developer\'s e-mail</string>
+    <string name="dev_email">koin20000@gmail.com</string>
+    <string name="dev_blog_title">개발자 블로그 Developer\'s blog</string>
+    <string name="dev_blog">https://keykat7.blogspot.com</string>
 </resources>
 
