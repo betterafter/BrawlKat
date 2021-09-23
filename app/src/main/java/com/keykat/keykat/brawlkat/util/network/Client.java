@@ -27,59 +27,55 @@ import java.util.HashMap;
 
 public class Client {
 
-    private                 InputStream                     data;
+    private InputStream data;
 
     // data 배열 리스트 ...............................................................................
-    public                  static ArrayList<String>        resData;
-    public                  ArrayList<String>               resOffiData;
-    public                  ArrayList<String>               resRankingData;
+    public static ArrayList<String> resData;
+    public ArrayList<String> resOffiData;
+    public ArrayList<String> resRankingData;
     // .............................................................................................
 
-    public                  getApiThread                    getThread;
-    public                  getAllTypeApiThread             officialApiThread;
+    public getApiThread getThread;
+    public getAllTypeApiThread officialApiThread;
 
-    public                  boolean                         socketFail = false;
-    public                  static boolean                  firstInit = false;
+    public static boolean isGetApiThreadStop;
 
-    public                  static boolean                  isGetApiThreadStop;
-
-    private                 final String                    boundaryCode = "this_is_a_kat_data_boundary!";
+    private final String boundaryCode = "this_is_a_kat_data_boundary!";
 
     //private               String                          GCPIPADDRESS = "35.237.9.225";
-    private                 final String                    ORACLEIPADDRESS = "193.122.98.86";
-    private                 int                             TimeOut = 10000;
+    private final String ORACLEIPADDRESS = "193.122.98.86";
 
-    private                 final Context                   context;
+    private final Context context;
 
 
-    public Client(Context context){
+    public Client(Context context) {
         this.context = context;
     }
 
 
     // 플레이어 및 클럽을 검색할 때 작동하는 스레드. 앱을 실행할 때 저장한 유저 정보가 있다면 불러오고 그렇지 않으면 굳이 불러올 필요가 없음.
     // 이후 필요할 때마다 발동시키면 됨.
-    public class getAllTypeApiThread extends Thread{
+    public class getAllTypeApiThread extends Thread {
 
         private final String tag;
         private final String type;
         private final String apiType;
         Context context;
 
-        public getAllTypeApiThread(String tag, String type, String apiType, Context context){
+        public getAllTypeApiThread(String tag, String type, String apiType, Context context) {
             this.tag = tag;
             this.type = type;
             this.apiType = apiType;
             this.context = context;
         }
 
-        public void run(){
+        public void run() {
 
-            try{
+            try {
 
-                while(true){
+                while (true) {
 
-                    if(tag == null) continue;
+                    if (tag == null) continue;
                     SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
                     Socket socket = new Socket();
                     socket.connect(socketAddress);
@@ -89,9 +85,9 @@ public class Client {
 
                     // 데이터 보내기
                     // playerTag를 먼저 보냄.
-                    if(apiType.equals("official"))
+                    if (apiType.equals("official"))
                         result = "%23" + tag;
-                    else if(apiType.equals("nofficial"))
+                    else if (apiType.equals("nofficial"))
                         result = tag;
                     result = type + "/" + result + "/" + apiType;
                     OutputStream os = socket.getOutputStream();
@@ -109,7 +105,8 @@ public class Client {
                     BufferedReader reader = new BufferedReader(input);
                     result = reader.readLine();
 
-                    int startidx = 0; int split;
+                    int startidx = 0;
+                    int split;
 
                     // API 데이터 파싱
                     String splited;
@@ -119,7 +116,7 @@ public class Client {
 
                         split = result.indexOf(boundaryCode, startidx);
 
-                        if(split == -1) break;
+                        if (split == -1) break;
                         splited = result.substring(startidx, split);
 
                         resOffiData.add(splited);
@@ -133,9 +130,7 @@ public class Client {
                     socket.close();
                     break;
                 }
-            }
-
-            catch (Exception e){
+            } catch (Exception e) {
                 KatData.ServerProblemDialog();
                 e.printStackTrace();
             }
@@ -145,32 +140,32 @@ public class Client {
 
     // brawlify에서 가져오는 랭킹 데이터로 매번 업데이트할 필요가 없음. 어차피 랭킹이 그렇게 자주 바뀌는 시스템이 아니기 때문.
     // 앱을 실행할 때 맨 처음에 한번만 불러오거나 필요할 때만 불러오게 하면 됨.
-    public class getRankingApiThread extends Thread{
+    public class getRankingApiThread extends Thread {
 
         String countryCode;
         String Id;
         String status;
         kat_LoadingDialog dialog;
 
-        public getRankingApiThread(String countryCode, String Id, String status, kat_LoadingDialog dialog){
+        public getRankingApiThread(String countryCode, String Id, String status, kat_LoadingDialog dialog) {
             this.countryCode = countryCode;
             this.Id = Id;
             this.status = status;
             this.dialog = dialog;
         }
 
-        public getRankingApiThread(String countryCode, String Id, String status){
+        public getRankingApiThread(String countryCode, String Id, String status) {
             this.countryCode = countryCode;
             this.Id = Id;
             this.status = status;
         }
 
 
-        public void run(){
+        public void run() {
 
-            try{
+            try {
 
-                while(true){
+                while (true) {
 
                     SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
                     Socket socket = new Socket();
@@ -180,9 +175,9 @@ public class Client {
                     String result;
 
                     // 데이터 보내기
-                    if(status.equals("PowerPlay"))
+                    if (status.equals("PowerPlay"))
                         result = "rankings" + "/" + countryCode + "PowerPlay" + Id + "/" + "official";
-                    else if(status.equals("Brawler"))
+                    else if (status.equals("Brawler"))
                         result = "rankings" + "/" + countryCode + Id + "/" + "official";
                     else
                         result = "rankings" + "/" + countryCode + "/" + "official";
@@ -201,7 +196,8 @@ public class Client {
                     BufferedReader reader = new BufferedReader(input);
                     result = reader.readLine();
 
-                    int startidx = 0; int split = 0;
+                    int startidx = 0;
+                    int split = 0;
 
                     // API 데이터 파싱
                     String splited;
@@ -212,7 +208,7 @@ public class Client {
 
                         split = result.indexOf(boundaryCode, startidx);
 
-                        if(split == -1) break;
+                        if (split == -1) break;
                         splited = result.substring(startidx, split);
 
                         resRankingData.add(splited);
@@ -221,51 +217,45 @@ public class Client {
 
                     // 파싱 할 부분 ...................................................................
 
-                    if(status.equals("PowerPlay")){
+                    if (status.equals("PowerPlay")) {
                         kat_official_PowerPlaySeasonRankingParser powerPlaySeasonRankingParser;
 
                         powerPlaySeasonRankingParser = new kat_official_PowerPlaySeasonRankingParser(resRankingData.get(0));
 
-                        if(countryCode.equals("global")) {
+                        if (countryCode.equals("global")) {
                             if (!KatData.PowerPlaySeasonRankingArrayList.containsKey(Id))
                                 KatData.PowerPlaySeasonRankingArrayList.put(Id, powerPlaySeasonRankingParser.DataParser());
-                        }
-                        else {
+                        } else {
                             if (KatData.MyPowerPlaySeasonRankingArrayList.containsKey(countryCode)) {
                                 if (!KatData.MyPowerPlaySeasonRankingArrayList.get(countryCode).containsKey(Id)) {
                                     KatData.MyPowerPlaySeasonRankingArrayList
                                             .get(countryCode)
                                             .put(Id, powerPlaySeasonRankingParser.DataParser());
                                 }
-                            }
-                            else{
+                            } else {
                                 KatData.MyPowerPlaySeasonRankingArrayList.put(countryCode,
-                                        new HashMap<String, ArrayList<kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData>>());
+                                        new HashMap<>());
                                 KatData.MyPowerPlaySeasonRankingArrayList
                                         .get(countryCode)
                                         .put(Id, powerPlaySeasonRankingParser.DataParser());
                             }
                         }
-                    }
-
-                    else if(status.equals("Brawler")){
+                    } else if (status.equals("Brawler")) {
                         kat_official_BrawlerRankingParser brawlerRankingParser;
 
                         brawlerRankingParser = new kat_official_BrawlerRankingParser(resRankingData.get(0));
 
-                        if(countryCode.equals("global")) {
+                        if (countryCode.equals("global")) {
                             if (!KatData.BrawlerRankingArrayList.containsKey(Id))
                                 KatData.BrawlerRankingArrayList.put(Id, brawlerRankingParser.DataParser());
-                        }
-                        else{
-                            if(KatData.MyBrawlerRankingArrayList.containsKey(countryCode)){
-                                if(!KatData.MyBrawlerRankingArrayList.get(countryCode).containsKey(Id)) {
+                        } else {
+                            if (KatData.MyBrawlerRankingArrayList.containsKey(countryCode)) {
+                                if (!KatData.MyBrawlerRankingArrayList.get(countryCode).containsKey(Id)) {
                                     KatData.MyBrawlerRankingArrayList
                                             .get(countryCode)
                                             .put(Id, brawlerRankingParser.DataParser());
                                 }
-                            }
-                            else{
+                            } else {
                                 KatData.MyBrawlerRankingArrayList.put(countryCode,
                                         new HashMap<String, ArrayList<kat_official_BrawlerRankingParser.brawlerRankingData>>());
 
@@ -274,9 +264,7 @@ public class Client {
                                         .put(Id, brawlerRankingParser.DataParser());
                             }
                         }
-                    }
-
-                    else{
+                    } else {
                         kat_official_ClubRankingParser clubRankingParser;
                         kat_official_PlayerRankingParser playerRankingParser;
                         kat_official_PowerPlaySeasonParser powerPlaySeasonParser;
@@ -285,12 +273,11 @@ public class Client {
                         playerRankingParser = new kat_official_PlayerRankingParser(resRankingData.get(1));
                         powerPlaySeasonParser = new kat_official_PowerPlaySeasonParser(resRankingData.get(2));
 
-                        if(countryCode.equals("global")) {
+                        if (countryCode.equals("global")) {
                             KatData.PlayerRankingArrayList = playerRankingParser.DataParser();
                             KatData.ClubRankingArrayList = clubRankingParser.DataParser();
                             KatData.PowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
-                        }
-                        else{
+                        } else {
                             KatData.MyPlayerRankingArrayList = playerRankingParser.DataParser();
                             KatData.MyClubRankingArrayList = clubRankingParser.DataParser();
                             KatData.MyPowerPlaySeasonArrayList = powerPlaySeasonParser.DataParser();
@@ -301,12 +288,10 @@ public class Client {
                     data.close();
                     reader.close();
                     socket.close();
-                    if(dialog != null) dialog.dismiss();
+                    if (dialog != null) dialog.dismiss();
                     break;
                 }
-            }
-
-            catch (Exception e){
+            } catch (Exception e) {
                 KatData.ServerProblemDialog();
                 e.printStackTrace();
             }
@@ -314,9 +299,9 @@ public class Client {
     }
 
     // brawlify에서 가져오는 브롤러, 이벤트, 맵에 대한 데이터로 10분마다 업데이트함.
-    public class getApiThread extends Thread{
+    public class getApiThread extends Thread {
 
-        public void run(){
+        public void run() {
 
             InputStreamReader input;
             BufferedReader reader;
@@ -329,7 +314,7 @@ public class Client {
                     // 못하게 막기
                     // 이를 위해 앱에 액세스 기능을 허용해야 하는데, 앱 시작할 때 허용할 수 있게 만들 것.
                     String currName = GetTopPackageNameKt.getTopPackageName(context);
-                    if(!currName.equals("") && !currName.toLowerCase().contains("brawlkat")){
+                    if (!currName.equals("") && !currName.toLowerCase().contains("brawlkat")) {
                         sleep(time);
                         continue;
                     }
@@ -357,7 +342,8 @@ public class Client {
 
                     result = reader.readLine();
 
-                    int startidx = 0; int split = 0;
+                    int startidx = 0;
+                    int split;
 
                     // API 데이터 파싱
                     String splited;
@@ -367,7 +353,7 @@ public class Client {
 
                         split = result.indexOf(boundaryCode, startidx);
 
-                        if(split == -1) break;
+                        if (split == -1) break;
                         splited = result.substring(startidx, split);
                         resData.add(splited);
                         startidx = split + boundaryCode.length();
@@ -377,7 +363,6 @@ public class Client {
                     kat_brawlersParser brawlersParser;
                     kat_mapsParser mapsParser;
 
-
                     eventsParser = new kat_eventsParser(resData.get(0));
                     brawlersParser = new kat_brawlersParser(resData.get(1));
                     mapsParser = new kat_mapsParser(resData.get(2));
@@ -386,7 +371,10 @@ public class Client {
                     KatData.BrawlersArrayList = brawlersParser.DataParser();
                     KatData.mapData = mapsParser.DataParser();
 
-                    firstInit = true;
+                    System.out.println(KatData.EventArrayList);
+                    System.out.println(KatData.BrawlersArrayList);
+                    System.out.println(KatData.mapData);
+
                     reader.close();
 
                     os.close();
@@ -394,21 +382,21 @@ public class Client {
 
                     sleep(time);
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 // 이 스레드는 소켓 연결이 안될 때마다 불러올 필요는 없고 해당 정보가 없을 때만 다이얼로그를 띄우도록 함.
                 // 어차피 해당 정보가 있긴 있으면 급한대로 업데이트 전 정보를 가져다 쓰면 되니까.
-                if(KatData.EventArrayList == null || KatData.BrawlersArrayList == null || KatData.mapData == null)
+                if (KatData.EventArrayList == null
+                        || KatData.BrawlersArrayList == null
+                        || KatData.mapData == null
+                )
                     KatData.ServerProblemDialog();
 
                 e.printStackTrace();
-            }
-            finally {
+            } finally {
                 try {
                     // 소켓 종료.
-                    if(data != null) data.close();
-                }
-                catch (Exception e){
+                    if (data != null) data.close();
+                } catch (Exception e) {
                     // TODO : process exceptions.
                 }
             }
@@ -416,11 +404,7 @@ public class Client {
     }
 
 
-
-
-
-
-    public void init(){
+    public void init() {
 
         isGetApiThreadStop = false;
 
@@ -428,52 +412,39 @@ public class Client {
         getThread.start();
     }
 
-    public void remove(){
+    public void remove() {
         isGetApiThreadStop = true;
         getThread = null;
     }
 
-    public boolean isGetApiThreadAlive(){
-        if(getThread != null) return true;
+    public boolean isGetApiThreadAlive() {
+        if (getThread != null) return true;
         else return false;
     }
 
 
-
-
-    public void AllTypeInit(String tag, String type, String apiType, Context context){
+    public void AllTypeInit(String tag, String type, String apiType, Context context) {
 
         resOffiData = new ArrayList<>();
 
         officialApiThread = new getAllTypeApiThread(tag, type, apiType, context);
-        if(officialApiThread.getState() == Thread.State.NEW) officialApiThread.start();
+        if (officialApiThread.getState() == Thread.State.NEW) officialApiThread.start();
     }
 
-    public void RankingInit(String countryCode, String Id, String status, kat_LoadingDialog dialog){
-        getRankingApiThread getRankingApiThread = new getRankingApiThread(countryCode, Id, status, dialog);
-        getRankingApiThread.start();
-    }
-
-    public void RankingInit(String countryCode, String Id, String status){
+    public void RankingInit(String countryCode, String Id, String status) {
         getRankingApiThread getRankingApiThread = new getRankingApiThread(countryCode, Id, status);
         getRankingApiThread.start();
     }
 
-    public getRankingApiThread RankingResearch(String countryCode, String Id, String status){
-        getRankingApiThread t = new getRankingApiThread(countryCode, Id, status);
-
-        return t;
-    }
-
-
     public ArrayList<String> getData() {
         return resData;
     }
+
     public ArrayList<String> getAllTypeData() {
         return resOffiData;
     }
 
-    public getAllTypeApiThread apiThread(){
+    public getAllTypeApiThread apiThread() {
         return officialApiThread;
     }
 }
