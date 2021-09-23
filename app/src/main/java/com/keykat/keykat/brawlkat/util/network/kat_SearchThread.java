@@ -8,6 +8,7 @@ import android.content.Intent;
 import android.os.Bundle;
 
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
+import com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
 import com.keykat.keykat.brawlkat.util.KatData;
@@ -118,8 +119,10 @@ public class kat_SearchThread extends AppCompatActivity {
 
         // 제대로 가져왔을 경우
         else {
-            KatData.official_playerInfoParser = new kat_official_playerInfoParser(sendData.get(0));
-            KatData.official_playerBattleLogParser = new kat_official_playerBattleLogParser(sendData.get(1));
+            KatData.official_playerInfoParser
+                    = new kat_official_playerInfoParser(sendData.get(0));
+            KatData.official_playerBattleLogParser
+                    = new kat_official_playerBattleLogParser(sendData.get(1));
 
 
             try {
@@ -131,7 +134,8 @@ public class kat_SearchThread extends AppCompatActivity {
 
                         // 알람창 강제 종료되는 것 방지
                         if (sendData.get(0).length() > 50)
-                            KatData.eventsPlayerData = KatData.official_playerInfoParser.DataParser();
+                            KatData.eventsPlayerData
+                                    = KatData.official_playerInfoParser.DataParser();
                     }
                 }
 
@@ -140,8 +144,12 @@ public class kat_SearchThread extends AppCompatActivity {
                 if (!KatData.client.getAllTypeData().get(1).equals("{none}")
                         && KatData.client.getAllTypeData().get(1).length() > 30
                         && KatData.client.getAllTypeData().get(1) != null) {
-                    KatData.playerBattleDataList = KatData.official_playerBattleLogParser.DataParser();
-                    KatData.playerBattleDataListStack.add(KatData.official_playerBattleLogParser.DataParser());
+
+                    KatData.playerBattleDataList
+                            = KatData.official_playerBattleLogParser.DataParser();
+
+                    KatData.playerBattleDataListStack
+                            .add(KatData.official_playerBattleLogParser.DataParser());
                 }
 
                 String type = "players";
@@ -164,11 +172,11 @@ public class kat_SearchThread extends AppCompatActivity {
                     return;
                 }
 
-                // "자신의 계정 찾기"에서 넘어왔을 경우
-                if (fromActivity.getClass().getName().equals("com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity")) {
+                if (fromActivity instanceof kat_SearchAccountForSaveActivity) {
                     if (sendData.get(0).length() > 50)
                         KatData.eventsPlayerData = KatData.playerData;
-                    kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
+                    kat_NotificationUpdater updater
+                            = new kat_NotificationUpdater(fromActivity.getApplicationContext());
                     updater.update();
                 }
 
@@ -181,10 +189,12 @@ public class kat_SearchThread extends AppCompatActivity {
                             KatData.playerData.getName()
                     );
                 }
-                kat_NotificationUpdater updater = new kat_NotificationUpdater(fromActivity.getApplicationContext());
+                kat_NotificationUpdater updater
+                        = new kat_NotificationUpdater(fromActivity.getApplicationContext());
                 updater.update();
 
-                ActivityManager manager = (ActivityManager) fromActivity.getSystemService(Context.ACTIVITY_SERVICE);
+                ActivityManager manager
+                        = (ActivityManager) fromActivity.getSystemService(Context.ACTIVITY_SERVICE);
                 List<ActivityManager.RunningTaskInfo> info = manager.getRunningTasks(1);
                 ComponentName componentName = info.get(0).topActivity;
                 String topActivityName = componentName.getShortClassName().substring(1);

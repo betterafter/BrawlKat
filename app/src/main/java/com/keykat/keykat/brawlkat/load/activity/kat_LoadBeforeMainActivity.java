@@ -15,16 +15,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
-import com.google.android.gms.ads.initialization.InitializationStatus;
-import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.service.util.kat_onTaskRemovedService;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.database.kat_countryDatabase;
 import com.keykat.keykat.brawlkat.util.database.kat_database;
 import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
 import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
-import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.network.Client;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
@@ -84,7 +82,9 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
         // 처음 앱 실행할 때 광고를 초기화하기 위해선 인터넷 연결상태를 체크할 필요가 있음.
         ConnectivityManager manager
-                = (ConnectivityManager) getApplicationContext().getSystemService(Context.CONNECTIVITY_SERVICE);
+                = (ConnectivityManager) getApplicationContext().getSystemService(
+                Context.CONNECTIVITY_SERVICE
+        );
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         // 인터넷에 연결되지 않았다면 경고 다이얼로그 표시
         if (networkInfo == null) {
@@ -93,10 +93,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         // 인터넷에 연결되었다면 광고 초기화
         else {
             // 광고 초기화
-            MobileAds.initialize(this, new OnInitializationCompleteListener() {
-                @Override
-                public void onInitializationComplete(InitializationStatus initializationStatus) {
-                }
+            MobileAds.initialize(this, initializationStatus -> {
             });
             KatData.adRequest = new AdRequest.Builder().build();
         }
@@ -106,12 +103,40 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
 
         // 데이터베이스 모두 초기화////////////////////////////////////////////////////////////////////////
-        KatData.katabase = new kat_database(getApplicationContext(), "kat", null, 2);
-        KatData.kataFavoritesBase = new kat_favoritesDatabase(getApplicationContext(), "katfav", null, 4);
-        KatData.kataMyAccountBase = new kat_myAccountDatabase(getApplicationContext(), "katma", null, 1);
-        KatData.kataCountryBase = new kat_countryDatabase(getApplicationContext(), "katcountry", null, 1);
+        KatData.katabase
+                = new kat_database(
+                getApplicationContext(),
+                "kat",
+                null,
+                2
+        );
 
-        kat_countryCodeParser countryCodeParser = new kat_countryCodeParser(this);
+        KatData.kataFavoritesBase
+                = new kat_favoritesDatabase(
+                getApplicationContext(),
+                "katfav",
+                null,
+                4
+        );
+
+        KatData.kataMyAccountBase
+                = new kat_myAccountDatabase(
+                getApplicationContext(),
+                "katma",
+                null,
+                1
+        );
+
+        KatData.kataCountryBase
+                = new kat_countryDatabase(
+                getApplicationContext(),
+                "katcountry",
+                null,
+                1
+        );
+
+        kat_countryCodeParser countryCodeParser
+                = new kat_countryCodeParser(this);
         try {
             KatData.countryCodeMap = countryCodeParser.DataParser();
         } catch (Exception e) {
@@ -156,10 +181,11 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
         try {
             if (KatData.kataMyAccountBase.size() == 1) {
-                kat_SearchThread kset = new kat_SearchThread(this, kat_Player_MainActivity.class);
+                kat_SearchThread kat_searchThread
+                        = new kat_SearchThread(this, kat_Player_MainActivity.class);
                 String tag = KatData.kataMyAccountBase.getTag();
                 String realTag = tag.substring(1);
-                kset.SearchStart(realTag, "players", getApplicationContext());
+                kat_searchThread.SearchStart(realTag, "players", getApplicationContext());
             } else {
                 Intent intent = new Intent(
                         kat_LoadBeforeMainActivity.this,
@@ -178,10 +204,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         public void run() {
 
             while (true) {
-
-                System.out.println(KatData.EventArrayList);
-                System.out.println(KatData.BrawlersArrayList);
-
                 if (KatData.EventArrayList != null && KatData.BrawlersArrayList != null
                         && KatData.mapData != null) {
 
