@@ -37,18 +37,12 @@ import androidx.core.content.res.ResourcesCompat;
 public class kat_Player_ClubDetailActivity extends AppCompatActivity {
 
 
-    private                             ImageView                           player_club_icon;
-    private                             TextView                            player_club_name;
-    private                             TextView                            player_club_tag;
-    private                             TextView                            player_club_description;
+    private ImageView player_club_icon;
+    private TextView player_club_name;
+    private TextView player_club_tag;
+    private TextView player_club_description;
 
-    private                             int[]                               colorArray2;
-
-
-
-
-
-
+    private int[] colorArray2;
 
 
     @Override
@@ -73,7 +67,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         player_club_description = findViewById(R.id.player_club_description);
 
         colorArray2 = new int[]{
-                R.color.Color1,  R.color.Color3, R.color.Color4,
+                R.color.Color1, R.color.Color3, R.color.Color4,
                 R.color.Color6, R.color.Color7
         };
     }
@@ -92,7 +86,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         KatData.currentActivity = this;
     }
 
-    private void setData(){
+    private void setData() {
 
         String iconUrl = KatData.WebRootUrl + "/assets/club/" + KatData.clubData.getBadgeId() + ".png?v=1";
         KatData.GlideImageWithRoundCorner(
@@ -113,7 +107,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    private void setClubInformationList(){
+    private void setClubInformationList() {
 
         String[] informationIconUrl = new String[]{
                 KatData.WebRootUrl + "/assets/icon/trophy.png",
@@ -132,7 +126,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
                 Integer.toString(KatData.clubData.getRequiredTrophies()),
                 KatData.clubData.getTrophyRange(),
                 Integer.toString(KatData.clubData.getAverageTrophy()),
-                KatData.clubData.getMemberDatas().size()  + " / " + "100"
+                KatData.clubData.getMemberDatas().size() + " / " + "100"
         };
 
         LinearLayout linearLayout = findViewById(R.id.player_club_clubInformation);
@@ -160,7 +154,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         Iterator<String> iter = roles.keySet().iterator();
 
         int idx = 0;
-        while(iter.hasNext()){
+        while (iter.hasNext()) {
             String key = iter.next();
             int value = roles.get(key);
 
@@ -171,7 +165,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
         }
 
 
-        for(int i = 0; i < 5; i++){
+        for (int i = 0; i < 5; i++) {
 
             // 내부 레이아웃 아이템을 같은 간격으로 정렬
             @SuppressLint("InflateParams") View view = layoutInflater.inflate(R.layout.club_detail_clubinformation, null);
@@ -200,9 +194,9 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
             value.setTypeface(tv.getTypeface(), Typeface.BOLD);
             value.setTextColor(ContextCompat.getColor(getApplicationContext(), colorArray2[i]));
 
-            if(i == 4){
+            if (i == 4) {
                 LinearLayout member_summary_layout = view.findViewById(R.id.member_summary);
-                for(int j = 0; j < 4; j++){
+                for (int j = 0; j < 4; j++) {
                     @SuppressLint("InflateParams")
                     View v = layoutInflater.inflate(R.layout.player_club_member_information, null);
                     TextView club_member_type = v.findViewById(R.id.player_club_member_type);
@@ -221,13 +215,13 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
     }
 
     @SuppressLint("SetTextI18n")
-    public void setClubMemberList(){
+    public void setClubMemberList() {
 
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
-        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         final ArrayList<kat_official_clubInfoParser.clubMemberData> memberData = KatData.clubData.getMemberDatas();
-        for(int i = 0; i < memberData.size(); i++){
+        for (int i = 0; i < memberData.size(); i++) {
             @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.player_club_detail_members_item, null);
             TextView club_member_rank = view.findViewById(R.id.player_club_detail_members_ranknum);
             ImageView club_member_icon = view.findViewById(R.id.player_club_detail_members_icon);
@@ -288,12 +282,12 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
 
 
     @SuppressLint("SetTextI18n")
-    public void setClubLog(){
+    public void setClubLog() {
 
         LinearLayout linearLayout = findViewById(R.id.player_club_members);
         linearLayout.removeAllViews();
 
-        if(KatData.clubLogData.getStatus().equals("forbidden")){
+        if (KatData.clubLogData.getStatus().equals("forbidden")) {
 
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                     LinearLayout.LayoutParams.MATCH_PARENT,
@@ -327,32 +321,29 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
             return;
         }
 
-        LayoutInflater inflater = (LayoutInflater)getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        LayoutInflater inflater = (LayoutInflater) getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         ArrayList<Object> cld = KatData.clubLogData.getHistoryData();
-        for(int i = 0; i < cld.size(); i++){
+        for (int i = 0; i < cld.size(); i++) {
 
             @SuppressLint("InflateParams") View view = inflater.inflate(R.layout.player_club_detail_club_log, null);
             TextView type = view.findViewById(R.id.player_club_detail_club_log_type);
             TextView change = view.findViewById(R.id.player_club_detail_club_log_change);
 
-            if(cld.get(i) instanceof kat_clubLogParser.joinData){
+            if (cld.get(i) instanceof kat_clubLogParser.joinData) {
                 kat_clubLogParser.joinData data = (kat_clubLogParser.joinData) cld.get(i);
                 type.setText("Changing Club Member");
 
                 Drawable drawable = type.getBackground();
-                if(data.isJoin()) {
+                if (data.isJoin()) {
                     drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color12));
                     change.setText(data.getPlayerName() + " 님이 클럽에 가입했습니다.");
-                }
-                else {
+                } else {
                     drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color11));
                     change.setText(data.getPlayerName() + " 님이 클럽을 탈퇴했습니다.");
                 }
 
-               // time.setText(data.getTimeFormat());
-            }
-
-            else if(cld.get(i) instanceof kat_clubLogParser.settingData){
+                // time.setText(data.getTimeFormat());
+            } else if (cld.get(i) instanceof kat_clubLogParser.settingData) {
                 kat_clubLogParser.settingData data = (kat_clubLogParser.settingData) cld.get(i);
                 type.setText("Changing Club Status");
                 Drawable drawable = type.getBackground();
@@ -373,28 +364,26 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
                         change.setText("before : " + data.getOldType() + '\n' + "after : " + data.getNewType());
                         break;
                 }
-               // time.setText(data.getTimeFormat());
-            }
-
-            else if(cld.get(i) instanceof kat_clubLogParser.promoteData){
+                // time.setText(data.getTimeFormat());
+            } else if (cld.get(i) instanceof kat_clubLogParser.promoteData) {
                 kat_clubLogParser.promoteData data = (kat_clubLogParser.promoteData) cld.get(i);
                 Drawable drawable = type.getBackground();
                 drawable.setTint(ContextCompat.getColor(getApplicationContext(), R.color.Color8));
                 type.setText("Changing Member's Role");
                 change.setText(data.getPlayerName() + " 님의 역할이 " + data.getOldRole() + " 에서 " + data.getNewRole() + " 로 변경되었습니다.");
 
-               // time.setText(data.getTimeFormat());
+                // time.setText(data.getTimeFormat());
             }
 
             linearLayout.addView(view);
         }
     }
 
-    public void onsetClubMemberListClick(View view){
+    public void onsetClubMemberListClick(View view) {
         setClubMemberList();
     }
 
-    public void onsetClubLogClick(View view){
+    public void onsetClubLogClick(View view) {
         setClubLog();
     }
 
