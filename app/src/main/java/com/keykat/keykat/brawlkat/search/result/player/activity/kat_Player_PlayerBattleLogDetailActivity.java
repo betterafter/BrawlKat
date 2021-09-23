@@ -11,7 +11,6 @@ import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
-import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
@@ -20,8 +19,8 @@ import androidx.viewpager2.widget.ViewPager2;
 public class kat_Player_PlayerBattleLogDetailActivity extends AppCompatActivity {
 
 
-    public                  kat_official_playerInfoParser.playerData                    playerData;
-    public                  kat_official_playerBattleLogParser.playerBattleData         battleData;
+    public kat_official_playerInfoParser.playerData playerData;
+    public kat_official_playerBattleLogParser.playerBattleData battleData;
 
 
     private ViewPager2 viewPager2;
@@ -41,20 +40,30 @@ public class kat_Player_PlayerBattleLogDetailActivity extends AppCompatActivity 
         super.onStart();
 
         Intent intent = getIntent();
-        playerData = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra("playerData");
-        battleData = (kat_official_playerBattleLogParser.playerBattleData) intent.getSerializableExtra("battleData");
+        playerData
+                = (kat_official_playerInfoParser.playerData) intent.getSerializableExtra(
+                "playerData"
+        );
+        battleData
+                = (kat_official_playerBattleLogParser.playerBattleData) intent.getSerializableExtra(
+                "battleData"
+        );
 
-        adapter = new kat_Player_PlayerBattleLogDetailAdapter(this, playerData, battleData);
+        adapter
+                = new kat_Player_PlayerBattleLogDetailAdapter(
+                this,
+                playerData,
+                battleData
+        );
+
         viewPager2.setAdapter(adapter);
 
         tabLayout = findViewById(R.id.player_player_detail_battle_log_detail_tabLayout);
         new TabLayoutMediator(tabLayout, viewPager2,
-                new TabLayoutMediator.TabConfigurationStrategy() {
-                    @Override public void onConfigureTab(@NonNull TabLayout.Tab tab, int position) {
-                        tab.setText("Tab " + (position + 1));
-                        if(position == 0) tab.setText("플레이어");
-                        else if(position == 1) tab.setText("맵 정보");
-                    }
+                (tab, position) -> {
+                    tab.setText("Tab " + (position + 1));
+                    if (position == 0) tab.setText("플레이어");
+                    else if (position == 1) tab.setText("맵 정보");
                 }).attach();
 
     }

@@ -18,7 +18,11 @@ public class kat_onTaskRemovedService extends Service {
 
     @Override
     public void onTaskRemoved(Intent rootIntent) { //핸들링 하는 부분
-        KatData.client.remove();
+        try {
+            KatData.client.remove();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         stopSelf(); //서비스도 같이 종료
     }
 }

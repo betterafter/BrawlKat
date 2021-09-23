@@ -164,6 +164,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
                 player_detail_tag.setTextColor(Color.parseColor("#000000"));
             }
         }
+
         KatData.GlideImage(
                 getApplicationContext(),
                 url_icon_trophies,

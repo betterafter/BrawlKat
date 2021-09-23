@@ -212,7 +212,11 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
             events = null;
         }
-        KatData.client.remove();
+        try {
+            KatData.client.remove();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
 
         super.onDestroy();

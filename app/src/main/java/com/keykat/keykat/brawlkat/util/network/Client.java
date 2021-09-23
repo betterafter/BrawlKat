@@ -308,7 +308,10 @@ public class Client {
 
             int time = 1000 * 60 * 10;
             try {
-                while (!isGetApiThreadStop) {
+
+                System.out.println("api thread start");
+
+                while (true) {
 
                     // usageEvent를 이용하여 현재 앱이 실행 중인지를 확인하고, 실행 중이 아니라면 데이터를 가져오는 것을
                     // 못하게 막기
@@ -413,20 +416,18 @@ public class Client {
 
     public void init() {
 
-        isGetApiThreadStop = false;
+        if(getThread == null)
+            getThread = new getApiThread();
 
-        getThread = new getApiThread();
         getThread.start();
     }
 
-    public void remove() {
-        isGetApiThreadStop = true;
-        getThread = null;
+    public void remove() throws InterruptedException {
+        getThread.interrupt();
     }
 
     public boolean isGetApiThreadAlive() {
-        if (getThread != null) return true;
-        else return false;
+        return getThread != null;
     }
 
 
