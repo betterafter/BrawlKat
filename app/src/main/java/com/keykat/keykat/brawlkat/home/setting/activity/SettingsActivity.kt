@@ -29,9 +29,9 @@ class SettingsActivity : AppCompatActivity() {
     class SettingsFragment : PreferenceFragmentCompat() {
 
         private var foregroundServicePreferences: SwitchPreferenceCompat? = null
-        private var serviceEditTextPreference: EditTextPreference? = null
-        private var policyEditTextPreference: EditTextPreference? = null
-        private var developerInfoEditTextPreference: EditTextPreference? = null
+        private var servicePreference: Preference? = null
+        private var policyPreference: Preference? = null
+        private var developerPreference: Preference? = null
 
         private lateinit var serviceIntent: Intent
 
@@ -44,19 +44,36 @@ class SettingsActivity : AppCompatActivity() {
             )
 
             foregroundServicePreferences = findPreference(getString(R.string.notify_service))
-            serviceEditTextPreference = findPreference(getString(R.string.service))
-            policyEditTextPreference = findPreference(getString(R.string.policy))
-            developerInfoEditTextPreference = findPreference(getString(R.string.developer))
+            servicePreference = findPreference(getString(R.string.service))
+            policyPreference = findPreference(getString(R.string.policy))
+            developerPreference = findPreference(getString(R.string.developer))
 
+            setPreferenceClickListener()
+        }
+
+        private fun setPreferenceClickListener() {
             foregroundServicePreferences?.setOnPreferenceChangeListener { _, newValue ->
                 if (!checkPermission())
                     startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
 
-                if (newValue.equals(true)) {
-                    requireActivity().startForegroundService(serviceIntent)
-                } else {
-                    requireActivity().stopService(serviceIntent)
-                }
+                if (newValue.equals(true)) requireActivity().startForegroundService(serviceIntent)
+                else requireActivity().stopService(serviceIntent)
+
+                true
+            }
+
+            servicePreference?.setOnPreferenceClickListener {
+                var intent = Intent(activity, ServiceSummaryActivity::class.java)
+                startActivity(intent)
+                true
+            }
+
+            policyPreference?.setOnPreferenceClickListener {
+
+                true
+            }
+
+            developerPreference?.setOnPreferenceClickListener {
 
                 true
             }

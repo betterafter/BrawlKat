@@ -19,11 +19,12 @@ import com.google.android.gms.ads.initialization.InitializationStatus;
 import com.google.android.gms.ads.initialization.OnInitializationCompleteListener;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
-import com.keykat.keykat.brawlkat.util.KatData;
+import com.keykat.keykat.brawlkat.service.util.kat_onTaskRemovedService;
 import com.keykat.keykat.brawlkat.util.database.kat_countryDatabase;
 import com.keykat.keykat.brawlkat.util.database.kat_database;
 import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
 import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
+import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.network.Client;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
@@ -101,7 +102,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         }
 
         // client의 getApiThread를 앱이 종료 후에 같이 종료되어 데이터 손실을 막게 해줌
-        //startService(new Intent(this, kat_onTaskRemovedService.class));
+        startService(new Intent(this, kat_onTaskRemovedService.class));
 
 
         // 데이터베이스 모두 초기화////////////////////////////////////////////////////////////////////////
@@ -180,7 +181,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
 
                 System.out.println(KatData.EventArrayList);
                 System.out.println(KatData.BrawlersArrayList);
-                System.out.println(KatData.mapData);
 
                 if (KatData.EventArrayList != null && KatData.BrawlersArrayList != null
                         && KatData.mapData != null) {
