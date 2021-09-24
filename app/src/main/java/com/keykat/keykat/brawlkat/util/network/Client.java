@@ -3,11 +3,7 @@ package com.keykat.keykat.brawlkat.util.network;
 import android.content.Context;
 
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.util.GetTopPackageNameKt;
 import com.keykat.keykat.brawlkat.util.KatData;
-import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser;
-import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
-import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_BrawlerRankingParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_ClubRankingParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PlayerRankingParser;
@@ -35,7 +31,7 @@ public class Client {
     public ArrayList<String> resRankingData;
     // .............................................................................................
 
-    public getApiThread getThread;
+    public BaseApiDataThread getThread;
     public getAllTypeApiThread officialApiThread;
 
     public static boolean isGetApiThreadStop;
@@ -298,126 +294,11 @@ public class Client {
         }
     }
 
-    // brawlify에서 가져오는 브롤러, 이벤트, 맵에 대한 데이터로 10분마다 업데이트함.
-    public class getApiThread extends Thread {
-
-        public void run() {
-
-            InputStreamReader input;
-            BufferedReader reader;
-
-            int time = 1000 * 60 * 10;
-            try {
-
-                System.out.println("api thread start");
-
-                while (true) {
-
-                    // usageEvent를 이용하여 현재 앱이 실행 중인지를 확인하고, 실행 중이 아니라면 데이터를 가져오는 것을
-                    // 못하게 막기
-                    // 이를 위해 앱에 액세스 기능을 허용해야 하는데, 앱 시작할 때 허용할 수 있게 만들 것.
-                    String currName = GetTopPackageNameKt.getTopPackageName(context);
-                    System.out.println(currName);
-                    if (!currName.equals("") && !currName.toLowerCase().contains("brawlkat")) {
-                        sleep(time);
-                        continue;
-                    }
-
-                    System.out.println("app name done");
-
-                    SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
-                    Socket socket = new Socket();
-                    socket.connect(socketAddress);
-
-                    System.out.println("connect done");
-
-                    byte[] bytes;
-                    String result;
-
-                    // 데이터 보내기
-
-                    // starlist api는 서버에 보낼 데이터가 없기 때문에 개행문자만을 보내 수신 종료한다.
-                    result = "/" + "/" + "nofficial";
-                    result += "\n";
-                    OutputStream os = socket.getOutputStream();
-                    bytes = result.getBytes(StandardCharsets.UTF_8);
-                    os.write(bytes);
-                    os.flush();
-
-                    data = socket.getInputStream();
-                    input = new InputStreamReader(data);
-                    reader = new BufferedReader(input);
-
-                    System.out.println("get data");
-
-                    result = reader.readLine();
-
-                    int startidx = 0;
-                    int split;
-
-                    // API 데이터 파싱
-                    String splited;
-                    resData = new ArrayList<>();
-
-                    while (true) {
-                        System.out.println("data parsing...");
-                        split = result.indexOf(boundaryCode, startidx);
-
-                        if (split == -1) break;
-                        splited = result.substring(startidx, split);
-                        resData.add(splited);
-                        startidx = split + boundaryCode.length();
-                    }
-
-                    kat_eventsParser eventsParser;
-                    kat_brawlersParser brawlersParser;
-                    kat_mapsParser mapsParser;
-
-                    eventsParser = new kat_eventsParser(resData.get(0));
-                    brawlersParser = new kat_brawlersParser(resData.get(1));
-                    mapsParser = new kat_mapsParser(resData.get(2));
-
-                    KatData.EventArrayList = eventsParser.DataParser();
-                    KatData.BrawlersArrayList = brawlersParser.DataParser();
-                    KatData.mapData = mapsParser.DataParser();
-
-                    System.out.println(KatData.EventArrayList);
-                    System.out.println(KatData.BrawlersArrayList);
-                    System.out.println(KatData.mapData);
-
-                    reader.close();
-
-                    os.close();
-                    socket.close();
-
-                    sleep(time);
-                }
-            } catch (Exception e) {
-                // 이 스레드는 소켓 연결이 안될 때마다 불러올 필요는 없고 해당 정보가 없을 때만 다이얼로그를 띄우도록 함.
-                // 어차피 해당 정보가 있긴 있으면 급한대로 업데이트 전 정보를 가져다 쓰면 되니까.
-                if (KatData.EventArrayList == null
-                        || KatData.BrawlersArrayList == null
-                        || KatData.mapData == null
-                )
-                    KatData.ServerProblemDialog();
-
-                e.printStackTrace();
-            } finally {
-                try {
-                    // 소켓 종료.
-                    if (data != null) data.close();
-                } catch (Exception e) {
-                    // TODO : process exceptions.
-                }
-            }
-        }
-    }
-
 
     public void init() {
 
         if(getThread == null)
-            getThread = new getApiThread();
+            getThread = new BaseApiDataThread(context);
 
         getThread.start();
     }
