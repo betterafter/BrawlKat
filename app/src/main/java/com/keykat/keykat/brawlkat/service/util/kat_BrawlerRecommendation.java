@@ -32,7 +32,7 @@ public class kat_BrawlerRecommendation {
 
 
     public void init(){
-        playerData = KatData.eventsPlayerData;
+        playerData = KatData.eventsPlayerData.getValue();
         EventArrayList = KatData.EventArrayList;
     }
 

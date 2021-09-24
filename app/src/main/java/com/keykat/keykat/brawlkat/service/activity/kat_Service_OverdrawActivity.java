@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.service.activity;
 
+import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
@@ -7,7 +8,9 @@ import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.PixelFormat;
+import android.os.Handler;
 import android.os.IBinder;
+import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
@@ -18,7 +21,6 @@ import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.service.util.kat_ButtonBroadcastReceiver;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
@@ -29,49 +31,48 @@ import androidx.core.app.NotificationCompat;
 public class kat_Service_OverdrawActivity extends Service implements View.OnTouchListener {
 
     // 윈도우 매니저
-    public      WindowManager                   windowManager;
-    public      WindowManager                   mapWindowManager;
-    public      WindowManager.LayoutParams      layoutParams;
-    public      WindowManager.LayoutParams      mapRecommend;
-    public      Context                         context;
+    public WindowManager windowManager;
+    public WindowManager mapWindowManager;
+    public WindowManager.LayoutParams layoutParams;
+    public WindowManager.LayoutParams mapRecommend;
+    public Context context;
 
 
     // 뷰
-    private     Button                          btn;
-    public      ConstraintLayout                constraintLayout;
-    public      View                            mapRecommendView;
-    public      LayoutInflater                  layoutInflater;
-    private     kat_Service_EventActivity       events;
-    public      buttonLongClickToExitThread     buttonThread;
+    private Button btn;
+    public ConstraintLayout constraintLayout;
+    public View mapRecommendView;
+    public LayoutInflater layoutInflater;
+    private kat_Service_EventActivity events;
+    public buttonLongClickToExitThread buttonThread;
 
 
     // 기타 변수들
-    private     float                           mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
-    public      boolean                         ServiceButtonTouched = false;
-    public      int                             ServiceButtonTouchedCase = 0;
-    public      static String                   getPlayerTag;
+    private float mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
+    public boolean ServiceButtonTouched = false;
+    public int ServiceButtonTouchedCase = 0;
+    public static String getPlayerTag;
 
-    public      boolean                         unbindCall = false;
+    public boolean unbindCall = false;
 
 
-    private     BrawlStarsPlayCheckThread       checkThread;
-    private     timeCountThread                 timeThread;
-    private     boolean                         isCheckThreadStart;
-    private     int                             timeCount = 0;
+    private BrawlStarsPlayCheckThread checkThread;
+    private timeCountThread timeThread;
+    private boolean isCheckThreadStart;
+    private int timeCount = 0;
 
-    private     kat_SearchThread                searchThread;
+    private kat_SearchThread searchThread;
 
 
     private NotificationManager mNotificationManager;
 
     @Override
-    public IBinder onBind(Intent arg0){
+    public IBinder onBind(Intent arg0) {
         return null;
     }
 
     @Override
-    public int onStartCommand(Intent intent, int flags, int startId )
-    {
+    public int onStartCommand(Intent intent, int flags, int startId) {
         context = getApplicationContext();
         searchThread = new kat_SearchThread();
 
@@ -85,7 +86,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         events.getCurrentEventsInformation();
 
 
-        if(!KatData.client.isGetApiThreadAlive())
+        if (!KatData.client.isGetApiThreadAlive())
             KatData.client.init();
 
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.sub_notification);
@@ -138,9 +139,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     }
 
 
-
     // 메인 버튼 생성
-    public void init_Inflater(){
+    public void init_Inflater() {
 
         constraintLayout = new ConstraintLayout(this);
 
@@ -164,7 +164,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     }
 
     // 메인 버튼에 연결된 윈도우 매니저 선언
-    public void init_windowManager(){
+    public void init_windowManager() {
 
         // FLAG_NOT_FOCUSABLE : 현재 윈도우에 포커스가 집중되어 네비게이션 바 같은 시스템 ui가 현재 서비스 윈도우의 상태에
         // 종속되므로 해당 플래그로 포커스를 없애줘야함.
@@ -174,7 +174,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
                 WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
                         | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH
-                | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
+                        | WindowManager.LayoutParams.FLAG_NOT_FOCUSABLE,
                 PixelFormat.TRANSLUCENT
         );
 
@@ -185,28 +185,22 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     // 서비스 종료
     @Override
     public void onDestroy() {
-        if(windowManager != null) {
+        if (windowManager != null) {
             //서비스 종료시 뷰 제거.
-            if(constraintLayout != null && constraintLayout.getWindowToken() != null)
+            if (constraintLayout != null && constraintLayout.getWindowToken() != null)
                 windowManager.removeView(constraintLayout);
         }
 
         unbindCall = true;
-        KatData.Companion.setForegroundServiceStart(false);
+        KatData.isForegroundServiceStart = false;
         setNotification();
-
-//        kat_ActionBroadcastReceiver forGetPackageName = new kat_ActionBroadcastReceiver();
-//        if(!forGetPackageName.getTopPackageName(context).equals("com.keykat.keykat.brawlkat")){
-//            KatData.client.remove();
-//        }
-
 
         isCheckThreadStart = false;
         checkThread = null;
         timeThread = null;
         buttonThread = null;
 
-        if(events != null) {
+        if (events != null) {
             events.isEventThreadStart = false;
             events.eventsThread = null;
 
@@ -224,7 +218,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     }
 
 
-
+    @SuppressLint("ClickableViewAccessibility")
     @Override
     public boolean onTouch(View v, MotionEvent ev) {
 
@@ -242,7 +236,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 mWidgetStartingX = layoutParams.x;
                 mWidgetStartingY = layoutParams.y;
                 return false;
-                
+
             case MotionEvent.ACTION_MOVE:
 
                 float deltaX = mStartingX - ev.getRawX();
@@ -252,11 +246,11 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 windowManager.updateViewLayout(constraintLayout, layoutParams);
 
                 // 버튼 움직임을 의도한 모션을 취할 때는 '3초 누르기' 모션 해제
-                if(Math.abs(mWidgetStartingX - layoutParams.x) > 30 || Math.abs(mWidgetStartingY - layoutParams.y) > 30){
+                if (Math.abs(mWidgetStartingX - layoutParams.x) > 30 || Math.abs(mWidgetStartingY - layoutParams.y) > 30) {
                     buttonThread.stopLongClickAction = true;
                 }
                 // 그렇지 않으면 '3초 누르기' 모션 유지
-                else{
+                else {
                     buttonThread.stopLongClickAction = false;
                 }
 
@@ -265,15 +259,16 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
             case MotionEvent.ACTION_UP:
 
                 buttonThread.stopLongClickAction = true;
-                if(timeCount > 30){
+                if (timeCount > 30) {
                     kat_SearchThread searchThread = new kat_SearchThread();
                     searchThread.SearchStart(getPlayerTag, "players", context);
                     setNotification();
                     timeCount = 0;
                 }
-                if(ServiceButtonTouchedCase != 3){
+                if (ServiceButtonTouchedCase != 3) {
 
-                    if(Math.abs(mWidgetStartingX - layoutParams.x) > 30 || Math.abs(mWidgetStartingY - layoutParams.y) > 30){
+                    if (Math.abs(mWidgetStartingX - layoutParams.x) > 30
+                            || Math.abs(mWidgetStartingY - layoutParams.y) > 30) {
                         ServiceButtonTouchedCase = 1;
                     }
 
@@ -296,18 +291,19 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     }
 
     // 버튼을 3초 이상 누르고 있으면 서비스 종료
-    private class buttonLongClickToExitThread extends Thread{
+    private class buttonLongClickToExitThread extends Thread {
 
         public int stopCount;
         public boolean stopLongClickAction = true;
 
-        public void run(){
+        public void run() {
 
-            try{
-                stopCount = 0; stopLongClickAction = true;
+            try {
+                stopCount = 0;
+                stopLongClickAction = true;
 
-                while(isCheckThreadStart){
-                    if(stopCount >= 3){
+                while (isCheckThreadStart) {
+                    if (stopCount >= 3) {
                         stopCount = 0;
                         onDestroy();
                         stopSelf();
@@ -316,13 +312,10 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                     }
 
                     stopCount++;
-                    if(stopLongClickAction){
-                        stopCount = 0; continue;
-                    }
-                    sleep(1000);
+                    stopCount = 0;
+                    continue;
                 }
-            }
-            catch (Exception e){
+            } catch (Exception e) {
                 e.printStackTrace();
             }
         }
@@ -330,42 +323,37 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
 
     // notification 업데이트
-    private void setNotification(){
-
-        final kat_Player_MainActivity activity = kat_Player_MainActivity.kat_player_mainActivity;
-        activity.runOnUiThread(new Runnable() {
-            @Override
-            public void run() {
-                if(!kat_SearchThread.SearchDataOnOverdraw)
-                    searchThread.SearchStart(getPlayerTag, "players", activity);
-            }
+    private void setNotification() {
+        new Handler(Looper.getMainLooper()).post(() -> {
+            if (!kat_SearchThread.SearchDataOnOverdraw)
+                searchThread.SearchStart(getPlayerTag, "players", this);
         });
     }
 
 
-    private class timeCountThread extends Thread{
-        public void run(){
-            while(isCheckThreadStart){
+    private class timeCountThread extends Thread {
+        public void run() {
+            while (isCheckThreadStart) {
                 try {
                     timeCount++;
                     sleep(1000);
-                }catch (Exception e){
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
             }
         }
     }
 
-    private class BrawlStarsPlayCheckThread extends Thread{
+    private class BrawlStarsPlayCheckThread extends Thread {
 
         Context context;
 
-        public BrawlStarsPlayCheckThread(Context context){
+        public BrawlStarsPlayCheckThread(Context context) {
             this.context = context;
         }
 
-        public void run(){
-            while(isCheckThreadStart){
+        public void run() {
+            while (isCheckThreadStart) {
 
                 try {
                     setNotification();

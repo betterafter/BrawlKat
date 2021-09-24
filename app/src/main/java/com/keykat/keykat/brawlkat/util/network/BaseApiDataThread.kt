@@ -2,7 +2,6 @@ package com.keykat.keykat.brawlkat.util.network
 
 import android.content.Context
 import com.keykat.keykat.brawlkat.util.KatData
-import com.keykat.keykat.brawlkat.util.KatData.Companion.ServerProblemDialog
 import com.keykat.keykat.brawlkat.util.getAppName
 import com.keykat.keykat.brawlkat.util.getTopPackageName
 import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser
@@ -35,81 +34,20 @@ class BaseApiDataThread(val context: Context) : Thread() {
 
     override fun run() {
 
-        println("api thread start")
         while (true) {
             try {
-
-                println("app name done")
-                val socketAddress: SocketAddress = InetSocketAddress(oracleAddress, 9000)
-                val socket = Socket()
-                socket.connect(socketAddress)
-                println("connect done")
-                var bytes: ByteArray
-                var result: String
-
-                // 데이터 보내기
-
-                // starlist api는 서버에 보낼 데이터가 없기 때문에 개행문자만을 보내 수신 종료한다.
-                result = "/" + "/" + "nofficial"
-                result += "\n"
-                val os = socket.getOutputStream()
-                bytes = result.toByteArray(StandardCharsets.UTF_8)
-                os.write(bytes)
-                os.flush()
-                data = socket.getInputStream()
-                input = InputStreamReader(data)
-                reader = BufferedReader(input)
-                println("get data")
-                result = reader.readLine()
-                var startidx = 0
-                var split: Int
-
-                // API 데이터 파싱
-                var splited: String
-                Client.resData = ArrayList()
-                while (true) {
-                    println("data parsing...")
-                    split = result.indexOf(boundaryCode, startidx)
-                    if (split == -1) break
-                    splited = result.substring(startidx, split)
-                    Client.resData.add(splited)
-                    startidx = split + boundaryCode.length
-                }
-
-                eventsParser = kat_eventsParser(Client.resData[0])
-                brawlersParser = kat_brawlersParser(Client.resData[1])
-                mapsParser = kat_mapsParser(Client.resData[2])
-
-                KatData.EventArrayList = eventsParser.DataParser()
-                KatData.BrawlersArrayList = brawlersParser.DataParser()
-                KatData.mapData = mapsParser.DataParser()
-
-                println(KatData.EventArrayList)
-                println(KatData.BrawlersArrayList)
-                println(KatData.mapData)
-
-                reader.close()
-                os.close()
-                socket.close()
-
-                // usageEvent를 이용하여 현재 앱이 실행 중인지를 확인하고, 실행 중이 아니라면 데이터를 가져오는 것을
-                // 못하게 막기
-                val currName = getTopPackageName(context)
-                if (currName == null
-                    || currName.isEmpty()
-                    || currName
-                        .lowercase(Locale.getDefault())
-                        .contains(context.getAppName())
-                ) break
+                getData()
+                if(!checkApplicationIsRun()) break
 
                 sleep(time.toLong())
+
             } catch (e: Exception) {
                 // 이 스레드는 소켓 연결이 안될 때마다 불러올 필요는 없고 해당 정보가 없을 때만 다이얼로그를 띄우도록 함.
                 // 어차피 해당 정보가 있긴 있으면 급한대로 업데이트 전 정보를 가져다 쓰면 되니까.
                 if (KatData.EventArrayList.size <= 1
                     || KatData.BrawlersArrayList.size <= 1
                     || KatData.mapData.size <= 1
-                ) ServerProblemDialog()
+                ) KatData.serverProblemDialog()
                 e.printStackTrace()
             } finally {
                 try {
@@ -119,6 +57,67 @@ class BaseApiDataThread(val context: Context) : Thread() {
                 }
             }
         }
+    }
+
+    fun getData() {
+        val socketAddress: SocketAddress = InetSocketAddress(oracleAddress, 9000)
+        val socket = Socket()
+        socket.connect(socketAddress)
+        val bytes: ByteArray
+
+        // 데이터 보내기
+
+        // starlist api는 서버에 보낼 데이터가 없기 때문에 개행문자만을 보내 수신 종료한다.
+        var result: String = "/" + "/" + "nofficial"
+        result += "\n"
+        val os = socket.getOutputStream()
+        bytes = result.toByteArray(StandardCharsets.UTF_8)
+        os.write(bytes)
+        os.flush()
+        data = socket.getInputStream()
+        input = InputStreamReader(data)
+        reader = BufferedReader(input)
+        result = reader.readLine()
+        var startidx = 0
+        var split: Int
+
+        // API 데이터 파싱
+        var splited: String
+        Client.resData = ArrayList()
+        while (true) {
+            split = result.indexOf(boundaryCode, startidx)
+            if (split == -1) break
+            splited = result.substring(startidx, split)
+            Client.resData.add(splited)
+            startidx = split + boundaryCode.length
+        }
+
+        eventsParser = kat_eventsParser(Client.resData[0])
+        brawlersParser = kat_brawlersParser(Client.resData[1])
+        mapsParser = kat_mapsParser(Client.resData[2])
+
+        KatData.EventArrayList = eventsParser.DataParser()
+        KatData.BrawlersArrayList = brawlersParser.DataParser()
+        KatData.mapData = mapsParser.DataParser()
+
+        reader.close()
+        os.close()
+        socket.close()
+
+    }
+
+    private fun checkApplicationIsRun(): Boolean {
+        // usageEvent를 이용하여 현재 앱이 실행 중인지를 확인하고, 실행 중이 아니라면 데이터를 가져오는 것을
+        // 못하게 막기
+        val currName = getTopPackageName(context)
+        if (currName == null
+            || currName.isEmpty()
+            || currName
+                .lowercase(Locale.getDefault())
+                .contains(context.getAppName())
+        ) return false
+
+        return true
     }
 }
 

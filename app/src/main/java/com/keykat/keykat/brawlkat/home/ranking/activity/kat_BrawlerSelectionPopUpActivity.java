@@ -81,7 +81,7 @@ public class kat_BrawlerSelectionPopUpActivity extends AppCompatActivity {
                     button.setBackgroundColor(getResources().getColor(R.color.semiBlack));
                     button.setLayoutParams(params2);
 
-                    KatData.GlideImage(
+                    KatData.glideImage(
                             getApplicationContext(),
                             imageUrl,
                             KatData.SCREEN_WIDTH.intValue() / 5,

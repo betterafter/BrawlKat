@@ -134,7 +134,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
             try {
                 while (isEventThreadStart) {
-                    if (!KatData.Companion.isForegroundServiceStart()) break;
+                    if (!KatData.isForegroundServiceStart) break;
 
                     if (viewPager == null) {
                         viewPager

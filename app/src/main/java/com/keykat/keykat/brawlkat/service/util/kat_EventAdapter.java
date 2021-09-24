@@ -149,9 +149,9 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
             if (isUserRecommend) {
                 playerBrawlersArrayList = new ArrayList<>();
-                if (KatData.eventsPlayerData != null) {
+                if (KatData.eventsPlayerData.getValue() != null) {
                     ArrayList<kat_official_playerInfoParser.playerBrawlerData> data
-                            = KatData.eventsPlayerData.getBrawlerData();
+                            = KatData.eventsPlayerData.getValue().getBrawlerData();
 
                     for (int i = 0; i < data.size(); i++) {
                         playerBrawlersArrayList.add(data.get(i).getName());

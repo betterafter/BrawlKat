@@ -127,7 +127,7 @@ public class Client {
                     break;
                 }
             } catch (Exception e) {
-                KatData.ServerProblemDialog();
+                KatData.serverProblemDialog();
                 e.printStackTrace();
             }
         }
@@ -288,7 +288,7 @@ public class Client {
                     break;
                 }
             } catch (Exception e) {
-                KatData.ServerProblemDialog();
+                KatData.serverProblemDialog();
                 e.printStackTrace();
             }
         }

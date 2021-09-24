@@ -87,7 +87,7 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
         NetworkInfo networkInfo = manager.getActiveNetworkInfo();
         // 인터넷에 연결되지 않았다면 경고 다이얼로그 표시
         if (networkInfo == null) {
-            KatData.ServerProblemDialog();
+            KatData.serverProblemDialog();
         }
         // 인터넷에 연결되었다면 광고 초기화
         else {

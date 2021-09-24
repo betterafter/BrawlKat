@@ -62,7 +62,7 @@ public class setRankingView {
             TextView player_ranking_player_rank
                     = itemView.findViewById(R.id.player_Ranking_rank);
 
-            KatData.GlideImage(
+            KatData.glideImage(
                     activity.getApplicationContext(),
                     kat_RankingFragment.PlayerImageUrl(playerData.getIconId()),
                     KatData.SCREEN_HEIGHT.intValue() / 15,
@@ -146,7 +146,7 @@ public class setRankingView {
             player_ranking_player_trophies.setLayoutParams(params2);
 
 
-            KatData.GlideImage(
+            KatData.glideImage(
                     activity.getApplicationContext(),
                     kat_RankingFragment.ClubImageUrl(clubData.getBadgeId()),
                     KatData.SCREEN_HEIGHT.intValue() / 15,
@@ -203,7 +203,7 @@ public class setRankingView {
             TextView player_ranking_player_rank
                     = itemView.findViewById(R.id.player_Ranking_rank);
 
-            KatData.GlideImage(
+            KatData.glideImage(
                     activity.getApplicationContext(),
                     kat_RankingFragment.PlayerImageUrl(brawlerRankingData.getIconId()),
                     KatData.SCREEN_HEIGHT.intValue() / 15,
@@ -269,7 +269,7 @@ public class setRankingView {
             TextView player_ranking_player_rank
                     = itemView.findViewById(R.id.player_Ranking_rank);
 
-            KatData.GlideImage(
+            KatData.glideImage(
                     activity.getApplicationContext(),
                     kat_RankingFragment.PlayerImageUrl(powerPlaySeasonRankingData.getIconId()),
                     KatData.SCREEN_HEIGHT.intValue() / 15,

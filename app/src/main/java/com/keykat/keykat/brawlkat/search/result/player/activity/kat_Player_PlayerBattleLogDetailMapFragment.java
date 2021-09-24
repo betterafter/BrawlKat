@@ -14,7 +14,6 @@ import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -56,7 +55,7 @@ public class kat_Player_PlayerBattleLogDetailMapFragment extends Fragment {
 
                 kat_mapsParser.mapData data = mapData.get(battleData.getEventId());
 
-                KatData.GlideImage(
+                KatData.glideImage(
                         requireActivity().getApplicationContext(),
                         data.getMapImageUrl(),
                         KatData.SCREEN_WIDTH.intValue(),

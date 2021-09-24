@@ -326,7 +326,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
 
         for(int k = 0; k < BrawlersArrayList.size(); k++){
             if(BrawlersArrayList.get(k).get("name").toString().toLowerCase().equals(playerInfo.getBrawler_name().toLowerCase())){
-                KatData.GlideImage(
+                KatData.glideImage(
                         getActivity().getApplicationContext(),
                         Objects.requireNonNull(BrawlersArrayList.get(k).get("imageUrl")).toString(),
                         KatData.SCREEN_WIDTH.intValue() / 10,

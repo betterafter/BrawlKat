@@ -26,7 +26,7 @@ import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.home.search.activity.kat_SearchFragment;
 import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotifActivity;
+import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotificationActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
@@ -87,7 +87,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean(getString(R.string.notify_service), false)) {
             foregroundServiceIntent = new Intent(
                     getApplicationContext(),
-                    kat_Service_BrawlStarsNotifActivity.class
+                    kat_Service_BrawlStarsNotificationActivity.class
             );
             startForegroundService(foregroundServiceIntent);
         }
@@ -145,9 +145,9 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                         toast.show();
                         return false;
                     } else {
-                        if (KatData.Companion.isForegroundServiceStart()) {
+                        if (KatData.isForegroundServiceStart) {
                             stopService(serviceIntent);
-                            KatData.Companion.setForegroundServiceStart(false);
+                            KatData.isForegroundServiceStart = false;
                         } else {
                             KatData.dialog.show();
                             interstitialAd.loadAd(new AdRequest.Builder().build());
@@ -156,7 +156,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                                 public void onAdClosed() {
                                     super.onAdClosed();
                                     getPermission();
-                                    KatData.Companion.setForegroundServiceStart(true);
+                                    KatData.isForegroundServiceStart = true;
                                     KatData.dialog.dismiss();
                                 }
 
@@ -164,7 +164,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                                 public void onAdFailedToLoad(int errorCode) {
                                     super.onAdFailedToLoad(errorCode);
                                     getPermission();
-                                    KatData.Companion.setForegroundServiceStart(true);
+                                    KatData.isForegroundServiceStart = true;
                                     KatData.dialog.dismiss();
                                 }
 
@@ -246,7 +246,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
     public void getPermission() {
 
-        if (KatData.Companion.isForegroundServiceStart()) return;
+        if (KatData.isForegroundServiceStart) return;
         // 마시멜로우 이상일 경우
         if (!Settings.canDrawOverlays(this)) {// 체크
 
@@ -256,7 +256,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         } else {
             kat_Service_OverdrawActivity.getPlayerTag = playerTag;
             startService(serviceIntent);
-            KatData.Companion.setForegroundServiceStart(true);
+            KatData.isForegroundServiceStart = true;
         }
     }
 

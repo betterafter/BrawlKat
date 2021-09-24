@@ -27,7 +27,6 @@ import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivity;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
 import com.keykat.keykat.brawlkat.util.network.Client;
@@ -46,22 +45,22 @@ import androidx.fragment.app.Fragment;
 public class kat_SearchFragment extends Fragment {
 
 
-    private             kat_Player_MainActivity                                                 kat_player_mainActivity;
-    private             Client                                                                  client;
+    private kat_Player_MainActivity kat_player_mainActivity;
+    private Client client;
 
-    private             boolean                                                                 touchOutsideOfMyAccount = true;
-    private             LinearLayout                                                            inputMyAccount;
-    private             kat_official_playerInfoParser.playerData                                playerData;
-    private             ArrayList<HashMap<String, Object>>                                      BrawlerArrayList;
+    private boolean touchOutsideOfMyAccount = true;
+    private LinearLayout inputMyAccount;
+    private kat_official_playerInfoParser.playerData playerData;
+    private ArrayList<HashMap<String, Object>> BrawlerArrayList;
 
-    private             RequestOptions                                                          options;
-    public              static int                                                              height;
-    public              static int                                                              width;
+    private RequestOptions options;
+    public static int height;
+    public static int width;
 
-    private             kat_LoadingDialog                                                       dialog;
+    private kat_LoadingDialog dialog;
 
 
-    public kat_SearchFragment(kat_Player_MainActivity kat_player_mainActivity){
+    public kat_SearchFragment(kat_Player_MainActivity kat_player_mainActivity) {
         this.kat_player_mainActivity = kat_player_mainActivity;
     }
 
@@ -85,7 +84,12 @@ public class kat_SearchFragment extends Fragment {
     }
 
 
-    public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState){
+    @SuppressLint("ClickableViewAccessibility")
+    public View onCreateView(
+            @NonNull LayoutInflater inflater,
+            @Nullable ViewGroup container,
+            @Nullable Bundle savedInstanceState
+    ) {
         View view = inflater.inflate(R.layout.player_main, container, false);
 
         //광고.......................................................................................
@@ -97,7 +101,6 @@ public class kat_SearchFragment extends Fragment {
         //..........................................................................................
 
 
-
         LinearLayout player_user_search_layout = view.findViewById(R.id.player_user_searchInput_layout);
         LinearLayout player_club_search_layout = view.findViewById(R.id.player_club_searchInput_layout);
 
@@ -106,7 +109,7 @@ public class kat_SearchFragment extends Fragment {
 
         // 내 계정 뷰 보여주기......................................................................................................//
         kat_myAccountDatabase kataMyAccountBase = KatData.kataMyAccountBase;
-        if(kataMyAccountBase.size() == 1){
+        if (kataMyAccountBase.size() == 1) {
 
             final View tempView = player_main_inputMyAccount.getChildAt(0);
             final Drawable tempDrawable = player_main_inputMyAccount.getBackground();
@@ -136,7 +139,7 @@ public class kat_SearchFragment extends Fragment {
             // 플레이어의 모스트 3 브롤러 가져오기. 다 똑같으면 이름 순으로
             ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData
                     = new ArrayList<>();
-            if(kat_Player_MainActivity.MyPlayerData != null) {
+            if (kat_Player_MainActivity.MyPlayerData != null) {
                 brawlerData = kat_Player_MainActivity.MyPlayerData.getBrawlerData();
             }
             Collections.sort(brawlerData, new brawlerSort());
@@ -152,10 +155,9 @@ public class kat_SearchFragment extends Fragment {
             findBrawler(brawler3, kat_Player_MainActivity.MyPlayerData, BrawlerArrayList, 2);
 
 
-
             // 이미지 링크 선언
             String url_profile = "";
-            if(kat_Player_MainActivity.MyPlayerData != null){
+            if (kat_Player_MainActivity.MyPlayerData != null) {
                 url_profile = KatData.WebRootUrl + "/assets/profile/" +
                         kat_Player_MainActivity.MyPlayerData.getIconId() + ".png?v=1";
             }
@@ -168,48 +170,40 @@ public class kat_SearchFragment extends Fragment {
             // 텍스트 세팅
             player_my_account_tag.setText(playerData.getTag());
             player_my_account_name.setText(playerData.getName());
-            player_my_account_trophies.setText(playerData.getTrophies() + " / " + playerData.getHighestTrophies());
+            player_my_account_trophies.setText(
+                    playerData.getTrophies() + " / " + playerData.getHighestTrophies()
+            );
             player_my_account_level.setText(Integer.toString(playerData.getExpLevel()));
 
             player_main_inputMyAccount.addView(accountView);
 
-            player_my_account_close.setOnTouchListener(new View.OnTouchListener(){
-                @SuppressLint("ClickableViewAccessibility")
-                @Override
-                public boolean onTouch(View v, MotionEvent motionEvent){
+            player_my_account_close.setOnTouchListener((v, motionEvent) -> {
 
-                    player_main_inputMyAccount.removeAllViews();
-                    player_main_inputMyAccount.addView(tempView);
-                    player_main_inputMyAccount.setBackground(tempDrawable);
+                player_main_inputMyAccount.removeAllViews();
+                player_main_inputMyAccount.addView(tempView);
+                player_main_inputMyAccount.setBackground(tempDrawable);
 
-                    KatData.kataMyAccountBase.delete(playerData.getTag());
-                    KatData.eventsPlayerData = null;
+                KatData.kataMyAccountBase.delete(playerData.getTag());
+                KatData.eventsPlayerData.setValue(null);
 
-                    kat_NotificationUpdater updater = new kat_NotificationUpdater(getActivity().getApplicationContext());
-                    updater.update();
-
-                    return true;
-                }
+                return true;
             });
 
 
-            accountView.setOnTouchListener(new View.OnTouchListener(){
-                @Override
-                public boolean onTouch(View v, MotionEvent motionEvent){
-                    if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+            accountView.setOnTouchListener((v, motionEvent) -> {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 
-                        dialog.show();
+                    dialog.show();
 
-                        String RawTag = playerData.getTag();
-                        String newTag = RawTag.substring(1);
+                    String RawTag = playerData.getTag();
+                    String newTag = RawTag.substring(1);
 
-                        kat_SearchThread kset = new kat_SearchThread(getActivity(),
-                                kat_Player_PlayerDetailActivity.class, dialog);
-                        kset.SearchStart(newTag, "players", getActivity().getApplicationContext());
+                    kat_SearchThread kset = new kat_SearchThread(getActivity(),
+                            kat_Player_PlayerDetailActivity.class, dialog);
+                    kset.SearchStart(newTag, "players", getActivity().getApplicationContext());
 
-                    }
-                    return false;
                 }
+                return false;
             });
 
             // 부모 뷰와 크기 맞추기
@@ -222,10 +216,10 @@ public class kat_SearchFragment extends Fragment {
         }
         // ..................................................................................................................//
 
-        player_user_search_layout.setOnTouchListener(new View.OnTouchListener(){
+        player_user_search_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     Intent intent = new Intent(getActivity(), kat_Player_RecentSearchActivity.class);
                     intent.putExtra("type", "players");
                     getActivity().startActivity(intent);
@@ -235,10 +229,10 @@ public class kat_SearchFragment extends Fragment {
             }
         });
 
-        player_club_search_layout.setOnTouchListener(new View.OnTouchListener(){
+        player_club_search_layout.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent motionEvent){
-                if(motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
+            public boolean onTouch(View v, MotionEvent motionEvent) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_DOWN) {
                     Intent intent = new Intent(getActivity(), kat_Player_RecentSearchActivity.class);
                     intent.putExtra("type", "clubs");
                     getActivity().startActivity(intent);
@@ -247,11 +241,11 @@ public class kat_SearchFragment extends Fragment {
             }
         });
 
-        player_main_inputMyAccount.setOnTouchListener(new View.OnTouchListener(){
+        player_main_inputMyAccount.setOnTouchListener(new View.OnTouchListener() {
             @Override
-            public boolean onTouch(View v, MotionEvent motionEvent){
+            public boolean onTouch(View v, MotionEvent motionEvent) {
 
-                if(motionEvent.getAction() == MotionEvent.ACTION_UP) {
+                if (motionEvent.getAction() == MotionEvent.ACTION_UP) {
 
                     Intent intent = new Intent(getActivity(), kat_SearchAccountForSaveActivity.class);
                     startActivity(intent);
@@ -264,8 +258,7 @@ public class kat_SearchFragment extends Fragment {
     }
 
 
-
-    public void GlideImage(String url, int width, int height, ImageView view){
+    public void GlideImage(String url, int width, int height, ImageView view) {
 
         Glide.with(getActivity().getApplicationContext())
                 .applyDefaultRequestOptions(options)
@@ -274,7 +267,7 @@ public class kat_SearchFragment extends Fragment {
                 .into(view);
     }
 
-    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view){
+    public void GlideImageWithRoundCorner(String url, int width, int height, ImageView view) {
         Glide.with(getActivity().getApplicationContext())
                 .applyDefaultRequestOptions(options)
                 .load(url)
@@ -292,8 +285,8 @@ public class kat_SearchFragment extends Fragment {
                            kat_official_playerInfoParser.playerBrawlerData t2) {
 
 
-            if(t1.getTrophies() < t2.getTrophies()) return 1;
-            else if(t1.getTrophies() > t2.getTrophies()) return -1;
+            if (t1.getTrophies() < t2.getTrophies()) return 1;
+            else if (t1.getTrophies() > t2.getTrophies()) return -1;
             return 0;
         }
     }
@@ -302,14 +295,14 @@ public class kat_SearchFragment extends Fragment {
     public void findBrawler(FrameLayout frameLayout,
                             kat_official_playerInfoParser.playerData playerData,
                             ArrayList<HashMap<String, Object>> BrawlerArrayList,
-                            int i){
-        if(playerData == null) return;
+                            int i) {
+        if (playerData == null) return;
         ArrayList<kat_official_playerInfoParser.playerBrawlerData> brawlerData = playerData.getBrawlerData();
-        if(brawlerData.size() - 1 < i) return;
-        if(BrawlerArrayList == null) return;
-        for(int j = 0; j <BrawlerArrayList.size(); j++){
+        if (brawlerData.size() - 1 < i) return;
+        if (BrawlerArrayList == null) return;
+        for (int j = 0; j < BrawlerArrayList.size(); j++) {
 
-            if(brawlerData.get(i).getId().equals(BrawlerArrayList.get(j).get("id").toString())){
+            if (brawlerData.get(i).getId().equals(BrawlerArrayList.get(j).get("id").toString())) {
                 ImageView imageView = (ImageView) frameLayout.getChildAt(0);
                 TextView textView = (TextView) frameLayout.getChildAt(1);
 

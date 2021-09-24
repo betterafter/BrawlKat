@@ -81,7 +81,8 @@
         <!--        </receiver>-->
         <service android:name=".service.activity.kat_Service_OverdrawActivity" />
 
-        <service android:name=".service.activity.kat_Service_BrawlStarsNotifActivity" /> <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
+        <service android:name=".service.activity.kat_Service_BrawlStarsNotificationActivity" />
+        <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
 <!--        <service-->
 <!--            android:name=".service.util.kat_onTaskRemovedService"-->
 <!--            android:stopWithTask="false" />-->

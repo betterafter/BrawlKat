@@ -138,7 +138,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
         };
 
 
-        KatData.GlideImageWithRoundCorner(
+        KatData.glideImageWithRoundCorner(
                 getApplicationContext(),
                 url_profile,
                 KatData.SCREEN_WIDTH.intValue() / 5,
@@ -165,7 +165,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
             }
         }
 
-        KatData.GlideImage(
+        KatData.glideImage(
                 getApplicationContext(),
                 url_icon_trophies,
                 KatData.SCREEN_WIDTH.intValue() / 30,
@@ -294,7 +294,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
 
                 // 각 아이템 값 선언
                 ImageView icon = view.findViewById(R.id.player_detail_game_info_icon);
-                KatData.GlideImage(
+                KatData.glideImage(
                         getApplicationContext(),
                         iconImage[i],
                         KatData.SCREEN_WIDTH.intValue() / 20,
@@ -429,7 +429,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
                             .toString()
                             .toUpperCase())) {
 
-                        KatData.GlideImage(
+                        KatData.glideImage(
                                 getApplicationContext(),
                                 Objects.requireNonNull(
                                         BrawlersArrayList
@@ -473,7 +473,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
                                     );
                                     sp.setMargins(5, 5, 5, 5);
                                     starPower.setLayoutParams(sp);
-                                    KatData.GlideImage(
+                                    KatData.glideImage(
                                             getApplicationContext(),
                                             starPowersArrayList.get(x).getImageUrl(),
                                             KatData.SCREEN_WIDTH.intValue() / 30,
@@ -504,7 +504,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
                                     gg.setMargins(5, 5, 5, 5);
                                     gadget.setLayoutParams(gg);
 
-                                    KatData.GlideImage(
+                                    KatData.glideImage(
                                             getApplicationContext(),
                                             gadgetsArrayList.get(y).getImageUrl(),
                                             KatData.SCREEN_WIDTH.intValue() / 30,
@@ -734,7 +734,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
                         .toLowerCase(Locale.ROOT)
                         .equals(userBrawler.toLowerCase())
                 ) {
-                    KatData.GlideImage(getApplicationContext(),
+                    KatData.glideImage(getApplicationContext(),
                             Objects.requireNonNull(KatData.BrawlersArrayList
                                     .get(j)
                                     .get("imageUrl"))
@@ -760,7 +760,7 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
                     && KatData.mapData.get(battleData.getEventId()) != null
             ) {
 
-                KatData.GlideImage(
+                KatData.glideImage(
                         getApplicationContext(),
                         Objects.requireNonNull(KatData.mapData
                                 .get(battleData.getEventId()))

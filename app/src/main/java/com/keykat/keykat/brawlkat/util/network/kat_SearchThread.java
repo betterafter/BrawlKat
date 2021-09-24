@@ -10,7 +10,6 @@ import android.os.Bundle;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.service.util.kat_NotificationUpdater;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_clubLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_clubInfoParser;
@@ -113,7 +112,7 @@ public class kat_SearchThread extends AppCompatActivity {
         // 제대로 가져오지 못했을 경우 알림
         if (sendData.get(0).equals("{none}")) {
             if (kat_loadingDialog != null) kat_loadingDialog.dismiss();
-            KatData.ServerProblemDialog();
+            KatData.serverProblemDialog();
         }
 
 
@@ -134,8 +133,9 @@ public class kat_SearchThread extends AppCompatActivity {
 
                         // 알람창 강제 종료되는 것 방지
                         if (sendData.get(0).length() > 50)
-                            KatData.eventsPlayerData
-                                    = KatData.official_playerInfoParser.DataParser();
+                            KatData.eventsPlayerData.postValue(
+                                    KatData.official_playerInfoParser.DataParser()
+                            );
                     }
                 }
 
@@ -161,23 +161,15 @@ public class kat_SearchThread extends AppCompatActivity {
                 KatData.katabase.insert(type, Tag, name, isAccount);
 
                 if (fromActivity == null) {
-                    // 알림창 업데이트
-                    kat_NotificationUpdater updater
-                            = new kat_NotificationUpdater(
-                            getApplicationContext(),
-                            KatData.playerData
-                    );
-                    updater.update();
                     SearchDataOnOverdraw = false;
                     return;
                 }
 
                 if (fromActivity instanceof kat_SearchAccountForSaveActivity) {
                     if (sendData.get(0).length() > 50)
-                        KatData.eventsPlayerData = KatData.playerData;
-                    kat_NotificationUpdater updater
-                            = new kat_NotificationUpdater(fromActivity.getApplicationContext());
-                    updater.update();
+                        KatData.eventsPlayerData.postValue(
+                                KatData.official_playerInfoParser.DataParser()
+                        );
                 }
 
 
@@ -189,9 +181,6 @@ public class kat_SearchThread extends AppCompatActivity {
                             KatData.playerData.getName()
                     );
                 }
-                kat_NotificationUpdater updater
-                        = new kat_NotificationUpdater(fromActivity.getApplicationContext());
-                updater.update();
 
                 ActivityManager manager
                         = (ActivityManager) fromActivity.getSystemService(Context.ACTIVITY_SERVICE);
@@ -223,7 +212,7 @@ public class kat_SearchThread extends AppCompatActivity {
         // 제대로 가져오지 못했을 경우 알림
         if (sendData.get(0).equals("{none}")) {
             if (kat_loadingDialog != null) kat_loadingDialog.dismiss();
-            KatData.ServerProblemDialog();
+            KatData.serverProblemDialog();
         }
 
         // 제대로 가져왔을 경우

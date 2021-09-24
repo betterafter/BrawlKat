@@ -89,7 +89,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
     private void setData() {
 
         String iconUrl = KatData.WebRootUrl + "/assets/club/" + KatData.clubData.getBadgeId() + ".png?v=1";
-        KatData.GlideImageWithRoundCorner(
+        KatData.glideImageWithRoundCorner(
                 getApplicationContext(),
                 iconUrl,
                 KatData.SCREEN_WIDTH.intValue() / 7,
@@ -178,7 +178,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
 
             // 각 아이템 값 선언
             ImageView icon = view.findViewById(R.id.club_detail_game_info_icon);
-            KatData.GlideImageWithRoundCorner(
+            KatData.glideImageWithRoundCorner(
                     getApplicationContext(),
                     informationIconUrl[i],
                     KatData.SCREEN_WIDTH.intValue() / 20,
@@ -231,7 +231,7 @@ public class kat_Player_ClubDetailActivity extends AppCompatActivity {
 
             String iconUrl = KatData.WebRootUrl + "/assets/profile-low/" +
                     memberData.get(i).getIconId() + ".png?v=1";
-            KatData.GlideImage(
+            KatData.glideImage(
                     getApplicationContext(),
                     iconUrl,
                     KatData.SCREEN_WIDTH.intValue() / 10,

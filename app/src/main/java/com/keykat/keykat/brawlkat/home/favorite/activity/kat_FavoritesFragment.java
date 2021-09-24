@@ -164,7 +164,7 @@ public class kat_FavoritesFragment extends Fragment {
             ImageView player_close = view.findViewById(R.id.player_favorites_close);
 
             String url_profile = KatData.WebRootUrl + "/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
-            KatData.GlideImageWithRoundCorner(
+            KatData.glideImageWithRoundCorner(
                     Objects.requireNonNull(getActivity()).getApplicationContext(),
                     url_profile,
                     KatData.SCREEN_WIDTH.intValue() / 8,
@@ -174,7 +174,7 @@ public class kat_FavoritesFragment extends Fragment {
 
             player_level.setText(databaseItem.get(i).get(7));
             player_name.setText(databaseItem.get(i).get(3));
-            KatData.GlideImageWithRoundCorner(
+            KatData.glideImageWithRoundCorner(
                     getActivity().getApplicationContext(),
                     url_icon_trophies,
                     KatData.SCREEN_WIDTH.intValue() / 30,
