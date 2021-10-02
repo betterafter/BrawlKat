@@ -279,7 +279,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 searchThread.SearchStart(getPlayerTag, "players", this);
         });
     }
-    
+
     private class timeCountThread extends Thread {
         public void run() {
             while (isCheckThreadStart) {
