@@ -16,7 +16,9 @@
             android:label="@string/title_activity_settings"
             android:screenOrientation="portrait"
             android:theme="@style/PreferenceScreen" />
-        <activity android:name=".load.activity.kat_LoadBeforeMainActivity">
+        <activity
+            android:name=".load.activity.kat_LoadBeforeMainActivity"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

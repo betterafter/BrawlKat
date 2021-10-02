@@ -50,19 +50,21 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     // 기타 변수들
     private float mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
     public boolean ServiceButtonTouched = false;
-    public int ServiceButtonTouchedCase = 0;
     public static String getPlayerTag;
 
     public boolean unbindCall = false;
 
-
-    private BrawlStarsPlayCheckThread checkThread;
     private timeCountThread timeThread;
     private boolean isCheckThreadStart;
     private int timeCount = 0;
 
     private kat_SearchThread searchThread;
 
+    private final Handler onButtonLongTouchHandler = new Handler();
+    private final Runnable onButtonLongTouchRunnable = () -> {
+        onDestroy();
+        stopSelf();
+    };
 
     private NotificationManager mNotificationManager;
 
@@ -90,9 +92,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
             KatData.client.init();
 
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.sub_notification);
-
-        checkThread = new BrawlStarsPlayCheckThread(context);
-        checkThread.start();
 
         timeThread = new timeCountThread();
         timeThread.start();
@@ -130,7 +129,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         // id 값은 0보다 큰 양수가 들어가야 한다.
         mNotificationManager.notify(2, notification.build());
         startForeground(2, notification.build());
-        return START_NOT_STICKY;
+        return START_STICKY;
     }
 
     @Override
@@ -196,7 +195,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         setNotification();
 
         isCheckThreadStart = false;
-        checkThread = null;
         timeThread = null;
         buttonThread = null;
 
@@ -227,6 +225,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
             case MotionEvent.ACTION_DOWN:
 
+                onButtonLongTouchHandler.postDelayed(onButtonLongTouchRunnable, 2000);
+
                 buttonThread.stopLongClickAction = false;
 
                 ServiceButtonTouched = true;
@@ -246,17 +246,16 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 windowManager.updateViewLayout(constraintLayout, layoutParams);
 
                 // 버튼 움직임을 의도한 모션을 취할 때는 '3초 누르기' 모션 해제
-                if (Math.abs(mWidgetStartingX - layoutParams.x) > 30 || Math.abs(mWidgetStartingY - layoutParams.y) > 30) {
-                    buttonThread.stopLongClickAction = true;
-                }
-                // 그렇지 않으면 '3초 누르기' 모션 유지
-                else {
-                    buttonThread.stopLongClickAction = false;
+                if (Math.abs(mWidgetStartingX - layoutParams.x) > 30
+                        || Math.abs(mWidgetStartingY - layoutParams.y) > 30) {
+                    onButtonLongTouchHandler.removeCallbacks(onButtonLongTouchRunnable);
                 }
 
                 return true;
 
             case MotionEvent.ACTION_UP:
+
+                onButtonLongTouchHandler.removeCallbacks(onButtonLongTouchRunnable);
 
                 buttonThread.stopLongClickAction = true;
                 if (timeCount > 30) {
@@ -265,26 +264,18 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                     setNotification();
                     timeCount = 0;
                 }
-                if (ServiceButtonTouchedCase != 3) {
 
-                    if (Math.abs(mWidgetStartingX - layoutParams.x) > 30
-                            || Math.abs(mWidgetStartingY - layoutParams.y) > 30) {
-                        ServiceButtonTouchedCase = 1;
-                    }
-
-                    // 움직이지 않고 제자리 터치 할 경우
-                    else {
-                        ServiceButtonTouchedCase = 2;
-                        events.ShowEventsInformation();
-                        events.Change();
-                        events.addModeButton();
-                        events.ChangeRecommendViewClick();
-                    }
+                if (Math.abs(mWidgetStartingX - layoutParams.x) <= 30
+                        && Math.abs(mWidgetStartingY - layoutParams.y) <= 30) {
+                    events.ShowEventsInformation();
+                    events.Change();
+                    events.addModeButton();
+                    events.ChangeRecommendViewClick();
                 }
 
-
             case MotionEvent.ACTION_OUTSIDE:
-                ServiceButtonTouchedCase = 0;
+                onButtonLongTouchHandler.removeCallbacks(onButtonLongTouchRunnable);
+
         }
 
         return false;
@@ -338,28 +329,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                     timeCount++;
                     sleep(1000);
                 } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
-    }
-
-    private class BrawlStarsPlayCheckThread extends Thread {
-
-        Context context;
-
-        public BrawlStarsPlayCheckThread(Context context) {
-            this.context = context;
-        }
-
-        public void run() {
-            while (isCheckThreadStart) {
-
-                try {
-                    setNotification();
-
-                    sleep(1000 * 5);
-                } catch (InterruptedException e) {
                     e.printStackTrace();
                 }
             }

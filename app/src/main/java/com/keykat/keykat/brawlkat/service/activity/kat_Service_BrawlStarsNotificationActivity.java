@@ -37,6 +37,8 @@ public class kat_Service_BrawlStarsNotificationActivity extends LifecycleService
     public void onCreate() {
         super.onCreate();
         updater = new NotificationUpdater(this, notification);
+        updater.update();
+        notification = updater.updatedNotification();
 
         Observer<kat_official_playerInfoParser.playerData> observer = playerData -> {
             updater.update();
@@ -58,13 +60,8 @@ public class kat_Service_BrawlStarsNotificationActivity extends LifecycleService
                 = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
         mNotificationManager.createNotificationChannel(channel);
 
-        updater.update();
-        if (updater.updatedNotification() != null) {
-            notification = updater.updatedNotification();
-            assert notification != null;
-            startForeground(1, notification.build());
-        }
-        
+        if (notification != null) startForeground(1, notification.build());
+
         return START_STICKY;
     }
 

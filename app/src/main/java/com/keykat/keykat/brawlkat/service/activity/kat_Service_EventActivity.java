@@ -137,8 +137,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     if (!KatData.isForegroundServiceStart) break;
 
                     if (viewPager == null) {
-                        viewPager
-                                = overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
+                        viewPager = overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
                         eventAdapter = new kat_EventAdapter(
                                 context,
                                 EventArrayList,
@@ -165,8 +164,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
 
         final Button btn = new Button(context);
-        LinearLayout buttonGroup
-                = overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
+        LinearLayout buttonGroup = overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,

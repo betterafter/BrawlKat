@@ -204,7 +204,6 @@ class NotificationUpdater(
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
                 .setCustomContentView(scv)
                 .setShowWhen(false)
-            return
         }
     }
 
