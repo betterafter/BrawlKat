@@ -44,7 +44,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     public View mapRecommendView;
     public LayoutInflater layoutInflater;
     private kat_Service_EventActivity events;
-    public buttonLongClickToExitThread buttonThread;
 
 
     // 기타 변수들
@@ -95,10 +94,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         timeThread = new timeCountThread();
         timeThread.start();
-
-        // 메인 버튼 클릭 스레드 실행
-        buttonThread = new buttonLongClickToExitThread();
-        buttonThread.start();
 
         isCheckThreadStart = true;
 
@@ -196,7 +191,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         isCheckThreadStart = false;
         timeThread = null;
-        buttonThread = null;
 
         if (events != null) {
             events.isEventThreadStart = false;
@@ -227,8 +221,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
                 onButtonLongTouchHandler.postDelayed(onButtonLongTouchRunnable, 2000);
 
-                buttonThread.stopLongClickAction = false;
-
                 ServiceButtonTouched = true;
                 mStartingX = ev.getRawX();
                 mStartingY = ev.getRawY();
@@ -257,7 +249,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
                 onButtonLongTouchHandler.removeCallbacks(onButtonLongTouchRunnable);
 
-                buttonThread.stopLongClickAction = true;
                 if (timeCount > 30) {
                     kat_SearchThread searchThread = new kat_SearchThread();
                     searchThread.SearchStart(getPlayerTag, "players", context);
@@ -281,38 +272,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         return false;
     }
 
-    // 버튼을 3초 이상 누르고 있으면 서비스 종료
-    private class buttonLongClickToExitThread extends Thread {
-
-        public int stopCount;
-        public boolean stopLongClickAction = true;
-
-        public void run() {
-
-            try {
-                stopCount = 0;
-                stopLongClickAction = true;
-
-                while (isCheckThreadStart) {
-                    if (stopCount >= 3) {
-                        stopCount = 0;
-                        onDestroy();
-                        stopSelf();
-
-                        break;
-                    }
-
-                    stopCount++;
-                    stopCount = 0;
-                    continue;
-                }
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
     // notification 업데이트
     private void setNotification() {
         new Handler(Looper.getMainLooper()).post(() -> {
@@ -320,8 +279,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
                 searchThread.SearchStart(getPlayerTag, "players", this);
         });
     }
-
-
+    
     private class timeCountThread extends Thread {
         public void run() {
             while (isCheckThreadStart) {
