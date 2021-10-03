@@ -30,6 +30,7 @@ import java.util.*
 
 object KatData {
 
+
     // 데이터를 위한 여러 변수들.
     lateinit var clubLogData: kat_clubLogParser.clubLogData
     lateinit var clubData: kat_official_clubInfoParser.clubData

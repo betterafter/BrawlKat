@@ -49,7 +49,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     // 기타 변수들
     private float mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
     public boolean ServiceButtonTouched = false;
-    public static String getPlayerTag;
 
     public boolean unbindCall = false;
 
@@ -251,7 +250,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
                 if (timeCount > 30) {
                     kat_SearchThread searchThread = new kat_SearchThread();
-                    searchThread.SearchStart(getPlayerTag, "players", context);
+                    searchThread.SearchStart(KatData.playerTag, "players", context);
                     setNotification();
                     timeCount = 0;
                 }
@@ -276,7 +275,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
     private void setNotification() {
         new Handler(Looper.getMainLooper()).post(() -> {
             if (!kat_SearchThread.SearchDataOnOverdraw)
-                searchThread.SearchStart(getPlayerTag, "players", this);
+                searchThread.SearchStart(KatData.playerTag, "players", this);
         });
     }
 

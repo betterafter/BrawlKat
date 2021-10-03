@@ -3,10 +3,12 @@ package com.keykat.keykat.brawlkat.service.util;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
+import android.provider.Settings;
+import android.widget.Toast;
 
-import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.load.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
+import com.keykat.keykat.brawlkat.util.KatData;
 
 public class kat_ButtonBroadcastReceiver extends BroadcastReceiver {
 
@@ -20,28 +22,13 @@ public class kat_ButtonBroadcastReceiver extends BroadcastReceiver {
         }
         else if(intent.getAction().equals("main.ANALYTICS")){
 
-            kat_Player_MainActivity.kat_player_mainActivity.getPermission();
-
-
-//            ActivityManager am = (ActivityManager)context.getSystemService(Context.ACTIVITY_SERVICE);
-//            List<ActivityManager.RunningServiceInfo> rs = am.getRunningServices(1000);
-//
-//            boolean isMainServiceExist = false;
-//            for(ActivityManager.RunningServiceInfo info : rs) {
-//                String className = info.service.getClassName();
-//                if(className.equals("com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity")){
-//                    isMainServiceExist = true;
-//                    break;
-//                }
-//            }
-//            if(!isMainServiceExist){
-//
-//                if (!kat_Player_MainActivity.kat_player_mainActivity.isServiceStart) {
-//                    kat_Player_MainActivity.kat_player_mainActivity.getPermission();
-//                    kat_Player_MainActivity.kat_player_mainActivity.isServiceStart = true;
-//                }
-//                kat_Service_BrawlStarsNotifActivity.alreadyStart = true;
-//            }
+            if(Settings.canDrawOverlays(context)) {
+                Intent serviceIntent = new Intent(context, kat_Service_OverdrawActivity.class);
+                context.startService(serviceIntent);
+                KatData.isForegroundServiceStart = true;
+            } else {
+                Toast.makeText(context, "다른 앱 위에 그리기 권한을 먼저 허용해주세요.", Toast.LENGTH_SHORT).show();
+            }
         }
         else if(intent.getAction().equals("overdraw.STOP")){
             Intent serviceIntent = new Intent(context, kat_Service_OverdrawActivity.class);
