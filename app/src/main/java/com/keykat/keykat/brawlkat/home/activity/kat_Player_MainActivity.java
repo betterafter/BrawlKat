@@ -53,7 +53,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
     private static long mLastClickTime = 0;
     //.................................................................................................................//
     public static String official = "official";
-    public static String playerTag;
     public static kat_official_playerInfoParser.playerData MyPlayerData;
     public kat_official_playerInfoParser.playerData playerData;
 
@@ -202,7 +201,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         }
 
         if (KatData.kataMyAccountBase.size() > 0) {
-            playerTag = KatData.kataMyAccountBase.getTag().substring(1);
+            KatData.playerTag = KatData.kataMyAccountBase.getTag().substring(1);
         }
     }
 
@@ -254,7 +253,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                     Uri.parse("package:" + getPackageName()));
             startActivityForResult(intent, ACTION_MANAGE_OVERLAY_PERMISSION_REQUEST_CODE);
         } else {
-            kat_Service_OverdrawActivity.getPlayerTag = playerTag;
             startService(serviceIntent);
             KatData.isForegroundServiceStart = true;
         }
@@ -269,7 +267,6 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                 // TODO 동의를 얻지 못했을 경우의 처리
 
             } else {
-                kat_Service_OverdrawActivity.getPlayerTag = playerTag;
                 startService(serviceIntent);
             }
         }
