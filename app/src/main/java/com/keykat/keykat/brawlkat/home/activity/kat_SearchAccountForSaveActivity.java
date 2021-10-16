@@ -62,6 +62,7 @@ public class kat_SearchAccountForSaveActivity extends AppCompatActivity {
         String text = Objects.requireNonNull(AccountInputEditText.getText()).toString();
         if (!idChecker(text)) {
             Toast.makeText(this, getString(R.string.account_save_error_text), Toast.LENGTH_SHORT).show();
+            AccountInputEditText.setText("");
             return;
         }
 

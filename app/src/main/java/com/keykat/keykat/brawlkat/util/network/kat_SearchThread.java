@@ -6,7 +6,11 @@ import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 
+import com.keykat.keykat.brawlkat.common.ui.ClubNotFoundDialog;
+import com.keykat.keykat.brawlkat.common.ui.PlayerNotFoundDialog;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
@@ -112,7 +116,7 @@ public class kat_SearchThread extends AppCompatActivity {
         // 제대로 가져오지 못했을 경우 알림
         if (sendData.get(0).equals("{none}")) {
             if (kat_loadingDialog != null) kat_loadingDialog.dismiss();
-            KatData.serverProblemDialog();
+            setPlayerErrorDialog();
         }
 
 
@@ -212,7 +216,7 @@ public class kat_SearchThread extends AppCompatActivity {
         // 제대로 가져오지 못했을 경우 알림
         if (sendData.get(0).equals("{none}")) {
             if (kat_loadingDialog != null) kat_loadingDialog.dismiss();
-            KatData.serverProblemDialog();
+            setClubErrorDialog();
         }
 
         // 제대로 가져왔을 경우
@@ -258,6 +262,15 @@ public class kat_SearchThread extends AppCompatActivity {
         }
     }
 
+    private void setPlayerErrorDialog() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> PlayerNotFoundDialog.Companion.init(fromActivity), 0);
+    }
+
+    private void setClubErrorDialog() {
+        Handler handler = new Handler(Looper.getMainLooper());
+        handler.postDelayed(() -> ClubNotFoundDialog.Companion.init(fromActivity), 0);
+    }
 
     public void SearchStart(String tag, String type, Context context) {
         SearchThread searchThread = new SearchThread(tag, type, context);

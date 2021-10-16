@@ -117,7 +117,6 @@ public class Client {
                         startidx = split + boundaryCode.length();
                     }
 
-
                     input.close();
                     data.close();
                     reader.close();
