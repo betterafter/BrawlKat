@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.service.activity;
+package com.keykat.keykat.brawlkat.service.systembarservice;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;

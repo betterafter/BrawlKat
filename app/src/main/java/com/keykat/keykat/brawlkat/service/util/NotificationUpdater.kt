@@ -8,7 +8,7 @@ import android.text.Html
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.keykat.keykat.brawlkat.R
-import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotificationActivity
+import com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity
 import com.keykat.keykat.brawlkat.util.KatData
 import com.keykat.keykat.brawlkat.util.KatData.glideImageWithNotification
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser

@@ -7,7 +7,7 @@ import android.provider.Settings;
 import android.widget.Toast;
 
 import com.keykat.keykat.brawlkat.load.activity.kat_LoadBeforeMainActivity;
-import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.kat_Service_OverdrawService;
 import com.keykat.keykat.brawlkat.util.KatData;
 
 public class kat_ButtonBroadcastReceiver extends BroadcastReceiver {
@@ -23,7 +23,7 @@ public class kat_ButtonBroadcastReceiver extends BroadcastReceiver {
         else if(intent.getAction().equals("main.ANALYTICS")){
 
             if(Settings.canDrawOverlays(context)) {
-                Intent serviceIntent = new Intent(context, kat_Service_OverdrawActivity.class);
+                Intent serviceIntent = new Intent(context, kat_Service_OverdrawService.class);
                 context.startService(serviceIntent);
                 KatData.isForegroundServiceStart = true;
             } else {
@@ -31,7 +31,7 @@ public class kat_ButtonBroadcastReceiver extends BroadcastReceiver {
             }
         }
         else if(intent.getAction().equals("overdraw.STOP")){
-            Intent serviceIntent = new Intent(context, kat_Service_OverdrawActivity.class);
+            Intent serviceIntent = new Intent(context, kat_Service_OverdrawService.class);
             context.stopService(serviceIntent);
         }
     }

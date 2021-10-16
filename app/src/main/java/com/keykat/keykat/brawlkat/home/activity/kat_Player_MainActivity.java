@@ -26,8 +26,8 @@ import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.home.search.activity.kat_SearchFragment;
 import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotificationActivity;
-import com.keykat.keykat.brawlkat.service.activity.kat_Service_OverdrawActivity;
+import com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.kat_Service_OverdrawService;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -91,7 +91,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             startForegroundService(foregroundServiceIntent);
         }
 
-        serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawActivity.class);
+        serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawService.class);
         KatData.dialog = new kat_LoadingDialog(this);
 
         kat_player_mainActivity = this;

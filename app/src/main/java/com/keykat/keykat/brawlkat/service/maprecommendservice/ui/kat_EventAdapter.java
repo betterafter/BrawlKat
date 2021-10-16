@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.service.util;
+package com.keykat.keykat.brawlkat.service.maprecommendservice.ui;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -18,7 +18,8 @@ import com.bumptech.glide.load.DecodeFormat;
 import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.service.activity.kat_Service_EventActivity;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendPresenter;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -31,24 +32,26 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.viewHolder> {
-
+public class kat_EventAdapter
+        extends RecyclerView.Adapter<kat_EventAdapter.viewHolder>
+        implements MapRecommendContract.RecyclerView {
 
     private final Context context;
     private final ArrayList<kat_eventsParser.pair> EventArrayList;
     private final ArrayList<HashMap<String, Object>> BrawlersArrayList;
-    private final kat_Service_EventActivity eventActivity;
     private ArrayList<String> playerBrawlersArrayList;
+    private MapRecommendPresenter presenter;
+    private Boolean isUserRecommend = false;
 
 
     public kat_EventAdapter(Context context, ArrayList<kat_eventsParser.pair> EventArrayList,
                             ArrayList<HashMap<String, Object>> BrawlersArrayList,
-                            kat_Service_EventActivity eventActivity
+                            MapRecommendPresenter presenter
     ) {
         this.context = context;
         this.EventArrayList = EventArrayList;
         this.BrawlersArrayList = BrawlersArrayList;
-        this.eventActivity = eventActivity;
+        this.presenter = presenter;
     }
 
     @NonNull
@@ -65,8 +68,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
         holder.fastImageLoad();
         holder.onBind(position);
-
-        holder.onBrawlerRecommendsBind(position, eventActivity.changeRecommendView);
+        holder.onBrawlerRecommendsBind(position);
     }
 
     @Override
@@ -77,6 +79,12 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
     @SuppressLint("NotifyDataSetChanged")
     public void refresh() {
         this.notifyDataSetChanged();
+    }
+
+    @Override
+    public void updateRecommendState(boolean state) {
+        isUserRecommend = state;
+        refresh();
     }
 
 
@@ -104,7 +112,6 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
             this.EventArrayList = EventArrayList;
             this.BrawlersArrayList = BrawlersArrayList;
         }
-
 
         public void fastImageLoad() {
             options = new RequestOptions()
@@ -143,7 +150,7 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
         // 전체 브롤러 추천 뷰
         @SuppressLint("SetTextI18n")
-        public void onBrawlerRecommendsBind(int position, boolean isUserRecommend) {
+        public void onBrawlerRecommendsBind(int position) {
 
             RecommendsLayout.removeAllViews();
 
@@ -187,7 +194,6 @@ public class kat_EventAdapter extends RecyclerView.Adapter<kat_EventAdapter.view
 
                 for (int j = 0; j < 5; j++) {
 
-                    //if(EventArrayList.get(position).getWins().size() == i) return;
                     if (EventArrayList.get(position).getWins().size() <= i) break;
 
 
