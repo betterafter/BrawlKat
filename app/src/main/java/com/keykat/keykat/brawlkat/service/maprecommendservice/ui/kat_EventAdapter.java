@@ -81,7 +81,6 @@ public class kat_EventAdapter
     public void updateRecommendState(boolean state) {
         isUserRecommend = state;
         notifyDataSetChanged();
-        System.out.println("!!!!!");
     }
 
 
@@ -148,8 +147,6 @@ public class kat_EventAdapter
         // 전체 브롤러 추천 뷰
         @SuppressLint("SetTextI18n")
         public void onBrawlerRecommendsBind(int position) {
-
-            System.out.println("!#!@#!@#@!#!@#");
             RecommendsLayout.removeAllViews();
 
             if (isUserRecommend) {

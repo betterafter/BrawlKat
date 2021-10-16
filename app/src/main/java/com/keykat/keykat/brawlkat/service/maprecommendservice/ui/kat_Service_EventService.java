@@ -93,19 +93,26 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
 
     // 서비스 실행 시에 보여지는 화면
     public void ShowEventsInformation() {
-        WindowManager.LayoutParams mapRecommendLayoutParams = new WindowManager.LayoutParams(
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.WRAP_CONTENT,
-                WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
-                WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
-                        | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
-                PixelFormat.TRANSLUCENT
-        );
+        try {
+            windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
+            WindowManager.LayoutParams mapRecommendLayoutParams = new WindowManager.LayoutParams(
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.WRAP_CONTENT,
+                    WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
+                    WindowManager.LayoutParams.FLAG_NOT_TOUCH_MODAL
+                            | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
+                    PixelFormat.TRANSLUCENT
+            );
+            if(mapRecommendView.getWindowToken() != null) {
+                windowManager.removeView(mapRecommendView);
+            }
 
-        if (mapRecommendView.getWindowToken() == null) {
             mapRecommendLayoutParams.height = fixedHeight;
             mapRecommendLayoutParams.width = fixedWidth / 2;
             windowManager.addView(mapRecommendView, mapRecommendLayoutParams);
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
@@ -191,8 +198,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
 //                mLastClickTime = SystemClock.elapsedRealtime();
 //                return;
 //            }
-
-            System.out.println(isPlayerRecommend);
+            
             isPlayerRecommend = !isPlayerRecommend;
             if (isPlayerRecommend) {
                 presenter.setOnPlayerRecommendClicked();
