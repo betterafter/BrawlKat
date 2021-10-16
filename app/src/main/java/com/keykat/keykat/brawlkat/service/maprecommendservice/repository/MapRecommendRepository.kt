@@ -5,4 +5,5 @@ import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser
 
 interface MapRecommendRepository {
     fun getPlayerInfoData(): kat_official_playerInfoParser.playerData?
+    fun getMapRecommendData(viewCallback: () -> (Unit))
 }

@@ -81,5 +81,10 @@
     <string name="dev_email">koin20000@gmail.com</string>
     <string name="dev_blog_title">개발자 블로그 Developer\'s blog</string>
     <string name="dev_blog">https://keykat7.blogspot.com</string>
+
+
+    <!--Service-->
+    <string name="playerChange">My</string>
+    <string name="allChange">All</string>
 </resources>
 

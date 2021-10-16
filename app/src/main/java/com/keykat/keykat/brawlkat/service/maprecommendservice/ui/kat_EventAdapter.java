@@ -42,7 +42,8 @@ public class kat_EventAdapter
     private Boolean isUserRecommend = false;
 
 
-    public kat_EventAdapter(Context context, ArrayList<kat_eventsParser.pair> EventArrayList,
+    public kat_EventAdapter(Context context,
+                            ArrayList<kat_eventsParser.pair> EventArrayList,
                             ArrayList<HashMap<String, Object>> BrawlersArrayList
     ) {
         this.context = context;
@@ -72,14 +73,16 @@ public class kat_EventAdapter
         return EventArrayList.size();
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    public void refresh() {
-        this.notifyDataSetChanged();
+    @Override
+    public void updateRecommendState(boolean state) {
+        System.out.println(isUserRecommend);
+        isUserRecommend = state;
+        refresh();
     }
 
     @Override
-    public void updateRecommendState(boolean state) {
-        isUserRecommend = state;
+    @SuppressLint("NotifyDataSetChanged")
+    public void refresh() {
         notifyDataSetChanged();
     }
 
@@ -135,7 +138,8 @@ public class kat_EventAdapter
             MapType.setText(name);
 
             Glide.with(context)
-                    .load(backgroundUrl).override(width / 2, height / 5)
+                    .load(backgroundUrl)
+                    .override(width / 2, height / 5)
                     .into(background);
 
             Glide.with(context)

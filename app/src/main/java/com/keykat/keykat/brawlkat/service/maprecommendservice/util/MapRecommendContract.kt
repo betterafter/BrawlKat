@@ -14,6 +14,7 @@ class MapRecommendContract {
 
     interface RecyclerView {
        fun updateRecommendState(state: Boolean)
+       fun refresh()
     }
 
     interface Presenter {
