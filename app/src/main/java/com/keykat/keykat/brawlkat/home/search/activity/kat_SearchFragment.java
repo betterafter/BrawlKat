@@ -29,7 +29,6 @@ import com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivit
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
-import com.keykat.keykat.brawlkat.util.network.Client;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
@@ -44,12 +43,6 @@ import androidx.fragment.app.Fragment;
 
 public class kat_SearchFragment extends Fragment {
 
-
-    private kat_Player_MainActivity kat_player_mainActivity;
-    private Client client;
-
-    private boolean touchOutsideOfMyAccount = true;
-    private LinearLayout inputMyAccount;
     private kat_official_playerInfoParser.playerData playerData;
     private ArrayList<HashMap<String, Object>> BrawlerArrayList;
 
@@ -59,18 +52,11 @@ public class kat_SearchFragment extends Fragment {
 
     private kat_LoadingDialog dialog;
 
-
-    public kat_SearchFragment(kat_Player_MainActivity kat_player_mainActivity) {
-        this.kat_player_mainActivity = kat_player_mainActivity;
-    }
-
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         dialog = new kat_LoadingDialog(getActivity());
-        client = KatData.client;
 
         options = new RequestOptions()
                 .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
@@ -84,7 +70,7 @@ public class kat_SearchFragment extends Fragment {
     }
 
 
-    @SuppressLint("ClickableViewAccessibility")
+    @SuppressLint({"ClickableViewAccessibility", "SetTextI18n"})
     public View onCreateView(
             @NonNull LayoutInflater inflater,
             @Nullable ViewGroup container,

@@ -96,7 +96,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
 
         kat_player_mainActivity = this;
 
-        kat_searchFragment = new kat_SearchFragment(kat_Player_MainActivity.this);
+        kat_searchFragment = new kat_SearchFragment();
         kat_favoritesFragment = new kat_FavoritesFragment();
         kat_rankingFragment = new kat_RankingFragment();
 
@@ -104,9 +104,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         BottomNavigationView bottomNavigationView = findViewById(R.id.bottomNavi);
         bottomNavigationView.setOnNavigationItemSelectedListener(menuItem -> {
 
-            kat_searchFragment = new kat_SearchFragment(
-                    kat_Player_MainActivity.this
-            );
+            kat_searchFragment = new kat_SearchFragment();
             kat_favoritesFragment = new kat_FavoritesFragment();
             kat_rankingFragment = new kat_RankingFragment();
 
