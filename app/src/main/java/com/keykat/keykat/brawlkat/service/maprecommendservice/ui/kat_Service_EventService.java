@@ -4,7 +4,6 @@ import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.PixelFormat;
 import android.graphics.Typeface;
-import android.graphics.drawable.Drawable;
 import android.os.SystemClock;
 import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
@@ -17,8 +16,9 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.keykat.keykat.brawlkat.R;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
-import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendPresenter;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendViewPagerPresenter;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 
@@ -41,7 +41,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
     private kat_EventAdapter eventAdapter;
 
 
-    private MapRecommendPresenter presenter;
+    private MapRecommendViewPagerPresenter presenter;
     private MapRecommendContract.MainView mainView;
 
 
@@ -52,23 +52,24 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
     public ArrayList<HashMap<String, Object>> BrawlersArrayList;
 
     private ViewPager2 viewPager = null;
-    public boolean changeRecommendView = false;
+    public boolean isPlayerRecommend = false;
 
     private static long mLastClickTime = 0;
     public boolean isEventThreadStart = true;
 
 
     public kat_Service_EventService(Context context,
-                                    kat_EventAdapter eventAdapter,
+                                    MapRecommendRepository repository,
                                     MapRecommendContract.MainView mainView,
-                                    View.OnTouchListener touchListener,
-                                    MapRecommendPresenter presenter) {
+                                    View.OnTouchListener touchListener) {
         super();
         this.context = context;
-        this.eventAdapter = eventAdapter;
         this.mainView = mainView;
         this.touchListener = touchListener;
-        this.presenter = presenter;
+
+        this.presenter = new MapRecommendViewPagerPresenter(
+                repository, this, eventAdapter
+        );
 
         init_mapInflater();
     }
@@ -134,8 +135,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
                         eventAdapter = new kat_EventAdapter(
                                 context,
                                 EventArrayList,
-                                BrawlersArrayList,
-                                presenter
+                                BrawlersArrayList
                         );
                     }
 
@@ -183,17 +183,22 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
 
         btn.setOnClickListener(view -> {
 
-            if (SystemClock.elapsedRealtime() - mLastClickTime < 1500) {
-                return;
-            }
+//            if (SystemClock.elapsedRealtime() - mLastClickTime < 1500) {
+//                return;
+//            }
+//
+//            if (KatData.playerTag == null) {
+//                mLastClickTime = SystemClock.elapsedRealtime();
+//                return;
+//            }
 
-            if (KatData.playerTag == null) {
-                mLastClickTime = SystemClock.elapsedRealtime();
-                return;
+            System.out.println(isPlayerRecommend);
+            isPlayerRecommend = !isPlayerRecommend;
+            if (isPlayerRecommend) {
+                presenter.setOnPlayerRecommendClicked();
+            } else {
+                presenter.setOnAllRecommendClicked();
             }
-
-            changeRecommendView = !changeRecommendView;
-            presenter.setOnPlayerRecommendClicked(changeRecommendView);
 
             int length = ((ViewGroup) btn.getParent()).getWidth();
 
@@ -205,17 +210,12 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
             params1.setMargins(5, 5, 5, 5);
             btn.setLayoutParams(params1);
 
-            Drawable drawable
-                    = context.getResources().getDrawable(R.drawable.round_rotate_right_24_small);
-            btn.setBackground(drawable);
-            btn.setText("");
-
             mLastClickTime = SystemClock.elapsedRealtime();
         });
     }
 
     @Override
-    public void setOnPlayerRecommendButtonClick(boolean isPlayerRecommend) {
+    public void setOnPlayerRecommendButtonClick() {
         Button changeButton = (Button) mapRecommendButtonGroup.getChildAt(mapRecommendButtonGroup.getChildCount() - 1);
         changeButton.setText("My");
         changeButton.setTextSize(12);
@@ -223,7 +223,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
     }
 
     @Override
-    public void setOnAllRecommendButtonClick(boolean isPlayerRecommend) {
+    public void setOnAllRecommendButtonClick() {
         Button changeButton = (Button) mapRecommendButtonGroup.getChildAt(mapRecommendButtonGroup.getChildCount() - 1);
         changeButton.setText("All");
         changeButton.setTextSize(10);
@@ -283,7 +283,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
 
         if (windowManager != null) {
             if (mapRecommendView != null) {
-                if(mapRecommendView.getWindowToken() != null) {
+                if (mapRecommendView.getWindowToken() != null) {
                     windowManager.removeView(mapRecommendView);
                 }
             }

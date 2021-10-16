@@ -50,7 +50,6 @@ public class kat_Service_OverdrawService
     private final MapRecommendRepository repository
             = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource());
 
-    public kat_EventAdapter eventAdapter;
 
     // 기타 변수들
     private float mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
@@ -93,8 +92,8 @@ public class kat_Service_OverdrawService
         init_windowManager();
 
         // EventActivity 선언 및 뷰 생성
-        events = new kat_Service_EventService(context, eventAdapter, this, this, presenter);
-        presenter = new MapRecommendPresenter(repository, this, events, eventAdapter);
+        events = new kat_Service_EventService(context, repository, this, this);
+        presenter = new MapRecommendPresenter(repository, this);
         events.getCurrentEventsInformation();
 
 

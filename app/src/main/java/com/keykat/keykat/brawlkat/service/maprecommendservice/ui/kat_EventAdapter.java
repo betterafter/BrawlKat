@@ -19,7 +19,6 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
-import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendPresenter;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -40,18 +39,15 @@ public class kat_EventAdapter
     private final ArrayList<kat_eventsParser.pair> EventArrayList;
     private final ArrayList<HashMap<String, Object>> BrawlersArrayList;
     private ArrayList<String> playerBrawlersArrayList;
-    private MapRecommendPresenter presenter;
     private Boolean isUserRecommend = false;
 
 
     public kat_EventAdapter(Context context, ArrayList<kat_eventsParser.pair> EventArrayList,
-                            ArrayList<HashMap<String, Object>> BrawlersArrayList,
-                            MapRecommendPresenter presenter
+                            ArrayList<HashMap<String, Object>> BrawlersArrayList
     ) {
         this.context = context;
         this.EventArrayList = EventArrayList;
         this.BrawlersArrayList = BrawlersArrayList;
-        this.presenter = presenter;
     }
 
     @NonNull
@@ -84,7 +80,8 @@ public class kat_EventAdapter
     @Override
     public void updateRecommendState(boolean state) {
         isUserRecommend = state;
-        refresh();
+        notifyDataSetChanged();
+        System.out.println("!!!!!");
     }
 
 
@@ -152,6 +149,7 @@ public class kat_EventAdapter
         @SuppressLint("SetTextI18n")
         public void onBrawlerRecommendsBind(int position) {
 
+            System.out.println("!#!@#!@#@!#!@#");
             RecommendsLayout.removeAllViews();
 
             if (isUserRecommend) {

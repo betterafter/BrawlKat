@@ -8,8 +8,8 @@ class MapRecommendContract {
     }
 
     interface ViewpagerView {
-        fun setOnPlayerRecommendButtonClick(isPlayerRecommend: Boolean)
-        fun setOnAllRecommendButtonClick(isPlayerRecommend: Boolean)
+        fun setOnPlayerRecommendButtonClick()
+        fun setOnAllRecommendButtonClick()
     }
 
     interface RecyclerView {
@@ -18,5 +18,10 @@ class MapRecommendContract {
 
     interface Presenter {
         fun fetchPlayerBrawlersArrayList(): ArrayList<String>
+    }
+
+    interface ViewPagerPresenter {
+        fun setOnPlayerRecommendClicked()
+        fun setOnAllRecommendClicked()
     }
 }
