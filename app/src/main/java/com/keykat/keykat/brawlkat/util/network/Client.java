@@ -70,7 +70,6 @@ public class Client {
             try {
 
                 while (true) {
-
                     if (tag == null) continue;
                     SocketAddress socketAddress = new InetSocketAddress(ORACLEIPADDRESS, 9000);
                     Socket socket = new Socket();
@@ -109,7 +108,6 @@ public class Client {
                     resOffiData = new ArrayList<>();
 
                     while (true) {
-
                         split = result.indexOf(boundaryCode, startidx);
 
                         if (split == -1) break;
