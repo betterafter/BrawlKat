@@ -1,6 +1,10 @@
 package com.keykat.keykat.brawlkat.service.maprecommendservice.util
 
 import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository
+import com.keykat.keykat.brawlkat.util.KatData
+import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser.pair
+import java.util.ArrayList
+import java.util.HashMap
 
 class MapRecommendViewPagerPresenter(
     private val mapRecommendRepository: MapRecommendRepository,
@@ -16,5 +20,11 @@ class MapRecommendViewPagerPresenter(
     override fun setOnAllRecommendClicked() {
         viewPagerView.setOnAllRecommendButtonClick()
         recyclerView?.updateRecommendState(false)
+    }
+
+    fun getMapRecommendData() {
+        mapRecommendRepository.getMapRecommendData {
+            recyclerView?.refresh()
+        }
     }
 }

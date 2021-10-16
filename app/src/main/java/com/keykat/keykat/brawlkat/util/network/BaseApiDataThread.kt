@@ -36,8 +36,8 @@ class BaseApiDataThread(val context: Context) : Thread() {
 
         while (true) {
             try {
-                getData()
-                if(!checkApplicationIsRun()) break
+                getData(null)
+                if (!checkApplicationIsRun()) break
 
                 sleep(time.toLong())
 
@@ -59,7 +59,7 @@ class BaseApiDataThread(val context: Context) : Thread() {
         }
     }
 
-    fun getData() {
+    fun getData(viewCallback: (() -> (Unit))?) {
         val socketAddress: SocketAddress = InetSocketAddress(oracleAddress, 9000)
         val socket = Socket()
         socket.connect(socketAddress)
@@ -104,16 +104,14 @@ class BaseApiDataThread(val context: Context) : Thread() {
         os.close()
         socket.close()
 
+        viewCallback?.let { viewCallback() }
     }
 
     private fun checkApplicationIsRun(): Boolean {
         // usageEvent를 이용하여 현재 앱이 실행 중인지를 확인하고, 실행 중이 아니라면 데이터를 가져오는 것을
         // 못하게 막기
         val currName = getTopPackageName(context)
-        if (currName == null
-            || currName.isEmpty()
-            || currName
-                .lowercase(Locale.getDefault())
+        if (currName == null || currName.isEmpty() || currName.lowercase(Locale.getDefault())
                 .contains(context.getAppName())
         ) return false
 

@@ -27,6 +27,7 @@ import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendD
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendPresenter;
 import com.keykat.keykat.brawlkat.service.util.kat_ButtonBroadcastReceiver;
 import com.keykat.keykat.brawlkat.util.KatData;
+import com.keykat.keykat.brawlkat.util.network.BaseApiDataThread;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -36,10 +37,11 @@ public class kat_Service_OverdrawService
         extends Service
         implements View.OnTouchListener, MapRecommendContract.MainView {
 
+    public Context context;
+
     // 윈도우 매니저
     public WindowManager windowManager;
     public WindowManager.LayoutParams layoutParams;
-    public Context context;
 
     // 뷰
     private Button btn;
@@ -47,8 +49,9 @@ public class kat_Service_OverdrawService
     private kat_Service_EventService events;
 
     private MapRecommendPresenter presenter;
-    private final MapRecommendRepository repository
-            = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource());
+    private MapRecommendRepository repository;
+
+    private BaseApiDataThread baseApiDataThread;
 
 
     // 기타 변수들
@@ -85,8 +88,8 @@ public class kat_Service_OverdrawService
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = getApplicationContext();
+        repository = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource(context));
         searchThread = new kat_SearchThread();
-
 
         init_Inflater();
         init_windowManager();
@@ -94,8 +97,6 @@ public class kat_Service_OverdrawService
         // EventActivity 선언 및 뷰 생성
         events = new kat_Service_EventService(context, repository, this, this);
         presenter = new MapRecommendPresenter(repository, this);
-        events.getCurrentEventsInformation();
-
 
         if (!KatData.client.isGetApiThreadAlive())
             KatData.client.init();
@@ -261,7 +262,6 @@ public class kat_Service_OverdrawService
                 if (Math.abs(mWidgetStartingX - layoutParams.x) <= 30
                         && Math.abs(mWidgetStartingY - layoutParams.y) <= 30) {
                     events.ShowEventsInformation();
-                    events.Change();
                     events.addModeButton();
                     events.ChangeRecommendViewClick();
                 }
