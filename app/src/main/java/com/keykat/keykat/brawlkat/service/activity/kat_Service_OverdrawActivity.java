@@ -32,16 +32,13 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
     // 윈도우 매니저
     public WindowManager windowManager;
-    public WindowManager mapWindowManager;
     public WindowManager.LayoutParams layoutParams;
-    public WindowManager.LayoutParams mapRecommend;
     public Context context;
 
 
     // 뷰
     private Button btn;
     public ConstraintLayout constraintLayout;
-    public View mapRecommendView;
     public LayoutInflater layoutInflater;
     private kat_Service_EventActivity events;
 
@@ -82,7 +79,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
         // EventActivity 선언 및 뷰 생성
         events = new kat_Service_EventActivity(context, this);
-        events.init_mapInflater();
         events.getCurrentEventsInformation();
 
 
