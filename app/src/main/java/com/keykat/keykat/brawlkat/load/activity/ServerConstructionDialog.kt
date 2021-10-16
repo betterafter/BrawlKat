@@ -17,7 +17,7 @@ class ServerConstructionDialog {
             val dialog = Dialog(activity)
             dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
             dialog.setCancelable(false)
-            dialog.setContentView(R.layout.load_server_construction_dialog)
+            dialog.setContentView(R.layout.dialog_load_server_construction)
             dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
             dialog.findViewById<Button>(R.id.finishbutton).setOnClickListener {
