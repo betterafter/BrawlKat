@@ -32,6 +32,10 @@ import androidx.viewpager2.widget.ViewPager2;
 
 public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
+    private View mapRecommendView;
+    private WindowManager windowManager;
+
+
     private final Context context;
     private final kat_Service_OverdrawActivity overdrawActivity;
     public getEventsThread eventsThread;
@@ -55,6 +59,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         this.context = context;
         this.overdrawActivity = overdrawActivity;
 
+        init_mapInflater();
     }
 
     // map inflater 초기화
@@ -62,17 +67,15 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
     public void init_mapInflater() {
         layoutInflater
                 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-
-        overdrawActivity.mapRecommendView
+        windowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
+        mapRecommendView
                 = layoutInflater.inflate(R.layout.service_map_recommend, null);
-
-        overdrawActivity.mapRecommendView.setOnTouchListener(this);
+        mapRecommendView.setOnTouchListener(this);
     }
 
     // 서비스 실행 시에 보여지는 화면
     public void ShowEventsInformation() {
-
-        overdrawActivity.mapRecommend = new WindowManager.LayoutParams(
+        WindowManager.LayoutParams mapRecommendLayoutParams = new WindowManager.LayoutParams(
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.WRAP_CONTENT,
                 WindowManager.LayoutParams.TYPE_APPLICATION_OVERLAY,
@@ -81,23 +84,20 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 PixelFormat.TRANSLUCENT
         );
 
-        if (overdrawActivity.mapWindowManager == null)
-            overdrawActivity.mapWindowManager = (WindowManager) context.getSystemService(WINDOW_SERVICE);
-
-        if (overdrawActivity.mapRecommendView.getWindowToken() == null) {
+        if (mapRecommendView.getWindowToken() == null) {
 
             DisplayMetrics metrics = new DisplayMetrics();
-            overdrawActivity.mapWindowManager.getDefaultDisplay().getMetrics(metrics);
+            windowManager.getDefaultDisplay().getMetrics(metrics);
 
             int fixedWidth = Math.max(metrics.heightPixels, metrics.widthPixels);
 
-            overdrawActivity.mapRecommend.height
+            mapRecommendLayoutParams.height
                     = Math.min(metrics.heightPixels, metrics.widthPixels);
-            overdrawActivity.mapRecommend.width = fixedWidth / 2;
+            mapRecommendLayoutParams.width = fixedWidth / 2;
 
-            overdrawActivity.mapWindowManager.addView(
-                    overdrawActivity.mapRecommendView,
-                    overdrawActivity.mapRecommend
+            windowManager.addView(
+                    mapRecommendView,
+                    mapRecommendLayoutParams
             );
         }
     }
@@ -137,7 +137,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                     if (!KatData.isForegroundServiceStart) break;
 
                     if (viewPager == null) {
-                        viewPager = overdrawActivity.mapRecommendView.findViewById(R.id.viewPager2);
+                        viewPager = mapRecommendView.findViewById(R.id.viewPager2);
                         eventAdapter = new kat_EventAdapter(
                                 context,
                                 EventArrayList,
@@ -164,7 +164,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
 
         final Button btn = new Button(context);
-        LinearLayout buttonGroup = overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
+        LinearLayout buttonGroup = mapRecommendView.findViewById(R.id.buttonGroup);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
@@ -197,7 +197,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
                 return;
             }
 
-            if (getPlayerTag == null) {
+            if (KatData.playerTag == null) {
                 mLastClickTime = SystemClock.elapsedRealtime();
                 return;
             }
@@ -269,8 +269,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
         int setWidth = Math.max(width, height);
-        LinearLayout buttonGroup
-                = overdrawActivity.mapRecommendView.findViewById(R.id.buttonGroup);
+        LinearLayout buttonGroup = mapRecommendView.findViewById(R.id.buttonGroup);
         buttonGroup.removeAllViews();
 
         for (int i = 0; i < EventArrayList.size(); i++) {
@@ -303,12 +302,7 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
 
 
             final int idx = i;
-            btn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    viewPager.setCurrentItem(idx, true);
-                }
-            });
+            btn.setOnClickListener(view -> viewPager.setCurrentItem(idx, true));
 
             buttonGroup.addView(btn);
         }
@@ -323,9 +317,9 @@ public class kat_Service_EventActivity extends kat_Service_OverdrawActivity {
             eventsThread = null;
         }
 
-        if (overdrawActivity.mapWindowManager != null) {
-            if (overdrawActivity.mapRecommendView != null)
-                overdrawActivity.mapWindowManager.removeView(overdrawActivity.mapRecommendView);
+        if (windowManager != null) {
+            if (mapRecommendView != null)
+                windowManager.removeView(mapRecommendView);
         }
     }
 }
