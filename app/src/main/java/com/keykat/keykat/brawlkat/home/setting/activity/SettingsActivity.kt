@@ -10,7 +10,7 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import com.keykat.keykat.brawlkat.R
-import com.keykat.keykat.brawlkat.service.activity.kat_Service_BrawlStarsNotificationActivity
+import com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity
 
 class SettingsActivity : AppCompatActivity() {
 

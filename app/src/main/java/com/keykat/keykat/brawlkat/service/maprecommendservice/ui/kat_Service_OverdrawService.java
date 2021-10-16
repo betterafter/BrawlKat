@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.service.activity;
+package com.keykat.keykat.brawlkat.service.maprecommendservice.ui;
 
 import android.annotation.SuppressLint;
 import android.app.NotificationChannel;
@@ -12,7 +12,6 @@ import android.os.Handler;
 import android.os.IBinder;
 import android.os.Looper;
 import android.util.DisplayMetrics;
-import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
@@ -21,6 +20,11 @@ import android.widget.LinearLayout;
 import android.widget.RemoteViews;
 
 import com.keykat.keykat.brawlkat.R;
+import com.keykat.keykat.brawlkat.common.Injection;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendDataSource;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendPresenter;
 import com.keykat.keykat.brawlkat.service.util.kat_ButtonBroadcastReceiver;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
@@ -28,20 +32,25 @@ import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 
-public class kat_Service_OverdrawActivity extends Service implements View.OnTouchListener {
+public class kat_Service_OverdrawService
+        extends Service
+        implements View.OnTouchListener, MapRecommendContract.MainView {
 
     // 윈도우 매니저
     public WindowManager windowManager;
     public WindowManager.LayoutParams layoutParams;
     public Context context;
 
-
     // 뷰
     private Button btn;
     public ConstraintLayout constraintLayout;
-    public LayoutInflater layoutInflater;
-    private kat_Service_EventActivity events;
+    private kat_Service_EventService events;
 
+    private MapRecommendPresenter presenter;
+    private final MapRecommendRepository repository
+            = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource());
+
+    public kat_EventAdapter eventAdapter;
 
     // 기타 변수들
     private float mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
@@ -63,6 +72,12 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
     private NotificationManager mNotificationManager;
 
+
+    @Override
+    public void onCreate() {
+        super.onCreate();
+    }
+
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -78,7 +93,8 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         init_windowManager();
 
         // EventActivity 선언 및 뷰 생성
-        events = new kat_Service_EventActivity(context, this);
+        events = new kat_Service_EventService(context, eventAdapter, this, this, presenter);
+        presenter = new MapRecommendPresenter(repository, this, events, eventAdapter);
         events.getCurrentEventsInformation();
 
 
@@ -121,12 +137,6 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         startForeground(2, notification.build());
         return START_STICKY;
     }
-
-    @Override
-    public void onCreate() {
-        super.onCreate();
-    }
-
 
     // 메인 버튼 생성
     public void init_Inflater() {
@@ -188,9 +198,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
         timeThread = null;
 
         if (events != null) {
-            events.isEventThreadStart = false;
-            events.eventsThread = null;
-
+            events.onDismiss();
             events = null;
         }
         try {
@@ -261,6 +269,7 @@ public class kat_Service_OverdrawActivity extends Service implements View.OnTouc
 
             case MotionEvent.ACTION_OUTSIDE:
                 onButtonLongTouchHandler.removeCallbacks(onButtonLongTouchRunnable);
+                events.onDismiss();
 
         }
 
