@@ -84,18 +84,19 @@ class BaseApiDataThread(val context: Context) : Thread() {
 
         // API 데이터 파싱
         var splited: String
-        Client.resData = ArrayList()
+        val resData: ArrayList<String> = ArrayList()
+
         while (true) {
             split = result.indexOf(boundaryCode, startidx)
             if (split == -1) break
             splited = result.substring(startidx, split)
-            Client.resData.add(splited)
+            resData.add(splited)
             startidx = split + boundaryCode.length
         }
 
-        eventsParser = kat_eventsParser(Client.resData[0])
-        brawlersParser = kat_brawlersParser(Client.resData[1])
-        mapsParser = kat_mapsParser(Client.resData[2])
+        eventsParser = kat_eventsParser(resData[0])
+        brawlersParser = kat_brawlersParser(resData[1])
+        mapsParser = kat_mapsParser(resData[2])
 
         KatData.EventArrayList = eventsParser.DataParser()
         KatData.BrawlersArrayList = brawlersParser.DataParser()

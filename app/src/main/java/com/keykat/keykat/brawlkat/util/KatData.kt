@@ -27,6 +27,8 @@ import com.keykat.keykat.brawlkat.util.parser.kat_official_PowerPlaySeasonParser
 import com.keykat.keykat.brawlkat.util.parser.kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData
 import java.lang.Exception
 import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 object KatData {
 

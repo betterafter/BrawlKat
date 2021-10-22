@@ -11,6 +11,9 @@ import com.keykat.keykat.brawlkat.util.network.BaseApiDataThread
 import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser
 import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.InetSocketAddress
@@ -26,6 +29,8 @@ class MapRecommendDataSource(
     fun getPlayerInfoData() = KatData.eventsPlayerData.value
 
     fun getMapRecommendViewData(viewCallback: () -> (Unit)) {
-        baseApiDataThread.getData(viewCallback)
+        CoroutineScope(Dispatchers.IO).launch {
+            baseApiDataThread.getData(viewCallback)
+        }
     }
 }

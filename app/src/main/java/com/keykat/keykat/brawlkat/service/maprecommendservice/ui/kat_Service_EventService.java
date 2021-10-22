@@ -59,7 +59,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
         this.mainView = mainView;
         this.touchListener = touchListener;
 
-        init_mapInflater();
+        initMapInflater();
         this.presenter = new MapRecommendViewPagerPresenter(
                 repository, this, eventAdapter
         );
@@ -67,7 +67,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
 
     // map inflater 초기화
     @SuppressLint("InflateParams")
-    public void init_mapInflater() {
+    public void initMapInflater() {
         LayoutInflater layoutInflater
                 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         mapRecommendView = layoutInflater.inflate(R.layout.service_map_recommend, null);
@@ -93,8 +93,6 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
     // 서비스 실행 시에 보여지는 화면
     public void ShowEventsInformation() {
         try {
-            presenter.getMapRecommendData();
-
             windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             WindowManager.LayoutParams mapRecommendLayoutParams = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.WRAP_CONTENT,
@@ -112,6 +110,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
             mapRecommendLayoutParams.width = fixedWidth / 2;
             windowManager.addView(mapRecommendView, mapRecommendLayoutParams);
 
+            presenter.getMapRecommendData();
         } catch (Exception e) {
             e.printStackTrace();
         }
