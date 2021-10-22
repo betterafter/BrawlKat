@@ -7,12 +7,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.keykat.keykat.brawlkat.common.IntentKey;
 import com.keykat.keykat.brawlkat.service.util.NotificationContract;
+import com.keykat.keykat.brawlkat.service.util.NotificationData;
 import com.keykat.keykat.brawlkat.service.util.NotificationPresenter;
 import com.keykat.keykat.brawlkat.service.util.NotificationUpdater;
-import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser;
-import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
-import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -31,11 +30,6 @@ public class kat_Service_BrawlStarsNotificationActivity
     private NotificationPresenter notificationPresenter;
     public NotificationUpdater updater;
 
-    private kat_eventsParser eventsParser;
-    private kat_brawlersParser brawlersParser;
-    private kat_mapsParser mapsParser;
-
-
     @Nullable
     @Override
     public IBinder onBind(@NonNull Intent intent) {
@@ -53,12 +47,16 @@ public class kat_Service_BrawlStarsNotificationActivity
         super.onStartCommand(intent, flags, startId);
 
         notificationPresenter = new NotificationPresenter(this);
-        notificationPresenter.loadData();
+        notificationPresenter.loadData(
+                intent.getStringExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey()),
+                "players",
+                "official"
+        );
 
         initChannel();
-        initNotification();
+        initNotification(new NotificationData(null, null, null, null));
 
-        return START_STICKY;
+        return START_REDELIVER_INTENT;
     }
 
     public void initChannel() {
@@ -69,19 +67,22 @@ public class kat_Service_BrawlStarsNotificationActivity
         );
     }
 
-    public void initNotification() {
+    public void initNotification(NotificationData notificationData) {
         notificationManager
                 = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
         notificationManager.createNotificationChannel(channel);
 
-        updater = new NotificationUpdater(this, notificationManager);
+        updater = new NotificationUpdater(this, notificationManager, notificationData);
+        updater.update();
         notification = updater.getUpdatedNotification();
         startForeground(1, notification.build());
     }
 
     @Override
-    public void updateService() {
+    public void updateService(@NonNull NotificationData notificationData) {
+        updater = new NotificationUpdater(this, notificationManager, notificationData);
         updater.update();
+        notification = updater.getUpdatedNotification();
         notificationManager.notify(1, notification.build());
     }
 

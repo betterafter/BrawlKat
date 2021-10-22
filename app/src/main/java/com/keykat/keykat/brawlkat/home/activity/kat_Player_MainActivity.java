@@ -21,13 +21,14 @@ import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.keykat.keykat.brawlkat.R;
+import com.keykat.keykat.brawlkat.common.IntentKey;
 import com.keykat.keykat.brawlkat.home.favorite.activity.kat_FavoritesFragment;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.home.search.activity.kat_SearchFragment;
 import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.kat_Service_OverdrawService;
+import com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -88,10 +89,12 @@ public class kat_Player_MainActivity extends AppCompatActivity {
                     getApplicationContext(),
                     kat_Service_BrawlStarsNotificationActivity.class
             );
+            foregroundServiceIntent.putExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey(), KatData.playerTag);
             startForegroundService(foregroundServiceIntent);
         }
 
         serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawService.class);
+
         KatData.dialog = new kat_LoadingDialog(this);
 
         kat_player_mainActivity = this;
