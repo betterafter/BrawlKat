@@ -11,22 +11,49 @@ import androidx.core.app.NotificationCompat
 import com.keykat.keykat.brawlkat.R
 import com.keykat.keykat.brawlkat.common.glideImageWithNotification
 import com.keykat.keykat.brawlkat.util.KatData
+import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser
 import java.lang.Exception
+import java.util.ArrayList
+import java.util.HashMap
 
 class NotificationUpdater(
     private val context: Context,
-    private val notificationManager: NotificationManager
+    private val notificationManager: NotificationManager,
+    private val notificationData: NotificationData
 ) {
 
-    private var playerData: kat_official_playerInfoParser.playerData?
+    private var playerData: kat_official_playerInfoParser.playerData? = null
+    private var eventList: ArrayList<kat_eventsParser.pair>? = null
+    private var brawlerData: ArrayList<HashMap<String, Any>>? = null
+
+    private var brawlerRecommendation: kat_BrawlerRecommendation? = null
+
     private lateinit var notification: NotificationCompat.Builder
 
-    private val scv = smallContentView()
-    private val bcv = bigContentView()
+    private var scv: RemoteViews
+    private var bcv: RemoteViews
 
     init {
-        setSmallNotification()
+        notificationData.playerArrayList?.let {
+            if (notificationData.playerArrayList.size > 0) {
+                playerData = kat_official_playerInfoParser(notificationData.playerArrayList[0]).DataParser()
+            }
+        }
+
+        notificationData.eventArrayList?.let {
+            eventList = it
+        }
+
+        notificationData.brawlerArrayList?.let {
+            brawlerData = it
+        }
+
+        scv = smallContentView()
+        bcv = bigContentView()
+
+        brawlerRecommendation = kat_BrawlerRecommendation(playerData, eventList)
+        setErrorNotification()
     }
 
     private fun smallContentView(): RemoteViews {
@@ -85,6 +112,7 @@ class NotificationUpdater(
         val bigContentView = ctView(R.layout.main_notification_big)
         return try {
 
+            println("data: " + playerData?.tag)
             playerData?.let {
                 // 스타 포인트 연산
                 val seasonRewardsCalculator = kat_SeasonRewardsCalculator(it)
@@ -92,8 +120,7 @@ class NotificationUpdater(
                 bigContentView.setTextViewText(R.id.title, it.name)
                 bigContentView.setTextViewText(R.id.explain_text, " after season end")
                 bigContentView.setTextViewText(R.id.text, "$seasonRewards points")
-                val recommendation = kat_BrawlerRecommendation()
-                recommendation.init()
+                val recommendation = kat_BrawlerRecommendation(it, eventList)
 
                 val rIndex = recommendationBrawlerIndex
 
@@ -160,10 +187,8 @@ class NotificationUpdater(
     }
 
     fun update() {
-        playerData = KatData.eventsPlayerData.value
-        println(playerData?.name)
         try {
-            if (playerData != null) {
+            playerData?.let {
                 notification = NotificationCompat.Builder(
                     context, "channel"
                 )
@@ -174,10 +199,7 @@ class NotificationUpdater(
                     .setCustomContentView(scv)
                     .setCustomBigContentView(bcv)
                     .setShowWhen(false)
-            } else {
-                setSmallNotification()
-            }
-            if (playerData != null) {
+
                 val url = urlForBigContentViewRecommendBrawler()
                 if (url == "") return
 
@@ -189,16 +211,16 @@ class NotificationUpdater(
                     1,
                     url
                 )
+            } ?: run {
+                setErrorNotification()
             }
-            updaterNotify()
-
         } catch (e: Exception) {
             e.printStackTrace()
-            setSmallNotification()
         }
+        notificationManager.notify(1, notification.build())
     }
 
-    private fun setSmallNotification() {
+    private fun setErrorNotification() {
         notification = NotificationCompat.Builder(
             context, "channel"
         )
@@ -211,43 +233,35 @@ class NotificationUpdater(
     }
 
 
-
-
     fun getUpdatedNotification() = notification
 
-    private fun updaterNotify() {
-        notificationManager.notify(1, notification.build())
-    }
-
     private fun urlForBigContentViewRecommendBrawler(): String {
-
-        val brawlersArrayList = KatData.BrawlersArrayList
         var index = 0
 
         try {
-            val brawlerRecommendation = kat_BrawlerRecommendation()
-            brawlerRecommendation.init()
-            val id = brawlerRecommendation.recommend()
+            brawlerData?.let {
+                val id = brawlerRecommendation?.recommend()
 
-            for (i in brawlersArrayList.indices) {
-                if ((brawlersArrayList[i]["id"] as Int).toString() == id) {
-                    index = i
-                    break
+                for (i in it.indices) {
+                    if ((it[i]["id"] as Int).toString() == id) {
+                        index = i
+                        break
+                    }
                 }
+                return it[index]["imageUrl"].toString()
+            } ?: run {
+                return ""
             }
-            return brawlersArrayList[index]["imageUrl"].toString()
+
         } catch (e: Exception) {
             e.printStackTrace()
+            return ""
         }
-        return ""
     }
 
     private val recommendationBrawlerIndex: Int
         get() = try {
-
-            val brawlerRecommendation = kat_BrawlerRecommendation()
-            brawlerRecommendation.init()
-            val id = brawlerRecommendation.recommend()
+            val id = brawlerRecommendation?.recommend()
             var index = 0
 
             playerData?.let {

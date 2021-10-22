@@ -1,5 +1,7 @@
 package com.keykat.keykat.brawlkat.service.util
 
+import com.keykat.keykat.brawlkat.common.exceptions.InvalidBaseDataException
+import com.keykat.keykat.brawlkat.common.exceptions.InvalidPlayerDataException
 import com.keykat.keykat.brawlkat.util.KatData
 import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser
@@ -16,11 +18,7 @@ const val IP = "193.122.98.86"
 const val BOUNDARY = "this_is_a_kat_data_boundary!"
 
 class NotificationDataSource {
-
-    lateinit var playerData: kat_official_playerInfoParser.playerData
-
-
-    fun getBaseData(viewCallback: (() -> (Unit))?) {
+    fun getBaseData(): Result<NotificationData> {
 
         val socketAddress: SocketAddress = InetSocketAddress(IP, 9000)
         val socket = Socket()
@@ -67,14 +65,25 @@ class NotificationDataSource {
         os.close()
         socket.close()
 
-        viewCallback?.let { viewCallback() }
+        return if (resData.isEmpty()) {
+            Result.failure(InvalidBaseDataException(resData.toString()))
+        } else {
+            kotlin.runCatching {
+                NotificationData(
+                    eventsParser.DataParser(),
+                    brawlersParser.DataParser(),
+                    mapsParser.DataParser(),
+                    null
+                )
+            }
+        }
     }
 
     fun getPlayerData(
         tag: String,
         type: String,
         apiType: String
-    ) {
+    ): Result<NotificationData> {
         val socketAddress: SocketAddress = InetSocketAddress(IP, 9000)
         val socket = Socket()
         socket.connect(socketAddress)
@@ -84,10 +93,11 @@ class NotificationDataSource {
 
         // 데이터 보내기
         // playerTag를 먼저 보냄.
-
-        // 데이터 보내기
-        // playerTag를 먼저 보냄.
-        if (apiType == "official") result = "%23$tag" else if (apiType == "nofficial") result = tag
+        if (apiType == "official") {
+            result = "%23$tag"
+        } else if (apiType == "nofficial") {
+            result = tag
+        }
         result = type + "/" + result + "/" + apiType
         val os = socket.getOutputStream()
         bytes = result.toByteArray(StandardCharsets.UTF_8)
@@ -123,5 +133,13 @@ class NotificationDataSource {
         data.close()
         reader.close()
         socket.close()
+
+        return if (resData.isEmpty()) {
+            Result.failure(InvalidPlayerDataException(resData.toString()))
+        } else {
+            kotlin.runCatching {
+                NotificationData(null, null, null, resData)
+            }
+        }
     }
 }

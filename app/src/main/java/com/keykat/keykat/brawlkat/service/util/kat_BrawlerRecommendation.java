@@ -1,6 +1,5 @@
 package com.keykat.keykat.brawlkat.service.util;
 
-import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
@@ -9,7 +8,17 @@ import java.util.HashMap;
 
 public class kat_BrawlerRecommendation {
 
-    kat_official_playerInfoParser.playerData playerData;
+    private final kat_official_playerInfoParser.playerData playerData;
+    private final ArrayList<kat_eventsParser.pair> eventArrayList;
+
+    public kat_BrawlerRecommendation(
+            kat_official_playerInfoParser.playerData playerData,
+            ArrayList<kat_eventsParser.pair> eventArrayList
+    ) {
+        this.playerData = playerData;
+        this.eventArrayList = eventArrayList;
+    }
+
     int[] level  = new int[]{
             501, 525, 550, 575, 600, 625, 650, 675, 700, 725, 750, 775,
             800, 825, 850, 875, 900, 925, 950, 975, 1050, 1100, 1150,
@@ -27,14 +36,6 @@ public class kat_BrawlerRecommendation {
             799, 824, 849, 874, 885, 900, 920, 940, 960, 980, 1000, 1020,
             1040, 1060, 1080, 1100, 1120, 1140, 1150
     };
-
-    private ArrayList<kat_eventsParser.pair> EventArrayList;
-
-
-    public void init(){
-        playerData = KatData.eventsPlayerData.getValue();
-        EventArrayList = KatData.EventArrayList;
-    }
 
     public int expectedStarPoint(int current){
 
@@ -79,6 +80,7 @@ public class kat_BrawlerRecommendation {
 
     public String recommend(){
 
+        if(playerData == null) return "";
         ArrayList<kat_official_playerInfoParser.playerBrawlerData> playerBrawlerData = playerData.getBrawlerData();
         int MAX = 10000000;
         int minDifference = MAX;
@@ -128,9 +130,10 @@ public class kat_BrawlerRecommendation {
     public double averageWinRate(String brawler){
 
         double winRate = 0;
+        if(eventArrayList == null) return winRate;
 
-        for(int i = 0; i < EventArrayList.size(); i++){
-            ArrayList<HashMap<String, Object>> wins = EventArrayList.get(i).getWins();
+        for(int i = 0; i < eventArrayList.size(); i++){
+            ArrayList<HashMap<String, Object>> wins = eventArrayList.get(i).getWins();
             for(int j = 0; j < wins.size(); j++){
                 if(wins.get(j).get("brawler").toString().equals(brawler.toLowerCase())) {
                     double currWinRate;
@@ -139,7 +142,7 @@ public class kat_BrawlerRecommendation {
                 }
             }
         }
-        winRate /= EventArrayList.size();
+        winRate /= eventArrayList.size();
 
         return winRate;
     }
