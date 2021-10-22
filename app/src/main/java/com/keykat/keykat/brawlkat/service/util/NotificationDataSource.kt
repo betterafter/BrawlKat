@@ -57,10 +57,6 @@ class NotificationDataSource {
         val brawlersParser = kat_brawlersParser(resData[1])
         val mapsParser = kat_mapsParser(resData[2])
 
-        KatData.EventArrayList = eventsParser.DataParser()
-        KatData.BrawlersArrayList = brawlersParser.DataParser()
-        KatData.mapData = mapsParser.DataParser()
-
         reader.close()
         os.close()
         socket.close()
