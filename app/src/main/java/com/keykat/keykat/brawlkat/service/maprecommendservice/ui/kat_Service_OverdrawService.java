@@ -10,7 +10,6 @@ import android.content.Intent;
 import android.graphics.PixelFormat;
 import android.os.Handler;
 import android.os.IBinder;
-import android.os.Looper;
 import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
@@ -24,11 +23,8 @@ import com.keykat.keykat.brawlkat.common.Injection;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendDataSource;
-import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendPresenter;
 import com.keykat.keykat.brawlkat.service.util.kat_ButtonBroadcastReceiver;
 import com.keykat.keykat.brawlkat.util.KatData;
-import com.keykat.keykat.brawlkat.util.network.BaseApiDataThread;
-import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
@@ -43,16 +39,8 @@ public class kat_Service_OverdrawService
     public WindowManager windowManager;
     public WindowManager.LayoutParams layoutParams;
 
-    // 뷰
-    private Button btn;
     public ConstraintLayout constraintLayout;
     private kat_Service_EventService events;
-
-    private MapRecommendPresenter presenter;
-    private MapRecommendRepository repository;
-
-    private BaseApiDataThread baseApiDataThread;
-
 
     // 기타 변수들
     private float mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
@@ -60,19 +48,11 @@ public class kat_Service_OverdrawService
 
     public boolean unbindCall = false;
 
-    private timeCountThread timeThread;
-    private boolean isCheckThreadStart;
-    private int timeCount = 0;
-
-    private kat_SearchThread searchThread;
-
     private final Handler onButtonLongTouchHandler = new Handler();
     private final Runnable onButtonLongTouchRunnable = () -> {
         onDestroy();
         stopSelf();
     };
-
-    private NotificationManager mNotificationManager;
 
 
     @Override
@@ -88,25 +68,18 @@ public class kat_Service_OverdrawService
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = getApplicationContext();
-        repository = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource(context));
-        searchThread = new kat_SearchThread();
+        MapRecommendRepository repository = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource(context));
 
         init_Inflater();
         init_windowManager();
 
         // EventActivity 선언 및 뷰 생성
         events = new kat_Service_EventService(context, repository, this, this);
-        presenter = new MapRecommendPresenter(repository, this);
 
         if (!KatData.client.isGetApiThreadAlive())
             KatData.client.init();
 
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.sub_notification);
-
-        timeThread = new timeCountThread();
-        timeThread.start();
-
-        isCheckThreadStart = true;
 
         // 종료 버튼을 위한 펜딩 인텐트
         Intent buttonIntent = new Intent(this, kat_ButtonBroadcastReceiver.class);
@@ -121,7 +94,7 @@ public class kat_Service_OverdrawService
                 NotificationManager.IMPORTANCE_LOW);
 
 
-        mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+        NotificationManager mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
         mNotificationManager.createNotificationChannel(channel);
 
         NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "subChannel")
@@ -139,11 +112,13 @@ public class kat_Service_OverdrawService
     }
 
     // 메인 버튼 생성
+    @SuppressLint("ClickableViewAccessibility")
     public void init_Inflater() {
 
         constraintLayout = new ConstraintLayout(this);
 
-        btn = new Button(this);
+        // 뷰
+        Button button = new Button(this);
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
@@ -154,12 +129,12 @@ public class kat_Service_OverdrawService
                 setWidth / 5
         );
 
-        btn.setBackground(context.getResources().getDrawable(R.drawable.service_click));
-        btn.setLayoutParams(params);
+        button.setBackground(context.getResources().getDrawable(R.drawable.service_click));
+        button.setLayoutParams(params);
 
-        btn.setOnTouchListener(this);
+        button.setOnTouchListener(this);
 
-        constraintLayout.addView(btn);
+        constraintLayout.addView(button);
     }
 
     // 메인 버튼에 연결된 윈도우 매니저 선언
@@ -192,10 +167,6 @@ public class kat_Service_OverdrawService
 
         unbindCall = true;
         KatData.isForegroundServiceStart = false;
-        setNotification();
-
-        isCheckThreadStart = false;
-        timeThread = null;
 
         if (events != null) {
             events.onDismiss();
@@ -252,13 +223,6 @@ public class kat_Service_OverdrawService
 
                 onButtonLongTouchHandler.removeCallbacks(onButtonLongTouchRunnable);
 
-                if (timeCount > 30) {
-                    kat_SearchThread searchThread = new kat_SearchThread();
-                    searchThread.SearchStart(KatData.playerTag, "players", context);
-                    setNotification();
-                    timeCount = 0;
-                }
-
                 if (Math.abs(mWidgetStartingX - layoutParams.x) <= 30
                         && Math.abs(mWidgetStartingY - layoutParams.y) <= 30) {
                     events.ShowEventsInformation();
@@ -273,26 +237,5 @@ public class kat_Service_OverdrawService
         }
 
         return false;
-    }
-
-    // notification 업데이트
-    private void setNotification() {
-        new Handler(Looper.getMainLooper()).post(() -> {
-            if (!kat_SearchThread.SearchDataOnOverdraw)
-                searchThread.SearchStart(KatData.playerTag, "players", this);
-        });
-    }
-
-    private class timeCountThread extends Thread {
-        public void run() {
-            while (isCheckThreadStart) {
-                try {
-                    timeCount++;
-                    sleep(1000);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        }
     }
 }
