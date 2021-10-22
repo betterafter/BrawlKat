@@ -26,8 +26,6 @@ fun getTopPackageName(context: Context): String? {
             lastRunAppTimeStamp = event.timeStamp
         }
     }
-    println(lastRunAppTimeStamp)
-    println(packageNameMap.get(lastRunAppTimeStamp))
     val result = packageNameMap.get(lastRunAppTimeStamp) ?: return ""
     return result.toString()
 }

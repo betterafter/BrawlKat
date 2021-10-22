@@ -75,7 +75,6 @@ public class kat_EventAdapter
 
     @Override
     public void updateRecommendState(boolean state) {
-        System.out.println(isUserRecommend);
         isUserRecommend = state;
         refresh();
     }

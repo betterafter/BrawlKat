@@ -169,28 +169,4 @@ object KatData {
             .override(width, height)
             .into(view)
     }
-
-
-    @JvmStatic
-    @Throws(Exception::class)
-    fun glideImageWithNotification(
-        context: Context?, ImageViewId: Int, contentView: RemoteViews?,
-        notif: Notification?, notificationId: Int, url: String?
-    ) {
-        val notificationTarget = NotificationTarget(
-            context,
-            ImageViewId,
-            contentView,
-            notif,
-            notificationId
-        )
-        val setWidth = Math.min(SCREEN_WIDTH.toInt(), SCREEN_HEIGHT.toInt())
-        Glide
-            .with(context!!)
-            .applyDefaultRequestOptions(options)
-            .asBitmap()
-            .load(url)
-            .override(setWidth / 4, setWidth / 4)
-            .into(notificationTarget)
-    }
 }

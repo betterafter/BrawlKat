@@ -1,6 +1,7 @@
 package com.keykat.keykat.brawlkat.service.util
 
 import android.annotation.SuppressLint
+import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.Intent
@@ -8,18 +9,25 @@ import android.text.Html
 import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.keykat.keykat.brawlkat.R
-import com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity
+import com.keykat.keykat.brawlkat.common.glideImageWithNotification
 import com.keykat.keykat.brawlkat.util.KatData
-import com.keykat.keykat.brawlkat.util.KatData.glideImageWithNotification
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser
 import java.lang.Exception
 
 class NotificationUpdater(
     private val context: Context,
-    private var notification: NotificationCompat.Builder?
+    private val notificationManager: NotificationManager
 ) {
 
     private var playerData: kat_official_playerInfoParser.playerData?
+    private lateinit var notification: NotificationCompat.Builder
+
+    private val scv = smallContentView()
+    private val bcv = bigContentView()
+
+    init {
+        setSmallNotification()
+    }
 
     private fun smallContentView(): RemoteViews {
         val contentView = RemoteViews(context.packageName, R.layout.main_notification)
@@ -152,10 +160,8 @@ class NotificationUpdater(
     }
 
     fun update() {
-
         playerData = KatData.eventsPlayerData.value
-        val scv = smallContentView()
-        val bcv = bigContentView()
+        println(playerData?.name)
         try {
             if (playerData != null) {
                 notification = NotificationCompat.Builder(
@@ -169,15 +175,7 @@ class NotificationUpdater(
                     .setCustomBigContentView(bcv)
                     .setShowWhen(false)
             } else {
-                notification = NotificationCompat.Builder(
-                    context, "channel"
-                )
-                    .setSmallIcon(R.drawable.kat_notification_icon)
-                    .setColor(context.resources.getColor(R.color.semiBlack))
-                    .setColorized(true)
-                    .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                    .setCustomContentView(scv)
-                    .setShowWhen(false)
+                setSmallNotification()
             }
             if (playerData != null) {
                 val url = urlForBigContentViewRecommendBrawler()
@@ -187,34 +185,38 @@ class NotificationUpdater(
                     context,
                     R.id.main_notification_big_img,
                     bcv,
-                    notification?.build(),
+                    notification.build(),
                     1,
                     url
                 )
             }
             updaterNotify()
+
         } catch (e: Exception) {
             e.printStackTrace()
-            notification = NotificationCompat.Builder(
-                context, "channel"
-            )
-                .setSmallIcon(R.drawable.kat_notification_icon)
-                .setColor(context.resources.getColor(R.color.semiBlack))
-                .setColorized(true)
-                .setStyle(NotificationCompat.DecoratedCustomViewStyle())
-                .setCustomContentView(scv)
-                .setShowWhen(false)
+            setSmallNotification()
         }
     }
 
-    fun updatedNotification() = notification
+    private fun setSmallNotification() {
+        notification = NotificationCompat.Builder(
+            context, "channel"
+        )
+            .setSmallIcon(R.drawable.kat_notification_icon)
+            .setColor(context.resources.getColor(R.color.semiBlack))
+            .setColorized(true)
+            .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+            .setCustomContentView(scv)
+            .setShowWhen(false)
+    }
+
+
+
+
+    fun getUpdatedNotification() = notification
 
     private fun updaterNotify() {
-        if (kat_Service_BrawlStarsNotificationActivity.mNotificationManager != null)
-            kat_Service_BrawlStarsNotificationActivity.mNotificationManager.notify(
-                1,
-                notification?.build()
-            )
+        notificationManager.notify(1, notification.build())
     }
 
     private fun urlForBigContentViewRecommendBrawler(): String {

@@ -16,6 +16,7 @@ import java.net.Socket
 import java.net.SocketAddress
 import java.nio.charset.StandardCharsets
 import java.util.*
+import kotlin.collections.ArrayList
 
 // brawlify에서 가져오는 브롤러, 이벤트, 맵에 대한 데이터로 10분마다 업데이트함.
 class BaseApiDataThread(val context: Context) : Thread() {
