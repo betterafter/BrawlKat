@@ -7,23 +7,33 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 
+import com.keykat.keykat.brawlkat.service.util.NotificationContract;
+import com.keykat.keykat.brawlkat.service.util.NotificationPresenter;
 import com.keykat.keykat.brawlkat.service.util.NotificationUpdater;
-import com.keykat.keykat.brawlkat.util.KatData;
-import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
+import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser;
+import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
+import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
-import androidx.lifecycle.Observer;
 
-public class kat_Service_BrawlStarsNotificationActivity extends LifecycleService {
+public class kat_Service_BrawlStarsNotificationActivity
+        extends LifecycleService
+        implements NotificationContract.View {
 
     @SuppressLint("StaticFieldLeak")
     public NotificationCompat.Builder notification;
-    public static NotificationManager mNotificationManager;
+    public NotificationManager notificationManager;
+    private NotificationChannel channel;
 
+    private NotificationPresenter notificationPresenter;
     public NotificationUpdater updater;
+
+    private kat_eventsParser eventsParser;
+    private kat_brawlersParser brawlersParser;
+    private kat_mapsParser mapsParser;
 
 
     @Nullable
@@ -36,33 +46,43 @@ public class kat_Service_BrawlStarsNotificationActivity extends LifecycleService
     @Override
     public void onCreate() {
         super.onCreate();
-        updater = new NotificationUpdater(this, notification);
-        updater.update();
-        notification = updater.updatedNotification();
-
-        Observer<kat_official_playerInfoParser.playerData> observer = playerData -> {
-            updater.update();
-        };
-        KatData.eventsPlayerData.observe(this, observer);
     }
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         super.onStartCommand(intent, flags, startId);
 
-        NotificationChannel channel = new NotificationChannel(
+        notificationPresenter = new NotificationPresenter(this);
+        notificationPresenter.loadData();
+
+        initChannel();
+        initNotification();
+
+        return START_STICKY;
+    }
+
+    public void initChannel() {
+        channel = new NotificationChannel(
                 "channel",
                 "brawl stars play",
                 NotificationManager.IMPORTANCE_LOW
         );
+    }
 
-        mNotificationManager
+    public void initNotification() {
+        notificationManager
                 = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
-        mNotificationManager.createNotificationChannel(channel);
+        notificationManager.createNotificationChannel(channel);
 
-        if (notification != null) startForeground(1, notification.build());
+        updater = new NotificationUpdater(this, notificationManager);
+        notification = updater.getUpdatedNotification();
+        startForeground(1, notification.build());
+    }
 
-        return START_STICKY;
+    @Override
+    public void updateService() {
+        updater.update();
+        notificationManager.notify(1, notification.build());
     }
 
     @Override

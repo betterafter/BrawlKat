@@ -95,8 +95,8 @@
 
                 <ImageView
                     android:id="@+id/main_notification_big_img"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
                     tools:srcCompat="@tools:sample/avatars" />
 
                 <LinearLayout
