@@ -17,42 +17,41 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
-
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.common.Injection;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
 import com.keykat.keykat.brawlkat.service.model.datasource.MapRecommendDataSource;
 import com.keykat.keykat.brawlkat.service.util.ServiceButtonBroadcastReceiver;
-import com.keykat.keykat.brawlkat.util.KatData;
-
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
+import androidx.core.content.ContextCompat;
 
 public class OverdrawService
         extends Service
         implements View.OnTouchListener, MapRecommendContract.MainView {
 
-    public Context context;
-
-    // 윈도우 매니저
+    // 뷰
     public WindowManager windowManager;
     public WindowManager.LayoutParams layoutParams;
-
+    private RemoteViews contentView;
+    public Context context;
     public ConstraintLayout constraintLayout;
+
+    // 이벤트 서비스
     private EventService events;
-
-    // 기타 변수들
-    private float mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
     public boolean ServiceButtonTouched = false;
-
-    public boolean unbindCall = false;
-
     private final Handler onButtonLongTouchHandler = new Handler();
     private final Runnable onButtonLongTouchRunnable = () -> {
         onDestroy();
         stopSelf();
     };
+
+    // 기타 변수들
+    private float mStartingX;
+    private float mStartingY;
+    private float mWidgetStartingX;
+    private float mWidgetStartingY;
 
 
     @Override
@@ -68,52 +67,52 @@ public class OverdrawService
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
         context = getApplicationContext();
-        MapRecommendRepository repository = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource(context));
-
-        init_Inflater();
-        init_windowManager();
-
-        // EventActivity 선언 및 뷰 생성
+        MapRecommendRepository repository
+                = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource(context));
         events = new EventService(context, repository, this);
 
-        if (!KatData.client.isGetApiThreadAlive())
-            KatData.client.init();
+        initInflater();
+        initWindowManager();
+        initContentView();
+        initNotification();
 
-        RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.sub_notification);
+        return START_STICKY;
+    }
 
-        // 종료 버튼을 위한 펜딩 인텐트
+    public void initContentView() {
+        contentView = new RemoteViews(getPackageName(), R.layout.sub_notification);
         Intent buttonIntent = new Intent(this, ServiceButtonBroadcastReceiver.class);
         buttonIntent.setAction("overdraw.STOP");
+        @SuppressLint("UnspecifiedImmutableFlag")
         PendingIntent btPendingIntent = PendingIntent.getBroadcast(this, 0, buttonIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
         // 종료버튼과 펜딩 인텐트 연결
         contentView.setOnClickPendingIntent(R.id.service_exit, btPendingIntent);
+    }
 
-
+    public void initNotification() {
+        // 종료 버튼을 위한 펜딩 인텐트
         NotificationChannel channel = new NotificationChannel("subChannel", "brawl stars analytics play",
                 NotificationManager.IMPORTANCE_LOW);
-
-
-        NotificationManager mNotificationManager = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+        // notificationManager 생성
+        NotificationManager mNotificationManager
+                = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
         mNotificationManager.createNotificationChannel(channel);
-
+        // notification 생성
         NotificationCompat.Builder notification = new NotificationCompat.Builder(this, "subChannel")
                 .setSmallIcon(R.drawable.kat_notification_icon)
-                .setColor(getResources().getColor(R.color.semiBlack))
+                .setColor(ContextCompat.getColor(context, R.color.semiBlack))
                 .setColorized(true)
                 .setStyle(new NotificationCompat.DecoratedCustomViewStyle())
                 .setCustomBigContentView(contentView)
                 .setShowWhen(false);
-
         // id 값은 0보다 큰 양수가 들어가야 한다.
-        mNotificationManager.notify(2, notification.build());
         startForeground(2, notification.build());
-        return START_STICKY;
     }
 
     // 메인 버튼 생성
     @SuppressLint("ClickableViewAccessibility")
-    public void init_Inflater() {
+    public void initInflater() {
 
         constraintLayout = new ConstraintLayout(this);
 
@@ -138,7 +137,7 @@ public class OverdrawService
     }
 
     // 메인 버튼에 연결된 윈도우 매니저 선언
-    public void init_windowManager() {
+    public void initWindowManager() {
 
         // FLAG_NOT_FOCUSABLE : 현재 윈도우에 포커스가 집중되어 네비게이션 바 같은 시스템 ui가 현재 서비스 윈도우의 상태에
         // 종속되므로 해당 플래그로 포커스를 없애줘야함.
@@ -161,23 +160,15 @@ public class OverdrawService
     public void onDestroy() {
         if (windowManager != null) {
             //서비스 종료시 뷰 제거.
-            if (constraintLayout != null && constraintLayout.getWindowToken() != null)
+            if (constraintLayout != null && constraintLayout.getWindowToken() != null) {
                 windowManager.removeView(constraintLayout);
+            }
         }
-
-        unbindCall = true;
-        KatData.isForegroundServiceStart = false;
 
         if (events != null) {
             events.onDismiss();
             events = null;
         }
-        try {
-            KatData.client.remove();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
-
 
         super.onDestroy();
         stopSelf();
