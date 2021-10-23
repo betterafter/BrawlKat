@@ -26,9 +26,9 @@ class MapRecommendViewPagerPresenter(
     }
 
     fun getMapRecommendData() {
-        mapRecommendRepository.getMapRecommendData {
+        mapRecommendRepository.getMapRecommendData { data ->
             CoroutineScope(Dispatchers.Main).launch {
-                recyclerView?.refresh()
+                recyclerView?.refresh(data)
             }
         }
     }

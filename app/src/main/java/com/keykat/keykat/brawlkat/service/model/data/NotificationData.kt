@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.service.util
+package com.keykat.keykat.brawlkat.service.model.data
 
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser
 import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser

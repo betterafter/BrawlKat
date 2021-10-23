@@ -19,6 +19,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy;
 import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
+import com.keykat.keykat.brawlkat.service.model.data.NotificationData;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -36,8 +37,8 @@ public class kat_EventAdapter
         implements MapRecommendContract.RecyclerView {
 
     private final Context context;
-    private final ArrayList<kat_eventsParser.pair> EventArrayList;
-    private final ArrayList<HashMap<String, Object>> BrawlersArrayList;
+    private ArrayList<kat_eventsParser.pair> EventArrayList;
+    private ArrayList<HashMap<String, Object>> BrawlersArrayList;
     private ArrayList<String> playerBrawlersArrayList;
     private Boolean isUserRecommend = false;
 
@@ -73,15 +74,18 @@ public class kat_EventAdapter
         return EventArrayList.size();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     @Override
     public void updateRecommendState(boolean state) {
         isUserRecommend = state;
-        refresh();
+        notifyDataSetChanged();
     }
 
     @Override
     @SuppressLint("NotifyDataSetChanged")
-    public void refresh() {
+    public void refresh(@NonNull NotificationData notificationData) {
+        this.EventArrayList = notificationData.getEventArrayList();
+        this.BrawlersArrayList = notificationData.getBrawlerArrayList();
         notifyDataSetChanged();
     }
 
@@ -98,8 +102,10 @@ public class kat_EventAdapter
         private final ArrayList<kat_eventsParser.pair> EventArrayList;
         private final ArrayList<HashMap<String, Object>> BrawlersArrayList;
 
-        public viewHolder(@NonNull View itemView, ArrayList<kat_eventsParser.pair> EventArrayList,
-                          ArrayList<HashMap<String, Object>> BrawlersArrayList) {
+        public viewHolder(@NonNull View itemView,
+                          ArrayList<kat_eventsParser.pair> EventArrayList,
+                          ArrayList<HashMap<String, Object>> BrawlersArrayList
+        ) {
             super(itemView);
 
             background = itemView.findViewById(R.id.item_background);
