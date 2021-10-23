@@ -74,7 +74,6 @@ object KatData {
     // database ................................................................................
     lateinit var katabase: kat_database
     lateinit var kataFavoritesBase: kat_favoritesDatabase
-    lateinit var kataMyAccountBase: kat_myAccountDatabase
     lateinit var kataCountryBase: kat_countryDatabase
     lateinit var kataSettingBase: kat_settingDatabase
 

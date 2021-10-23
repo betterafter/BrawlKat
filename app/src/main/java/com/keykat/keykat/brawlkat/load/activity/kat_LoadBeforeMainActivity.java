@@ -16,12 +16,12 @@ import com.bumptech.glide.request.RequestOptions;
 import com.google.android.gms.ads.AdRequest;
 import com.google.android.gms.ads.MobileAds;
 import com.keykat.keykat.brawlkat.R;
+import com.keykat.keykat.brawlkat.common.model.datasource.SharedPreferenceManager;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.database.kat_countryDatabase;
 import com.keykat.keykat.brawlkat.util.database.kat_database;
 import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
-import com.keykat.keykat.brawlkat.util.database.kat_myAccountDatabase;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.network.Client;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
@@ -118,14 +118,6 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
                 4
         );
 
-        KatData.kataMyAccountBase
-                = new kat_myAccountDatabase(
-                getApplicationContext(),
-                "katma",
-                null,
-                1
-        );
-
         KatData.kataCountryBase
                 = new kat_countryDatabase(
                 getApplicationContext(),
@@ -179,11 +171,13 @@ public class kat_LoadBeforeMainActivity extends AppCompatActivity {
     private void move() {
 
         try {
-            if (KatData.kataMyAccountBase.size() == 1) {
+            SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(this);
+            String account = sharedPreferenceManager.getAccount();
+            System.out.println(account);
+            if (account != null && !account.equals("")) {
                 kat_SearchThread kat_searchThread
                         = new kat_SearchThread(this, kat_Player_MainActivity.class);
-                String tag = KatData.kataMyAccountBase.getTag();
-                String realTag = tag.substring(1);
+                String realTag = account.substring(1);
                 kat_searchThread.SearchStart(realTag, "players", getApplicationContext());
             } else {
                 Intent intent = new Intent(

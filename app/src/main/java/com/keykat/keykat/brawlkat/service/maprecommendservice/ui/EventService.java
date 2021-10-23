@@ -15,15 +15,16 @@ import android.widget.LinearLayout;
 
 import com.bumptech.glide.Glide;
 import com.keykat.keykat.brawlkat.R;
+import com.keykat.keykat.brawlkat.common.model.datasource.SharedPreferenceManager;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendViewPagerPresenter;
 import com.keykat.keykat.brawlkat.service.model.data.NotificationData;
-import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.core.content.ContextCompat;
@@ -179,7 +180,10 @@ public class EventService implements MapRecommendContract.ViewpagerView {
         recommendButton.setBackgroundColor(ContextCompat.getColor(context, R.color.semiBlack));
         recommendButton.setText(context.getString(R.string.playerChange));
         recommendButton.setAllCaps(false);
-        if (KatData.kataMyAccountBase.getTag().equals("")) {
+
+        SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(context);
+
+        if (Objects.equals(sharedPreferenceManager.getAccount(), "")) {
             recommendButton.setTextColor(ContextCompat.getColor(context, R.color.gray));
             recommendButton.setEnabled(false);
         } else {

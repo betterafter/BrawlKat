@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.keykat.keykat.brawlkat.common.model.datasource.SharedPreferenceManager;
 import com.keykat.keykat.brawlkat.common.ui.ClubNotFoundDialog;
 import com.keykat.keykat.brawlkat.common.ui.PlayerNotFoundDialog;
 import com.keykat.keykat.brawlkat.home.activity.kat_Player_MainActivity;
@@ -39,11 +40,6 @@ public class kat_SearchThread extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
-
-    public kat_SearchThread() {
-    }
-
-    ;
 
     public kat_SearchThread(Activity fromActivity, Class toclass) {
         this.fromActivity = fromActivity;
@@ -130,11 +126,12 @@ public class kat_SearchThread extends AppCompatActivity {
 
             try {
                 // 자신의 플레이어 데이터를 따로 저장. (맵 승률 서비스를 위해 따로 저장하는 리스트)
-                // 이 때 notification의 내용도 바꿔준다.
-                if (!KatData.kataMyAccountBase.getTag().equals("")) {
-                    if (KatData.kataMyAccountBase.getTag()
-                            .equals(KatData.official_playerInfoParser.DataParser().getTag())) {
+                SharedPreferenceManager sharedPreferenceManager
+                        = new SharedPreferenceManager(fromActivity.getApplicationContext());
+                String account = sharedPreferenceManager.getAccount();
 
+                if (account != null) {
+                    if (account.equals(KatData.official_playerInfoParser.DataParser().getTag())) {
                         // 알람창 강제 종료되는 것 방지
                         if (sendData.get(0).length() > 50)
                             KatData.eventsPlayerData.postValue(
@@ -142,7 +139,6 @@ public class kat_SearchThread extends AppCompatActivity {
                             );
                     }
                 }
-
 
                 KatData.playerData = KatData.official_playerInfoParser.DataParser();
                 if (!KatData.client.getAllTypeData().get(1).equals("{none}")
@@ -157,12 +153,12 @@ public class kat_SearchThread extends AppCompatActivity {
                 }
 
                 String type = "players";
-                String Tag = KatData.playerData.getTag();
+                String tag = KatData.playerData.getTag();
                 String name = KatData.playerData.getName();
                 String isAccount = "NO";
 
                 KatData.katabase.delete(type);
-                KatData.katabase.insert(type, Tag, name, isAccount);
+                KatData.katabase.insert(type, tag, name, isAccount);
 
                 if (fromActivity == null) {
                     SearchDataOnOverdraw = false;
@@ -170,20 +166,12 @@ public class kat_SearchThread extends AppCompatActivity {
                 }
 
                 if (fromActivity instanceof kat_SearchAccountForSaveActivity) {
+                    sharedPreferenceManager.putAccount(tag);
+
                     if (sendData.get(0).length() > 50)
                         KatData.eventsPlayerData.postValue(
                                 KatData.official_playerInfoParser.DataParser()
                         );
-                }
-
-
-                if (KatData.kataMyAccountBase.size() < 1) {
-
-                    KatData.kataMyAccountBase.insert(
-                            "player",
-                            KatData.playerData.getTag(),
-                            KatData.playerData.getName()
-                    );
                 }
 
                 ActivityManager manager
@@ -201,6 +189,7 @@ public class kat_SearchThread extends AppCompatActivity {
                 }
 
                 Intent intent = new Intent(fromActivity, toClass);
+                System.out.println(KatData.playerData);
                 intent.putExtra("playerData", KatData.playerData);
                 fromActivity.startActivity(intent);
 
