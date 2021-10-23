@@ -135,7 +135,7 @@ public class EventAdapter
             String backgroundUrl
                     = (String) EventArrayList.get(position).getInfo().get("mapTypeImageUrl");
             String gameModeTypeUrl
-                    = (String) EventArrayList.get(position).getInfo().get("gamemodeTypeImageUrl");
+                    = (String) EventArrayList.get(position).getInfo().get("gameModeTypeImageUrl");
             String mapName = (String) EventArrayList.get(position).getInfo().get("mapName");
             String name = (String) EventArrayList.get(position).getInfo().get("name");
 
