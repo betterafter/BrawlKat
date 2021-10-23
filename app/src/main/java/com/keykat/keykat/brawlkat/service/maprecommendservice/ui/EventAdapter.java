@@ -37,8 +37,8 @@ public class EventAdapter
         implements MapRecommendContract.RecyclerView {
 
     private final Context context;
-    private ArrayList<kat_eventsParser.pair> EventArrayList;
-    private ArrayList<HashMap<String, Object>> BrawlersArrayList;
+    private ArrayList<kat_eventsParser.pair> eventArrayList;
+    private ArrayList<HashMap<String, Object>> brawlersArrayList;
     private ArrayList<String> playerBrawlersArrayList;
     private Boolean isUserRecommend = false;
 
@@ -48,8 +48,8 @@ public class EventAdapter
                         ArrayList<HashMap<String, Object>> BrawlersArrayList
     ) {
         this.context = context;
-        this.EventArrayList = EventArrayList;
-        this.BrawlersArrayList = BrawlersArrayList;
+        this.eventArrayList = EventArrayList;
+        this.brawlersArrayList = BrawlersArrayList;
     }
 
     @NonNull
@@ -58,20 +58,19 @@ public class EventAdapter
         LayoutInflater inflater
                 = (LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
         View view = inflater.inflate(R.layout.service_map_event_item, parent, false);
-        return new viewHolder(view, EventArrayList, BrawlersArrayList);
+        return new viewHolder(view);
     }
 
     @Override
     public void onBindViewHolder(@NonNull viewHolder holder, int position) {
-
         holder.fastImageLoad();
-        holder.onBind(position);
-        holder.onBrawlerRecommendsBind(position);
+        holder.onBind(position, eventArrayList, brawlersArrayList);
+        holder.onBrawlerRecommendsBind(position, eventArrayList, brawlersArrayList);
     }
 
     @Override
     public int getItemCount() {
-        return EventArrayList.size();
+        return eventArrayList.size();
     }
 
     @SuppressLint("NotifyDataSetChanged")
@@ -84,8 +83,8 @@ public class EventAdapter
     @Override
     @SuppressLint("NotifyDataSetChanged")
     public void refresh(@NonNull NotificationData notificationData) {
-        this.EventArrayList = notificationData.getEventArrayList();
-        this.BrawlersArrayList = notificationData.getBrawlerArrayList();
+        this.eventArrayList = notificationData.getEventArrayList();
+        this.brawlersArrayList = notificationData.getBrawlerArrayList();
         notifyDataSetChanged();
     }
 
@@ -99,13 +98,7 @@ public class EventAdapter
         private final LinearLayout RecommendsLayout;
         private RequestOptions options;
 
-        private final ArrayList<kat_eventsParser.pair> EventArrayList;
-        private final ArrayList<HashMap<String, Object>> BrawlersArrayList;
-
-        public viewHolder(@NonNull View itemView,
-                          ArrayList<kat_eventsParser.pair> EventArrayList,
-                          ArrayList<HashMap<String, Object>> BrawlersArrayList
-        ) {
+        public viewHolder(@NonNull View itemView) {
             super(itemView);
 
             background = itemView.findViewById(R.id.item_background);
@@ -113,8 +106,6 @@ public class EventAdapter
             MapName_Time = itemView.findViewById(R.id.item_mapNameAndTime);
             MapType = itemView.findViewById(R.id.item_mapType);
             RecommendsLayout = itemView.findViewById(R.id.item_RecommendsLayout);
-            this.EventArrayList = EventArrayList;
-            this.BrawlersArrayList = BrawlersArrayList;
         }
 
         public void fastImageLoad() {
@@ -126,18 +117,22 @@ public class EventAdapter
         }
 
         // 기본 이미지 세팅
-        public void onBind(int position) {
+        public void onBind(
+                int position,
+                ArrayList<kat_eventsParser.pair> eventArrayList,
+                ArrayList<HashMap<String, Object>> brawlersArrayList
+        ) {
 
             DisplayMetrics metrics = context.getResources().getDisplayMetrics();
             int height = Math.min(metrics.heightPixels, metrics.widthPixels);
             int width = Math.max(metrics.heightPixels, metrics.widthPixels);
 
             String backgroundUrl
-                    = (String) EventArrayList.get(position).getInfo().get("mapTypeImageUrl");
+                    = (String) eventArrayList.get(position).getInfo().get("mapTypeImageUrl");
             String gameModeTypeUrl
-                    = (String) EventArrayList.get(position).getInfo().get("gameModeTypeImageUrl");
-            String mapName = (String) EventArrayList.get(position).getInfo().get("mapName");
-            String name = (String) EventArrayList.get(position).getInfo().get("name");
+                    = (String) eventArrayList.get(position).getInfo().get("gameModeTypeImageUrl");
+            String mapName = (String) eventArrayList.get(position).getInfo().get("mapName");
+            String name = (String) eventArrayList.get(position).getInfo().get("name");
 
             MapName_Time.setText(mapName);
             MapType.setText(name);
@@ -155,7 +150,11 @@ public class EventAdapter
 
         // 전체 브롤러 추천 뷰
         @SuppressLint("SetTextI18n")
-        public void onBrawlerRecommendsBind(int position) {
+        public void onBrawlerRecommendsBind(
+                int position,
+                ArrayList<kat_eventsParser.pair> eventArrayList,
+                ArrayList<HashMap<String, Object>> brawlersArrayList
+        ) {
             RecommendsLayout.removeAllViews();
 
             if (isUserRecommend) {
@@ -178,7 +177,7 @@ public class EventAdapter
 
             int i = 0;
 
-            if (EventArrayList.get(position).getWins().size() <= 0) {
+            if (eventArrayList.get(position).getWins().size() <= 0) {
 
                 TextView loadingText = new TextView(context);
                 loadingText.setText(context.getString(R.string.overdrawErrorMessage));
@@ -192,13 +191,13 @@ public class EventAdapter
                 RecommendsLayout.addView(loadingText);
             }
 
-            while (i < EventArrayList.get(position).getWins().size()) {
+            while (i < eventArrayList.get(position).getWins().size()) {
 
                 LinearLayout VerticalLayout = new LinearLayout(context);
 
                 for (int j = 0; j < 5; j++) {
 
-                    if (EventArrayList.get(position).getWins().size() <= i) break;
+                    if (eventArrayList.get(position).getWins().size() <= i) break;
 
 
                     @SuppressLint("InflateParams")
@@ -207,7 +206,7 @@ public class EventAdapter
                             R.layout.service_map_event_item_brawler, null
                     );
                     String brawlerID = Objects.requireNonNull(
-                            EventArrayList.get(position).getWins().get(i).get("brawler")
+                            eventArrayList.get(position).getWins().get(i).get("brawler")
                     ).toString();
 
                     int idx = 0;
@@ -215,7 +214,7 @@ public class EventAdapter
                     while (true) {
                         // brawlersArrayList 에서 현재 순위의 브롤러를 찾았을 때
                         if (Objects.requireNonNull(
-                                BrawlersArrayList.get(idx).get("id")).toString().equals(brawlerID)
+                                brawlersArrayList.get(idx).get("id")).toString().equals(brawlerID)
                         ) {
                             if (isUserRecommend) {
                                 for (int k = 0; k < playerBrawlersArrayList.size(); k++) {
@@ -224,7 +223,7 @@ public class EventAdapter
 
                                     if (playerBrawler.equals(
                                             Objects.requireNonNull(
-                                                    BrawlersArrayList.get(idx).get("name")
+                                                    brawlersArrayList.get(idx).get("name")
                                             ).toString().toLowerCase())
                                     ) {
                                         BrawlerFoundInUserRecommend = true;
@@ -249,8 +248,8 @@ public class EventAdapter
                     TextView brawlerWinRate
                             = brawlerView.findViewById(R.id.map_event_item_brawler_winRate);
 
-                    String brawlersImageUrl = (String) BrawlersArrayList.get(idx).get("imageUrl");
-                    String brawlersName = (String) BrawlersArrayList.get(idx).get("name");
+                    String brawlersImageUrl = (String) brawlersArrayList.get(idx).get("imageUrl");
+                    String brawlersName = (String) brawlersArrayList.get(idx).get("name");
 
                     Glide.with(context)
                             .applyDefaultRequestOptions(options)
@@ -261,7 +260,7 @@ public class EventAdapter
                     brawlerName.setText(brawlersName);
                     double winRate = Double.parseDouble(
                             Objects.requireNonNull(
-                                    EventArrayList.get(position).getWins().get(i).get("winRate")
+                                    eventArrayList.get(position).getWins().get(i).get("winRate")
                             ).toString());
                     double round_winRate = Math.round(winRate * 100) / 100.0;
 
