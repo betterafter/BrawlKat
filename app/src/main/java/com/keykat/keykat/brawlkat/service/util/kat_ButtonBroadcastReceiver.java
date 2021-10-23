@@ -24,6 +24,7 @@ public class kat_ButtonBroadcastReceiver extends BroadcastReceiver {
 
             if(Settings.canDrawOverlays(context)) {
                 Intent serviceIntent = new Intent(context, kat_Service_OverdrawService.class);
+                context.stopService(serviceIntent);
                 context.startService(serviceIntent);
                 KatData.isForegroundServiceStart = true;
             } else {
