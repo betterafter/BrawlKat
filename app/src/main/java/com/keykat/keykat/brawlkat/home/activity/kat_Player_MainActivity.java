@@ -27,8 +27,8 @@ import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.home.search.activity.kat_SearchFragment;
 import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.kat_Service_OverdrawService;
-import com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity;
+import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.OverdrawService;
+import com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationActivity;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -87,13 +87,13 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean(getString(R.string.notify_service), false)) {
             foregroundServiceIntent = new Intent(
                     getApplicationContext(),
-                    kat_Service_BrawlStarsNotificationActivity.class
+                    BrawlStarsNotificationActivity.class
             );
             foregroundServiceIntent.putExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey(), KatData.playerTag);
             startForegroundService(foregroundServiceIntent);
         }
 
-        serviceIntent = new Intent(kat_Player_MainActivity.this, kat_Service_OverdrawService.class);
+        serviceIntent = new Intent(kat_Player_MainActivity.this, OverdrawService.class);
 
         KatData.dialog = new kat_LoadingDialog(this);
 

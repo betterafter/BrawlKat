@@ -11,6 +11,7 @@ class MapRecommendContract {
     interface ViewpagerView {
         fun setOnPlayerRecommendButtonClick()
         fun setOnAllRecommendButtonClick()
+        fun updateMapRecommendData(notificationData: NotificationData)
     }
 
     interface RecyclerView {

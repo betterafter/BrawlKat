@@ -1,6 +1,6 @@
 package com.keykat.keykat.brawlkat.service.maprecommendservice.repository
 
-import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendDataSource
+import com.keykat.keykat.brawlkat.service.model.datasource.MapRecommendDataSource
 import com.keykat.keykat.brawlkat.service.model.data.NotificationData
 
 class MapRecommendRepositoryImpl(

@@ -4,10 +4,10 @@
 
     <!-- broadcast message -->
     <!--    <string name="check_start">-->
-    <!--        com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity.CHECK_START-->
+    <!--        com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationActivity.CHECK_START-->
     <!--    </string>-->
     <!--    <string name="check_end">-->
-    <!--        com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity.CHECK_END-->
+    <!--        com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationActivity.CHECK_END-->
     <!--    </string>-->
     <!--    <string name="screen_on">android.intent.action.SCREEN_ON</string>-->
     <!--    <string name="screen_off">android.intent.action.SCREEN_OFF</string>-->

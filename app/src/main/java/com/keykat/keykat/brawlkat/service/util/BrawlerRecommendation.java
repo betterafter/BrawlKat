@@ -6,12 +6,12 @@ import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class kat_BrawlerRecommendation {
+public class BrawlerRecommendation {
 
     private final kat_official_playerInfoParser.playerData playerData;
     private final ArrayList<kat_eventsParser.pair> eventArrayList;
 
-    public kat_BrawlerRecommendation(
+    public BrawlerRecommendation(
             kat_official_playerInfoParser.playerData playerData,
             ArrayList<kat_eventsParser.pair> eventArrayList
     ) {
