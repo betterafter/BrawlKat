@@ -83,7 +83,7 @@
         <!--        </receiver>-->
         <service android:name=".service.maprecommendservice.ui.OverdrawService" />
 
-        <service android:name=".service.systembarservice.BrawlStarsNotificationActivity" />
+        <service android:name=".service.systembarservice.BrawlStarsNotificationService" />
         <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
 <!--        <service-->
 <!--            android:name=".service.util.kat_onTaskRemovedService"-->

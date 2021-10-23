@@ -4,10 +4,10 @@
 
     <!-- broadcast message -->
     <!--    <string name="check_start">-->
-    <!--        com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationActivity.CHECK_START-->
+    <!--        com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationService.CHECK_START-->
     <!--    </string>-->
     <!--    <string name="check_end">-->
-    <!--        com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationActivity.CHECK_END-->
+    <!--        com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationService.CHECK_END-->
     <!--    </string>-->
     <!--    <string name="screen_on">android.intent.action.SCREEN_ON</string>-->
     <!--    <string name="screen_off">android.intent.action.SCREEN_OFF</string>-->
@@ -95,5 +95,6 @@
     <!--common-->
     <string name="common_ok">확인</string>
     <string name="account_save_error_text">계정 태그에는 영문자 또는 숫자만 포함될 수 있습니다.</string>
+    <string name="sharedPreferenceKey">ACCOUNT_SHARED_PREFERENCE_KEY</string>
 </resources>
 

@@ -22,13 +22,14 @@ import com.google.android.gms.ads.InterstitialAd;
 import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.common.IntentKey;
+import com.keykat.keykat.brawlkat.common.model.datasource.SharedPreferenceManager;
 import com.keykat.keykat.brawlkat.home.favorite.activity.kat_FavoritesFragment;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.home.search.activity.kat_SearchFragment;
 import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.OverdrawService;
-import com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationActivity;
+import com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationService;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
@@ -87,7 +88,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         if (sharedPreferences.getBoolean(getString(R.string.notify_service), false)) {
             foregroundServiceIntent = new Intent(
                     getApplicationContext(),
-                    BrawlStarsNotificationActivity.class
+                    BrawlStarsNotificationService.class
             );
             foregroundServiceIntent.putExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey(), KatData.playerTag);
             startForegroundService(foregroundServiceIntent);
@@ -201,9 +202,7 @@ public class kat_Player_MainActivity extends AppCompatActivity {
             }
         }
 
-        if (KatData.kataMyAccountBase.size() > 0) {
-            KatData.playerTag = KatData.kataMyAccountBase.getTag().substring(1);
-        }
+        getAccount();
     }
 
 
@@ -212,6 +211,11 @@ public class kat_Player_MainActivity extends AppCompatActivity {
         super.onResume();
         KatData.currentActivity = this;
         AsyncCoroutine.Companion.setFinished(true);
+    }
+
+    public void getAccount() {
+        SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(this);
+        KatData.playerTag = sharedPreferenceManager.getAccount();
     }
 
 
