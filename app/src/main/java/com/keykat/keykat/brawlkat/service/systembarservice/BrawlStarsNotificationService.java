@@ -8,8 +8,9 @@ import android.content.Intent;
 import android.os.IBinder;
 
 import com.keykat.keykat.brawlkat.common.IntentKey;
-import com.keykat.keykat.brawlkat.service.util.NotificationContract;
+import com.keykat.keykat.brawlkat.common.model.datasource.SharedPreferenceManager;
 import com.keykat.keykat.brawlkat.service.model.data.NotificationData;
+import com.keykat.keykat.brawlkat.service.util.NotificationContract;
 import com.keykat.keykat.brawlkat.service.util.NotificationPresenter;
 import com.keykat.keykat.brawlkat.service.util.NotificationUpdater;
 
@@ -18,7 +19,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 
-public class BrawlStarsNotificationActivity
+public class BrawlStarsNotificationService
         extends LifecycleService
         implements NotificationContract.View {
 
@@ -29,6 +30,8 @@ public class BrawlStarsNotificationActivity
 
     private NotificationPresenter notificationPresenter;
     public NotificationUpdater updater;
+
+    private String playerTag;
 
     @Nullable
     @Override
@@ -47,11 +50,26 @@ public class BrawlStarsNotificationActivity
         super.onStartCommand(intent, flags, startId);
 
         notificationPresenter = new NotificationPresenter(this);
-        notificationPresenter.loadData(
-                intent.getStringExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey()),
-                "players",
-                "official"
-        );
+        playerTag = intent.getStringExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey());
+        if (playerTag == null) {
+
+            SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(this);
+            playerTag = sharedPreferenceManager.getAccount();
+            if(playerTag != null && !playerTag.equals("")) {
+                playerTag = playerTag.substring(1);
+                notificationPresenter.loadData(
+                        playerTag,
+                        "players",
+                        "official"
+                );
+            }
+        } else {
+            notificationPresenter.loadData(
+                    playerTag,
+                    "players",
+                    "official"
+            );
+        }
 
         initChannel();
         initNotification(new NotificationData(null, null, null, null));

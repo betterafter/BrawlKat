@@ -114,8 +114,6 @@ class NotificationUpdater(
     private fun bigContentView(): RemoteViews {
         val bigContentView = ctView(R.layout.main_notification_big)
         return try {
-
-            println("data: " + playerData?.tag)
             playerData?.let {
                 // 스타 포인트 연산
                 val seasonRewardsCalculator =
