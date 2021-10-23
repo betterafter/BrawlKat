@@ -10,6 +10,7 @@ import android.widget.RemoteViews
 import androidx.core.app.NotificationCompat
 import com.keykat.keykat.brawlkat.R
 import com.keykat.keykat.brawlkat.common.glideImageWithNotification
+import com.keykat.keykat.brawlkat.service.model.data.NotificationData
 import com.keykat.keykat.brawlkat.util.KatData
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser

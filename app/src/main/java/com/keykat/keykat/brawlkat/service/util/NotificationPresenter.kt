@@ -1,5 +1,6 @@
 package com.keykat.keykat.brawlkat.service.util
 
+import com.keykat.keykat.brawlkat.service.model.data.NotificationData
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

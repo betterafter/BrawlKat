@@ -1,6 +1,7 @@
 package com.keykat.keykat.brawlkat.service.maprecommendservice.util
 
 import android.widget.Button
+import com.keykat.keykat.brawlkat.service.model.data.NotificationData
 
 class MapRecommendContract {
     interface MainView {
@@ -14,7 +15,7 @@ class MapRecommendContract {
 
     interface RecyclerView {
        fun updateRecommendState(state: Boolean)
-       fun refresh()
+       fun refresh(notificationData: NotificationData)
     }
 
     interface Presenter {

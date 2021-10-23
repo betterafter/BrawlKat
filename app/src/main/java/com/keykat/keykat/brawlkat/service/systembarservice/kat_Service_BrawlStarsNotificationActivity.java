@@ -9,7 +9,7 @@ import android.os.IBinder;
 
 import com.keykat.keykat.brawlkat.common.IntentKey;
 import com.keykat.keykat.brawlkat.service.util.NotificationContract;
-import com.keykat.keykat.brawlkat.service.util.NotificationData;
+import com.keykat.keykat.brawlkat.service.model.data.NotificationData;
 import com.keykat.keykat.brawlkat.service.util.NotificationPresenter;
 import com.keykat.keykat.brawlkat.service.util.NotificationUpdater;
 
