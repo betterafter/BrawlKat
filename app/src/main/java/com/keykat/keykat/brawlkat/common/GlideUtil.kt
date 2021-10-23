@@ -2,6 +2,7 @@ package com.keykat.keykat.brawlkat.common
 
 import android.app.Notification
 import android.content.Context
+import android.widget.ImageButton
 import android.widget.RemoteViews
 import com.bumptech.glide.Glide
 import com.bumptech.glide.Priority
@@ -37,4 +38,11 @@ fun glideImageWithNotification(
         .asBitmap()
         .load(url)
         .into(notificationTarget)
+}
+
+fun ImageButton.setImage(url: String, width: Int, height: Int) {
+    Glide.with(this.context)
+        .load(url)
+        .override(width, height)
+        .into(this)
 }

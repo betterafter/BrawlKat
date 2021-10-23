@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import androidx.annotation.NonNull;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
@@ -36,19 +37,16 @@ public class EventService implements MapRecommendContract.ViewpagerView {
     private LinearLayout mapRecommendButtonGroup;
     private WindowManager windowManager;
     private final View.OnTouchListener touchListener;
-    private int fixedWidth;
-    private int fixedHeight;
-
     private EventAdapter eventAdapter;
-
     private final MapRecommendViewPagerPresenter presenter;
-
+    private ViewPager2 viewPager = null;
     private final Context context;
 
     public ArrayList<kat_eventsParser.pair> eventArrayList = new ArrayList<>();
     public ArrayList<HashMap<String, Object>> brawlersArrayList = new ArrayList<>();
 
-    private ViewPager2 viewPager = null;
+    private int fixedWidth;
+    private int fixedHeight;
     public boolean isPlayerRecommend = false;
 
     public EventService(Context context,
@@ -101,7 +99,7 @@ public class EventService implements MapRecommendContract.ViewpagerView {
                             | WindowManager.LayoutParams.FLAG_WATCH_OUTSIDE_TOUCH,
                     PixelFormat.TRANSLUCENT
             );
-            if(mapRecommendView.getWindowToken() != null) {
+            if (mapRecommendView.getWindowToken() != null) {
                 windowManager.removeView(mapRecommendView);
             }
 
@@ -114,56 +112,6 @@ public class EventService implements MapRecommendContract.ViewpagerView {
         } catch (Exception e) {
             e.printStackTrace();
         }
-    }
-
-    @SuppressLint("SetTextI18n")
-    public void changeRecommendViewClick() {
-
-        final Button btn = new Button(context);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                LinearLayout.LayoutParams.MATCH_PARENT,
-                LinearLayout.LayoutParams.MATCH_PARENT
-        );
-        params.setMargins(5, 5, 5, 5);
-
-        btn.setLayoutParams(params);
-
-        btn.setBackgroundColor(context.getResources().getColor(R.color.semiBlack));
-        btn.setText(context.getString(R.string.playerChange));
-        btn.setAllCaps(false);
-        if (KatData.kataMyAccountBase.getTag().equals("")) {
-            btn.setTextColor(context.getResources().getColor(R.color.gray));
-            btn.setEnabled(false);
-        } else {
-            btn.setTextColor(context.getResources().getColor(R.color.Color1));
-            btn.setEnabled(true);
-        }
-        Typeface typeface = ResourcesCompat.getFont(context, R.font.lilita_one);
-        btn.setTypeface(typeface);
-        btn.setTextSize(context.getResources().getInteger(R.integer.map_recommend_service_button_text_size));
-        mapRecommendButtonGroup.addView(btn);
-
-
-        btn.setOnClickListener(view -> {
-
-            isPlayerRecommend = !isPlayerRecommend;
-            if (isPlayerRecommend) {
-                presenter.setOnPlayerRecommendClicked();
-            } else {
-                presenter.setOnAllRecommendClicked();
-            }
-
-            int length = ((ViewGroup) btn.getParent()).getWidth();
-
-            // 이미지 버튼 스타일링
-            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
-                    length - 10,
-                    length - 10
-            );
-            params1.setMargins(5, 5, 5, 5);
-            btn.setLayoutParams(params1);
-        });
     }
 
     @Override
@@ -189,7 +137,7 @@ public class EventService implements MapRecommendContract.ViewpagerView {
 
         for (int i = 0; i < eventArrayList.size(); i++) {
 
-            ImageButton btn = new ImageButton(context);
+            ImageButton eventButton = new ImageButton(context);
 
             // 이미지 버튼 스타일링
             LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
@@ -197,31 +145,79 @@ public class EventService implements MapRecommendContract.ViewpagerView {
                     ViewGroup.LayoutParams.WRAP_CONTENT
             );
             params.setMargins(5, 5, 5, 5);
-            btn.setLayoutParams(params);
+            eventButton.setLayoutParams(params);
 
             String gameModeTypeUrl
-                    = (String) eventArrayList.get(i).getInfo().get("gamemodeTypeImageUrl");
-            String mapType = (String) eventArrayList.get(i).getInfo().get("name");
+                    = (String) eventArrayList.get(i).getInfo().get("gameModeTypeImageUrl");
+            eventButton.setBackgroundResource(R.drawable.normalbutton);
 
             Glide.with(context)
                     .load(gameModeTypeUrl)
                     .override(fixedWidth / 32, fixedWidth / 32)
-                    .into(btn);
-
-            // setBackground는 default 스타일이 따로 정해져있어서 커스텀 스타일을 default 스타일이 덮어씌우는 느낌이 된다.
-            //btn.setBackgroundColor(Color.BLACK);
-            if (mapType != null && mapType.contains("Championship")) {
-                btn.setBackgroundResource(R.drawable.championshipbutton);
-            } else {
-                btn.setBackgroundResource(R.drawable.normalbutton);
-            }
-
+                    .into(eventButton);
 
             final int idx = i;
-            btn.setOnClickListener(view -> viewPager.setCurrentItem(idx, true));
+            eventButton.setOnClickListener(view -> viewPager.setCurrentItem(idx, true));
 
-            buttonGroup.addView(btn);
+            buttonGroup.addView(eventButton);
         }
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void changeRecommendViewClick() {
+
+        final Button recommendButton = new Button(context);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.MATCH_PARENT
+        );
+        params.setMargins(5, 5, 5, 5);
+
+        recommendButton.setLayoutParams(params);
+
+        recommendButton.setBackgroundColor(ContextCompat.getColor(context, R.color.semiBlack));
+        recommendButton.setText(context.getString(R.string.playerChange));
+        recommendButton.setAllCaps(false);
+        if (KatData.kataMyAccountBase.getTag().equals("")) {
+            recommendButton.setTextColor(ContextCompat.getColor(context, R.color.gray));
+            recommendButton.setEnabled(false);
+        } else {
+            recommendButton.setTextColor(ContextCompat.getColor(context, R.color.Color1));
+            recommendButton.setEnabled(true);
+        }
+        Typeface typeface = ResourcesCompat.getFont(context, R.font.lilita_one);
+        recommendButton.setTypeface(typeface);
+        recommendButton.setTextSize(context.getResources().getInteger(R.integer.map_recommend_service_button_text_size));
+
+        mapRecommendButtonGroup.addView(recommendButton);
+
+        recommendButton.setOnClickListener(view -> {
+            isPlayerRecommend = !isPlayerRecommend;
+            if (isPlayerRecommend) {
+                presenter.setOnPlayerRecommendClicked();
+            } else {
+                presenter.setOnAllRecommendClicked();
+            }
+
+            int length = ((ViewGroup) recommendButton.getParent()).getWidth();
+
+            // 이미지 버튼 스타일링
+            LinearLayout.LayoutParams params1 = new LinearLayout.LayoutParams(
+                    length - 10,
+                    length - 10
+            );
+            params1.setMargins(5, 5, 5, 5);
+            recommendButton.setLayoutParams(params1);
+        });
+    }
+
+    @Override
+    public void updateMapRecommendData(@NonNull NotificationData notificationData) {
+        this.eventArrayList = notificationData.getEventArrayList();
+        this.brawlersArrayList = notificationData.getBrawlerArrayList();
+        addModeButton();
+        changeRecommendViewClick();
     }
 
     public void onDismiss() {
@@ -232,13 +228,5 @@ public class EventService implements MapRecommendContract.ViewpagerView {
                 }
             }
         }
-    }
-
-    @Override
-    public void updateMapRecommendData(@NonNull NotificationData notificationData) {
-        this.eventArrayList = notificationData.getEventArrayList();
-        this.brawlersArrayList = notificationData.getBrawlerArrayList();
-        addModeButton();
-        changeRecommendViewClick();
     }
 }
