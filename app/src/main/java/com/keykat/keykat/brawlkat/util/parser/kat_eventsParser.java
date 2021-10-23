@@ -16,9 +16,9 @@ public class kat_eventsParser {
         this.data = data;
     }
 
-    public class pair{
-        private HashMap<String, Object> info;
-        private ArrayList<HashMap<String, Object> > wins;
+    public static class pair{
+        private final HashMap<String, Object> info;
+        private final ArrayList<HashMap<String, Object> > wins;
 
         public pair(HashMap<String, Object> info, ArrayList<HashMap<String, Object> > wins){
             this.info = info;
@@ -67,8 +67,8 @@ public class kat_eventsParser {
                 JSONObject mapTypeImageUrl = (JSONObject) info.get("environment");
                 map.put("mapTypeImageUrl", mapTypeImageUrl.get("imageUrl"));
                 // 맵 정보 - 게임 모드 타입
-                JSONObject gamemodeTypeImageUrl = (JSONObject) info.get("gameMode");
-                map.put("gamemodeTypeImageUrl", gamemodeTypeImageUrl.get("imageUrl"));
+                JSONObject gameModeTypeImageUrl = (JSONObject) info.get("gameMode");
+                map.put("gameModeTypeImageUrl", gameModeTypeImageUrl.get("imageUrl"));
 
                 // 브롤러 별 승률
                 JSONArray stats = (JSONArray) info.get("stats");
@@ -95,29 +95,4 @@ public class kat_eventsParser {
         }
         return slot;
     }
-
-
-
-
-//    public void testPrint(ArrayList<pair> arrayList){
-//        for(pair arr : arrayList){
-//
-//            HashMap<String, Object> info = arr.info;
-//            ArrayList<HashMap<String, Object> > wins = arr.wins;
-//
-//            System.out.println(info.get("name"));
-//            System.out.println(info.get("startTime"));
-//            System.out.println(info.get("endTime"));
-//            System.out.println(info.get("mapTypeImageUrl"));
-//            System.out.println(info.get("gamemodeTypeImageUrl"));
-//
-//            for(HashMap<String, Object> w : wins){
-//                System.out.println(w.get("brawler"));
-//                System.out.println(w.get("winRate"));
-//                System.out.println(w.get("useRate"));
-//                System.out.println('\n');
-//            }
-//        }
-//    }
-
 }
