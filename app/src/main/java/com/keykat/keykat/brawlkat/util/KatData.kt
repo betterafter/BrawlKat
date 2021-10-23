@@ -75,7 +75,6 @@ object KatData {
     lateinit var katabase: kat_database
     lateinit var kataFavoritesBase: kat_favoritesDatabase
     lateinit var kataCountryBase: kat_countryDatabase
-    lateinit var kataSettingBase: kat_settingDatabase
 
     lateinit var countryCodeMap: HashMap<String, String>
 
@@ -121,11 +120,6 @@ object KatData {
     // .........................................................................................
 
     // .........................................................................................
-    const val TYPE_WIFI = 1
-    const val TYPE_MOBILE = 2
-    const val TYPE_NOT_CONNECTED = 3
-
-    const val ApiRootUrl = "https://api.brawlify.com"
     const val CdnRootUrl = "https://cdn.brawlify.com"
     const val WebRootUrl = "https://brawlify.com"
 
