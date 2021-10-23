@@ -1,12 +1,7 @@
 package com.keykat.keykat.brawlkat.service.maprecommendservice.repository
 
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendDataSource
-import com.keykat.keykat.brawlkat.service.util.NotificationData
-import com.keykat.keykat.brawlkat.util.KatData
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
+import com.keykat.keykat.brawlkat.service.model.data.NotificationData
 
 class MapRecommendRepositoryImpl(
     private val mapRecommendDataSource: MapRecommendDataSource
@@ -14,7 +9,7 @@ class MapRecommendRepositoryImpl(
 
     override fun getPlayerInfoData() = mapRecommendDataSource.getPlayerInfoData()
 
-    override fun getMapRecommendData(viewCallback: () -> (Unit)) {
+    override fun getMapRecommendData(viewCallback: (NotificationData) -> (Unit)) {
         mapRecommendDataSource.getMapRecommendViewData(viewCallback)
     }
 }

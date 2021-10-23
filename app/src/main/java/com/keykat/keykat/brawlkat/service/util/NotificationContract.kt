@@ -1,6 +1,6 @@
 package com.keykat.keykat.brawlkat.service.util
 
-import kotlinx.coroutines.Deferred
+import com.keykat.keykat.brawlkat.service.model.data.NotificationData
 
 interface NotificationContract {
 
