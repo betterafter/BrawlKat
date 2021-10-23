@@ -22,14 +22,14 @@ import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.common.Injection;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
-import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendDataSource;
-import com.keykat.keykat.brawlkat.service.util.kat_ButtonBroadcastReceiver;
+import com.keykat.keykat.brawlkat.service.model.datasource.MapRecommendDataSource;
+import com.keykat.keykat.brawlkat.service.util.ServiceButtonBroadcastReceiver;
 import com.keykat.keykat.brawlkat.util.KatData;
 
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 
-public class kat_Service_OverdrawService
+public class OverdrawService
         extends Service
         implements View.OnTouchListener, MapRecommendContract.MainView {
 
@@ -40,7 +40,7 @@ public class kat_Service_OverdrawService
     public WindowManager.LayoutParams layoutParams;
 
     public ConstraintLayout constraintLayout;
-    private kat_Service_EventService events;
+    private EventService events;
 
     // 기타 변수들
     private float mStartingX, mStartingY, mWidgetStartingX, mWidgetStartingY;
@@ -74,7 +74,7 @@ public class kat_Service_OverdrawService
         init_windowManager();
 
         // EventActivity 선언 및 뷰 생성
-        events = new kat_Service_EventService(context, repository, this, this);
+        events = new EventService(context, repository, this);
 
         if (!KatData.client.isGetApiThreadAlive())
             KatData.client.init();
@@ -82,7 +82,7 @@ public class kat_Service_OverdrawService
         RemoteViews contentView = new RemoteViews(getPackageName(), R.layout.sub_notification);
 
         // 종료 버튼을 위한 펜딩 인텐트
-        Intent buttonIntent = new Intent(this, kat_ButtonBroadcastReceiver.class);
+        Intent buttonIntent = new Intent(this, ServiceButtonBroadcastReceiver.class);
         buttonIntent.setAction("overdraw.STOP");
         PendingIntent btPendingIntent = PendingIntent.getBroadcast(this, 0, buttonIntent,
                 PendingIntent.FLAG_UPDATE_CURRENT);
@@ -225,9 +225,7 @@ public class kat_Service_OverdrawService
 
                 if (Math.abs(mWidgetStartingX - layoutParams.x) <= 30
                         && Math.abs(mWidgetStartingY - layoutParams.y) <= 30) {
-                    events.ShowEventsInformation();
-                    events.addModeButton();
-                    events.ChangeRecommendViewClick();
+                    events.showEventsInformation();
                 }
 
             case MotionEvent.ACTION_OUTSIDE:

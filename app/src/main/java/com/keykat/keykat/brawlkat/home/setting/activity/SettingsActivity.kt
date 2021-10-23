@@ -10,7 +10,7 @@ import android.provider.Settings
 import androidx.appcompat.app.AppCompatActivity
 import androidx.preference.*
 import com.keykat.keykat.brawlkat.R
-import com.keykat.keykat.brawlkat.service.systembarservice.kat_Service_BrawlStarsNotificationActivity
+import com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationActivity
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -40,7 +40,7 @@ class SettingsActivity : AppCompatActivity() {
 
             serviceIntent = Intent(
                 requireActivity().applicationContext,
-                kat_Service_BrawlStarsNotificationActivity::class.java
+                BrawlStarsNotificationActivity::class.java
             )
 
             foregroundServicePreferences = findPreference(getString(R.string.notify_service))

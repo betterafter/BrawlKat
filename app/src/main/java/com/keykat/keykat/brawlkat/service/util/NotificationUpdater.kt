@@ -28,7 +28,7 @@ class NotificationUpdater(
     private var eventList: ArrayList<kat_eventsParser.pair>? = null
     private var brawlerData: ArrayList<HashMap<String, Any>>? = null
 
-    private var brawlerRecommendation: kat_BrawlerRecommendation? = null
+    private var brawlerRecommendation: BrawlerRecommendation? = null
 
     private lateinit var notification: NotificationCompat.Builder
 
@@ -53,7 +53,8 @@ class NotificationUpdater(
         scv = smallContentView()
         bcv = bigContentView()
 
-        brawlerRecommendation = kat_BrawlerRecommendation(playerData, eventList)
+        brawlerRecommendation =
+            BrawlerRecommendation(playerData, eventList)
         setErrorNotification()
     }
 
@@ -63,7 +64,8 @@ class NotificationUpdater(
 
             playerData?.let {
                 // 스타 포인트 연산
-                val seasonRewardsCalculator = kat_SeasonRewardsCalculator(it)
+                val seasonRewardsCalculator =
+                    SeasonRewardsCalculator(it)
                 val seasonRewards = seasonRewardsCalculator.SeasonsRewardsCalculator()
 
                 // 뷰 연결
@@ -75,12 +77,12 @@ class NotificationUpdater(
             // 인텐트 등록
             val homeIntent = Intent(
                 context,
-                kat_ButtonBroadcastReceiver::class.java
+                ServiceButtonBroadcastReceiver::class.java
             )
             homeIntent.action = "main.HOME"
             val analyticsIntent = Intent(
                 context,
-                kat_ButtonBroadcastReceiver::class.java
+                ServiceButtonBroadcastReceiver::class.java
             )
             analyticsIntent.action = "main.ANALYTICS"
             @SuppressLint("UnspecifiedImmutableFlag") val homePendingIntent =
@@ -116,12 +118,14 @@ class NotificationUpdater(
             println("data: " + playerData?.tag)
             playerData?.let {
                 // 스타 포인트 연산
-                val seasonRewardsCalculator = kat_SeasonRewardsCalculator(it)
+                val seasonRewardsCalculator =
+                    SeasonRewardsCalculator(it)
                 val seasonRewards = seasonRewardsCalculator.SeasonsRewardsCalculator()
                 bigContentView.setTextViewText(R.id.title, it.name)
                 bigContentView.setTextViewText(R.id.explain_text, " after season end")
                 bigContentView.setTextViewText(R.id.text, "$seasonRewards points")
-                val recommendation = kat_BrawlerRecommendation(it, eventList)
+                val recommendation =
+                    BrawlerRecommendation(it, eventList)
 
                 val rIndex = recommendationBrawlerIndex
 
@@ -155,12 +159,12 @@ class NotificationUpdater(
             // 인텐트 등록
             val homeIntent = Intent(
                 context,
-                kat_ButtonBroadcastReceiver::class.java
+                ServiceButtonBroadcastReceiver::class.java
             )
             homeIntent.action = "main.HOME"
             val analyticsIntent = Intent(
                 context,
-                kat_ButtonBroadcastReceiver::class.java
+                ServiceButtonBroadcastReceiver::class.java
             )
             analyticsIntent.action = "main.ANALYTICS"
             @SuppressLint("UnspecifiedImmutableFlag") val homePendingIntent =

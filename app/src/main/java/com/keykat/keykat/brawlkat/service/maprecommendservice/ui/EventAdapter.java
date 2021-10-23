@@ -32,8 +32,8 @@ import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-public class kat_EventAdapter
-        extends RecyclerView.Adapter<kat_EventAdapter.viewHolder>
+public class EventAdapter
+        extends RecyclerView.Adapter<EventAdapter.viewHolder>
         implements MapRecommendContract.RecyclerView {
 
     private final Context context;
@@ -43,9 +43,9 @@ public class kat_EventAdapter
     private Boolean isUserRecommend = false;
 
 
-    public kat_EventAdapter(Context context,
-                            ArrayList<kat_eventsParser.pair> EventArrayList,
-                            ArrayList<HashMap<String, Object>> BrawlersArrayList
+    public EventAdapter(Context context,
+                        ArrayList<kat_eventsParser.pair> EventArrayList,
+                        ArrayList<HashMap<String, Object>> BrawlersArrayList
     ) {
         this.context = context;
         this.EventArrayList = EventArrayList;
