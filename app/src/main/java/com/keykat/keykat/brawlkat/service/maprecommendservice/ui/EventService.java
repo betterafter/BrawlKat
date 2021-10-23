@@ -18,17 +18,19 @@ import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendViewPagerPresenter;
+import com.keykat.keykat.brawlkat.service.model.data.NotificationData;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import androidx.annotation.NonNull;
 import androidx.core.content.res.ResourcesCompat;
 import androidx.viewpager2.widget.ViewPager2;
 
 
-public class kat_Service_EventService implements MapRecommendContract.ViewpagerView {
+public class EventService implements MapRecommendContract.ViewpagerView {
 
     private View mapRecommendView;
     private LinearLayout mapRecommendButtonGroup;
@@ -37,26 +39,23 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
     private int fixedWidth;
     private int fixedHeight;
 
-    private kat_EventAdapter eventAdapter;
+    private EventAdapter eventAdapter;
 
-    private MapRecommendViewPagerPresenter presenter;
-    private MapRecommendContract.MainView mainView;
+    private final MapRecommendViewPagerPresenter presenter;
 
     private final Context context;
 
-    public ArrayList<kat_eventsParser.pair> EventArrayList = KatData.EventArrayList;
-    public ArrayList<HashMap<String, Object>> BrawlersArrayList = KatData.BrawlersArrayList;
+    public ArrayList<kat_eventsParser.pair> eventArrayList = new ArrayList<>();
+    public ArrayList<HashMap<String, Object>> brawlersArrayList = new ArrayList<>();
 
     private ViewPager2 viewPager = null;
     public boolean isPlayerRecommend = false;
 
-    public kat_Service_EventService(Context context,
-                                    MapRecommendRepository repository,
-                                    MapRecommendContract.MainView mainView,
-                                    View.OnTouchListener touchListener) {
+    public EventService(Context context,
+                        MapRecommendRepository repository,
+                        View.OnTouchListener touchListener) {
         super();
         this.context = context;
-        this.mainView = mainView;
         this.touchListener = touchListener;
 
         initMapInflater();
@@ -85,13 +84,13 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
     }
 
     private void initAdapter() {
-        eventAdapter = new kat_EventAdapter(context, EventArrayList, BrawlersArrayList);
+        eventAdapter = new EventAdapter(context, eventArrayList, brawlersArrayList);
         viewPager = mapRecommendView.findViewById(R.id.viewPager2);
         viewPager.setAdapter(eventAdapter);
     }
 
     // 서비스 실행 시에 보여지는 화면
-    public void ShowEventsInformation() {
+    public void showEventsInformation() {
         try {
             windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             WindowManager.LayoutParams mapRecommendLayoutParams = new WindowManager.LayoutParams(
@@ -111,13 +110,14 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
             windowManager.addView(mapRecommendView, mapRecommendLayoutParams);
 
             presenter.getMapRecommendData();
+
         } catch (Exception e) {
             e.printStackTrace();
         }
     }
 
     @SuppressLint("SetTextI18n")
-    public void ChangeRecommendViewClick() {
+    public void changeRecommendViewClick() {
 
         final Button btn = new Button(context);
 
@@ -187,7 +187,7 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
         LinearLayout buttonGroup = mapRecommendView.findViewById(R.id.buttonGroup);
         buttonGroup.removeAllViews();
 
-        for (int i = 0; i < EventArrayList.size(); i++) {
+        for (int i = 0; i < eventArrayList.size(); i++) {
 
             ImageButton btn = new ImageButton(context);
 
@@ -200,8 +200,8 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
             btn.setLayoutParams(params);
 
             String gameModeTypeUrl
-                    = (String) EventArrayList.get(i).getInfo().get("gamemodeTypeImageUrl");
-            String mapType = (String) EventArrayList.get(i).getInfo().get("name");
+                    = (String) eventArrayList.get(i).getInfo().get("gamemodeTypeImageUrl");
+            String mapType = (String) eventArrayList.get(i).getInfo().get("name");
 
             Glide.with(context)
                     .load(gameModeTypeUrl)
@@ -232,5 +232,13 @@ public class kat_Service_EventService implements MapRecommendContract.ViewpagerV
                 }
             }
         }
+    }
+
+    @Override
+    public void updateMapRecommendData(@NonNull NotificationData notificationData) {
+        this.eventArrayList = notificationData.getEventArrayList();
+        this.brawlersArrayList = notificationData.getBrawlerArrayList();
+        addModeButton();
+        changeRecommendViewClick();
     }
 }

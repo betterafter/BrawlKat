@@ -18,7 +18,7 @@ import androidx.annotation.Nullable;
 import androidx.core.app.NotificationCompat;
 import androidx.lifecycle.LifecycleService;
 
-public class kat_Service_BrawlStarsNotificationActivity
+public class BrawlStarsNotificationActivity
         extends LifecycleService
         implements NotificationContract.View {
 

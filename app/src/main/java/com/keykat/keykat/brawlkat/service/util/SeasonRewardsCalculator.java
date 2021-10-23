@@ -4,7 +4,7 @@ import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 
-public class kat_SeasonRewardsCalculator {
+public class SeasonRewardsCalculator {
 
     kat_official_playerInfoParser.playerData playerData;
 
@@ -20,7 +20,7 @@ public class kat_SeasonRewardsCalculator {
             1040, 1060, 1080, 1100, 1120, 1140, 1150
     };
 
-    public kat_SeasonRewardsCalculator(kat_official_playerInfoParser.playerData playerData){
+    public SeasonRewardsCalculator(kat_official_playerInfoParser.playerData playerData){
         this.playerData = playerData;
     }
 

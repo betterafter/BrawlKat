@@ -29,6 +29,7 @@ class MapRecommendViewPagerPresenter(
         mapRecommendRepository.getMapRecommendData { data ->
             CoroutineScope(Dispatchers.Main).launch {
                 recyclerView?.refresh(data)
+                viewPagerView.updateMapRecommendData(data)
             }
         }
     }

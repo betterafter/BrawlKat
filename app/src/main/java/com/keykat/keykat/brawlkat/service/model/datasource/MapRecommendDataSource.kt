@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.service.maprecommendservice.util
+package com.keykat.keykat.brawlkat.service.model.datasource
 
 import android.content.Context
 import com.keykat.keykat.brawlkat.service.model.data.NotificationData

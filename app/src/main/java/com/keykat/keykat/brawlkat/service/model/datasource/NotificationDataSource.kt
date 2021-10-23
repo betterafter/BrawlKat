@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.service.util
+package com.keykat.keykat.brawlkat.service.model.datasource
 
 import com.keykat.keykat.brawlkat.common.exceptions.InvalidBaseDataException
 import com.keykat.keykat.brawlkat.common.exceptions.InvalidPlayerDataException

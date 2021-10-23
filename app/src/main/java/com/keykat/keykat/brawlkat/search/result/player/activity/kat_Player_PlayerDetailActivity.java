@@ -20,7 +20,7 @@ import com.keykat.keykat.brawlkat.home.favorite.activity.kat_FavoritesFragment;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.search.result.club.activity.kat_Player_ClubDetailActivity;
-import com.keykat.keykat.brawlkat.service.util.kat_SeasonRewardsCalculator;
+import com.keykat.keykat.brawlkat.service.util.SeasonRewardsCalculator;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser;
@@ -323,8 +323,8 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
         TextView reward_text = view.findViewById(R.id.player_detail_reward);
         TextView after_trophies_text = view.findViewById(R.id.player_detail_after_trophies);
 
-        kat_SeasonRewardsCalculator seasonRewardsCalculator
-                = new kat_SeasonRewardsCalculator(KatData.playerData);
+        SeasonRewardsCalculator seasonRewardsCalculator
+                = new SeasonRewardsCalculator(KatData.playerData);
 
         int seasonRewards = seasonRewardsCalculator.SeasonsRewardsCalculator();
         int seasonReset = seasonRewardsCalculator.SeasonsResetTrophiesCalculator();

@@ -67,7 +67,7 @@
             android:name="com.google.android.gms.ads.APPLICATION_ID"
             android:value="ca-app-pub-5909086836185335~3154086269" />
 
-        <receiver android:name=".service.util.kat_ButtonBroadcastReceiver">
+        <receiver android:name=".service.util.ServiceButtonBroadcastReceiver">
             <intent-filter android:priority="10000">
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
@@ -81,9 +81,9 @@
         <!--                <action android:name="com.example.brawlkat.kat_Service_BrawlStarsNotifActivity.CHECK_END" />-->
         <!--            </intent-filter>-->
         <!--        </receiver>-->
-        <service android:name=".service.maprecommendservice.ui.kat_Service_OverdrawService" />
+        <service android:name=".service.maprecommendservice.ui.OverdrawService" />
 
-        <service android:name=".service.systembarservice.kat_Service_BrawlStarsNotificationActivity" />
+        <service android:name=".service.systembarservice.BrawlStarsNotificationActivity" />
         <!-- Sample AdMob App ID: ca-app-pub-3940256099942544~3347511713 -->
 <!--        <service-->
 <!--            android:name=".service.util.kat_onTaskRemovedService"-->
