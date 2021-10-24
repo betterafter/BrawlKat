@@ -28,6 +28,9 @@
         <entry key="app/src/main/res/layout/player_main.xml" value="0.11458333333333333" />
         <entry key="app/src/main/res/layout/player_my_account.xml" value="0.18802083333333333" />
         <entry key="app/src/main/res/layout/player_player_detail.xml" value="0.1644021739130435" />
+        <entry key="app/src/main/res/layout/player_ranking.xml" value="0.14488348530901723" />
+        <entry key="app/src/main/res/layout/player_ranking_brawler.xml" value="0.14488348530901723" />
+        <entry key="app/src/main/res/layout/player_ranking_player.xml" value="0.14488348530901723" />
         <entry key="app/src/main/res/layout/player_search_account_for_save_activity.xml" value="0.25" />
         <entry key="app/src/main/res/layout/service_map_recommend.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/settings.xml" value="0.16666666666666666" />

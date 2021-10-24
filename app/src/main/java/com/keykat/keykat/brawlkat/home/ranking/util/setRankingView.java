@@ -45,7 +45,7 @@ public class setRankingView {
         for (int i = 0; i < PlayerRankingArrayList.size(); i++) {
 
             @SuppressLint("InflateParams")
-            View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
+            View itemView = layoutInflater.inflate(R.layout.item_player_ranking, null);
             final kat_official_PlayerRankingParser.playerData playerData
                     = PlayerRankingArrayList.get(i);
 
@@ -109,7 +109,7 @@ public class setRankingView {
 
         for (int i = 0; i < ClubRankingArrayList.size(); i++) {
 
-            View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
+            View itemView = layoutInflater.inflate(R.layout.item_player_ranking, null);
             final kat_official_ClubRankingParser.clubData clubData = ClubRankingArrayList.get(i);
 
             ImageView player_ranking_player_image
@@ -186,7 +186,7 @@ public class setRankingView {
 
         for (int i = 0; i < BrawlerRankingArrayList.size(); i++) {
 
-            View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
+            View itemView = layoutInflater.inflate(R.layout.item_player_ranking, null);
             final kat_official_BrawlerRankingParser.brawlerRankingData brawlerRankingData
                     = BrawlerRankingArrayList.get(i);
 
@@ -252,7 +252,7 @@ public class setRankingView {
 
         for (int i = 0; i < PowerPlayRankingArrayList.size(); i++) {
 
-            View itemView = layoutInflater.inflate(R.layout.player_ranking_item, null);
+            View itemView = layoutInflater.inflate(R.layout.item_player_ranking, null);
             final kat_official_PowerPlaySeasonRankingParser.powerPlaySeasonRankingData
                     powerPlaySeasonRankingData = PowerPlayRankingArrayList.get(i);
 
