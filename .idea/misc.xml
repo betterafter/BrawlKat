@@ -37,6 +37,8 @@
         <entry key="app/src/main/res/layout/player_ranking_brawler.xml" value="0.14488348530901723" />
         <entry key="app/src/main/res/layout/player_ranking_player.xml" value="0.14488348530901723" />
         <entry key="app/src/main/res/layout/player_search_account_for_save_activity.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/service_map_event_item.xml" value="0.375" />
+        <entry key="app/src/main/res/layout/service_map_event_item_brawler.xml" value="0.1671875" />
         <entry key="app/src/main/res/layout/service_map_recommend.xml" value="0.18697916666666667" />
         <entry key="app/src/main/res/layout/settings.xml" value="0.16666666666666666" />
         <entry key="app/src/main/res/menu/bottom_navigation.xml" value="0.1734375" />
