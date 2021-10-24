@@ -35,12 +35,12 @@ public class OverdrawService
     public WindowManager windowManager;
     public WindowManager.LayoutParams layoutParams;
     private RemoteViews contentView;
-    public Context context;
-    public ConstraintLayout constraintLayout;
+    private Context context;
+    private ConstraintLayout serviceButtonLayout;
+    private Button serviceButton;
 
     // 이벤트 서비스
     private EventService events;
-    public boolean ServiceButtonTouched = false;
     private final Handler onButtonLongTouchHandler = new Handler();
     private final Runnable onButtonLongTouchRunnable = () -> {
         onDestroy();
@@ -69,7 +69,7 @@ public class OverdrawService
         context = getApplicationContext();
         MapRecommendRepository repository
                 = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource(context));
-        events = new EventService(context, repository, this);
+        events = new EventService(context, repository, this, this);
 
         initInflater();
         initWindowManager();
@@ -114,10 +114,10 @@ public class OverdrawService
     @SuppressLint("ClickableViewAccessibility")
     public void initInflater() {
 
-        constraintLayout = new ConstraintLayout(this);
+        serviceButtonLayout = new ConstraintLayout(this);
 
         // 뷰
-        Button button = new Button(this);
+        serviceButton = new Button(this);
         DisplayMetrics metrics = context.getResources().getDisplayMetrics();
         int width = metrics.widthPixels;
         int height = metrics.heightPixels;
@@ -128,12 +128,12 @@ public class OverdrawService
                 setWidth / 5
         );
 
-        button.setBackground(context.getResources().getDrawable(R.drawable.service_click));
-        button.setLayoutParams(params);
+        serviceButton.setBackground(context.getResources().getDrawable(R.drawable.service_click));
+        serviceButton.setLayoutParams(params);
 
-        button.setOnTouchListener(this);
+        serviceButton.setOnTouchListener(this);
 
-        constraintLayout.addView(button);
+        serviceButtonLayout.addView(serviceButton);
     }
 
     // 메인 버튼에 연결된 윈도우 매니저 선언
@@ -152,7 +152,7 @@ public class OverdrawService
         );
 
         windowManager = (WindowManager) getSystemService(WINDOW_SERVICE);
-        windowManager.addView(constraintLayout, layoutParams);
+        windowManager.addView(serviceButtonLayout, layoutParams);
     }
 
     // 서비스 종료
@@ -160,8 +160,8 @@ public class OverdrawService
     public void onDestroy() {
         if (windowManager != null) {
             //서비스 종료시 뷰 제거.
-            if (constraintLayout != null && constraintLayout.getWindowToken() != null) {
-                windowManager.removeView(constraintLayout);
+            if (serviceButtonLayout != null && serviceButtonLayout.getWindowToken() != null) {
+                windowManager.removeView(serviceButtonLayout);
             }
         }
 
@@ -180,13 +180,10 @@ public class OverdrawService
     public boolean onTouch(View v, MotionEvent ev) {
 
         switch (ev.getAction()) {
-
-
             case MotionEvent.ACTION_DOWN:
 
                 onButtonLongTouchHandler.postDelayed(onButtonLongTouchRunnable, 2000);
 
-                ServiceButtonTouched = true;
                 mStartingX = ev.getRawX();
                 mStartingY = ev.getRawY();
 
@@ -200,7 +197,7 @@ public class OverdrawService
                 float deltaY = mStartingY - ev.getRawY();
                 layoutParams.x = (int) (mWidgetStartingX - deltaX);
                 layoutParams.y = (int) (mWidgetStartingY - deltaY);
-                windowManager.updateViewLayout(constraintLayout, layoutParams);
+                windowManager.updateViewLayout(serviceButtonLayout, layoutParams);
 
                 // 버튼 움직임을 의도한 모션을 취할 때는 '3초 누르기' 모션 해제
                 if (Math.abs(mWidgetStartingX - layoutParams.x) > 30
@@ -217,6 +214,7 @@ public class OverdrawService
                 if (Math.abs(mWidgetStartingX - layoutParams.x) <= 30
                         && Math.abs(mWidgetStartingY - layoutParams.y) <= 30) {
                     events.showEventsInformation();
+                    serviceButton.setEnabled(false);
                 }
 
             case MotionEvent.ACTION_OUTSIDE:
@@ -226,5 +224,10 @@ public class OverdrawService
         }
 
         return false;
+    }
+
+    @Override
+    public void setServiceButtonEnable() {
+        serviceButton.setEnabled(true);
     }
 }

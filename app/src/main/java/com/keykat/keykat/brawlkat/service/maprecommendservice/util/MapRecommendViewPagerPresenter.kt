@@ -12,7 +12,8 @@ import java.util.HashMap
 class MapRecommendViewPagerPresenter(
     private val mapRecommendRepository: MapRecommendRepository,
     private val viewPagerView: MapRecommendContract.ViewpagerView,
-    private val recyclerView: MapRecommendContract.RecyclerView?
+    private val recyclerView: MapRecommendContract.RecyclerView?,
+    private val mainView: MapRecommendContract.MainView?
 ): MapRecommendContract.ViewPagerPresenter {
 
     override fun setOnPlayerRecommendClicked() {
@@ -30,6 +31,7 @@ class MapRecommendViewPagerPresenter(
             CoroutineScope(Dispatchers.Main).launch {
                 recyclerView?.refresh(data)
                 viewPagerView.updateMapRecommendData(data)
+                mainView?.setServiceButtonEnable()
             }
         }
     }

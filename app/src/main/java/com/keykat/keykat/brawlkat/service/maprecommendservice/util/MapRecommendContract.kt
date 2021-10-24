@@ -5,7 +5,7 @@ import com.keykat.keykat.brawlkat.service.model.data.NotificationData
 
 class MapRecommendContract {
     interface MainView {
-
+        fun setServiceButtonEnable()
     }
 
     interface ViewpagerView {
