@@ -87,25 +87,29 @@ public class BrawlStarsNotificationService
     }
 
     public void fetchNotification(Intent intent) {
-        String playerTag = intent.getStringExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey());
-        if (playerTag == null) {
+        try {
+            String playerTag = intent.getStringExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey());
+            if (playerTag == null) {
 
-            SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(this);
-            playerTag = sharedPreferenceManager.getAccount();
-            if (playerTag != null && !playerTag.equals("")) {
-                playerTag = playerTag.substring(1);
+                SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(this);
+                playerTag = sharedPreferenceManager.getAccount();
+                if (playerTag != null && !playerTag.equals("")) {
+                    playerTag = playerTag.substring(1);
+                    notificationPresenter.loadData(
+                            playerTag,
+                            "players",
+                            "official"
+                    );
+                }
+            } else {
                 notificationPresenter.loadData(
                         playerTag,
                         "players",
                         "official"
                 );
             }
-        } else {
-            notificationPresenter.loadData(
-                    playerTag,
-                    "players",
-                    "official"
-            );
+        } catch (Exception e) {
+            e.printStackTrace();
         }
     }
 
