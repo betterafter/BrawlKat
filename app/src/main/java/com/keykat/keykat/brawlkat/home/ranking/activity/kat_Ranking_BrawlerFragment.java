@@ -48,7 +48,7 @@ public class kat_Ranking_BrawlerFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.player_ranking_brawler, container, false);
+        View view = inflater.inflate(R.layout.fragment_player_ranking_brawler, container, false);
         player_ranking_brawler_layout = view.findViewById(R.id.player_ranking_brawler_layout);
 
         globalClick(player_ranking_brawler_layout);
