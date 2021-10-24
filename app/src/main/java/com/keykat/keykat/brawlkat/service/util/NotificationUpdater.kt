@@ -75,17 +75,14 @@ class NotificationUpdater(
             }
 
             // 인텐트 등록
-            val homeIntent = Intent(
-                context,
-                ServiceButtonBroadcastReceiver::class.java
-            )
+            val homeIntent = Intent(context, ServiceButtonBroadcastReceiver::class.java)
             homeIntent.action = "main.HOME"
-            val analyticsIntent = Intent(
-                context,
-                ServiceButtonBroadcastReceiver::class.java
-            )
+
+            val analyticsIntent = Intent(context, ServiceButtonBroadcastReceiver::class.java)
             analyticsIntent.action = "main.ANALYTICS"
-            @SuppressLint("UnspecifiedImmutableFlag") val homePendingIntent =
+
+            @SuppressLint("UnspecifiedImmutableFlag")
+            val homePendingIntent =
                 PendingIntent.getBroadcast(
                     context,
                     0,
@@ -94,7 +91,8 @@ class NotificationUpdater(
                 )
 
             // 종료버튼과 펜딩 인텐트 연결
-            @SuppressLint("UnspecifiedImmutableFlag") val analyticsPendingIntent =
+            @SuppressLint("UnspecifiedImmutableFlag")
+            val analyticsPendingIntent =
                 PendingIntent.getBroadcast(
                     context,
                     0,
@@ -204,16 +202,16 @@ class NotificationUpdater(
                     .setShowWhen(false)
 
                 val url = urlForBigContentViewRecommendBrawler()
-                if (url == "") return
-
-                glideImageWithNotification(
-                    context,
-                    R.id.main_notification_big_img,
-                    bcv,
-                    notification.build(),
-                    1,
-                    url
-                )
+                if (url != "") {
+                    glideImageWithNotification(
+                        context,
+                        R.id.main_notification_big_img,
+                        bcv,
+                        notification.build(),
+                        1,
+                        url
+                    )
+                }
             } ?: run {
                 setErrorNotification()
             }
@@ -283,9 +281,5 @@ class NotificationUpdater(
 
     private fun ctView(contentViewId: Int): RemoteViews {
         return RemoteViews(context.packageName, contentViewId)
-    }
-
-    init {
-        playerData = KatData.eventsPlayerData.value
     }
 }
