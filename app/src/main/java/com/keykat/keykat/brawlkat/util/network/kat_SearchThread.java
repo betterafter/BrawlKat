@@ -194,6 +194,7 @@ public class kat_SearchThread extends AppCompatActivity {
                 fromActivity.startActivity(intent);
 
                 if (KatData.dialog != null) KatData.dialog.cancel();
+                if (this.kat_loadingDialog != null) this.kat_loadingDialog.dismiss();
             } catch (Exception e) {
                 e.printStackTrace();
             }
@@ -245,6 +246,7 @@ public class kat_SearchThread extends AppCompatActivity {
                 fromActivity.startActivity(intent);
 
                 if (KatData.dialog != null) KatData.dialog.cancel();
+                if (this.kat_loadingDialog != null) this.kat_loadingDialog.dismiss();
             } catch (Exception e) {
                 e.printStackTrace();
             }

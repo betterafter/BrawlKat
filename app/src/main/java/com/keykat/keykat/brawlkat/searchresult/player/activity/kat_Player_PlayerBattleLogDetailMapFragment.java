@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.search.result.player.activity;
+package com.keykat.keykat.brawlkat.searchresult.player.activity;
 
 import android.os.Bundle;
 import android.view.LayoutInflater;
