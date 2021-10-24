@@ -31,8 +31,6 @@ public class BrawlStarsNotificationService
     private NotificationPresenter notificationPresenter;
     public NotificationUpdater updater;
 
-    private String playerTag;
-
     @Nullable
     @Override
     public IBinder onBind(@NonNull Intent intent) {
@@ -50,12 +48,51 @@ public class BrawlStarsNotificationService
         super.onStartCommand(intent, flags, startId);
 
         notificationPresenter = new NotificationPresenter(this);
-        playerTag = intent.getStringExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey());
+
+        initChannel();
+        initNotificationManager();
+        initNotification(new NotificationData(null, null, null, null));
+        fetchNotification(intent);
+
+        return START_REDELIVER_INTENT;
+    }
+
+    public void initChannel() {
+        channel = new NotificationChannel(
+                "channel",
+                "brawl stars play",
+                NotificationManager.IMPORTANCE_LOW
+        );
+    }
+
+    public void initNotificationManager() {
+        notificationManager
+                = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
+        notificationManager.createNotificationChannel(channel);
+    }
+
+    public void initNotification(NotificationData notificationData) {
+        updater = new NotificationUpdater(this, notificationManager, notificationData);
+        updater.update();
+        notification = updater.getUpdatedNotification();
+        startForeground(1, notification.build());
+    }
+
+    @Override
+    public void updateService(@NonNull NotificationData notificationData) {
+        updater = new NotificationUpdater(this, notificationManager, notificationData);
+        updater.update();
+        notification = updater.getUpdatedNotification();
+        notificationManager.notify(1, notification.build());
+    }
+
+    public void fetchNotification(Intent intent) {
+        String playerTag = intent.getStringExtra(IntentKey.START_SERVICE_WITH_PLAYER_TAG.getKey());
         if (playerTag == null) {
 
             SharedPreferenceManager sharedPreferenceManager = new SharedPreferenceManager(this);
             playerTag = sharedPreferenceManager.getAccount();
-            if(playerTag != null && !playerTag.equals("")) {
+            if (playerTag != null && !playerTag.equals("")) {
                 playerTag = playerTag.substring(1);
                 notificationPresenter.loadData(
                         playerTag,
@@ -70,38 +107,6 @@ public class BrawlStarsNotificationService
                     "official"
             );
         }
-
-        initChannel();
-        initNotification(new NotificationData(null, null, null, null));
-
-        return START_REDELIVER_INTENT;
-    }
-
-    public void initChannel() {
-        channel = new NotificationChannel(
-                "channel",
-                "brawl stars play",
-                NotificationManager.IMPORTANCE_LOW
-        );
-    }
-
-    public void initNotification(NotificationData notificationData) {
-        notificationManager
-                = ((NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE));
-        notificationManager.createNotificationChannel(channel);
-
-        updater = new NotificationUpdater(this, notificationManager, notificationData);
-        updater.update();
-        notification = updater.getUpdatedNotification();
-        startForeground(1, notification.build());
-    }
-
-    @Override
-    public void updateService(@NonNull NotificationData notificationData) {
-        updater = new NotificationUpdater(this, notificationManager, notificationData);
-        updater.update();
-        notification = updater.getUpdatedNotification();
-        notificationManager.notify(1, notification.build());
     }
 
     @Override
