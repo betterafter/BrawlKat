@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.search.result.player.activity;
+package com.keykat.keykat.brawlkat.searchresult.player.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -19,7 +19,7 @@ import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.favorite.activity.kat_FavoritesFragment;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
-import com.keykat.keykat.brawlkat.search.result.club.activity.kat_Player_ClubDetailActivity;
+import com.keykat.keykat.brawlkat.searchresult.club.activity.kat_Player_ClubDetailActivity;
 import com.keykat.keykat.brawlkat.service.util.SeasonRewardsCalculator;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;

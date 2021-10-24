@@ -13,8 +13,8 @@ import android.widget.TextView;
 
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
-import com.keykat.keykat.brawlkat.search.result.club.activity.kat_Player_ClubDetailActivity;
-import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
+import com.keykat.keykat.brawlkat.searchresult.club.activity.kat_Player_ClubDetailActivity;
+import com.keykat.keykat.brawlkat.searchresult.player.activity.kat_Player_PlayerDetailActivity;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_BrawlerRankingParser;
