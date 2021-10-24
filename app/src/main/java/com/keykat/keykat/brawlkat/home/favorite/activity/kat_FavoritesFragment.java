@@ -67,7 +67,7 @@ public class kat_FavoritesFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        final View view = inflater.inflate(R.layout.player_favorites, null);
+        final View view = inflater.inflate(R.layout.fragment_player_favorites, null);
 
         // 광고 ....................................................................................
 
@@ -134,7 +134,7 @@ public class kat_FavoritesFragment extends Fragment {
 
             LayoutInflater layoutInflater =
                     (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-            view = layoutInflater.inflate(R.layout.player_favorites_item, viewGroup, false);
+            view = layoutInflater.inflate(R.layout.item_player_favorites, viewGroup, false);
             LinearLayout backgroundLayout = view.findViewById(R.id.player_favorites_background_layout);
 
             backgroundLayout.setBackgroundColor(Color.parseColor("#282830"));
