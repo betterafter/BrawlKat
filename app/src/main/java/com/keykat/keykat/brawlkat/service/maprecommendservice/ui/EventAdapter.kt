@@ -149,7 +149,9 @@ class EventAdapter(
                                         // 유저가 가진 브롤러와 전체 브롤러는 다르다
                                         if (isUserRecommend) {
                                             brawlerData["name"]?.let { name ->
-                                                if (name in playerBrawlersArrayList) {
+                                                if (name.toString()
+                                                        .uppercase(Locale.getDefault()) in playerBrawlersArrayList
+                                                ) {
                                                     val brawlerView = setBrawlerView(brawlerData, winData)
                                                     verticalLayout.addView(brawlerView)
                                                 }
