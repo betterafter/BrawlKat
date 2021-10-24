@@ -43,7 +43,7 @@ public class kat_Ranking_ClubFragment extends Fragment {
             @Nullable Bundle savedInstanceState
     ) {
 
-        View view = inflater.inflate(R.layout.player_ranking_club, container, false);
+        View view = inflater.inflate(R.layout.fragment_player_ranking_club, container, false);
         player_ranking_player_layout = view.findViewById(R.id.player_ranking_club_layout);
 
         final Button globalButton = view.findViewById(R.id.player_ranking_club_global);

@@ -55,7 +55,7 @@ public class kat_Ranking_PowerPlayFragment extends Fragment {
     ) {
 
         View view
-                = inflater.inflate(R.layout.player_ranking_powerplay, container, false);
+                = inflater.inflate(R.layout.fragment_player_ranking_powerplay, container, false);
         player_ranking_powerplay_layout = view.findViewById(R.id.player_ranking_powerplay_layout);
 
         final Button globalButton = view.findViewById(R.id.player_ranking_powerplay_global);

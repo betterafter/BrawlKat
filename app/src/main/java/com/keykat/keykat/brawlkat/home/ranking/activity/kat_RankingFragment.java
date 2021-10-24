@@ -14,8 +14,6 @@ import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.util.kat_Player_RankingAdapter;
 import com.keykat.keykat.brawlkat.util.KatData;
 
-import java.util.Objects;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
@@ -58,7 +56,7 @@ public class kat_RankingFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
-        View view = inflater.inflate(R.layout.player_ranking, container, false);
+        View view = inflater.inflate(R.layout.fragment_player_ranking, container, false);
 
         viewPager2 = view.findViewById(R.id.player_ranking_viewpager);
         TabLayout tabLayout = view.findViewById(R.id.player_ranking_tablayout);
