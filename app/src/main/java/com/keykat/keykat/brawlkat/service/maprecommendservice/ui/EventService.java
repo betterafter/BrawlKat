@@ -52,6 +52,7 @@ public class EventService implements MapRecommendContract.ViewpagerView {
 
     public EventService(Context context,
                         MapRecommendRepository repository,
+                        MapRecommendContract.MainView mainView,
                         View.OnTouchListener touchListener) {
         super();
         this.context = context;
@@ -59,7 +60,7 @@ public class EventService implements MapRecommendContract.ViewpagerView {
 
         initMapInflater();
         this.presenter = new MapRecommendViewPagerPresenter(
-                repository, this, eventAdapter
+                repository, this, eventAdapter, mainView
         );
     }
 
@@ -137,6 +138,7 @@ public class EventService implements MapRecommendContract.ViewpagerView {
         buttonGroup.removeAllViews();
 
         for (int i = 0; i < eventArrayList.size(); i++) {
+            kat_eventsParser.pair event = eventArrayList.get(i);
 
             ImageButton eventButton = new ImageButton(context);
 
@@ -147,15 +149,17 @@ public class EventService implements MapRecommendContract.ViewpagerView {
             );
             params.setMargins(5, 5, 5, 5);
             eventButton.setLayoutParams(params);
-
-            String gameModeTypeUrl
-                    = (String) eventArrayList.get(i).getInfo().get("gameModeTypeImageUrl");
             eventButton.setBackgroundResource(R.drawable.normalbutton);
 
-            Glide.with(context)
-                    .load(gameModeTypeUrl)
-                    .override(fixedWidth / 32, fixedWidth / 32)
-                    .into(eventButton);
+            if(event.getInfo() != null) {
+                if (event.getInfo().get("gameModeTypeImageUrl") != null) {
+                    String gameModeTypeUrl = (String) event.getInfo().get("gameModeTypeImageUrl");
+                    Glide.with(context)
+                            .load(gameModeTypeUrl)
+                            .override(fixedWidth / 32, fixedWidth / 32)
+                            .into(eventButton);
+                }
+            }
 
             final int idx = i;
             eventButton.setOnClickListener(view -> viewPager.setCurrentItem(idx, true));
@@ -220,8 +224,12 @@ public class EventService implements MapRecommendContract.ViewpagerView {
     public void updateMapRecommendData(@NonNull NotificationData notificationData) {
         this.eventArrayList = notificationData.getEventArrayList();
         this.brawlersArrayList = notificationData.getBrawlerArrayList();
-        addModeButton();
-        changeRecommendViewClick();
+        try {
+            addModeButton();
+            changeRecommendViewClick();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void onDismiss() {
