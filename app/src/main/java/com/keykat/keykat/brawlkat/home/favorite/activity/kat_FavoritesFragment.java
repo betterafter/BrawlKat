@@ -23,12 +23,11 @@ import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
 import com.keykat.keykat.brawlkat.util.KatData;
+import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 
 import java.util.ArrayList;
-import java.util.Objects;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
@@ -37,14 +36,14 @@ import androidx.fragment.app.Fragment;
 public class kat_FavoritesFragment extends Fragment {
 
 
-    private             RequestOptions                                                          options;
-    public              static int                                                              height;
-    public              static int                                                              width;
+    private RequestOptions options;
+    public static int height;
+    public static int width;
 
-    private             GridView                                                                gridView;
-    public              static gridAdapter                                                      gridAdapter;
+    private GridView gridView;
+    public static gridAdapter gridAdapter;
 
-    private             ArrayList<ArrayList<String>>                                            databaseItem;
+    private ArrayList<ArrayList<String>> databaseItem;
 
 
     @Override
@@ -80,7 +79,6 @@ public class kat_FavoritesFragment extends Fragment {
         //..........................................................................................
 
 
-
         kat_favoritesDatabase database = KatData.kataFavoritesBase;
         databaseItem = database.getItem();
 
@@ -92,18 +90,18 @@ public class kat_FavoritesFragment extends Fragment {
         return view;
     }
 
-    public void refresh(){
+    public void refresh() {
         gridAdapter.refreshData();
         gridAdapter.notifyDataSetChanged();
     }
 
 
-    private class gridAdapter extends BaseAdapter{
+    private class gridAdapter extends BaseAdapter {
 
-        public  ArrayList<ArrayList<String> >   databaseItem;
-        private String                          url_icon_trophies = KatData.CdnRootUrl + "/assets/icon/trophy.png";
+        public ArrayList<ArrayList<String>> databaseItem;
+        private String url_icon_trophies = KatData.CdnRootUrl + "/assets/icon/trophy.png";
 
-        public gridAdapter(ArrayList<ArrayList<String>> databaseItem){
+        public gridAdapter(ArrayList<ArrayList<String>> databaseItem) {
             this.databaseItem = databaseItem;
         }
 
@@ -123,17 +121,17 @@ public class kat_FavoritesFragment extends Fragment {
             return i;
         }
 
-        public void refreshData(){
+        public void refreshData() {
             databaseItem = KatData.kataFavoritesBase.getItem();
         }
 
         // 아이템 뷰 디자인
-        @SuppressLint("SetTextI18n")
+        @SuppressLint({"SetTextI18n", "ViewHolder"})
         @Override
         public View getView(int i, View view, ViewGroup viewGroup) {
 
             LayoutInflater layoutInflater =
-                    (LayoutInflater) getActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+                    (LayoutInflater) requireActivity().getApplicationContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
             view = layoutInflater.inflate(R.layout.item_player_favorites, viewGroup, false);
             LinearLayout backgroundLayout = view.findViewById(R.id.player_favorites_background_layout);
 
@@ -142,16 +140,13 @@ public class kat_FavoritesFragment extends Fragment {
 
             // 그리드뷰 아이템 클릭
             final int moveIdx = i;
-            view.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View view){
-                    kat_LoadingDialog dialog = new kat_LoadingDialog(getActivity());
-                    dialog.show();
+            view.setOnClickListener(view12 -> {
+                if(KatData.dialog != null) KatData.dialog.show();
 
-                    String tag = databaseItem.get(moveIdx).get(2).substring(1);
-                    kat_SearchThread kset = new kat_SearchThread(getActivity(),
-                            kat_Player_PlayerDetailActivity.class, dialog);
-                    kset.SearchStart(tag, "players", getActivity().getApplicationContext());
-                }
+                String tag = databaseItem.get(moveIdx).get(2).substring(1);
+                kat_SearchThread kset = new kat_SearchThread(getActivity(),
+                        kat_Player_PlayerDetailActivity.class);
+                kset.SearchStart(tag, "players", requireActivity().getApplicationContext());
             });
 
 
@@ -165,7 +160,7 @@ public class kat_FavoritesFragment extends Fragment {
 
             String url_profile = KatData.WebRootUrl + "/assets/profile/" + databaseItem.get(i).get(6) + ".png?v=1";
             KatData.glideImageWithRoundCorner(
-                    Objects.requireNonNull(getActivity()).getApplicationContext(),
+                    requireActivity().getApplicationContext(),
                     url_profile,
                     KatData.SCREEN_WIDTH.intValue() / 8,
                     KatData.SCREEN_WIDTH.intValue() / 8,
@@ -175,7 +170,7 @@ public class kat_FavoritesFragment extends Fragment {
             player_level.setText(databaseItem.get(i).get(7));
             player_name.setText(databaseItem.get(i).get(3));
             KatData.glideImageWithRoundCorner(
-                    getActivity().getApplicationContext(),
+                    requireActivity().getApplicationContext(),
                     url_icon_trophies,
                     KatData.SCREEN_WIDTH.intValue() / 30,
                     KatData.SCREEN_HEIGHT.intValue() / 30,
@@ -192,13 +187,11 @@ public class kat_FavoritesFragment extends Fragment {
 
             // 그리드뷰 닫기 버튼 클릭
             final int removeIdx = i;
-            player_close.setOnClickListener(new View.OnClickListener(){
-                public void onClick(View view){
-                    String tag = databaseItem.get(removeIdx).get(2);
-                    databaseItem.remove(removeIdx);
-                    KatData.kataFavoritesBase.delete(tag);
-                    gridAdapter.this.notifyDataSetChanged();
-                }
+            player_close.setOnClickListener(view1 -> {
+                String tag = databaseItem.get(removeIdx).get(2);
+                databaseItem.remove(removeIdx);
+                KatData.kataFavoritesBase.delete(tag);
+                gridAdapter.this.notifyDataSetChanged();
             });
 
             return view;
