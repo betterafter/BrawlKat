@@ -9,14 +9,19 @@
 
     <LinearLayout
         android:id="@+id/player_ranking_layout"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical" >
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"
+            android:layout_marginTop="50dp"
+            android:layout_marginHorizontal="10dp"
             android:gravity="right"
             android:orientation="horizontal">
 
@@ -28,16 +33,10 @@
                 android:background="@android:color/transparent"
                 android:fontFamily="@font/lilita_one"
                 android:gravity="center"
-                android:text="KR"
+                android:drawableEnd="@drawable/round_arrow_drop_down_24"
                 android:textColor="@color/Color1"
-                android:textSize="18sp" />
-
-            <ImageView
-                android:id="@+id/imageView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="center"
-                android:background="@drawable/round_arrow_drop_down_24" />
+                android:textSize="18sp"
+                tools:text="KR"/>
 
         </LinearLayout>
 
@@ -69,5 +68,7 @@
             android:id="@+id/player_ranking_viewpager"
             android:layout_width="match_parent"
             android:layout_height="match_parent" />
+
+
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
