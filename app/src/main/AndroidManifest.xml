@@ -32,13 +32,13 @@
             android:name=".search.activity.kat_Player_RecentSearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".search.result.player.activity.kat_Player_PlayerDetailActivity"
+            android:name=".searchresult.player.activity.kat_Player_PlayerDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".search.result.club.activity.kat_Player_ClubDetailActivity"
+            android:name=".searchresult.club.activity.kat_Player_ClubDetailActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".search.result.player.activity.kat_Player_PlayerBattleLogDetailActivity"
+            android:name=".searchresult.player.activity.kat_Player_PlayerBattleLogDetailActivity"
             android:screenOrientation="portrait" />
         <activity
             android:name=".home.activity.kat_SearchAccountForSaveActivity"

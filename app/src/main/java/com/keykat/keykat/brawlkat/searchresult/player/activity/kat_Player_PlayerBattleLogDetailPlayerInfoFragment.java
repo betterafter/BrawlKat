@@ -1,4 +1,4 @@
-package com.keykat.keykat.brawlkat.search.result.player.activity;
+package com.keykat.keykat.brawlkat.searchresult.player.activity;
 
 import android.content.Context;
 import android.graphics.Typeface;
@@ -12,6 +12,7 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.keykat.keykat.brawlkat.R;
+import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
@@ -182,7 +183,7 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
 
             LinearLayout innerLayout = new LinearLayout(requireActivity().getApplicationContext());
             innerLayout.setOrientation(LinearLayout.VERTICAL);
-            innerLayout.setBackground(ContextCompat.getDrawable(getActivity().getApplicationContext(), R.drawable.card));
+            innerLayout.setBackground(ContextCompat.getDrawable(requireActivity().getApplicationContext(), R.drawable.card));
             LinearLayout.LayoutParams layoutParams = new LinearLayout.LayoutParams(
                     ViewGroup.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT
@@ -346,11 +347,12 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
         player_tag.setText(playerInfo.getTag());
 
         v.setOnClickListener(v1 -> {
-            if (KatData.dialog != null) KatData.dialog.show();
+            kat_LoadingDialog dialog = new kat_LoadingDialog(getContext());
+            dialog.show();
 
             String realTag = playerInfo.getTag().substring(1);
 
-            kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class);
+            kat_SearchThread kset = new kat_SearchThread(getActivity(), kat_Player_PlayerDetailActivity.class, dialog);
             kset.SearchStart(realTag, "players", requireActivity().getApplicationContext());
         });
 

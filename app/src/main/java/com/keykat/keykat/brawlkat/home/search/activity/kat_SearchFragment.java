@@ -27,7 +27,7 @@ import com.keykat.keykat.brawlkat.home.activity.kat_SearchAccountForSaveActivity
 import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.search.activity.kat_Player_RecentSearchActivity;
-import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerDetailActivity;
+import com.keykat.keykat.brawlkat.searchresult.player.activity.kat_Player_PlayerDetailActivity;
 import com.keykat.keykat.brawlkat.util.KatData;
 import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;

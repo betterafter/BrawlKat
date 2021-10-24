@@ -1,9 +1,9 @@
-package com.keykat.keykat.brawlkat.search.result.player.util;
+package com.keykat.keykat.brawlkat.searchresult.player.util;
 
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerBattleLogParser;
 import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
-import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerBattleLogDetailMapFragment;
-import com.keykat.keykat.brawlkat.search.result.player.activity.kat_Player_PlayerBattleLogDetailPlayerInfoFragment;
+import com.keykat.keykat.brawlkat.searchresult.player.activity.kat_Player_PlayerBattleLogDetailMapFragment;
+import com.keykat.keykat.brawlkat.searchresult.player.activity.kat_Player_PlayerBattleLogDetailPlayerInfoFragment;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
