@@ -56,26 +56,32 @@ class SettingsActivity : AppCompatActivity() {
                 if (!checkPermission())
                     startActivity(Intent(Settings.ACTION_USAGE_ACCESS_SETTINGS))
 
-                if (newValue.equals(true)) requireActivity().startForegroundService(serviceIntent)
-                else requireActivity().stopService(serviceIntent)
+                if (newValue.equals(true)) {
+                    BrawlStarsNotificationService.normalExit = false
+                    requireActivity().startForegroundService(serviceIntent)
+                }
+                else {
+                    BrawlStarsNotificationService.normalExit = true
+                    requireActivity().stopService(serviceIntent)
+                }
 
                 true
             }
 
             servicePreference?.setOnPreferenceClickListener {
-                var intent = Intent(activity, ServiceSummaryActivity::class.java)
+                val intent = Intent(activity, ServiceSummaryActivity::class.java)
                 startActivity(intent)
                 true
             }
 
             policyPreference?.setOnPreferenceClickListener {
-                var intent = Intent(activity, PolicySummaryActivity::class.java)
+                val intent = Intent(activity, PolicySummaryActivity::class.java)
                 startActivity(intent)
                 true
             }
 
             developerPreference?.setOnPreferenceClickListener {
-                var intent = Intent(activity, DeveloperSummaryActivity::class.java)
+                val intent = Intent(activity, DeveloperSummaryActivity::class.java)
                 startActivity(intent)
                 true
             }
