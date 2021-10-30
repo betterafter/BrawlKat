@@ -20,7 +20,7 @@ import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapReco
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendViewPagerPresenter;
 import com.keykat.keykat.brawlkat.service.model.data.NotificationData;
-import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
+import com.keykat.keykat.brawlkat.common.util.parser.kat_eventsParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -92,6 +92,8 @@ public class EventService implements MapRecommendContract.ViewpagerView {
     // 서비스 실행 시에 보여지는 화면
     public void showEventsInformation() {
         try {
+
+
             windowManager = (WindowManager) context.getSystemService(Context.WINDOW_SERVICE);
             WindowManager.LayoutParams mapRecommendLayoutParams = new WindowManager.LayoutParams(
                     WindowManager.LayoutParams.WRAP_CONTENT,

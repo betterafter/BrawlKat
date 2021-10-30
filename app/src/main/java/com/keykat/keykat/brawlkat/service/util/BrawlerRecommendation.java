@@ -1,7 +1,7 @@
 package com.keykat.keykat.brawlkat.service.util;
 
-import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser;
-import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
+import com.keykat.keykat.brawlkat.common.util.parser.kat_eventsParser;
+import com.keykat.keykat.brawlkat.common.util.parser.kat_official_playerInfoParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

@@ -10,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.LinearLayout;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.KatData;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;

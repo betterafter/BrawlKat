@@ -3,9 +3,9 @@ package com.keykat.keykat.brawlkat.service.model.datasource
 import com.keykat.keykat.brawlkat.common.exceptions.InvalidBaseDataException
 import com.keykat.keykat.brawlkat.common.exceptions.InvalidPlayerDataException
 import com.keykat.keykat.brawlkat.service.model.data.NotificationData
-import com.keykat.keykat.brawlkat.util.parser.kat_brawlersParser
-import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser
-import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser
+import com.keykat.keykat.brawlkat.common.util.parser.kat_brawlersParser
+import com.keykat.keykat.brawlkat.common.util.parser.kat_eventsParser
+import com.keykat.keykat.brawlkat.common.util.parser.kat_mapsParser
 import java.io.BufferedReader
 import java.io.InputStreamReader
 import java.net.InetSocketAddress

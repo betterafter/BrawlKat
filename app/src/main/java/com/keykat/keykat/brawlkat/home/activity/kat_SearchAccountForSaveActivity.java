@@ -10,9 +10,9 @@ import android.widget.Toast;
 
 import com.google.android.material.textfield.TextInputEditText;
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
-import com.keykat.keykat.brawlkat.util.KatData;
-import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
+import com.keykat.keykat.brawlkat.common.util.kat_LoadingDialog;
+import com.keykat.keykat.brawlkat.common.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.network.kat_SearchThread;
 
 import java.util.Objects;
 

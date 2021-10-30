@@ -19,8 +19,8 @@ import com.bumptech.glide.request.RequestOptions
 import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.EventAdapter.ViewHolder
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract
 import com.keykat.keykat.brawlkat.service.model.data.NotificationData
-import com.keykat.keykat.brawlkat.util.KatData
-import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser.pair
+import com.keykat.keykat.brawlkat.common.util.KatData
+import com.keykat.keykat.brawlkat.common.util.parser.kat_eventsParser.pair
 import java.util.*
 import com.keykat.keykat.brawlkat.R
 import kotlin.collections.ArrayList

@@ -1,7 +1,7 @@
 package com.keykat.keykat.brawlkat.service.model.data
 
-import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser
-import com.keykat.keykat.brawlkat.util.parser.kat_mapsParser
+import com.keykat.keykat.brawlkat.common.util.parser.kat_eventsParser
+import com.keykat.keykat.brawlkat.common.util.parser.kat_mapsParser
 import java.util.ArrayList
 import java.util.HashMap
 

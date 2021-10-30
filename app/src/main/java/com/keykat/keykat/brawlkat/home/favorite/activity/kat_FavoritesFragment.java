@@ -22,9 +22,9 @@ import com.bumptech.glide.request.RequestOptions;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.searchresult.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.util.KatData;
-import com.keykat.keykat.brawlkat.util.database.kat_favoritesDatabase;
-import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
+import com.keykat.keykat.brawlkat.common.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.database.kat_favoritesDatabase;
+import com.keykat.keykat.brawlkat.common.util.network.kat_SearchThread;
 
 import java.util.ArrayList;
 

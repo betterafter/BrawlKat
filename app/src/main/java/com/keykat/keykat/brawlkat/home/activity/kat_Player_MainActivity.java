@@ -27,12 +27,12 @@ import com.keykat.keykat.brawlkat.home.favorite.activity.kat_FavoritesFragment;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_RankingFragment;
 import com.keykat.keykat.brawlkat.home.search.activity.kat_SearchFragment;
 import com.keykat.keykat.brawlkat.home.setting.activity.SettingsActivity;
-import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
+import com.keykat.keykat.brawlkat.common.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.OverdrawService;
 import com.keykat.keykat.brawlkat.service.systembarservice.BrawlStarsNotificationService;
-import com.keykat.keykat.brawlkat.util.KatData;
-import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
-import com.keykat.keykat.brawlkat.util.parser.kat_official_playerInfoParser;
+import com.keykat.keykat.brawlkat.common.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.network.AsyncCoroutine;
+import com.keykat.keykat.brawlkat.common.util.parser.kat_official_playerInfoParser;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;

@@ -9,7 +9,7 @@ import android.view.Window;
 import com.google.android.material.textfield.TextInputEditText;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.util.kat_CountrySelectionAdapter;
-import com.keykat.keykat.brawlkat.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.KatData;
 
 import java.util.ArrayList;
 import java.util.Iterator;
