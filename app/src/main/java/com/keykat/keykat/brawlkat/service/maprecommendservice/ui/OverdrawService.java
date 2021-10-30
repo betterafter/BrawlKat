@@ -14,6 +14,8 @@ import android.util.DisplayMetrics;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.WindowManager;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
@@ -94,8 +96,8 @@ public class OverdrawService
         int setWidth = Math.min(width, height);
 
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                setWidth / 5,
-                setWidth / 5
+                setWidth / 6,
+                setWidth / 6
         );
 
         serviceButtonLayout.setLayoutParams(params);
@@ -151,6 +153,8 @@ public class OverdrawService
             serviceButtonLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.layout_service_button_background));
 
             serviceButton.setBackground(context.getResources().getDrawable(R.drawable.layout_service_button));
+            Animation animation = AnimationUtils.loadAnimation(getApplicationContext(),R.anim.loading_rotation);
+            serviceButton.startAnimation(animation);
             serviceButtonLayout.addView(serviceButton);
 
         } catch (Exception e) {
@@ -253,5 +257,6 @@ public class OverdrawService
     public void setServiceButtonEnable() {
         setNormalButton();
         serviceButton.setEnabled(true);
+        serviceButton.clearAnimation();
     }
 }
