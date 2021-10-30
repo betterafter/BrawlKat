@@ -51,7 +51,7 @@ class EventAdapter(
     }
 
     override fun getItemCount(): Int {
-        return eventArrayList!!.size
+        return eventArrayList?.size ?: 0
     }
 
     @SuppressLint("NotifyDataSetChanged")

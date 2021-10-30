@@ -82,7 +82,9 @@
             </intent-filter>
         </receiver>
 
-        <service android:name=".service.maprecommendservice.ui.OverdrawService" />
+        <service
+            android:name=".service.maprecommendservice.ui.OverdrawService"
+            android:exported="true"/>
 
         <service
             android:name=".service.systembarservice.BrawlStarsNotificationService"

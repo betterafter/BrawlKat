@@ -109,55 +109,73 @@ class BaseApiDataThread(val context: Context) : Thread() {
     }
 
     fun getData(viewCallback: ((NotificationData) -> (Unit))?) {
-        val socketAddress: SocketAddress = InetSocketAddress(oracleAddress, 9000)
-        val socket = Socket()
-        socket.connect(socketAddress)
-        val bytes: ByteArray
 
-        // 데이터 보내기
+        try {
+            val socketAddress: SocketAddress = InetSocketAddress(oracleAddress, 9000)
+            val socket = Socket()
+            socket.soTimeout = 5000
+            socket.connect(socketAddress, 5000)
+            val bytes: ByteArray
 
-        // starlist api는 서버에 보낼 데이터가 없기 때문에 개행문자만을 보내 수신 종료한다.
-        var result: String = "/" + "/" + "nofficial"
-        result += "\n"
-        val os = socket.getOutputStream()
-        bytes = result.toByteArray(StandardCharsets.UTF_8)
-        os.write(bytes)
-        os.flush()
-        data = socket.getInputStream()
-        input = InputStreamReader(data)
-        reader = BufferedReader(input)
-        result = reader.readLine()
-        var startidx = 0
-        var split: Int
+            // 데이터 보내기
 
-        // API 데이터 파싱
-        var splited: String
-        val resData: ArrayList<String> = ArrayList()
+            // starlist api는 서버에 보낼 데이터가 없기 때문에 개행문자만을 보내 수신 종료한다.
+            var result: String = "/" + "/" + "nofficial"
+            result += "\n"
+            val os = socket.getOutputStream()
+            bytes = result.toByteArray(StandardCharsets.UTF_8)
+            os.write(bytes)
+            os.flush()
+            data = socket.getInputStream()
+            input = InputStreamReader(data)
+            reader = BufferedReader(input)
+            result = reader.readLine()
+            var startidx = 0
+            var split: Int
 
-        while (true) {
-            split = result.indexOf(boundaryCode, startidx)
-            if (split == -1) break
-            splited = result.substring(startidx, split)
-            resData.add(splited)
-            startidx = split + boundaryCode.length
+            // API 데이터 파싱
+            var splited: String
+            val resData: ArrayList<String> = ArrayList()
+
+            while (true) {
+                split = result.indexOf(boundaryCode, startidx)
+                if (split == -1) break
+                splited = result.substring(startidx, split)
+                resData.add(splited)
+                startidx = split + boundaryCode.length
+            }
+
+            eventsParser = kat_eventsParser(resData[0])
+            brawlersParser = kat_brawlersParser(resData[1])
+            mapsParser = kat_mapsParser(resData[2])
+
+            reader.close()
+            os.close()
+            socket.close()
+
+            viewCallback?.let {
+                viewCallback(
+                    NotificationData(
+                        eventArrayList = eventsParser.DataParser(),
+                        brawlerArrayList = brawlersParser.DataParser(),
+                        mapData = mapsParser.DataParser(),
+                        playerArrayList = null
+                    )
+                )
+            }
+        } catch (e: Exception) {
+            //e.printStackTrace()
+            viewCallback?.let {
+                viewCallback(
+                    NotificationData(
+                        eventArrayList = null,
+                        brawlerArrayList =  null,
+                        mapData = null,
+                        playerArrayList = null
+                    )
+                )
+            }
         }
-
-        eventsParser = kat_eventsParser(resData[0])
-        brawlersParser = kat_brawlersParser(resData[1])
-        mapsParser = kat_mapsParser(resData[2])
-
-        reader.close()
-        os.close()
-        socket.close()
-
-        viewCallback?.let { viewCallback(
-            NotificationData(
-                eventArrayList = eventsParser.DataParser(),
-                brawlerArrayList = brawlersParser.DataParser(),
-                mapData = mapsParser.DataParser(),
-                playerArrayList = null
-            )
-        ) }
     }
 
     private fun checkApplicationIsRun(): Boolean {
