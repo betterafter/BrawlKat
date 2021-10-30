@@ -3,9 +3,18 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="app/src/main/res/drawable-anydpi/layout_service_button.xml" value="0.3140625" />
         <entry key="app/src/main/res/drawable/card_background.xml" value="0.321025641025641" />
         <entry key="app/src/main/res/drawable/card_dialog_background.xml" value="0.321025641025641" />
+        <entry key="app/src/main/res/drawable/layout_service_loading_button.xml" value="0.3140625" />
+        <entry key="app/src/main/res/drawable/level.xml" value="0.3140625" />
         <entry key="app/src/main/res/drawable/round_build_24.xml" value="0.184375" />
+        <entry key="app/src/main/res/drawable/round_rotate_right_24.xml" value="0.3140625" />
+        <entry key="app/src/main/res/drawable/round_rotate_right_24_small.xml" value="0.3140625" />
+        <entry key="app/src/main/res/drawable/semi_round_button_inner_click.xml" value="0.3140625" />
+        <entry key="app/src/main/res/drawable/service.xml" value="0.3140625" />
+        <entry key="app/src/main/res/drawable/service_button_click.xml" value="0.3140625" />
+        <entry key="app/src/main/res/drawable/service_click.xml" value="0.3140625" />
         <entry key="app/src/main/res/layout/activity_settings.xml" value="0.1" />
         <entry key="app/src/main/res/layout/activity_settings_developer_summary.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_settings_policy_summary.xml" value="0.335" />

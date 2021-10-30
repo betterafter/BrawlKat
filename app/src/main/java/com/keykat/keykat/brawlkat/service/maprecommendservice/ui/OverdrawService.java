@@ -17,12 +17,14 @@ import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.RemoteViews;
+
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.common.Injection;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.util.MapRecommendContract;
 import com.keykat.keykat.brawlkat.service.model.datasource.MapRecommendDataSource;
 import com.keykat.keykat.brawlkat.service.util.ServiceButtonBroadcastReceiver;
+
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.app.NotificationCompat;
 import androidx.core.content.ContextCompat;
@@ -71,12 +73,33 @@ public class OverdrawService
                 = Injection.INSTANCE.provideMapRecommendRepository(new MapRecommendDataSource(context));
         events = new EventService(context, repository, this, this);
 
-        initInflater();
+        initViewProperties();
+        setNormalButton();
         initWindowManager();
         initContentView();
         initNotification();
 
         return START_STICKY;
+    }
+
+    public void initViewProperties() {
+        serviceButtonLayout = new ConstraintLayout(this);
+        serviceButtonLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.layout_service_button_background));
+        serviceButton = new Button(this);
+
+        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
+
+        int width = metrics.widthPixels;
+        int height = metrics.heightPixels;
+        int setWidth = Math.min(width, height);
+
+        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
+                setWidth / 5,
+                setWidth / 5
+        );
+
+        serviceButtonLayout.setLayoutParams(params);
+        serviceButton.setLayoutParams(params);
     }
 
     public void initContentView() {
@@ -112,28 +135,27 @@ public class OverdrawService
 
     // 메인 버튼 생성
     @SuppressLint("ClickableViewAccessibility")
-    public void initInflater() {
+    public void setNormalButton() {
 
-        serviceButtonLayout = new ConstraintLayout(this);
-
-        // 뷰
-        serviceButton = new Button(this);
-        DisplayMetrics metrics = context.getResources().getDisplayMetrics();
-        int width = metrics.widthPixels;
-        int height = metrics.heightPixels;
-        int setWidth = Math.min(width, height);
-
-        LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
-                setWidth / 5,
-                setWidth / 5
-        );
+        serviceButtonLayout.removeAllViews();
+        serviceButtonLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.layout_service_button_background));
 
         serviceButton.setBackground(context.getResources().getDrawable(R.drawable.service_click));
-        serviceButton.setLayoutParams(params);
-
         serviceButton.setOnTouchListener(this);
-
         serviceButtonLayout.addView(serviceButton);
+    }
+
+    public void setLoadingButton() {
+        try {
+            serviceButtonLayout.removeAllViews();
+            serviceButtonLayout.setBackground(ContextCompat.getDrawable(context, R.drawable.layout_service_button_background));
+
+            serviceButton.setBackground(context.getResources().getDrawable(R.drawable.layout_service_button));
+            serviceButtonLayout.addView(serviceButton);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     // 메인 버튼에 연결된 윈도우 매니저 선언
@@ -214,6 +236,7 @@ public class OverdrawService
                 if (Math.abs(mWidgetStartingX - layoutParams.x) <= 30
                         && Math.abs(mWidgetStartingY - layoutParams.y) <= 30) {
                     events.showEventsInformation();
+                    setLoadingButton();
                     serviceButton.setEnabled(false);
                 }
 
@@ -228,6 +251,7 @@ public class OverdrawService
 
     @Override
     public void setServiceButtonEnable() {
+        setNormalButton();
         serviceButton.setEnabled(true);
     }
 }
