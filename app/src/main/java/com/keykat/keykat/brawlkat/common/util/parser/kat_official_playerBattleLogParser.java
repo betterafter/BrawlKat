@@ -8,14 +8,14 @@ import java.util.ArrayList;
 
 public class kat_official_playerBattleLogParser implements Serializable {
 
-    private                                 String                              data;
+    private String data;
 
-    public kat_official_playerBattleLogParser(String data){
+    public kat_official_playerBattleLogParser(String data) {
         this.data = data;
     }
 
 
-    public ArrayList<playerBattleData> DataParser() throws Exception{
+    public ArrayList<playerBattleData> DataParser() throws Exception {
 
         JSONObject jsonObject = new JSONObject(data);
         JSONArray items = (JSONArray) jsonObject.get("items");
@@ -23,7 +23,7 @@ public class kat_official_playerBattleLogParser implements Serializable {
         ArrayList<playerBattleData> battleData = new ArrayList<>();
 
         // item 배열 파싱
-        for(int i = 0; i < items.length(); i++){
+        for (int i = 0; i < items.length(); i++) {
 
             JSONObject item = (JSONObject) items.get(i);
             playerBattleData pbd = new playerBattleData();
@@ -34,27 +34,27 @@ public class kat_official_playerBattleLogParser implements Serializable {
             // 플레이 이벤트 정보
             JSONObject event = (JSONObject) item.get("event");
             pbd.setEventId(event.getString("id"));
-            if(!event.isNull("mode"))
+            if (!event.isNull("mode"))
                 pbd.setEventMode(event.getString("mode"));
             pbd.setEventMap(event.getString("map"));
 
             // 전투 정보
             JSONObject battle = (JSONObject) item.get("battle");
-
-
-
-            if(!battle.isNull("result")){
-                pbd.setBattleResult(battle.getString("result"));
+            if (pbd.getEventMode() == null) {
+                pbd.setEventMode(battle.getString("mode"));
             }
-            else if(!battle.isNull("rank")) {
+
+
+            if (!battle.isNull("result")) {
+                pbd.setBattleResult(battle.getString("result"));
+            } else if (!battle.isNull("rank")) {
                 pbd.setBattleResult(battle.getString("rank"));
                 pbd.setRank(battle.getString("rank"));
-            }
-            else {
+            } else {
                 pbd.setBattleResult("draw");
             }
 
-            if(!battle.isNull("duration")){
+            if (!battle.isNull("duration")) {
                 pbd.setBattleDuration(battle.getString("duration"));
             }
 
@@ -81,12 +81,8 @@ public class kat_official_playerBattleLogParser implements Serializable {
 //                pbd.setBattleResult(battle.getString("rank"));
 //            }
             // 트로피 변화가 있으면 트로피 변화를 세팅해준다.
-            if(!battle.isNull("trophyChange"))
+            if (!battle.isNull("trophyChange"))
                 pbd.setBattleTrophyChange(Integer.toString(battle.getInt("trophyChange")));
-
-
-
-
 
 
             // all team : [ team 1 : [ {memeber1}, {memeber2} ],    team 2 : [ {memeber3}, {member4} ] ]
@@ -94,19 +90,17 @@ public class kat_official_playerBattleLogParser implements Serializable {
             ArrayList<Object> teamsArrayList = new ArrayList<>();
 
             // 스타 플레이어 태그 가져오기
-            if(!battle.isNull("starPlayer")){
+            if (!battle.isNull("starPlayer")) {
                 JSONObject starPlayer = battle.getJSONObject("starPlayer");
                 pbd.setStarPlayer(starPlayer.getString("tag"));
             }
 
 
-
-
             //////////////////// teams 중심 ////////////////////////////
             // 3 vs 3 모드인 경우 팀 형태로 데이터를 파싱해줘야 한다.
-            if(!battle.isNull("teams")){
+            if (!battle.isNull("teams")) {
                 JSONArray battleTeam = (JSONArray) battle.get("teams");
-                for(int j = 0; j < battleTeam.length(); j++) {
+                for (int j = 0; j < battleTeam.length(); j++) {
 
                     team teams = new team();
 
@@ -126,9 +120,9 @@ public class kat_official_playerBattleLogParser implements Serializable {
                         JSONObject brawlers = (JSONObject) teamInfo.get("brawler");
                         info.setBrawler_Id(brawlers.getString("id"));
                         info.setBrawler_name(brawlers.getString("name"));
-                        if(!brawlers.isNull("power"))
+                        if (!brawlers.isNull("power"))
                             info.setBrawler_power(brawlers.getString("power"));
-                        if(!brawlers.isNull("trophies"))
+                        if (!brawlers.isNull("trophies"))
                             info.setBrawler_trophies(brawlers.getString("trophies"));
 
                         eachTeamItem.add(info);
@@ -140,12 +134,12 @@ public class kat_official_playerBattleLogParser implements Serializable {
 
             /////////////////////////// player 중심 /////////////////////////
             // solo showdown 같이 개인전인 경우 플레이어 중심으로 데이터를 파싱해줘야 한다.
-            else if(!battle.isNull("players")){
+            else if (!battle.isNull("players")) {
                 JSONArray battlePlayer = (JSONArray) battle.get("players");
                 player player = new player();
                 ArrayList<playTeamInfo> eachTeamItem = new ArrayList<>();
 
-                for(int k = 0; k < battlePlayer.length(); k++){
+                for (int k = 0; k < battlePlayer.length(); k++) {
 
                     JSONObject playerInfo = (JSONObject) battlePlayer.get(k);
                     playTeamInfo info = new playTeamInfo();
@@ -156,9 +150,9 @@ public class kat_official_playerBattleLogParser implements Serializable {
                     JSONObject brawlers = (JSONObject) playerInfo.get("brawler");
                     info.setBrawler_Id(brawlers.getString("id"));
                     info.setBrawler_name(brawlers.getString("name"));
-                    if(!brawlers.isNull("power"))
+                    if (!brawlers.isNull("power"))
                         info.setBrawler_power(brawlers.getString("power"));
-                    if(!brawlers.isNull("trophies"))
+                    if (!brawlers.isNull("trophies"))
                         info.setBrawler_trophies(brawlers.getString("trophies"));
 
                     eachTeamItem.add(info);
@@ -175,7 +169,6 @@ public class kat_official_playerBattleLogParser implements Serializable {
 
         return battleData;
     }
-
 
 
     public class playerBattleData implements Serializable {
@@ -306,7 +299,7 @@ public class kat_official_playerBattleLogParser implements Serializable {
         }
     }
 
-    public class playTeamInfo implements Serializable{
+    public class playTeamInfo implements Serializable {
 
         String tag, name;
         String brawler_Id, brawler_name, brawler_power, brawler_trophies;
@@ -359,8 +352,6 @@ public class kat_official_playerBattleLogParser implements Serializable {
             this.brawler_trophies = brawler_trophies;
         }
     }
-
-
 
 
 }
