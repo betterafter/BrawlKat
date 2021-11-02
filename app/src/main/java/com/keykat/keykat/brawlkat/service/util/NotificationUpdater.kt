@@ -217,7 +217,6 @@ class NotificationUpdater(
         } catch (e: Exception) {
             e.printStackTrace()
         }
-        notificationManager.notify(1, notification.build())
     }
 
     private fun setErrorNotification() {
