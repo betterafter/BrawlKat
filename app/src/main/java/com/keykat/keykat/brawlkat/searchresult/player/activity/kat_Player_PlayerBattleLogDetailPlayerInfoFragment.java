@@ -106,6 +106,8 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
 
                 ArrayList<kat_official_playerBattleLogParser.playTeamInfo> teams =
                         ((kat_official_playerBattleLogParser.team) TeamOrPlayer.get(i)).getPlayTeamInfo();
+                System.out.println(battleData.getEventMode());
+                if(battleData.getEventMode() == null) continue;
                 if (battleData.getEventMode().equals("duoShowdown")) {
                     Team_result_duoShowDown_SetLinearLayout(teams, i, linearLayout, "duoShowDown");
                 } else Team_resultSetLinearLayout(teams, i, linearLayout, "not3vs3");
