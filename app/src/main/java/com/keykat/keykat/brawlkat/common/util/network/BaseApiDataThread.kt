@@ -113,8 +113,8 @@ class BaseApiDataThread(val context: Context) : Thread() {
         try {
             val socketAddress: SocketAddress = InetSocketAddress(oracleAddress, 9000)
             val socket = Socket()
-            socket.soTimeout = 5000
-            socket.connect(socketAddress, 5000)
+            socket.soTimeout = 4000
+            socket.connect(socketAddress, 4000)
             val bytes: ByteArray
 
             // 데이터 보내기

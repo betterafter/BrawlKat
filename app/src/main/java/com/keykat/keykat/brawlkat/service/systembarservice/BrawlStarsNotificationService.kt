@@ -37,7 +37,11 @@ class BrawlStarsNotificationService : Service(), NotificationContract.View {
         initChannel()
         initNotificationManager()
         initNotification(NotificationData(null, null, null, null))
-        fetchNotification()
+        try {
+            fetchNotification()
+        } catch (e: Exception) {
+            e.printStackTrace()
+        }
         return START_STICKY
     }
 
@@ -57,20 +61,24 @@ class BrawlStarsNotificationService : Service(), NotificationContract.View {
     private fun initNotification(notificationData: NotificationData?) {
         notificationManager?.let { manager ->
             notificationData?.let { data ->
-                updater = NotificationUpdater(this, manager, data)
-                updater?.update()
-                notification = updater?.getUpdatedNotification()
-                startForeground(1, notification?.build())
+                updater = NotificationUpdater(this, manager, data).apply {
+                    update()
+                }
+                notification = updater?.getUpdatedNotification()?.apply {
+                    startForeground(1, build())
+                }
             }
         }
     }
 
     override fun updateService(notificationData: NotificationData) {
         notificationManager?.let { manager ->
-            updater = NotificationUpdater(this, manager, notificationData)
-            updater?.update()
-            notification = updater?.getUpdatedNotification()
-            manager.notify(1, notification?.build())
+            updater = NotificationUpdater(this, manager, notificationData).apply {
+                update()
+            }
+            notification = updater?.getUpdatedNotification()?.apply {
+                manager.notify(1, build())
+            }
         }
     }
 
