@@ -1,13 +1,9 @@
 package com.keykat.keykat.brawlkat.service.maprecommendservice.util
 
 import com.keykat.keykat.brawlkat.service.maprecommendservice.repository.MapRecommendRepository
-import com.keykat.keykat.brawlkat.util.KatData
-import com.keykat.keykat.brawlkat.util.parser.kat_eventsParser.pair
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import java.util.ArrayList
-import java.util.HashMap
 
 class MapRecommendViewPagerPresenter(
     private val mapRecommendRepository: MapRecommendRepository,

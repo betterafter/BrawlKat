@@ -12,7 +12,7 @@ import com.google.android.material.tabs.TabLayout;
 import com.google.android.material.tabs.TabLayoutMediator;
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.util.kat_Player_RankingAdapter;
-import com.keykat.keykat.brawlkat.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.KatData;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

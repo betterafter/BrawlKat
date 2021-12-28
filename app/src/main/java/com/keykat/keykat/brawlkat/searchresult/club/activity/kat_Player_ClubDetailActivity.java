@@ -17,13 +17,13 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.home.util.kat_LoadingDialog;
+import com.keykat.keykat.brawlkat.common.util.kat_LoadingDialog;
 import com.keykat.keykat.brawlkat.home.util.kat_ad;
 import com.keykat.keykat.brawlkat.searchresult.player.activity.kat_Player_PlayerDetailActivity;
-import com.keykat.keykat.brawlkat.util.KatData;
-import com.keykat.keykat.brawlkat.util.network.kat_SearchThread;
-import com.keykat.keykat.brawlkat.util.parser.kat_clubLogParser;
-import com.keykat.keykat.brawlkat.util.parser.kat_official_clubInfoParser;
+import com.keykat.keykat.brawlkat.common.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.network.kat_SearchThread;
+import com.keykat.keykat.brawlkat.common.util.parser.kat_clubLogParser;
+import com.keykat.keykat.brawlkat.common.util.parser.kat_official_clubInfoParser;
 
 import java.util.ArrayList;
 import java.util.HashMap;

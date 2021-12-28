@@ -10,7 +10,7 @@ import android.widget.TextView;
 
 import com.keykat.keykat.brawlkat.R;
 import com.keykat.keykat.brawlkat.home.ranking.activity.kat_CountrySelectionPopUpActivity;
-import com.keykat.keykat.brawlkat.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.KatData;
 
 import java.util.ArrayList;
 import java.util.Locale;

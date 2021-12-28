@@ -10,8 +10,8 @@ import android.widget.Button;
 import android.widget.LinearLayout;
 
 import com.keykat.keykat.brawlkat.R;
-import com.keykat.keykat.brawlkat.util.KatData;
-import com.keykat.keykat.brawlkat.util.network.AsyncCoroutine;
+import com.keykat.keykat.brawlkat.common.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.network.AsyncCoroutine;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;

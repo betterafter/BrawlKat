@@ -2,8 +2,8 @@ package com.keykat.keykat.brawlkat.service.model.datasource
 
 import android.content.Context
 import com.keykat.keykat.brawlkat.service.model.data.NotificationData
-import com.keykat.keykat.brawlkat.util.KatData
-import com.keykat.keykat.brawlkat.util.network.BaseApiDataThread
+import com.keykat.keykat.brawlkat.common.util.KatData
+import com.keykat.keykat.brawlkat.common.util.network.BaseApiDataThread
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch

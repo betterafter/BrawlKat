@@ -8,7 +8,7 @@ import android.widget.Toast;
 
 import com.keykat.keykat.brawlkat.load.activity.kat_LoadBeforeMainActivity;
 import com.keykat.keykat.brawlkat.service.maprecommendservice.ui.OverdrawService;
-import com.keykat.keykat.brawlkat.util.KatData;
+import com.keykat.keykat.brawlkat.common.util.KatData;
 
 public class ServiceButtonBroadcastReceiver extends BroadcastReceiver {
 
