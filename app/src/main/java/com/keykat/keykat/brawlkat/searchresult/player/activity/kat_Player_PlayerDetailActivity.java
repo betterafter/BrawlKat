@@ -653,6 +653,8 @@ public class kat_Player_PlayerDetailActivity extends AppCompatActivity {
                         kat_official_playerBattleLogParser.playTeamInfo info
                                 = item.getPlayTeamInfo().get(k);
 
+                        System.out.println(info.getTag());
+
                         if (info.getTag().equals(KatData.playerData.getTag())) {
                             userBrawler = info.getBrawler_name();
                             check = true;

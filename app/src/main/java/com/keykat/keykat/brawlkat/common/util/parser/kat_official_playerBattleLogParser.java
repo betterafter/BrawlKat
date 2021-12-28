@@ -58,28 +58,6 @@ public class kat_official_playerBattleLogParser implements Serializable {
                 pbd.setBattleDuration(battle.getString("duration"));
             }
 
-            // trophyChange 가 없는 경우 :
-            // 1. 동점      2. 이벤트 모드
-//            if(battle.isNull("trophyChange")){
-//                // 동점일 경우
-//                if(!battle.isNull("result"))
-//                    pbd.setBattleResult(battle.getString("result"));
-//                else if(!battle.isNull("rank"))
-//                    pbd.setBattleResult(battle.getString("rank"));
-//
-//                // 그 외에 이벤트 모드일 경우 무승부로 처리
-//                else
-//                    pbd.setBattleResult("draw");
-//            }
-//            // 랭크가 없는 경우 : 3 vs 3 맵 또는 이벤트 맵인데 이벤트 맵은 위에서 걸러지므로 3 vs 3 맵만 판별하면 된다.
-//            else if(battle.isNull("rank")) {
-//                pbd.setBattleResult(battle.getString("result"));
-//                pbd.setBattleDuration(battle.getString("duration"));
-//            }
-//            // 그 외의 경우 무승부로 처리해버린다.
-//            else {
-//                pbd.setBattleResult(battle.getString("rank"));
-//            }
             // 트로피 변화가 있으면 트로피 변화를 세팅해준다.
             if (!battle.isNull("trophyChange"))
                 pbd.setBattleTrophyChange(Integer.toString(battle.getInt("trophyChange")));
@@ -95,8 +73,6 @@ public class kat_official_playerBattleLogParser implements Serializable {
                 pbd.setStarPlayer(starPlayer.getString("tag"));
             }
 
-
-            //////////////////// teams 중심 ////////////////////////////
             // 3 vs 3 모드인 경우 팀 형태로 데이터를 파싱해줘야 한다.
             if (!battle.isNull("teams")) {
                 JSONArray battleTeam = (JSONArray) battle.get("teams");
@@ -132,8 +108,7 @@ public class kat_official_playerBattleLogParser implements Serializable {
                 }
             }
 
-            /////////////////////////// player 중심 /////////////////////////
-            // solo showdown 같이 개인전인 경우 플레이어 중심으로 데이터를 파싱해줘야 한다.
+            // solo showdown, duels
             else if (!battle.isNull("players")) {
                 JSONArray battlePlayer = (JSONArray) battle.get("players");
                 player player = new player();
@@ -143,19 +118,43 @@ public class kat_official_playerBattleLogParser implements Serializable {
 
                     JSONObject playerInfo = (JSONObject) battlePlayer.get(k);
                     playTeamInfo info = new playTeamInfo();
-
                     info.setTag(playerInfo.getString("tag"));
                     info.setName(playerInfo.getString("name"));
 
-                    JSONObject brawlers = (JSONObject) playerInfo.get("brawler");
-                    info.setBrawler_Id(brawlers.getString("id"));
-                    info.setBrawler_name(brawlers.getString("name"));
-                    if (!brawlers.isNull("power"))
-                        info.setBrawler_power(brawlers.getString("power"));
-                    if (!brawlers.isNull("trophies"))
-                        info.setBrawler_trophies(brawlers.getString("trophies"));
+                    // solo showdown
+                    if (!playerInfo.isNull("brawler")) {
+                        JSONObject brawlers = (JSONObject) playerInfo.get("brawler");
+                        info.setBrawler_Id(brawlers.getString("id"));
+                        info.setBrawler_name(brawlers.getString("name"));
+                        if (!brawlers.isNull("power"))
+                            info.setBrawler_power(brawlers.getString("power"));
+                        if (!brawlers.isNull("trophies"))
+                            info.setBrawler_trophies(brawlers.getString("trophies"));
 
-                    eachTeamItem.add(info);
+                        eachTeamItem.add(info);
+                    }
+
+                    // duel
+                    else if (!playerInfo.isNull("brawlers")) {
+
+                        JSONArray brawlers = (JSONArray) playerInfo.get("brawlers");
+                        for (int cnt = 0; cnt < brawlers.length(); cnt++) {
+
+                            JSONObject brawler = (JSONObject) brawlers.get(cnt);
+                            playTeamInfo duelInfo = new playTeamInfo();
+                            duelInfo.setTag(playerInfo.getString("tag"));
+                            duelInfo.setName(playerInfo.getString("name"));
+
+                            duelInfo.setBrawler_Id(brawler.getString("id"));
+                            duelInfo.setBrawler_name(brawler.getString("name"));
+                            if (!brawler.isNull("power"))
+                                duelInfo.setBrawler_power(brawler.getString("power"));
+                            if (!brawler.isNull("trophies"))
+                                duelInfo.setBrawler_trophies(brawler.getString("trophies"));
+
+                            eachTeamItem.add(duelInfo);
+                        }
+                    }
                 }
                 player.setPlayTeamInfo(eachTeamItem);
                 teamsArrayList.add(player);

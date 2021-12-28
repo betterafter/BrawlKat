@@ -194,11 +194,15 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
             innerLayout.setPadding(15, 15, 15, 15);
             innerLayout.setLayoutParams(layoutParams);
 
-
-            if (battleData.getEventMode() != null && battleData.getEventMode().equals("soloShowdown"))
-                battleResultText_showDown(layoutParams, innerLayout, j);
-            else
-                battleResultText_event(layoutParams, innerLayout, j);
+            if (battleData.getEventMode() != null) {
+                if (battleData.getEventMode().equals("soloShowdown")) {
+                    battleResultText_showDown(layoutParams, innerLayout, j);
+                } else if (battleData.getEventMode().equals("duels")) {
+                    battleResultTextDuel(layoutParams, innerLayout, j);
+                } else {
+                    battleResultText_event(layoutParams, innerLayout, j);
+                }
+            }
 
             kat_official_playerBattleLogParser.playTeamInfo playerInfo = players.get(j);
             innerLayout.addView(playerItem(playerInfo, i));
@@ -264,6 +268,44 @@ public class kat_Player_PlayerBattleLogDetailPlayerInfoFragment extends Fragment
 
         tv.setText(i + 1 + "등");
         tv.setTextColor(getResources().getColor(colorArray2[i]));
+
+        innerLayout.addView(tv);
+    }
+
+    private void battleResultTextDuel(LinearLayout.LayoutParams layoutParams, LinearLayout innerLayout, int i) {
+
+        LinearLayout.LayoutParams TextViewLayoutParams = new LinearLayout.LayoutParams(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        TextView tv = new TextView(requireActivity().getApplicationContext());
+        tv.setTextSize(24);
+        tv.setBackground(getResources().getDrawable(R.drawable.card_bottom_line));
+        tv.setLayoutParams(TextViewLayoutParams);
+        tv.setPadding(20, 10, 0, 20);
+        tv.setTypeface(tv.getTypeface(), Typeface.BOLD);
+
+        if (battleData.getBattleResult().equals("victory")) {
+            if (i < 3) {
+                tv.setText("승리");
+                tv.setTextColor(getResources().getColor(colorArray[0]));
+            } else {
+                tv.setText("패배");
+                tv.setTextColor(getResources().getColor(colorArray[1]));
+            }
+        } else if (battleData.getBattleResult().equals("defeat")) {
+            if (i < 3) {
+                tv.setText("패배");
+                tv.setTextColor(getResources().getColor(colorArray[1]));
+            } else {
+                tv.setText("승리");
+                tv.setTextColor(getResources().getColor(colorArray[0]));
+            }
+        } else {
+            tv.setText("무승부");
+            tv.setTextColor(getResources().getColor(colorArray[2]));
+        }
 
         innerLayout.addView(tv);
     }
