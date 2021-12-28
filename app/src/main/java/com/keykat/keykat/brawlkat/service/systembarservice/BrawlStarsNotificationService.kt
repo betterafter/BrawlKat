@@ -33,11 +33,11 @@ class BrawlStarsNotificationService : Service(), NotificationContract.View {
 
     override fun onStartCommand(intent: Intent, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        notificationPresenter = NotificationPresenter(this)
-        initChannel()
-        initNotificationManager()
-        initNotification(NotificationData(null, null, null, null))
         try {
+            notificationPresenter = NotificationPresenter(this)
+            initChannel()
+            initNotificationManager()
+            initNotification(NotificationData(null, null, null, null))
             fetchNotification()
         } catch (e: Exception) {
             e.printStackTrace()
@@ -72,6 +72,9 @@ class BrawlStarsNotificationService : Service(), NotificationContract.View {
     }
 
     override fun updateService(notificationData: NotificationData) {
+        if (notificationData.brawlerArrayList == null || notificationData.eventArrayList == null ||
+            notificationData.playerArrayList == null
+        ) return
         notificationManager?.let { manager ->
             updater = NotificationUpdater(this, manager, notificationData).apply {
                 update()

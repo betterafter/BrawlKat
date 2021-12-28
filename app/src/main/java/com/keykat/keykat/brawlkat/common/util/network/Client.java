@@ -23,8 +23,6 @@ import java.util.HashMap;
 
 public class Client {
 
-    private InputStream data;
-
     // data 배열 리스트 ...............................................................................
     public static ArrayList<String> resData;
     public ArrayList<String> resOffiData;
@@ -33,8 +31,6 @@ public class Client {
 
     public BaseApiDataThread getThread;
     public getAllTypeApiThread officialApiThread;
-
-    public static boolean isGetApiThreadStop;
 
     private final String boundaryCode = "this_is_a_kat_data_boundary!";
 
@@ -299,15 +295,6 @@ public class Client {
 
         getThread.start();
     }
-
-    public void remove() throws InterruptedException {
-        getThread.interrupt();
-    }
-
-    public boolean isGetApiThreadAlive() {
-        return getThread != null;
-    }
-
 
     public void AllTypeInit(String tag, String type, String apiType, Context context) {
 
